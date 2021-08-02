@@ -101,13 +101,12 @@
 		ECBA13E426B78F77004D452C /* DinotisApp */ = {
 			isa = PBXGroup;
 			children = (
-				ECBA13E526B78F77004D452C /* AppDelegate.swift */,
-				ECBA13E726B78F77004D452C /* SceneDelegate.swift */,
-				ECBA13E926B78F77004D452C /* ContentView.swift */,
+				ECBA142A26B79132004D452C /* Common */,
+				ECBA142E26B79149004D452C /* View */,
 				ECBA13EE26B78F78004D452C /* Assets.xcassets */,
 				ECBA13F326B78F78004D452C /* LaunchScreen.storyboard */,
 				ECBA13F626B78F78004D452C /* Info.plist */,
-				ECBA13EB26B78F77004D452C /* DinotisApp.xcdatamodeld */,
+				ECBA143226B79153004D452C /* Local Storage */,
 				ECBA13F026B78F78004D452C /* Preview Content */,
 			);
 			path = DinotisApp;
@@ -137,6 +136,31 @@
 				ECBA140C26B78F78004D452C /* Info.plist */,
 			);
 			path = DinotisAppUITests;
+			sourceTree = "<group>";
+		};
+		ECBA142A26B79132004D452C /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				ECBA13E526B78F77004D452C /* AppDelegate.swift */,
+				ECBA13E726B78F77004D452C /* SceneDelegate.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		ECBA142E26B79149004D452C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				ECBA13E926B78F77004D452C /* ContentView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		ECBA143226B79153004D452C /* Local Storage */ = {
+			isa = PBXGroup;
+			children = (
+				ECBA13EB26B78F77004D452C /* DinotisApp.xcdatamodeld */,
+			);
+			path = "Local Storage";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
