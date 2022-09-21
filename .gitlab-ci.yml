@@ -1,0 +1,68 @@
+stages:
+  - build
+  - test
+  - archive
+
+build_project:
+  stage: build
+  script:
+    - xcodebuild -project DinotisApp.xcodeproj -scheme DinotisDevelopment -clonedSourcePackagesDirPath SourcePackages -destination 'platform=iOS Simulator,name=iPhone 14 Pro Max,OS=16.0' | xcpretty
+  allow_failure:
+    exit_codes: 1
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+  tags:
+    - dinotis-apps
+    - ios-tag
+    
+test_project:
+  stage: test
+  script:
+    - xcodebuild -project DinotisApp.xcodeproj -scheme DinotisDevelopment -clonedSourcePackagesDirPath SourcePackages -destination 'platform=iOS Simulator,name=iPhone 14 Pro Max,OS=16.0' test | xcpretty
+  allow_failure:
+    exit_codes: 1
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+  tags:
+    - dinotis-apps
+    - ios-tag
+    
+archive_build:
+  dependencies: []
+  stage: archive
+  artifacts:
+    paths:
+      - build/DinotisApp.ipa
+  before_script:
+      - export LC_ALL=en_US.UTF-8
+      - export LANG=en_US.UTF-8
+  script:
+    - fastlane spaceauth -u andihabil1004@gmail.com
+    - fastlane beta
+  allow_failure:
+    exit_codes: 1
+  tags:
+    - dinotis-apps
+    - ios-tag
+  only:
+    - develop
+
+release:
+  dependencies: []
+  stage: archive
+  artifacts:
+    paths:
+      - build/DinotisApp.ipa
+  before_script:
+      - export LC_ALL=en_US.UTF-8
+      - export LANG=en_US.UTF-8
+  script:
+    - fastlane spaceauth -u andihabil1004@gmail.com
+    - fastlane release
+  allow_failure:
+    exit_codes: 1
+  tags:
+    - dinotis-apps
+    - ios-tag
+  only:
+    - release

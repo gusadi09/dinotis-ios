@@ -1,0 +1,5 @@
+For this new version, We've been integrated In-App Purchase for buying coin as a consumable product. Which is the coin can buy a group video call (1-to-many services) and live streaming content (1-to-many services), this content can't buy with another payment method and only with coin (Consumable In-Apps Purchase Product), second one is for Private Video Call content (1-to-1 Services) we have additional payment method with payment gateway, but we still give coin option for payment too. We had read the guideline and this implementation was didn't violate the guideline we thought, because we still give the Consumable product to buy with In-Apps Purchase and then the Consumable product can book a content inside the apps. It's more like win to win solution.
+
+Please check the in-app purchase item shown or not.
+
+Thank You.
