@@ -1,0 +1,2 @@
+- Improve some component for iOS 16
+- Fixing Minor Bugs

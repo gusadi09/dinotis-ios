@@ -1,0 +1,2 @@
+- Peningkatan beberapa komponen untuk iOS 16
+- Perbaikan beberapa bug minor

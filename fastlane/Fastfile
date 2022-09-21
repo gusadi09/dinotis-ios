@@ -1,0 +1,48 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Push a new beta build to TestFlight"
+  lane :beta do
+    ENV["FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD"]= "efyb-yaap-zlfh-gfir"
+    increment_build_number(xcodeproj: "DinotisApp.xcodeproj")
+    build_app(scheme: "DinotisDevelopment")
+    match(
+       app_identifier:["com.dinotis.DinotisApp","com.dinotis.DinotisApp.DinotisNotificationServiceExtension"],
+       type: "appstore"
+    )
+    upload_to_testflight
+  end
+  lane :release do 
+    ENV["FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD"]= "efyb-yaap-zlfh-gfir"              
+    sync_code_signing(type: "appstore")  
+    build_app(scheme: "DinotisRelease")
+    match(
+       app_identifier:["com.dinotis.DinotisApp","com.dinotis.DinotisApp.DinotisNotificationServiceExtension"],
+       type: "appstore"
+    )
+    deliver(
+       skip_screenshots: true,
+       metadata_path: "./metadata",
+       submission_information: {
+        export_compliance_uses_encryption: true,
+        add_id_info_uses_idfa: false
+       }
+    )          
+    slack(message: "Successfully uploaded a new App Store build")
+  end
+end
