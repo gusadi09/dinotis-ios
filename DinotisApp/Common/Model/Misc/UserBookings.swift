@@ -6,25 +6,33 @@
 //
 
 import Foundation
+import DinotisData
 
 struct UserBooking: Codable {
-	var id, bookedAt: String?
-	var canceledAt, doneAt: String?
+	var id: String
+	let bookedAt: Date?
+	let invoiceId: String?
+	var canceledAt, doneAt: Date?
 	var isFailed: Bool?
-	var meetingID, userID, createdAt, updatedAt: String?
-	var bookingPayment: UserBookingPayment
-	var meeting: UserMeeting
+    var isReviewed: Bool?
+	var meetingID, userID: String?
+	let createdAt, updatedAt: Date?
+	var bookingPayment: UserBookingPayment?
+	var meeting: UserMeeting?
+	let meetingBundle: BundlingData?
+    let status: String?
 	
 	enum CodingKeys: String, CodingKey {
 		case id, bookedAt, canceledAt, doneAt
 		case meetingID = "meetingId"
 		case userID = "userId"
-		case createdAt, updatedAt, bookingPayment, meeting, isFailed
+		case invoiceId
+		case createdAt, updatedAt, bookingPayment, meeting, isFailed, isReviewed, meetingBundle, status
 	}
 }
 
 struct DetailBooking: Codable {
-	var meeting: UserMeeting
+	var meeting: UserMeeting?
 	let bookingPayment: BookingPayment?
 	
 	enum CodingKeys: String, CodingKey {
@@ -35,8 +43,8 @@ struct DetailBooking: Codable {
 // MARK: - BookingPayment
 struct UserBookingPayment: Codable {
 	var id, amount: String?
-	var paidAt: String?
-	var failedAt: String?
+	var paidAt: Date?
+	var failedAt: Date?
 	var bookingID: String?
 	var paymentMethodID: Int?
 	let externalId: String?
@@ -56,78 +64,46 @@ struct PrivateFeatureMeeting: Codable {
 	let data: [UserMeeting]?
 }
 
-struct OriginalSectionResponse: Codable {
-	let data: [OriginalSectionData]
-	let nextCursor: Int?
-}
-
-struct OriginalSectionData: Codable {
-	let id: Int?
-	let name: String?
-	let isActive: Bool?
-	let landingPageListContentList: [LandingPageContentData]
-	let user: User?
-
-	static func == (lhs: OriginalSectionData, rhs: OriginalSectionData) -> Bool {
-		return lhs.id.orZero() == rhs.id.orZero()
-	}
-
-	func hash(into hasher: inout Hasher) {
-		hasher.combine(id.orZero())
-	}
-}
-
-struct LandingPageContentData: Codable {
-	let id: Int?
-	let userId: String?
-	let meetingId: String?
-	let landingPageListId: Int?
-	let user: User?
-	let meeting: UserMeeting?
-	let isActive: Bool?
-	let createdAt: String?
-	let updatedAt: String?
-
-	static func == (lhs: LandingPageContentData, rhs: LandingPageContentData) -> Bool {
-		return lhs.id.orZero() == rhs.id.orZero()
-	}
-
-	func hash(into hasher: inout Hasher) {
-		hasher.combine(id.orZero())
-	}
-}
-
 // MARK: - Meeting
 struct UserMeeting: Codable {
 	var id: String
 	var title, meetingDescription, price: String?
-	var startAt, endAt: String?
+	var startAt, endAt: Date?
 	var isPrivate: Bool?
 	var isLiveStreaming: Bool?
 	var slots: Int?
+	let participants: Int?
 	var userID: String?
-	var startedAt, endedAt: String?
-	var createdAt, updatedAt: String?
-	var deletedAt: String?
+	var startedAt, endedAt: Date?
+	var createdAt, updatedAt: Date?
+	var deletedAt: Date?
 	var bookings: [Booked]?
 	var user: User?
+	let participantDetails: [User]?
+	let meetingBundleId, meetingRequestId: String?
+	let status: String?
+	let meetingRequest: MeetingRequestData?
+	let expiredAt: Date?
+    public let background: [String]?
 	
 	enum CodingKeys: String, CodingKey {
 		case id, title
 		case meetingDescription = "description"
-		case price, startAt, endAt, isPrivate, slots, isLiveStreaming
+		case price, startAt, endAt, isPrivate, slots, isLiveStreaming, participantDetails, expiredAt, background
 		case userID = "userId"
-		case startedAt, endedAt, createdAt, updatedAt, deletedAt, bookings, user
+		case startedAt, endedAt, createdAt, updatedAt, deletedAt, bookings, user, participants, meetingBundleId, meetingRequestId, status, meetingRequest
 	}
 }
 
 // MARK: - Booking
 struct Booked: Codable {
-	var id, bookedAt: String?
-	var canceledAt, doneAt: String?
-	var meetingID, userID, createdAt, updatedAt: String?
-	var bookingPayment: BookingPayment
-	var user: User
+	var id: String
+	let bookedAt: Date?
+	var canceledAt, doneAt: Date?
+	var meetingID, userID: String?
+	let createdAt, updatedAt: Date?
+	var bookingPayment: BookingPayment?
+	var user: User?
 	
 	enum CodingKeys: String, CodingKey {
 		case id, bookedAt, canceledAt, doneAt
@@ -138,8 +114,9 @@ struct Booked: Codable {
 }
 
 // MARK: - User
-struct User: Codable {
-	var id, name, username, email: String?
+struct User: Codable, Identifiable, Hashable {
+	var id: String
+	var name, username, email: String?
 	var profilePhoto: String?
 	var isVerified: Bool?
 	
@@ -151,6 +128,7 @@ struct User: Codable {
 
 struct UserBookings: Codable {
 	var data: [UserBooking]
+    let nextCursor: Int?
 }
 
 struct ExtraFeeResponse: Codable {

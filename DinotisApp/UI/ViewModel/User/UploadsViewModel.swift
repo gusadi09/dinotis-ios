@@ -75,45 +75,4 @@ class UploadsViewModel: ObservableObject {
             }
         }
     }
-    
-    func updateImage(fileUrl: PhotoProfileUrl) {
-        self.isLoading = true
-        self.isError = false
-        self.error = nil
-		self.isRefreshFailed = false
-        
-		uploadService.updateImage(token: stateObservable.accessToken, url: fileUrl) { result, error in
-            if result != nil {
-                self.isLoading = false
-                self.success = true
-            } else {
-				if let error = error {
-					if error.statusCode == 401 {
-						self.refreshService.refreshToken(with: self.stateObservable.refreshToken) { response in
-							switch response {
-								case .failure(_):
-									DispatchQueue.main.async {
-										self.isLoading = false
-										self.isRefreshFailed = true
-									}
-								case .success(let response):
-									self.stateObservable.accessToken = response.accessToken
-									self.stateObservable.refreshToken = response.refreshToken
-
-									self.updateImage(fileUrl: fileUrl)
-							}
-						}
-					} else {
-						DispatchQueue.main.async {
-							self.isLoading = false
-							self.isError = true
-							self.success = false
-
-							self.error = HMError.serverError(code: error.statusCode ?? 0, message: error.message ?? "")
-						}
-					}
-				}
-            }
-        }
-    }
 }

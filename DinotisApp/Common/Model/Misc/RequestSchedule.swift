@@ -12,11 +12,12 @@ struct RequestScheduleResponse: Codable {
 	let userId: String?
 	let requestUserId: String?
 	let type: String?
-	let createdAt: String?
-	let updatedAt: String?
+	let createdAt: Date?
+	let updatedAt: Date?
 }
 
 struct RequestScheduleBody: Codable {
 	let requestUserId: String
 	let type: String
+	let message: String
 }

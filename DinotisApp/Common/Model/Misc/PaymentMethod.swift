@@ -26,7 +26,7 @@ struct PaymentMethod: Codable {
 	}
 }
 
-struct PaymentMethodData: Codable {
+struct PaymentMethodDataV1: Codable {
 	var id: Int
 	var code: String?
 	var name: String
@@ -34,45 +34,61 @@ struct PaymentMethodData: Codable {
 	var extraFee: Double?
 	var extraFeeIsPercentage: Bool?
 	var bankID: Int?
-	var isEwallet, isDisbursement, isQr: Bool?
+	var isEwallet, isDisbursement, isQr, isCC, isIap, isCoin, isActive, isVisible: Bool?
 	
 	enum CodingKeys: String, CodingKey {
 		case id, code, name
 		case iconURL = "iconUrl"
 		case extraFee
 		case bankID = "bankId"
-		case isEwallet, isDisbursement, isQr, extraFeeIsPercentage
+		case isEwallet, isDisbursement, isQr, extraFeeIsPercentage, isCC, isIap, isCoin, isActive, isVisible
 	}
 }
 
 typealias PaymentData = [PaymentMethod]
 
 struct PaymentMethodResponse: Codable {
-	let data: [PaymentMethodData]?
+	let data: [PaymentMethodDataV1]?
 }
 
 struct BookingPay: Codable {
 	var paymentMethod: Int
-	var meetingId: String
+	var meetingId: String?
 	var voucherCode: String?
+    var meetingBundleId: String?
+    var rateCardId: String?
+}
+
+struct ExtraFeesBody: Codable {
+    var meetingId: String?
+    var meetingBundleId: String?
+    var rateCardId: String?
+}
+
+struct BundlingBooking: Codable {
+    var paymentMethod: Int
+    var voucherCode: String?
+    var meetingId: String?
+    var meetingBundleId: String?
 }
 
 struct CoinPay: Codable {
-	var meetingId: String
+	var meetingId: String?
 	var voucherCode: String?
+    var meetingBundleId: String?
 }
 
 struct BookingData: Codable {
 	var id: String
-	var bookedAt: String
-	var canceledAt: String?
-	let bookingPayment: UserBookingPayment
+	var bookedAt: Date?
+	var canceledAt: Date?
+	let bookingPayment: UserBookingPayment?
 }
 
 struct Invoice: Codable {
 	var id, number, status, userID, externalId: String?
 	var bankID: Int?
-	var expiredAt, createdAt, updatedAt: String?
+	var expiredAt, createdAt, updatedAt: Date?
 	
 	enum CodingKeys: String, CodingKey {
 		case id, number, status, externalId

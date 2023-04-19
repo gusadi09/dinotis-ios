@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import DinotisData
 
 struct UpdateUser: Codable {
 	var name: String?
@@ -30,16 +31,18 @@ struct Users: Codable {
 	let username: String?
 	let phone: String?
 	let profilePhoto: String?
-	let profileDescription, emailVerifiedAt: String?
+	let profileDescription: String?
+	let emailVerifiedAt: Date?
 	let isVerified: Bool?
 	let isPasswordFilled: Bool?
 	let registeredWith: Int?
-	let lastLoginAt, professionID: String?
-	let createdAt, updatedAt: String?
+	let lastLoginAt: Date?
+	let professionID: String?
+	let createdAt, updatedAt: Date?
 	let roles: [RoleElement]?
 	let balance: Balance?
 	let profession: String?
-	let professions: [ProfessionElement]?
+	let professions: [ProfessionData]?
 	let calendar: String?
 	let userHighlights: [Highlights]?
 	let coinBalance: CoinBalanceData?
@@ -55,9 +58,9 @@ struct Users: Codable {
 
 struct CoinBalanceData: Codable {
 	let id: Int?
-	let current: Int64?
+	let current: String?
 	let userId: String?
-	let updatedAt: String?
+	let updatedAt: Date?
 
 	static func == (lhs: CoinBalanceData, rhs: CoinBalanceData) -> Bool {
 		return lhs.id.orZero() == rhs.id.orZero()
@@ -72,7 +75,7 @@ struct CoinBalanceData: Codable {
 struct Balance: Codable {
 	var id: Int?
 	var current: String?
-	var updatedAt: String?
+	var updatedAt: Date?
 	
 	enum CodingKeys: String, CodingKey {
 		case id, current
@@ -80,30 +83,12 @@ struct Balance: Codable {
 	}
 }
 
-// MARK: - ProfessionElement
-struct ProfessionElement: Codable, Equatable {
-	
-	var userID: String
-	var professionID: Int
-	var createdAt, updatedAt: String
-	var profession: ProfessionProfession
-	
-	enum CodingKeys: String, CodingKey {
-		case userID = "userId"
-		case professionID = "professionId"
-		case createdAt, updatedAt, profession
-	}
-	
-	static func == (lhs: ProfessionElement, rhs: ProfessionElement) -> Bool {
-		return lhs.profession.id == rhs.profession.id
-	}
-}
-
 // MARK: - ProfessionProfession
-struct ProfessionProfession: Codable {
+struct ProfessionProfession: Codable, Hashable {
 	var id: Int
 	var professionCategoryId: Int?
-	var name, createdAt, updatedAt: String
+	var name: String?
+	let createdAt, updatedAt: Date?
 }
 
 struct ParticipantMeeting: Codable {
@@ -111,7 +96,7 @@ struct ParticipantMeeting: Codable {
 	var uid: UInt
 }
 
-struct ProfessionResponse: Codable {
+struct ProfessionResponseV1: Codable {
 	var data: [ProfessionProfession]?
 	var nextCursor: Int?
 }
@@ -119,8 +104,8 @@ struct ProfessionResponse: Codable {
 // MARK: - RoleElement
 struct RoleElement: Codable {
 	var userID: String
-	var roleID: Int
-	var createdAt, updatedAt: String
+	var roleID: Int?
+	var createdAt, updatedAt: Date?
 	var role: RoleRole?
 	
 	enum CodingKeys: String, CodingKey {
@@ -133,7 +118,7 @@ struct RoleElement: Codable {
 // MARK: - RoleRole
 struct RoleRole: Codable {
 	var id: Int
-	var name: String
+	var name: String?
 }
 
 // MARK: - UserDetail
@@ -141,7 +126,8 @@ struct UserDetail: Codable {
 	var id: Int?
 	var identityName, identityNumber, identityAddress, identityDateOfBirth: String?
 	var identityPlaceOfBirth, phone: String?
-	var userID, createdAt, updatedAt: String?
+	var userID: String?
+	let createdAt, updatedAt: Date?
 	
 	enum CodingKeys: String, CodingKey {
 		case id, identityName, identityNumber, identityAddress, identityDateOfBirth, identityPlaceOfBirth, phone
@@ -159,7 +145,7 @@ struct SuggestionBody: Codable {
 }
 
 struct CurrentBalance: Codable {
-	let current: Int?
+	let current: String?
 }
 
 struct AddBankAccount: Codable {
@@ -174,8 +160,8 @@ struct BankAccount: Codable {
 	let accountNumber: String?
 	let bankId: Int?
 	let userId: String?
-	let createdAt: String?
-	let updatedAt: String?
+	let createdAt: Date?
+	let updatedAt: Date?
 	let bank: Bank?
 }
 
@@ -190,9 +176,9 @@ struct WithdrawParams: Codable {
 
 struct HistoryTransaction: Codable {
 	let id: Int
-	let current: Int?
+	let current: String?
 	let userId: String?
-	let updatedAt: String?
+	let updatedAt: Date?
 	let balanceDetails: [BalanceDetails]?
 }
 
@@ -203,7 +189,7 @@ struct BalanceDetails: Codable {
 	let balanceId: Int?
 	let transactionId: String?
 	let isConfirmed: Bool?
-	let createdAt: String?
+	let createdAt: Date?
 	let topUp: String?
 	let balance: UserDetailBalance?
 	let transaction: String?
@@ -212,9 +198,9 @@ struct BalanceDetails: Codable {
 
 struct UserDetailBalance: Codable {
 	let id: Int
-	let current: Int?
+	let current: String?
 	let userId: String?
-	let updatedAt: String?
+	let updatedAt: Date?
 }
 
 struct UserWithdrawHistory: Codable {
@@ -225,6 +211,6 @@ struct UserWithdrawHistory: Codable {
 	let bankAccountId: Int?
 	let balanceDetailId: Int?
 	let externalId: String?
-	let createdAt: String?
-	let updatedAt: String?
+	let createdAt: Date?
+	let updatedAt: Date?
 }

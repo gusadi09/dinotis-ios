@@ -7,11 +7,12 @@
 
 import SwiftUI
 import CurrencyFormatter
+import DinotisDesignSystem
 
 struct HistoryCard: View {
 	@Binding var user: User
-	@Binding var meeting: UserMeeting
-	@Binding var payment: UserBookingPayment
+	@Binding var meeting: UserMeeting?
+	@Binding var payment: UserBookingPayment?
 	
 	var onTapDetail: () -> Void
 	
@@ -21,13 +22,13 @@ struct HistoryCard: View {
 				HStack {
 					ProfileImageContainer(profilePhoto: $user.profilePhoto, name: $user.name, width: 40, height: 40)
 					
-					if let name = user.name, let isVerif = user.isVerified {
+					if let name = user.name {
 						Text(name)
-							.font(Font.custom(FontManager.Montserrat.bold, size: 14))
+                            .font(.robotoBold(size: 14))
 							.minimumScaleFactor(0.01)
 							.lineLimit(1)
 						
-						if isVerif {
+						if user.isVerified ?? false {
 							Image("ic-verif-acc")
 								.resizable()
 								.scaledToFit()
@@ -37,9 +38,9 @@ struct HistoryCard: View {
 					
 					Spacer()
 					
-					if meeting.endedAt != nil {
+					if meeting?.endedAt != nil {
 						Text(NSLocalizedString("ended_meeting_card_label", comment: ""))
-							.font(.custom(FontManager.Montserrat.regular, size: 12))
+							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 							.padding(.vertical, 3)
 							.padding(.horizontal, 8)
@@ -54,9 +55,9 @@ struct HistoryCard: View {
 						.resizable()
 						.scaledToFit()
 						.frame(height: 18)
-					if let dateStart = dateISOFormatter.date(from: meeting.startAt.orEmpty()) {
-						Text(dateFormatter.string(from: dateStart))
-							.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+					if let dateStart = meeting?.startAt {
+                        Text(DateUtils.dateFormatter(dateStart, forFormat: .EEEEddMMMMyyyy))
+                            .font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 					}
 				}
@@ -67,10 +68,10 @@ struct HistoryCard: View {
 						.scaledToFit()
 						.frame(height: 18)
 					
-					if let timeStart = dateISOFormatter.date(from: meeting.startAt.orEmpty()),
-						 let timeEnd = dateISOFormatter.date(from: meeting.endAt.orEmpty()) {
-						Text("\(timeFormatter.string(from: timeStart)) - \(timeFormatter.string(from: timeEnd))")
-							.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+					if let timeStart = meeting?.startAt,
+						 let timeEnd = meeting?.endAt {
+						Text("\(DateUtils.dateFormatter(timeStart, forFormat: .HHmm)) - \(DateUtils.dateFormatter(timeEnd, forFormat: .HHmm))")
+                            .font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 					}
 				}
@@ -82,13 +83,13 @@ struct HistoryCard: View {
 							.scaledToFit()
 							.frame(height: 18)
 						
-						Text("\(String.init((meeting.bookings?.filter({ items in items.bookingPayment.paidAt != nil }).count).orZero()))/\(String.init(meeting.slots.orZero())) \(NSLocalizedString("participant", comment: ""))")
-							.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+						Text("\((meeting?.participants).orZero())/\(String.init((meeting?.slots).orZero())) \(NSLocalizedString("participant", comment: ""))")
+                            .font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 						
-						if meeting.slots.orZero() > 1 && !(meeting.isLiveStreaming ?? false) {
+						if (meeting?.slots).orZero() > 1 && !(meeting?.isLiveStreaming ?? false) {
 							Text(NSLocalizedString("group", comment: ""))
-								.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+                                .font(.robotoRegular(size: 12))
 								.foregroundColor(.black)
 								.padding(.vertical, 5)
 								.padding(.horizontal)
@@ -99,9 +100,9 @@ struct HistoryCard: View {
 										.stroke(Color("btn-stroke-1"), lineWidth: 1.0)
 								)
 							
-						} else if meeting.isLiveStreaming ?? false {
+						} else if meeting?.isLiveStreaming ?? false {
 							Text(LocaleText.liveStreamText)
-								.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+                                .font(.robotoRegular(size: 12))
 								.foregroundColor(.black)
 								.padding(.vertical, 5)
 								.padding(.horizontal)
@@ -113,7 +114,7 @@ struct HistoryCard: View {
 								)
 						} else {
 							Text(NSLocalizedString("private", comment: ""))
-								.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+                                .font(.robotoRegular(size: 12))
 								.foregroundColor(.black)
 								.padding(.vertical, 5)
 								.padding(.horizontal)
@@ -139,28 +140,28 @@ struct HistoryCard: View {
 							.frame(height: 15)
 
 						VStack(alignment: .leading, spacing: 5) {
-							if meeting.price == "0" {
+							if (meeting?.price).orEmpty() == "0" {
 								Text("free_text")
-									.font(.montserratBold(size: 14))
-									.foregroundColor(.primaryViolet)
+									.font(.robotoBold(size: 14))
+									.foregroundColor(.DinotisDefault.primary)
 							} else {
-								Text(meeting.price.orEmpty().toPriceFormat())
-									.font(.montserratBold(size: 14))
-									.foregroundColor(.primaryViolet)
+								Text((meeting?.price).orEmpty().toPriceFormat())
+									.font(.robotoBold(size: 14))
+									.foregroundColor(.DinotisDefault.primary)
 							}
 						}
 
 						Spacer()
 					
 					Button(action: {
-						if !(payment.paidAt == nil && payment.failedAt != nil) {
+						if !(payment?.paidAt == nil && payment?.failedAt != nil) {
 							onTapDetail()
 						}
 					}, label: {
-						if payment.paidAt == nil && payment.failedAt != nil {
+						if payment?.paidAt == nil && payment?.failedAt != nil {
 
 								Text(NSLocalizedString("fail", comment: ""))
-									.font(Font.custom(FontManager.Montserrat.semibold, size: 12))
+                                .font(.robotoMedium(size: 12))
 									.foregroundColor(Color(.red))
 									.padding()
 									.padding(.horizontal, 10)
@@ -173,7 +174,7 @@ struct HistoryCard: View {
 						} else {
 
 								Text(NSLocalizedString("view_details", comment: ""))
-									.font(Font.custom(FontManager.Montserrat.semibold, size: 12))
+                                .font(.robotoMedium(size: 12))
 									.foregroundColor(Color("btn-stroke-1"))
 									.padding()
 									.padding(.horizontal, 10)
@@ -185,7 +186,7 @@ struct HistoryCard: View {
 									)
 
 						}
-					}).disabled(payment.paidAt == nil && payment.failedAt != nil)
+					}).disabled(payment?.paidAt == nil && payment?.failedAt != nil)
 				}
 				.padding(.top, 10)
 			}
@@ -195,7 +196,6 @@ struct HistoryCard: View {
 		.background(Color.white)
 		.cornerRadius(12)
 		.shadow(color: Color("dinotis-shadow-1").opacity(0.15), radius: 10, x: 0.0, y: 0.0)
-		.padding(.horizontal)
 	}
 }
 

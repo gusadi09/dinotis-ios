@@ -1,0 +1,350 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Gus Adi on 06/12/22.
+  
+*/
+
+"title_boarding_first" = "Chat with Awesome Creators!";
+"description_boarding_first" = "Meet with great creators from various profession? only here is the place";
+"title_boarding_second" = "Anytime and anywhere";
+"description_boarding_second" = "Are you satisfied just hearing the sound? \nIf you chat here, you can see each other!";
+"title_role_type" = "Various interesting sessions for you";
+"description_role_type" = "Please choose the type of account that suits for you!";
+
+"label_skip" = "Skip";
+"label_continue" = "Next";
+"label_previous" = "Previous";
+
+"title_audience" = "Audience";
+"description_audience_login" = "Start chatting with creators";
+
+"title_creator" = "Creators";
+"description_creator_login" = "Start chatting with Audiences";
+
+"title_login" = "Login Account";
+"description_login" = "Please enter your mobile number & your account password that has been registered to enter the application";
+"hint_phone" = "Enter your phone number";
+"alert_phone_unregister" = "*The phone number you entered has not been registered";
+"alert_phone_wrong" = "*The phone number you entered is invalid";
+"hint_password" = "Enter Password";
+"alert_password_wrong" = "*The password you entered is incorrect";
+"link_forgot" = "Forgot password?";
+"label_login_terms_higlighted" = "Service Terms";
+"label_login_terms_first_part" = "When login, you will agree to the Dinotis ";
+"label_login_terms_second_part" = " & acknowledge that our Privacy Notice applies.";
+"link_register_here" = "Don't have an account yet? ";
+"link_register_here_highlighted" = "Register here";
+"label_login" = "Login";
+
+"title_register_audience" = "Register Account";
+"description_register" = "Enter a valid phone number to get an OTP code";
+"label_register_terms_highlighted" = "Service Terms";
+"label_register_terms_first_part" = "When registering, you will agree to the Dinotis ";
+"label_register_terms_second_part" = " & acknowledge that our Privacy Notice applies.";
+"link_login_here" = "Already have an account? ";
+"link_login_here_highlighted" = "Login here";
+"label_send_otp" = "Send OTP";
+
+"title_register_creator" = "Register Creator";
+"description_register_creator" = "Enter the mobile number and invitation code that was previously received";
+"hint_invitation_code" = "Enter Invitation Code";
+"alert_invitation_code_invalid" = "*The invitation code you entered is invalid";
+"link_request_invitation_code" = "Don't have an invite code yet?";
+"label_join_now" = "Join Now";
+
+"title_country_picker" = "Select Country";
+"hint_country_picker" = "Search Country";
+"link_country_picker" = "Reset Default";
+
+"title_otp_send_wa" = "Via Whatsapp";
+"description_otp_send_wa" = "We will send OTP via Whatsapp";
+"title_otp_send_sms" = "Via SMS";
+"description_otp_send_sms" = "We will send OTP via SMS";
+
+"hint_send_otp" = "Enter the OTP code that was sent to this number";
+"alert_send_otp_invalid" = "*The OTP code that you entered is invalid";
+"hint_resend_otp" = "OTP code not entered yet?";
+"link_resend_otp" = "Resend (%lld seconds)";
+"link_resend_otp_active" = "Resend";
+
+"title_form_register" = "Complete Personal Data";
+"label_form_name" = "Name";
+"hint_form_name" = "Use your real name";
+"alert_form_name_character_invalid" = "*The number of letters does not match";
+"alert_form_name_character_minimum" = "*Min 3 characters";
+"label_form_password" = "Password";
+"hint_form_password" = "Enter Password…";
+"label_form_repassword" = "Repeat Password";
+"hint_form_repassword" = "Repeat Password…";
+"alert_form_repassword_not_match" = "*The password that you entered does not match";
+"label_form_username" = "Username";
+"hint_form_username" = "Enter username";
+"alert_form_username_taken" = "*Username has been used by another creator";
+"label_form_bio" = "Bio";
+"hint_form_bio" = "Enter Bio";
+"label_form_profession" = "Profession";
+"hint_form_profession" = "Choose your Profession";
+"label_save" = "Save";
+
+"title_form_register_dialog_success" = "Personal Data Saved Successfully";
+"description_form_register_dialog_success" = "Thank you for completing your personal data";
+"label_close" = "Close";
+
+"title_forgot_password" = "Forgot password";
+"description_forgot_password" = "Enter a valid phone number, an OTP will be sent to reset your password";
+"title_change_password" = "Change Password";
+"description_change_password" = "Enter a new password to change your old password";
+"hint_new_password" = "Enter New Password";
+"hint_new_repassword" = "Repeat New Password";
+"alert_new_repassword_not_match" = "*The password you entered does not match";
+
+"title_change_password_dialog_success" = "Password Changed Successfully";
+"description_change_password_dialog_success" = "Congratulations, your password has been successfully updated";
+
+"label_your_coin" = "Your Coins";
+"label_add_coin" = "Add Coins";
+"description_add_coin" = "Coin ini hanya dapat digunakan untuk melakukan transaksi di dalam aplikasi DINOTIS dan tidak bisa ditarik tunai";
+
+"tab_profile" = "Profile";
+"description_setup_account" = "Account settings";
+"label_edit_profile" = "Edit Profile";
+"label_followed_creator" = "Your Preferred Creator";
+"label_change_password" = "Change Password";
+"label_help" = "Help";
+"label_logout" = "Logout";
+
+"title_followed_creator" = "Your Choosen Creator";
+
+"title_edit_profile" = "Edit Profile";
+"label_form_phone" = "Phone number";
+"label_change" = "Change";
+"label_change_now" = "Change Now";
+
+"title_change_old_password" = "Change Password";
+"link_forgot_old_password" = "Forgot Old Password?";
+"label_form_old_password" = "Old Password";
+"hint_form_old_password" = "Enter old password";
+"alert_form_old_password_character_minimum" = "*Min %lld characters";
+"label_form_new_password" = "New password";
+"hint_form_new_password" = "Enter new password";
+"alert_form_new_password_character_minimum" = "*Min %lld characters";
+"label_form_new_repassword" = "Repeat New Password";
+"hint_form_new_repassword" = "Re-enter the new password";
+"alert_form_new_repassword_character_minimum" = "*Min %lld characters";
+
+"title_change_phone" = "Change Phone Number";
+"description_change_phone" = "Enter your new phone number. An OTP code will be sent to your new phone number";
+
+"title_payment_success" = "Cool, your payment was successful!";
+"label_invoice" = "Invoices Number";
+"label_order_name" = "Order Name";
+"label_payment_method" = "Payment Method";
+"label_payment_total" = "Total Payment";
+"label_done" = "Done";
+
+"title_history_coin" = "Coin History";
+"title_no_history_coin" = "No coin transactions yet";
+"tab_all" = "All";
+"tab_coin_income" = "Coin In";
+"tab_coin_outcome" = "Coin Out";
+"ok_text" = "Okay";
+"return_text" = "Return";
+"attention_text" = "Attention";
+
+"tab_session" = "Session";
+"tab_creator" = "Creator";
+
+"notification_title" = "Notification";
+"notification_general_tab_text" = "General";
+"notification_transaction_tab_text" = "Transaction";
+"notification_empty_title" = "No Notification Yet...";
+"notification_transaction_empty_title" = "No Transaction Notification Yet...";
+"notification_empty_description" = "You haven't new notification now...";
+"notification_transaction_empty_description" = "You haven't new transaction notification now...";
+"notification_read_all" = "Read All";
+
+"step_payment_done" = "Payment Completed";
+"step_waiting_for_session" = "Waiting for Session";
+"step_session_start" = "Session Started";
+"step_session_done" = "Session Ended";
+"step_waiting_confirmation" = "Waiting for Creator's Confirmation";
+"step_set_session_time" = "Setting Session Time";
+"video_call_rules" = "Video Call Rules";
+"participant" = "Participants";
+"group_session_label_with_emoji" = "🗣️ Group Session";
+"private_session_label_with_emoji" = "⚡ Private Session";
+"group_session_participant_title" = "Participant in This Group Call Session";
+"private_session_participant_title" = "Participant in This Private Call Session";
+"need_help_question" = "Need help?";
+"contact_us_label" = "Contact us";
+"start_now_label" = "Start Now";
+"me_label" = "Me";
+"and_more_participant" = "And %lld other participants";
+"not_confirmed_text" = "Unconfirmed";
+"give_review_label" = "Give a Review";
+"detail_schedule_title" = "Your Schedule Status";
+"video_call_detail_title" = "Video Call Details";
+"booking_ratecard_title" = "Service Bookings";
+"booking_ratecard_show_full_text" = "Show more";
+"booking_ratecard_hide_full_text" = "Hide";
+"booking_rate_card_message_subtitle" = "* Please input the day and time for the Private Call that you wish to schedule.";
+"minute_in_duration" = "%lld Minutes";
+"private_video_call_label" = "Private Video Call";
+"price_label" = "Price";
+"note_for_creator_placeholder" = "Masukkan pesan untuk kreator di sini...";
+"note_for_creator_title" = "Pesan";
+"next_label" = "Next";
+"limited_quota_label" = "🔥 Limited quota";
+"cancel_label" = "Cancel";
+"pay_label" = "Bayar";
+"in_app_purchase_label" = "In-App Purchase";
+"other_payment_method_title" = "Other payment method";
+"other_payment_method_description" = "You can choose other payment method";
+"payment_confirmation_title" = "Payment Confirmation";
+"promo_code_title" = "Enter your promo code";
+"promo_code_label" = "Promo Code";
+"enter_label" = "Enter";
+"payment_label" = "Payment";
+"fee_sub_total_label" = "Sub-total";
+"fee_application" = "Application Fee";
+"fee_service" = "Service Fee";
+"total_label" = "Total";
+"payment_promo_not_found" = "Promo code not found";
+"apple_pay_text" = "Apple Pay";
+"discount_label" = "Discount";
+"continue_payment_label" = "Continue Payment";
+"session_completed" = "Sessions Completed";
+"in_app_purchase_error_trx" = "Can't make transaction.";
+
+"cancel_payment_question" = "Want to cancel the payment?";
+"cancel_payment_title_question" = "Are you sure want to cancel this payment?";
+"cancel_payment_description" = "By canceling, this order data will be lost.";
+"cancel_payment_confirmation" = "Sure, I want to cancel";
+
+"logout_title_question" = "You want to logout?";
+"logout_description" = "Don't take too long... Dinotis will miss you.";
+
+"see_details_label" = "See Details";
+"detail_payment_title" = "Payment Details";
+
+"withdraw_error_amount_over" = "The transaction exceeds the maximum limit";
+"withdraw_error_less" = "The transaction is less than Rp50.000";
+"withdraw_error_over_balance" = "The transaction exceeds the balance";
+
+"invoice_item_name" = "Item Name";
+"invoice_failed_payment" = "Oopss, your payment is failed!";
+"general_order_again" = "Order Again";
+"detail_payment_cancel_confirmation" = "Yes, I want to cancel";
+"profile_choosen_creator" = "Your Choosen Creator";
+"choosen_creator_empty" = "You didn't add choosen creator";
+"profession_management" = "Management";
+"management_name" = "Managed By ";
+"search_placeholder" = "Find some sessions, creators or management here...";
+"search_recommendation_title" = "Search recommendations";
+"search_related_creator_title" = "Related Creators";
+"search_related_session_title" = "Related Sessions";
+"search_see_all_label" = "See all";
+"search_general_not_found" = "Oopss... Seems like what you're looking for doesn't exist yet!";
+"search_tell_us_label" = "Tell Us";
+"search_creator_not_found_title" = "The creator you're looking for doesn't exist";
+"search_creator_not_found_desc" = "Let's find another creator!";
+"search_session_not_found_title" = "There are no sessions that match the search yet";
+"search_session_not_found_desc" = "Let's find another session!";
+"search_text" = "Search";
+
+"talent_detail_session" = "Session";
+"talent_detail_follower" = "Follower";
+"talent_detail_rating" = "Rating";
+"talent_detail_follow" = "Follow";
+"talent_detail_following" = "Following";
+"talent_detail_information" = "Information";
+"talent_detail_services" = "Services";
+"talent_detail_review" = "Reviews";
+"talent_detail_about_me" = "About Me";
+"talent_detail_gallery" = "Gallery";
+"talent_detail_empty_review_title" = "Woops, this creator haven't reviews yet";
+"talent_detail_empty_review_content" = "Don't forget to give review, for you who was joined this creator session ☺️💜";
+"talent_detail_available_sessions" = "Available Sessions";
+
+"see_text" = "See";
+"free_text" = "Free";
+
+"bundling_text" = "Bundling Package";
+"session_value_text" = "%lld Session";
+"bundling_session" = "Bundling Session";
+"see_bundling" = "See Bundling";
+"total_session_value" = "Total %lld Session";
+"booking_text" = "Booking";
+"request_session" = "Request Session";
+"gallery_empty" = "Doesn't added gallery yet";
+
+"schedule_today_agenda" = "Today's Agenda";
+"schedule_tab_waiting" = "Waiting for Payment";
+"schedule_tab_upcoming" = "Upcoming";
+"schedule_tab_cancel" = "Canceled";
+"schedule_empty_today_agenda" = "There are no agendas for today";
+"schedule_empty_session_title" = "Oopss, your session is still empty";
+"schedule_empty_session_desc" = "Let's find some sessions that you like!";
+"schedule_search_session_label" = "Find a Session";
+"total_price_label" = "Total Price";
+"payment_failed_text" = "Payment Failed";
+"pay_now_label" = "Pay Now";
+"your_comment_title" = "Your Comment";
+"your_comment_placeholder" = "Write your comments here...";
+"send_review_label" = "Send Review";
+"review_success_title" = "Your Review Has Been Submitted Successfully";
+"review_success_message" = "Thanks for submitting a review to the creator";
+
+"resend_label" = "Resend";
+"see_agenda_label" = "See Agenda";
+
+"alert_success_change_profile_title" = "Profile Updated Successfully";
+"alert_success_change_profile_message" = "Cool, your personal data has been successfully updated";
+"alert_failed_change_profile_title" = "Failed to Update Profile";
+"alert_failed_change_profile_message" = "Your personal data failed to update, please try again";
+
+"alert_failed_change_password_title" = "Failed to Change Password";
+"alert_failed_change_password_message" = "An error occurred, your password failed to update";
+
+"alert_failed_give_review_title" = "Failed to Send Your Review";
+"alert_failed_give_review_message" = "Failed to send your review to the creator, please try again";
+
+"alert_success_request_session_title" = "Service/Session Requested Successfully";
+"alert_success_request_session_message" = "Your service request was successfully sent to the creator";
+"alert_failed_request_session_title" = "Failed to Request Service/Session";
+"alert_failed_request_session_message" = "An error occurred while requesting the service/session, please try again to request the service/session";
+
+"alert_success_booking_title" = "Yeay! Session Booked Successfully";
+"alert_success_booking_message" = "The session you booked has been added to your agenda";
+"alert_failed_booking_title" = "Oops! Failed to Book The Session";
+"alert_failed_booking_message" = "Failed to book the session, please try again";
+
+"alert_success_follow_title" = "Yeay! Successfully Following This Creator";
+"alert_success_follow_message" = "Creators you follow will appear in your list of preferred creators";
+"alert_failed_follow_title" = "Failed to Follow This Creator";
+"alert_failed_follow_message" = "An error occurred when following this creator";
+
+"alert_success_change_phone_title" = "Yeay! Your Phone Number was Changed Successfully";
+"alert_success_change_phone_message" = "You have successfully changed your mobile number to";
+"alert_failed_change_phone_title" = "Oops! Failed to Change Your Phone Number";
+"alert_failed_change_phone_message" = "An error occurred, failed to change your phone number";
+
+"alert_session_expired" = "Your session has expired, please log in again.";
+
+"session_card_booked" = "Already Booked";
+"list_management_label" = "List Management";
+
+"attachments_text" = "Attachments";
+"general_revenue_purpose" = "Revenue Purpose";
+"general_private_wallet" = "Personal Wallet";
+"url_link_text" = "URL Link";
+"add_url_link_label" = "Add URL Link";
+"delete_url_link_label" = "Delete URL Link";
+"url_link_title_placeholder" = "URL Link Title";
+"see_additional_menu_label" = "See Additional Menu";
+"hide_additional_menu_label" = "Hide Additional Menu";
+
+"empty_file_message" = "Oops.. The file you are looking for was not found :(";
+"invalid_url" = "Please input valid url format";

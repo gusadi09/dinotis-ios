@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import DinotisDesignSystem
 
 struct ChipsView: View {
 	@Binding var categoryList: [Categories]
@@ -65,7 +66,7 @@ struct Chips: View {
 		
 		HStack {
 			Text(titleKey)
-				.font(.montserratSemiBold(size: UIDevice.current.userInterfaceIdiom == .pad ? 14 : 10))
+				.font(.robotoMedium(size: UIDevice.current.userInterfaceIdiom == .pad ? 14 : 10))
 		}
 		.padding(5)
 		.background(

@@ -7,6 +7,7 @@
 
 import Foundation
 import Moya
+import DinotisData
 
 extension MoyaProvider {
 	static func defaultProvider() -> MoyaProvider {

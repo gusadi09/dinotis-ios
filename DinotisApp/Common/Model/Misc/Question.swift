@@ -19,8 +19,8 @@ struct QuestionResponse: Codable, Hashable {
     let meetingId: String?
     let userId: String?
     let isAnswered: Bool?
-    let createdAt: String?
-    let updatedAt: String?
+    let createdAt: Date?
+    let updatedAt: Date?
     let user: Users?
     
     static func == (lhs: QuestionResponse, rhs: QuestionResponse) -> Bool {

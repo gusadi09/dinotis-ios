@@ -9,6 +9,6 @@ import Foundation
 
 
 struct MeetingEndCheckResponse: Codable {
-	let endAt: String?
+	let endAt: Date?
 	let isEnd: Bool?
 }

@@ -7,12 +7,12 @@ import TwilioSyncClient
 
 class SyncUserDocument: NSObject, SyncObjectConnecting, ObservableObject {
 	let speakerInvitePublisher = PassthroughSubject<Void, Never>()
-	var uniqueName: String!
+	var uniqueName: String?
 	var errorHandler: ((Error) -> Void)?
 	private var document: TWSDocument?
 	
 	func connect(client: TwilioSyncClient, completion: @escaping (Error?) -> Void) {
-		guard let options = TWSOpenOptions.open(withSidOrUniqueName: uniqueName) else { return }
+        guard let options = TWSOpenOptions.open(withSidOrUniqueName: uniqueName.orEmpty()) else { return }
 		
 		client.openDocument(with: options, delegate: self) { [weak self] result, document in
 			guard let document = document else {

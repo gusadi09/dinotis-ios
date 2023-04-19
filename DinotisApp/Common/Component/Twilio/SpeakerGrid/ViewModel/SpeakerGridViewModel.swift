@@ -7,6 +7,7 @@
 
 import TwilioVideo
 import Combine
+import DinotisData
 
 /// Subscribes to room and participant state changes to provide speaker state for the UI to display in a grid
 class SpeakerGridViewModel: ObservableObject {
@@ -77,6 +78,7 @@ class SpeakerGridViewModel: ObservableObject {
 				guard let self = self, !self.pages.isEmpty else { return }
 
 				self.pages[0].speakerPage[0] = self.speakerVideoViewModelFactory.makeSpeaker(participant: participant)
+				self.updateSpeaker(self.speakerVideoViewModelFactory.makeSpeaker(participant: participant))
 				
 			}
 			.store(in: &subscriptions)
@@ -91,7 +93,11 @@ class SpeakerGridViewModel: ObservableObject {
 			.store(in: &subscriptions)
 		
 		roomManager.remoteParticipantDisconnectPublisher
-			.sink { [weak self] participant in self?.removeParticipant(identity: participant.identity) }
+			.sink {
+				[weak self] participant in
+				self?.removeParticipant(identity: participant.identity)
+				self?.removeSpeaker(with: participant.identity)
+			}
 			.store(in: &subscriptions)
 		
 		roomManager.remoteParticipantChangePublisher
@@ -112,7 +118,6 @@ class SpeakerGridViewModel: ObservableObject {
 
 		if StateObservable.shared.spotlightedIdentity == StateObservable.shared.twilioUserIdentity {
 			self.pages[0].speakerPage[0] = self.pages[indexPath.section].speakerPage[indexPath.item]
-		} else {
 			self.updateParticipant(self.pages[indexPath.section].speakerPage[indexPath.item])
 		}
 
@@ -184,9 +189,13 @@ class SpeakerGridViewModel: ObservableObject {
 		}
 	}
 
-	private func updateSpeaker(_ speaker: SpeakerVideoViewModel) {
+	func updateSpeaker(_ speaker: SpeakerVideoViewModel) {
 		if let index = onscreenSpeakers.firstIndex(of: speaker) {
 			onscreenSpeakers[index] = speaker
+
+			onscreenSpeakers = onscreenSpeakers.sorted(by: {
+				$0.dominantSpeakerStartTime > $1.dominantSpeakerStartTime
+			})
 		}
 	}
 

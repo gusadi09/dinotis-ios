@@ -8,6 +8,7 @@
 import Combine
 import TwilioLivePlayer
 import Foundation
+import DinotisData
 
 final class PrivateStreamManager: ObservableObject {
     enum State {
@@ -19,7 +20,7 @@ final class PrivateStreamManager: ObservableObject {
     let errorPublisher = PassthroughSubject<Error, Never>()
     @Published var state = State.disconnected
     @Published var player: Player?
-    @Published var roomManager: PrivateRoomManager!
+    @Published var roomManager: PrivateRoomManager?
     private var accessToken: String?
     @Published var roomSID: String?
     private var subscriptions = Set<AnyCancellable>()
@@ -68,7 +69,7 @@ final class PrivateStreamManager: ObservableObject {
     }
     
     func disconnect() {
-        roomManager.disconnect()
+        roomManager?.disconnect()
         player = nil
         state = .disconnected
     }
@@ -81,15 +82,15 @@ final class PrivateStreamManager: ObservableObject {
                     self.handleError(error)
                     
                 case .finished:
-                    print("success")
+                    break
                 }
             } receiveValue: { response in
                 self.meetingId = meetingId
                 self.accessToken = response.token.orEmpty()
                 self.roomSID = response.roomSid.orEmpty()
                 self.stateObservable.twilioAccessToken = response.token.orEmpty()
-
-				self.connectRoom(accessToken: response.token.orEmpty())
+                
+                self.connectRoom(accessToken: response.token.orEmpty())
             }
             .store(in: &subscriptions)
     }
@@ -97,7 +98,7 @@ final class PrivateStreamManager: ObservableObject {
     private func connectRoom(accessToken: String) {
         switch stateObservable.twilioRole {
         default:
-            roomManager.connect(roomName: meetingId, accessToken: accessToken)
+            roomManager?.connect(roomName: meetingId, accessToken: accessToken)
         }
     }
     

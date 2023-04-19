@@ -7,17 +7,17 @@
 
 import SwiftUI
 import CurrencyFormatter
-import SwiftKeychainWrapper
+import DinotisDesignSystem
 
 struct ProfileTalentScheduleCard: View {
 	@State var isShowMenu = false
 	
 	@Binding var items: Meeting
 	@Binding var currentUserId: String
+
+	let isFromBundleDetail: Bool
 	
 	var onTapButton: () -> Void
-	
-	@ObservedObject var detailMeetingVM = DetailMeetingViewModel.shared
 	
 	var body: some View {
 		ZStack(alignment: .topTrailing) {
@@ -32,7 +32,7 @@ struct ProfileTalentScheduleCard: View {
 					
 					if items.endedAt != nil {
 						Text(NSLocalizedString("ended_meeting_card_label", comment: ""))
-							.font(.custom(FontManager.Montserrat.regular, size: 12))
+							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 							.padding(.vertical, 3)
 							.padding(.horizontal, 8)
@@ -42,11 +42,11 @@ struct ProfileTalentScheduleCard: View {
 				}
 				
 				Text(items.title.orEmpty())
-					.font(Font.custom(FontManager.Montserrat.bold, size: 14))
+					.font(.robotoBold(size: 14))
 					.foregroundColor(.black)
 				
 				Text(items.meetingDescription.orEmpty())
-					.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+					.font(.robotoRegular(size: 12))
 					.foregroundColor(.black)
 					.padding(.bottom, 10)
 				
@@ -56,9 +56,9 @@ struct ProfileTalentScheduleCard: View {
 						.scaledToFit()
 						.frame(height: 18)
 					
-					if let dateStart = dateISOFormatter.date(from: items.startAt.orEmpty()) {
-						Text(dateFormatter.string(from: dateStart))
-							.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+					if let dateStart = items.startAt {
+                        Text(DateUtils.dateFormatter(dateStart, forFormat: .EEEEddMMMMyyyy))
+							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 					}
 				}
@@ -69,10 +69,10 @@ struct ProfileTalentScheduleCard: View {
 						.scaledToFit()
 						.frame(height: 18)
 					
-					if let timeStart = dateISOFormatter.date(from: items.startAt.orEmpty()),
-						 let timeEnd = dateISOFormatter.date(from: items.endAt.orEmpty()) {
-						Text("\(timeFormatter.string(from: timeStart)) - \(timeFormatter.string(from: timeEnd))")
-							.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+					if let timeStart = items.startAt,
+						 let timeEnd = items.endAt {
+						Text("\(DateUtils.dateFormatter(timeStart, forFormat: .HHmm)) - \(DateUtils.dateFormatter(timeEnd, forFormat: .HHmm))")
+							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 					}
 				}
@@ -85,12 +85,12 @@ struct ProfileTalentScheduleCard: View {
 							.frame(height: 18)
 						
 						Text("\(String.init(participantCount()))/\(String.init(items.slots.orZero())) \(NSLocalizedString("participant", comment: ""))")
-							.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 						
 						if items.slots.orZero() > 1 && !(items.isLiveStreaming ?? false) {
 							Text(NSLocalizedString("group", comment: ""))
-								.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+								.font(.robotoRegular(size: 12))
 								.foregroundColor(.black)
 								.padding(.vertical, 5)
 								.padding(.horizontal)
@@ -103,7 +103,7 @@ struct ProfileTalentScheduleCard: View {
 							
 						} else if items.isLiveStreaming ?? false {
 							Text(LocaleText.liveStreamText)
-								.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+								.font(.robotoRegular(size: 12))
 								.foregroundColor(.black)
 								.padding(.vertical, 5)
 								.padding(.horizontal)
@@ -115,7 +115,7 @@ struct ProfileTalentScheduleCard: View {
 								)
 						} else {
 							Text(NSLocalizedString("private", comment: ""))
-								.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+								.font(.robotoRegular(size: 12))
 								.foregroundColor(.black)
 								.padding(.vertical, 5)
 								.padding(.horizontal)
@@ -142,88 +142,79 @@ struct ProfileTalentScheduleCard: View {
 
 					if items.price == "0" {
 						Text(NSLocalizedString("free_text", comment: ""))
-							.font(.montserratBold(size: 14))
-							.foregroundColor(.primaryViolet)
+							.font(.robotoBold(size: 14))
+							.foregroundColor(.DinotisDefault.primary)
 					} else {
 						VStack(alignment: .leading) {
 							Text("\(Int.init(items.price.orEmpty()) ?? 0)")
-								.font(.montserratBold(size: 14))
-								.foregroundColor(.primaryViolet)
+								.font(.robotoBold(size: 14))
+								.foregroundColor(.DinotisDefault.primary)
 						}
 					}
 
 					Spacer()
 
-					Button(action: {
-						onTapButton()
-					}, label: {
-						if items.endedAt != nil || items.slots.orZero() == items.bookings.filter({ items in
-							items.bookingPayment?.paidAt == nil &&
-							items.bookingPayment?.failedAt == nil
-						}).count || !isStillShowing(date: dateISOFormatter.date(from: items.endAt.orEmpty()) ?? Date()) && !isHaveMeeting() {
-							Text(NSLocalizedString("schedule_not_available", comment: ""))
-								.font(Font.custom(FontManager.Montserrat.semibold, size: 12))
-								.foregroundColor(.black.opacity(0.6))
-								.padding()
-								.padding(.horizontal, 10)
-								.background(
-									Color(.lightGray).opacity(0.4)
-								)
-								.cornerRadius(8)
-
-						} else if items.userID == currentUserId {
-							EmptyView()
-
-						} else if isHaveMeeting() {
-							Text(NSLocalizedString("view_details", comment: ""))
-								.font(Font.custom(FontManager.Montserrat.semibold, size: 12))
-								.foregroundColor(Color("btn-stroke-1"))
-								.padding()
-								.padding(.horizontal, 10)
-								.background(Color("btn-color-1"))
-								.cornerRadius(8)
-								.overlay(
-									RoundedRectangle(cornerRadius: 8)
-										.stroke(Color("btn-stroke-1"), lineWidth: 1.0)
-								)
-
-						} else if items.slots == items.bookings.filter({ items in
-							items.bookingPayment?.paidAt != nil
-						}).count && !isHaveMeeting() {
-							Text(NSLocalizedString("full_room", comment: ""))
-								.font(Font.custom(FontManager.Montserrat.semibold, size: 12))
-								.foregroundColor(.black.opacity(0.6))
-								.padding()
-								.padding(.horizontal, 10)
-								.background(
-									Color(.lightGray).opacity(0.4)
-								)
-								.cornerRadius(8)
-
-						} else {
-							Text(NSLocalizedString("booking", comment: ""))
-								.font(Font.custom(FontManager.Montserrat.semibold, size: 12))
-								.foregroundColor(.white)
-								.padding()
-								.padding(.horizontal, 10)
-								.background(
-									Color("btn-stroke-1")
-								)
-								.cornerRadius(8)
-						}
-					})
-					.buttonStyle(.plain)
-					.disabled(
-						(items.endedAt != nil ||
-						 items.slots == items.bookings.filter({ items in
-							 items.bookingPayment?.paidAt == nil &&
-							 items.bookingPayment?.failedAt == nil
-						 }).count ||
-						 !isStillShowing(date: dateISOFormatter.date(from: items.endAt.orEmpty()).orCurrentDate()) ||
-						 items.slots == items.bookings.filter({ items in
-							 items.bookingPayment?.paidAt != nil
-						 }).count) && !isHaveMeeting()
-					)
+					if !isFromBundleDetail {
+						Button(action: {
+							onTapButton()
+						}, label: {
+							if items.endedAt != nil || items.slots.orZero() == items.participants.orZero() || !isStillShowing(date: items.endAt.orCurrentDate()) && !(items.isAlreadyBooked ?? false)  {
+								Text(NSLocalizedString("schedule_not_available", comment: ""))
+									.font(.robotoMedium(size: 12))
+									.foregroundColor(.black.opacity(0.6))
+									.padding()
+									.padding(.horizontal, 10)
+									.background(
+										Color(.lightGray).opacity(0.4)
+									)
+									.cornerRadius(8)
+								
+							} else if items.userID == currentUserId {
+								EmptyView()
+								
+							} else if items.isAlreadyBooked ?? false  {
+								Text(NSLocalizedString("view_details", comment: ""))
+									.font(.robotoMedium(size: 12))
+									.foregroundColor(Color("btn-stroke-1"))
+									.padding()
+									.padding(.horizontal, 10)
+									.background(Color("btn-color-1"))
+									.cornerRadius(8)
+									.overlay(
+										RoundedRectangle(cornerRadius: 8)
+											.stroke(Color("btn-stroke-1"), lineWidth: 1.0)
+									)
+								
+                            } else if items.slots == items.participants.orZero() && items.isAlreadyBooked ?? false {
+								Text(NSLocalizedString("full_room", comment: ""))
+									.font(.robotoMedium(size: 12))
+									.foregroundColor(.black.opacity(0.6))
+									.padding()
+									.padding(.horizontal, 10)
+									.background(
+										Color(.lightGray).opacity(0.4)
+									)
+									.cornerRadius(8)
+								
+							} else {
+								Text(NSLocalizedString("booking", comment: ""))
+                                    .font(.robotoMedium(size: 12))
+									.foregroundColor(.white)
+									.padding()
+									.padding(.horizontal, 10)
+									.background(
+										Color("btn-stroke-1")
+									)
+									.cornerRadius(8)
+							}
+						})
+						.buttonStyle(.plain)
+						.disabled(
+							(items.endedAt != nil ||
+							 items.slots == items.participants.orZero() ||
+							 !isStillShowing(date: items.endAt.orCurrentDate())) && !(items.isAlreadyBooked ?? false)
+						)
+					}
 				}
 				.padding(.top, 10)
 			}
@@ -232,15 +223,13 @@ struct ProfileTalentScheduleCard: View {
 		.padding(.vertical, 25)
 		.background(Color.white)
 		.cornerRadius(12)
-		.shadow(color: Color("dinotis-shadow-1").opacity(0.15), radius: 10, x: 0.0, y: 0.0)
-		.padding(.horizontal)
-		.onAppear {
-			detailMeetingVM.getDetailMeeting(id: items.id.orEmpty())
-		}
+		.shadow(color: Color("dinotis-shadow-1").opacity(0.06), radius: 8, x: 0.0, y: 0.0)
 	}
 	
 	private func participantCount() -> Int {
-		items.bookings.filter({ items in items.bookingPayment?.paidAt != nil && items.bookingPayment?.failedAt == nil }).count
+		(
+			items.participants
+		).orZero()
 	}
 	
 	private func isStillShowing(date: Date) -> Bool {
@@ -254,18 +243,6 @@ struct ProfileTalentScheduleCard: View {
 		default:
 			return false
 		}
-	}
-	
-	private func isHaveMeeting() -> Bool {
-		var isUser = false
-		
-		for itemsOfBook in items.bookings.filter({ value in
-			value.userID == currentUserId && value.bookingPayment?.paidAt != nil
-		}) where currentUserId == itemsOfBook.userID {
-			isUser = true
-		}
-		
-		return isUser
 	}
 }
 

@@ -68,6 +68,7 @@ struct UnauthResponse: Codable, Error {
 	let message: String?
 	var fields: [FieldError]?
 	let error: String?
+    let errorCode: Int?
 }
 
 struct FieldError: Codable {
@@ -83,6 +84,7 @@ struct ResendOtp: Codable {
 struct ResendOTPChannel: Codable {
 	var phone: String
 	var channel: String = "whatsapp"
+	var invitationCode: String? = nil
 }
 
 struct SuccessResponse: Codable {

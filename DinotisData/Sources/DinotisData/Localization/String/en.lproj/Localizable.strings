@@ -1,0 +1,14 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Gus Adi on 16/01/23.
+  
+*/
+
+"internal_server_error_text" = "Sorry for your inconvenience, now our server is under maintenance, please try again later.";
+"cashback_coin_text" = "Yeay!! You get %@ coin cashback.";
+"cashback_percentage_text" = "Yeay!! You get %@%% cashback.";
+"discount_coin_text" = "Yeay!! You get %@ coin discount.";
+"discount_price_text" = "Yeay!! You get %@ discount.";
+"discount_percentage_text" = "Yeay!! You get %@%% discount.";

@@ -6,11 +6,18 @@
 //
 
 import Foundation
+import DinotisData
 
 struct TalentMeeting: Codable {
-	var data: [Meeting]
+	var data: TalentMeetingData?
 	let filters: FilterData?
+	let counter: String?
 	var nextCursor: Int?
+}
+
+struct TalentMeetingData: Codable {
+	let meetings: [Meeting]?
+	let bundles: [BundlingData]?
 }
 
 struct EditTalentResponse: Codable {
@@ -18,24 +25,25 @@ struct EditTalentResponse: Codable {
 	let description: String?
 	let talentAdditionalEmail: String?
 	let price: String?
-	let startAt: String?
-	let endAt: String?
+	let startAt: Date?
+	let endAt: Date?
 	let isPrivate: Bool?
 	let slots: Int?
 }
 
 struct MeetingOfTalent: Codable {
 	var id: String
-	var title, description, price, startAt: String
-	var endAt: String
-	var isPrivate: Bool
+	var title, description, price: String?
+	let startAt: Date?
+	var endAt: Date?
+	var isPrivate: Bool?
 	var isLiveStreaming: Bool?
-	var slots: Int
-	var userID: String
+	var slots: Int?
+	var userID: String?
 	var startedAt: String?
-	var endedAt: String?
-	var createdAt, updatedAt: String
-	var deletedAt: String?
+	var endedAt: Date?
+	var createdAt, updatedAt: Date?
+	var deletedAt: Date?
 	var bookings: [BookingOfTalent]?
 	
 	enum CodingKeys: String, CodingKey {
@@ -49,11 +57,13 @@ struct MeetingOfTalent: Codable {
 
 // MARK: - Booking
 struct BookingOfTalent: Codable {
-	var id, bookedAt: String
-	var canceledAt, doneAt: String?
-	var meetingID: String
-	var userID, createdAt, updatedAt: String
-	var bookingPayment: BookingPaymentOfTalent
+	var id: String
+	let bookedAt: Date?
+	var canceledAt, doneAt: Date?
+	var meetingID: String?
+	var userID: String?
+	let createdAt, updatedAt: Date?
+	var bookingPayment: BookingPaymentOfTalent?
 	
 	enum CodingKeys: String, CodingKey {
 		case id, bookedAt, canceledAt, doneAt
@@ -66,7 +76,7 @@ struct BookingOfTalent: Codable {
 // MARK: - BookingPayment
 struct BookingPaymentOfTalent: Codable {
 	var id, amount: String
-	var paidAt, failedAt: String?
+	var paidAt, failedAt: Date?
 	var bookingID: String
 	var paymentMethodID: Int
 	
@@ -81,32 +91,47 @@ struct DetailMeeting: Codable {
 	var id: String
 	var title: String?
 	var description, price: String?
-	var startAt: String?
-	var endAt: String?
+	var startAt: Date?
+	var endAt: Date?
 	var isPrivate: Bool?
 	var isLiveStreaming: Bool?
+	let participants: Int?
 	var slots: Int?
-	var userID, startedAt: String?
-	var endedAt: String?
-	var createdAt, updatedAt: String?
-	var deletedAt: String?
+	var userID: String?
+	let startedAt: Date?
+	var endedAt: Date?
+	var createdAt, updatedAt: Date?
+	var deletedAt: Date?
+	let meetingBundleId: String?
+	let meetingRequestId: String?
+	let user: User?
 	var bookings: [BookingMeeting]?
+	var participantDetails: [User]
+	let status: String?
+	let meetingRequest: MeetingRequestData?
+	let cancelOptions: [CancelOptionData]?
+    let meetingCollaborations: [MeetingCollaborationData]?
+    let meetingUrls: [MeetingURLData]?
+    let meetingUploads: [MeetingUploadData]?
+    let managementId: Int?
 	
 	enum CodingKeys: String, CodingKey {
 		case id, title
 		case description = "description"
-		case price, startAt, endAt, isPrivate, slots, isLiveStreaming
+		case price, startAt, endAt, isPrivate, slots, isLiveStreaming, participantDetails
 		case userID = "userId"
-		case startedAt, endedAt, createdAt, updatedAt, deletedAt, bookings
+		case startedAt, endedAt, createdAt, updatedAt, deletedAt, bookings, participants, meetingBundleId, meetingRequestId, meetingRequest, status, cancelOptions, user, meetingCollaborations, meetingUrls, meetingUploads, managementId
 	}
 }
 
 // MARK: - Booking
 struct BookingMeeting: Codable {
-	var id, bookedAt: String
-	var canceledAt, doneAt: String?
+	var id: String
+	let bookedAt: Date?
+	var canceledAt, doneAt: Date?
 	var meetingID: String?
-	var userID, createdAt, updatedAt: String?
+	var userID: String?
+	let createdAt, updatedAt: Date?
 	var bookingPayment: BookingPaymentTalent?
 	var user: UserTalents?
 	
@@ -120,9 +145,10 @@ struct BookingMeeting: Codable {
 
 // MARK: - BookingPayment
 struct BookingPaymentTalent: Codable {
-	var id, amount: String
-	var paidAt: String?
-	var failedAt: String?
+	var id: String
+	let amount: String?
+	var paidAt: Date?
+	var failedAt: Date?
 	var bookingID: String?
 	var paymentMethodID: Int?
 	
@@ -141,11 +167,12 @@ struct UserTalents: Codable {
 	var password: String?
 	var profilePhoto: String?
 	var profileDescription: String?
-	var emailVerifiedAt: String?
+	var emailVerifiedAt: Date?
 	var isVerified, isPasswordFilled: Bool?
 	var registeredWith: Int?
-	var lastLoginAt, professionID: String?
-	var createdAt, updatedAt: String?
+	var lastLoginAt: Date?
+	let professionID: String?
+	var createdAt, updatedAt: Date?
 	
 	enum CodingKeys: String, CodingKey {
 		case id, name, username, email, password, profilePhoto, profileDescription, emailVerifiedAt, isVerified, isPasswordFilled, registeredWith, lastLoginAt
@@ -155,14 +182,16 @@ struct UserTalents: Codable {
 }
 
 struct StartMeetingResponse: Codable {
-	var id, title, description, price: String
-	var startAt, endAt: String?
-	var isPrivate: Bool
-	var slots: Int
-	var userID, startedAt: String
-	var endedAt: String?
-	var createdAt, updatedAt: String
-	var deletedAt: String?
+	var id: String
+	let title, description, price: String?
+	var startAt, endAt: Date?
+	var isPrivate: Bool?
+	var slots: Int?
+	var userID: String?
+	let startedAt: Date?
+	var endedAt: Date?
+	var createdAt, updatedAt: Date?
+	var deletedAt: Date?
 	
 	enum CodingKeys: String, CodingKey {
 		case id, title
@@ -182,6 +211,13 @@ struct MeetingForm: Codable {
 	var endAt: String
 	var isPrivate: Bool
 	var slots: Int
+    var managementId: Int?
+  var urls: [MeetingURL]
+}
+
+struct MeetingURL: Codable {
+  var title: String
+  var url: String
 }
 
 struct MeetingRulesResponse: Codable, Hashable {

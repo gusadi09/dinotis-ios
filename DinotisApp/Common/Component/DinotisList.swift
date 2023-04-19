@@ -10,42 +10,49 @@ import Introspect
 
 struct DinotisList<Content>: View where Content: View {
 
-	private var views: Content
-	private var introspectConfig: (UITableView) -> Void
+    private var views: Content
+    private var introspectConfig: (UITableView) -> Void
+    private var refreshAction: () -> Void
 
-	init(introspectConfig: @escaping (UITableView) -> Void, @ViewBuilder content: () -> Content) {
-		self.introspectConfig = introspectConfig
-		self.views = content()
-	}
+	init(refreshAction: @escaping () -> Void = {}, introspectConfig: @escaping (UITableView) -> Void, @ViewBuilder content: () -> Content) {
+        self.refreshAction = refreshAction
+        self.introspectConfig = introspectConfig
+        self.views = content()
+    }
 
     var body: some View {
-		if #available(iOS 16.0, *) {
-			List {
-				views
-					.listRowSeparator(.hidden)
-			}
-			.listStyle(.plain)
-			.scrollContentBackground(.hidden)
+        if #available(iOS 16.0, *) {
+            List {
+                views
+                    .listRowSeparator(.hidden)
+                    .listSectionSeparator(.hidden)
+            }
+			.scrollIndicators(.hidden)
+            .listStyle(.plain)
+            .scrollContentBackground(.hidden)
+            .refreshable {
+                refreshAction()
+            }
 
-		} else {
-			List {
-				views
-			}
-			.listStyle(.plain)
-			.introspectTableView(customize: { view in
-				introspectConfig(view)
-			})
-		}
+        } else {
+            List {
+                views
+            }
+            .listStyle(.plain)
+            .introspectTableView(customize: { view in
+                introspectConfig(view)
+            })
+        }
     }
 }
 
 struct DinotisList_Previews: PreviewProvider {
     static var previews: some View {
-		DinotisList(introspectConfig: { _ in
+        DinotisList(refreshAction: {}, introspectConfig: { _ in
 
-		}) {
-			Text("Test")
-			Text("Test")
-		}
+        }) {
+            Text("Test")
+            Text("Test")
+        }
     }
 }

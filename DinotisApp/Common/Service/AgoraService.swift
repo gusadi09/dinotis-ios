@@ -16,14 +16,12 @@ class AgoraService {
 	@ObservedObject var network = Monitor.shared
 	
 	var httpHeader: HTTPHeaders = [
-		"Accept-Language": String(Locale.current.identifier.prefix(2)),
-		"Content-Type" : "application/json",
-		"Accept" : "application/json"
+		"Accept-Language": String(Locale.current.identifier.prefix(2))
 	]
 	
 	func startMeeting(with token: String, id: String, completion: @escaping ((StartMeetingResponse?, UnauthResponse?) -> Void)) {
 		httpHeader.add(.authorization(bearerToken: token))
-		
+
 		AF.request(meetRepo.startMeeting(with: id), method: .patch, headers: httpHeader)
 			.validate(statusCode: 200..<500)
 			.responseData { response in
@@ -58,6 +56,7 @@ class AgoraService {
 					do {
 						if let serverData = response.data {
 							let data = try JSONDecoder().decode(UnauthResponse.self, from: serverData)
+
 							completion(nil, data)
 						} else {
 							if self.network.status == .connected {

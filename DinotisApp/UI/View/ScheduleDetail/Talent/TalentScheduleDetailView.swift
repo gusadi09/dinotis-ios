@@ -7,15 +7,16 @@
 
 import SwiftUI
 import SwiftUITrackableScrollView
-import SwiftKeychainWrapper
 import CurrencyFormatter
 import SwiftUINavigation
 import OneSignal
+import DinotisData
+import DinotisDesignSystem
 
 struct TalentScheduleDetailView: View {
-	
-	@ObservedObject var viewModel: ScheduleDetailViewModel
-	@ObservedObject var stateObservable = StateObservable.shared
+    
+    @ObservedObject var viewModel: ScheduleDetailViewModel
+    @ObservedObject var stateObservable = StateObservable.shared
     
     @StateObject private var streamViewModel = StreamViewModel()
     @StateObject private var participantsViewModel = ParticipantsViewModel()
@@ -25,483 +26,458 @@ struct TalentScheduleDetailView: View {
     @StateObject private var speakerGridViewModel = SpeakerGridViewModel()
     @StateObject private var presentationLayoutViewModel = PresentationLayoutViewModel()
     @StateObject private var chatManager = ChatManager()
+    
+    @StateObject private var privateStreamViewModel = PrivateStreamViewModel()
+    @StateObject private var privateStreamManager = PrivateStreamManager()
+    @StateObject private var privateSpeakerSettingsManager = PrivateSpeakerSettingsManager()
+    @StateObject private var privateSpeakerViewModel = PrivateVideoSpeakerViewModel()
+    
+    @StateObject private var customerChatManager = CustomerChatManager()
+    
+    @Environment(\.presentationMode) var presentationMode
 
-	@StateObject private var privateStreamViewModel = PrivateStreamViewModel()
-	@StateObject private var privateStreamManager = PrivateStreamManager()
-	@StateObject private var privateSpeakerSettingsManager = PrivateSpeakerSettingsManager()
-	@StateObject private var privateSpeakerViewModel = PrivateVideoSpeakerViewModel()
-	
-	@ObservedObject var detailVM = DetailMeetingViewModel.shared
-	@ObservedObject var startVM = StartMeetViewModel.shared
-	
-	@ObservedObject var talentMeetingVM = TalentMeetingViewModel.shared
-	
-	@Environment(\.presentationMode) var presentationMode
+    @Environment(\.viewController) private var viewControllerHolder: ViewControllerHolder
+    
+    private var viewController: UIViewController? {
+        self.viewControllerHolder.value
+    }
+    
+    var body: some View {
+        ZStack {
+            ZStack(alignment: .top) {
+                Image.Dinotis.userTypeBackground
+                    .resizable()
+                    .edgesIgnoringSafeArea(.all)
+                    .alert(isPresented: $viewModel.isError) {
+                        Alert(
+                            title: Text(LocaleText.errorText),
+                            message: Text(viewModel.error.orEmpty()),
+                            dismissButton: .cancel(Text(LocaleText.returnText))
+                        )
+                    }
+                
+                VStack(spacing: 0) {
 
-	@Environment(\.viewController) private var viewControllerHolder: ViewControllerHolder
-	
-	private var viewController: UIViewController? {
-		self.viewControllerHolder.value
-	}
-	
-	var body: some View {
-		ZStack {
-			ZStack(alignment: .top) {
-				Image.Dinotis.userTypeBackground
-					.resizable()
-					.edgesIgnoringSafeArea(.all)
-					.alert(isPresented: $viewModel.isError) {
-						Alert(
-							title: Text(LocaleText.errorText),
-							message: Text((viewModel.error?.errorDescription).orEmpty()),
-							dismissButton: .cancel(Text(LocaleText.returnText))
-						)
-					}
-				
-				VStack(spacing: 0) {
-					Color.white.frame(height: 10)
-						.edgesIgnoringSafeArea(.all)
-						.alert(isPresented: $detailVM.isRefreshFailed) {
-							Alert(
-								title: Text(LocaleText.attention),
-								message: Text(LocaleText.sessionExpireText),
-								dismissButton: .default(Text(LocaleText.returnText), action: {
-									viewModel.backToRoot()
-									stateObservable.userType = 0
-									stateObservable.isVerified = ""
-									stateObservable.refreshToken = ""
-									stateObservable.accessToken = ""
-									stateObservable.isAnnounceShow = false
-									OneSignal.setExternalUserId("")
-								}))
+                    ZStack {
+                        HStack {
+                            Spacer()
+                            Text(LocaleText.videoCallDetailTitle)
+                                .font(.robotoBold(size: 14))
+                                .foregroundColor(.black)
+                            
+                            Spacer()
+                        }
+                        .padding()
+                        .alert(isPresented: $viewModel.isEndSuccess) {
+                            Alert(
+                                title: Text(LocaleText.successTitle),
+                                message: Text(LocaleText.successEndedMeetingText),
+                                dismissButton: .default(Text(LocaleText.returnText), action: {
+                                    self.presentationMode.wrappedValue.dismiss()
+                                }))
+                        }
+                        
+                        HStack {
+                            Button(action: {
+                                presentationMode.wrappedValue.dismiss()
+                            }, label: {
+                                Image.Dinotis.arrowBackIcon
+                                    .padding()
+                                    .background(Color.white)
+                                    .clipShape(Circle())
+                            })
+                            .padding(.leading)
+                            
+                            Spacer()
+                        }
+                        .alert(isPresented: $viewModel.isDeleteShow) {
+                            Alert(
+                                title: Text(LocaleText.attention),
+                                message: Text(LocaleText.deleteAlertText),
+                                primaryButton: .default(
+                                    Text(LocaleText.noText)
+                                ),
+                                secondaryButton: .destructive(
+                                    Text(LocaleText.yesDeleteText),
+                                    action: {
+                                        viewModel.deleteMeeting()
+                                    }
+                                )
+                            )
+                        }
+                        
+                    }
+                    .background(
+						Color.white
+							.edgesIgnoringSafeArea(.all)
+							.shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 20)
+					)
+                    
+                    RefreshableScrollViews(action: refreshList) {
+                        
+                        LazyVStack(spacing: 5) {
+                            if viewModel.isLoading {
+                                HStack {
+                                    Spacer()
+                                    ActivityIndicator(isAnimating: $viewModel.isLoading, color: .black, style: .medium)
+                                        .padding(.top)
+                                    
+                                    Spacer()
+                                }
+                            }
+                            
+                            RequestTimeline(viewModel: viewModel)
+                                .environmentObject(customerChatManager)
+                            
+                            if let data = viewModel.dataMeeting {
+                                TalentDetailScheduleCardView(
+                                    data: .constant(data),
+                                    onTapEdit: {
+                                        viewModel.routeToEditRateCardSchedule()
+                                    }, onTapDelete: {
+                                        viewModel.isDeleteShow.toggle()
+                                    }, onTapEnd: {
+                                        viewModel.isEndShow.toggle()
+                                    }
+                                )
+                                .valueChanged(value: viewModel.conteOffset) { val in
+                                    viewModel.tabColor = val > 0 ? Color.white : Color.clear
+                                }
+                                .alert(isPresented: $viewModel.isRefreshFailed) {
+                                    Alert(
+                                        title: Text(LocaleText.attention),
+                                        message: Text(LocaleText.sessionExpireText),
+                                        dismissButton: .default(Text(LocaleText.returnText), action: {
+                                            viewModel.backToRoot()
+                                            stateObservable.userType = 0
+                                            stateObservable.isVerified = ""
+                                            stateObservable.refreshToken = ""
+                                            stateObservable.accessToken = ""
+                                            stateObservable.isAnnounceShow = false
+                                            OneSignal.setExternalUserId("")
+                                        }))
+                                }
+                                
+                                if data.endedAt != nil {
+                                    Button(action: {
+                                        if let waurl = URL(string: "https://wa.me/6281318506068") {
+                                            if UIApplication.shared.canOpenURL(waurl) {
+                                                UIApplication.shared.open(waurl, options: [:], completionHandler: nil)
+                                            }
+                                        }
+                                    }, label: {
+                                        HStack {
+                                            Image.Dinotis.whatsappLogo
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(height: 28)
+                                            
+                                            Text(LocaleText.needHelpText)
+                                                .font(.robotoRegular(size: 14))
+                                                .foregroundColor(.black)
+                                                .underline()
+                                            +
+                                            Text(LocaleText.contactUsText)
+                                                .font(.robotoBold(size: 14))
+                                                .foregroundColor(.black)
+                                                .underline()
+                                            
+                                            Spacer()
+                                            
+                                            Image.Dinotis.chevronLeftCircleIcon
+                                        }
+                                        .padding()
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .foregroundColor(.white)
+                                                .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 0)
+                                        )
+                                        .padding(.horizontal)
+                                    })
+                                    
+                                    VStack {
+                                        Text(LocaleText.revenueSummaryText)
+                                            .font(.robotoBold(size: 16))
+                                        
+                                        HStack {
+                                            if let dataParticipant = data.participants {
+                                                Text("\(dataParticipant)x")
+                                                    .font(.robotoBold(size: 14))
+                                                
+                                                Text(LocaleText.generalParticipant)
+                                                    .font(.robotoRegular(size: 14))
+                                                
+                                                Spacer()
+                                                
+                                                Text(data.price.orEmpty().toCurrency())
+                                                    .font(.robotoBold(size: 14))
+                                            }
+                                        }
+                                        .padding(.top, 15)
+                                    }
+                                    .padding()
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .foregroundColor(.white)
+                                            .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 0)
+                                    )
+                                    .padding(.horizontal)
+                                    .padding(.bottom)
+                                    
+                                } else {
+                                    Button(action: {
+                                        if let waurl = URL(string: "https://wa.me/6281318506068") {
+                                            if UIApplication.shared.canOpenURL(waurl) {
+                                                UIApplication.shared.open(waurl, options: [:], completionHandler: nil)
+                                            }
+                                        }
+                                    }, label: {
+                                        HStack {
+                                            Image.talentProfileWhatsappIcon
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(height: 32)
+                                            
+                                            Text(LocaleText.needHelpText)
+                                                .font(.robotoRegular(size: 14))
+                                                .foregroundColor(.black)
+                                                .underline()
+                                            +
+                                            Text(LocaleText.contactUsText)
+                                                .font(.robotoBold(size: 14))
+                                                .foregroundColor(.black)
+                                                .underline()
+                                            
+                                            Spacer()
+                                            
+                                            Image.Dinotis.chevronLeftCircleIcon
+                                        }
+                                        .padding()
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .foregroundColor(.white)
+                                                .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 0)
+                                        )
+                                        .padding(.horizontal)
+                                    })
+                                    .padding(.bottom)
+                                }
+                                
+                            }
+                        }
+                    }
+
+					VStack(spacing: 0) {
+
+						if viewModel.dataMeeting?.meetingRequest == nil {
+							if let dataPrice = viewModel.dataMeeting {
+								HStack {
+									Text(LocaleText.totalIncomeText)
+										.font(.robotoRegular(size: 10))
+										.foregroundColor(.black)
+
+									Spacer()
+
+									Text(viewModel.totalPrice.numberString.toCurrency())
+										.font(.robotoMedium(size: 14))
+										.foregroundColor(.black)
+										.onAppear {
+											viewModel.totalPrice = (Int(dataPrice.price.orEmpty()).orZero()) * (dataPrice.bookings?.filter({ item in
+												item.bookingPayment?.paidAt != nil
+											}) ?? []).count
+										}
+								}
+								.padding(.horizontal)
+								.padding(.vertical, 10)
+								.background(Color.secondaryViolet.edgesIgnoringSafeArea(.all))
+								.isHidden(!(dataPrice.slots.orZero() > 1), remove: !(dataPrice.slots.orZero() > 1))
+							}
 						}
-					
-					ZStack {
+
 						HStack {
-							Spacer()
-							Text(NSLocalizedString("video_call_details", comment: ""))
-								.font(.montserratBold(size: 14))
-								.foregroundColor(.black)
-							
-							Spacer()
+                            if viewModel.dataMeeting?.meetingRequest != nil && !(viewModel.dataMeeting?.meetingRequest?.isConfirmed ?? false) {
+                                if viewModel.dataMeeting?.meetingRequest?.isAccepted ?? false {
+                                    HStack {
+                                        HStack(spacing: 7) {
+                                            Button {
+												viewModel.confirmationSheet.toggle()
+                                            } label: {
+                                                HStack {
+                                                    Spacer()
+                                                    
+                                                    Text(LocaleText.cancelText)
+                                                        .font(.robotoMedium(size: 12))
+                                                        .foregroundColor(.black)
+                                                    
+                                                    Spacer()
+                                                }
+                                                .padding()
+                                                .background(Color.secondaryViolet)
+                                                .overlay(
+                                                    RoundedRectangle(cornerRadius: 12)
+                                                        .stroke(Color.DinotisDefault.primary, lineWidth: 1)
+                                                )
+                                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                            }
+                                            
+                                            Button {
+                                                viewModel.routeToEditRateCardSchedule()
+                                            } label: {
+                                                HStack {
+                                                    Spacer()
+                                                    
+                                                    Text(LocaleText.setTime)
+                                                        .font(.robotoMedium(size: 12))
+                                                        .foregroundColor(.white)
+                                                    
+                                                    Spacer()
+                                                }
+                                                .padding()
+                                                .background(Color.DinotisDefault.primary)
+                                                .cornerRadius(12)
+                                            }
+                                            
+                                        }
+                                    }
+                                    .padding()
+                                    .background(Color.white.edgesIgnoringSafeArea(.all))
+                                    .isHidden(
+                                        !(viewModel.dataMeeting?.meetingRequest?.isConfirmed ?? false) && !(viewModel.dataMeeting?.meetingRequest?.isAccepted ?? false),
+                                        remove: !(viewModel.dataMeeting?.meetingRequest?.isConfirmed ?? false)
+                                    )
+                                }
+							} else {
+								HStack {
+									HStack(spacing: 10) {
+										Image.Dinotis.coinIcon
+											.resizable()
+											.scaledToFit()
+											.frame(height: 15)
+
+										if let dataPrice = viewModel.dataMeeting {
+											if (dataPrice.price.orEmpty()) == "0" {
+												Text(LocaleText.freeTextLabel)
+													.font(.robotoBold(size: 14))
+													.foregroundColor(.DinotisDefault.primary)
+											} else {
+												if dataPrice.slots.orZero() > 1 {
+													Text("\(dataPrice.price.orEmpty().toPriceFormat()) \(LocaleText.personSuffix)")
+														.font(.robotoBold(size: 14))
+														.foregroundColor(.DinotisDefault.primary)
+												} else {
+													Text(dataPrice.price.orEmpty().toPriceFormat())
+														.font(.robotoBold(size: 14))
+														.foregroundColor(.DinotisDefault.primary)
+												}
+											}
+										}
+									}
+									.padding(.vertical, 10)
+
+									Spacer()
+
+									if viewModel.dataMeeting?.endedAt == nil {
+                                        Button(action: {
+                                            viewModel.startPresented.toggle()
+                                        }, label: {
+                                            HStack {
+                                                Text(LocaleText.startNowText)
+                                                    .font(.robotoMedium(size: 14))
+													.foregroundColor(.white)
+													.padding(10)
+													.padding(.horizontal, 5)
+													.padding(.vertical, 5)
+											}
+                                            .background(Color.DinotisDefault.primary)
+											.clipShape(RoundedRectangle(cornerRadius: 12))
+										})
+									}
+								}
+								.padding()
+								.background(Color.white.edgesIgnoringSafeArea(.all))
+							}
+
 						}
-						.padding()
-						.alert(isPresented: $viewModel.isEndSuccess) {
+						.alert(isPresented: $viewModel.isDeleteSuccess) {
 							Alert(
 								title: Text(LocaleText.successTitle),
-								message: Text(NSLocalizedString("ended_meeting_success", comment: "")),
+								message: Text(LocaleText.successDeleteMeetingText),
 								dismissButton: .default(Text(LocaleText.returnText), action: {
 									self.presentationMode.wrappedValue.dismiss()
 								}))
 						}
-						
-						HStack {
-							Button(action: {
-								presentationMode.wrappedValue.dismiss()
-							}, label: {
-								Image.Dinotis.arrowBackIcon
-									.padding()
-									.background(Color.white)
-									.clipShape(Circle())
-							})
-							.padding(.leading)
-							
-							Spacer()
-						}
-						.alert(isPresented: $viewModel.isDeleteShow) {
-							Alert(
-								title: Text(LocaleText.attention),
-								message: Text(LocaleText.deleteAlertText),
-								primaryButton: .default(
-									Text(LocaleText.noText)
-								),
-								secondaryButton: .destructive(
-									Text(LocaleText.yesDeleteText),
-									action: {
-										viewModel.deleteMeeting()
-									}
-								)
-							)
-						}
-						
-					}
-					.padding(.top, 25)
-					.background(Color.white.shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 20))
-					
-					RefreshableScrollView(action: refreshList) {
-						if viewModel.isLoading {
-							HStack {
-								Spacer()
-								ActivityIndicator(isAnimating: $viewModel.isLoading, color: .black, style: .medium)
-									.padding(.top)
-								
-								Spacer()
-							}
-						}
-						
-						if let data = detailVM.data {
-							TalentDetailScheduleCardView(
-								data: .constant(data),
-								onTapEdit: {
-									viewModel.goToEdit.toggle()
-									viewModel.meetingForm = MeetingForm(
-										id: data.id,
-										title: data.title.orEmpty(),
-										description: data.description.orEmpty(),
-										price: Int(data.price.orEmpty()).orZero(),
-										startAt: data.startAt.orEmpty(),
-										endAt: data.endAt.orEmpty(),
-										isPrivate: data.isPrivate ?? true,
-										slots: data.slots.orZero()
+
+						if let meetId = viewModel.dataMeeting?.id {
+							NavigationLink(
+								unwrapping: $viewModel.route,
+								case: /HomeRouting.videoCall,
+								destination: {viewModel in
+									PrivateVideoCallView(
+										randomId: $viewModel.randomId,
+										meetingId: .constant(meetId),
+										viewModel: viewModel.wrappedValue
 									)
-								}, onTapDelete: {
-									viewModel.isDeleteShow.toggle()
-								}, onTapEnd: {
-									viewModel.isEndShow.toggle()
-								}
-							)
-							.valueChanged(value: viewModel.conteOffset) { val in
-								viewModel.tabColor = val > 0 ? Color.white : Color.clear
-							}
-							
-							if data.endedAt != nil {
-								Button(action: {
-									if let waurl = URL(string: "https://wa.me/6281318506068") {
-										if UIApplication.shared.canOpenURL(waurl) {
-											UIApplication.shared.open(waurl, options: [:], completionHandler: nil)
-										}
-									}
-								}, label: {
-									HStack {
-										Image.Dinotis.whatsappLogo
-											.resizable()
-											.scaledToFit()
-											.frame(height: 28)
-										
-										Text(NSLocalizedString("need_help", comment: "")).font(.montserratRegular(size: 14)).foregroundColor(.black).underline()
-										+
-										Text(NSLocalizedString("contact_us", comment: "")).font(.montserratBold(size: 14)).foregroundColor(.black).underline()
-										
-										Spacer()
-										
-										Image.Dinotis.chevronLeftCircleIcon
-									}
-									.padding()
-									.background(
-										RoundedRectangle(cornerRadius: 12)
-											.foregroundColor(.white)
-											.shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 0)
-									)
-									.padding(.horizontal)
-								})
-								
-								VStack {
-									Text(NSLocalizedString("revenue_summary", comment: ""))
-										.font(.montserratBold(size: 16))
-									
-									HStack {
-										if let dataParticipant = data.bookings?.filter({ value in
-											value.bookingPayment?.paidAt != nil
-										}) {
-											Text("\(dataParticipant.count)x")
-												.font(.montserratBold(size: 14))
-											
-											Text(LocaleText.generalParticipant)
-												.font(.montserratRegular(size: 14))
-											
-											Spacer()
-											
-											Text(data.price.orEmpty().toCurrency())
-												.font(.montserratBold(size: 14))
-										}
-									}
-									.padding(.top, 15)
-								}
-								.padding()
-								.background(
-									RoundedRectangle(cornerRadius: 12)
-										.foregroundColor(.white)
-										.shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 0)
-								)
-								.padding(.horizontal)
-								.padding(.bottom, 120)
-								
-							} else {
-								Button(action: {
-									if let waurl = URL(string: "https://wa.me/6281318506068") {
-										if UIApplication.shared.canOpenURL(waurl) {
-											UIApplication.shared.open(waurl, options: [:], completionHandler: nil)
-										}
-									}
-								}, label: {
-									HStack {
-										Image.Dinotis.whatsappLogo
-											.resizable()
-											.scaledToFit()
-											.frame(height: 28)
-										
-										Text(NSLocalizedString("need_help", comment: "")).font(.montserratRegular(size: 14)).foregroundColor(.black).underline()
-										+
-										Text(NSLocalizedString("contact_us", comment: "")).font(.montserratBold(size: 14)).foregroundColor(.black).underline()
-										
-										Spacer()
-										
-										Image.Dinotis.chevronLeftCircleIcon
-									}
-									.padding()
-									.background(
-										RoundedRectangle(cornerRadius: 12)
-											.foregroundColor(.white)
-											.shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 0)
-									)
-									.padding(.horizontal)
-								})
-								.padding(.bottom, 120)
-							}
-							
-						}
-					}
-					.alert(isPresented: $viewModel.isEndShow) {
-						Alert(
-							title: Text(LocaleText.attention),
-							message: Text(NSLocalizedString("ended_meeting_label", comment: "")),
-							primaryButton: .default(
-								Text(LocaleText.noText)
-							),
-							secondaryButton: .destructive(
-								Text(LocaleText.yesDeleteText),
-								action: {
-									viewModel.endMeeting()
-								}
-							)
-						)
-					}
-				}
-				.edgesIgnoringSafeArea(.all)
-				.valueChanged(value: detailVM.success, onChange: { value in
-					DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
-						withAnimation(.spring()) {
-							if value {
-								self.viewModel.isLoading = false
-							}
-						}
-					})
-				})
-				.valueChanged(value: detailVM.isLoading) { value in
-					DispatchQueue.main.async {
-						withAnimation(.spring()) {
-							if value {
-								self.viewModel.isLoading = true
-							}
-						}
-					}
-				}
-				
-				NavigationLink(
-					destination: EditTalentMeetingView(meetingForm: $viewModel.meetingForm, meetingId: $viewModel.bookingId),
-					isActive: $viewModel.goToEdit,
-					label: {
-						EmptyView()
-					})
-				
-				VStack(spacing: 0) {
-					Spacer()
-						.alert(isPresented: $startVM.isRefreshFailed) {
-							Alert(
-								title: Text(LocaleText.attention),
-								message: Text(LocaleText.sessionExpireText),
-								dismissButton: .default(Text(LocaleText.returnText), action: {
-									viewModel.backToRoot()
-									stateObservable.userType = 0
-									stateObservable.isVerified = ""
-									stateObservable.refreshToken = ""
-									stateObservable.accessToken = ""
-									stateObservable.isAnnounceShow = false
-									OneSignal.setExternalUserId("")
-								}))
-						}
-					
-					if let dataPrice = detailVM.data {
-						HStack {
-							Text(NSLocalizedString("total_income", comment: ""))
-								.font(.montserratRegular(size: 10))
-								.foregroundColor(.black)
-							
-							Spacer()
-							
-							Text(viewModel.totalPrice.numberString.toCurrency())
-								.font(.montserratSemiBold(size: 14))
-								.foregroundColor(.black)
-								.onAppear {
-									viewModel.totalPrice = (Int(dataPrice.price.orEmpty()).orZero()) * (dataPrice.bookings?.filter({ item in
-										item.bookingPayment?.paidAt != nil
-									}) ?? []).count
-								}
-						}
-						.padding(.horizontal)
-						.padding(.vertical, 10)
-						.background(Color.secondaryViolet)
-						.isHidden(!(dataPrice.slots.orZero() > 1), remove: !(dataPrice.slots.orZero() > 1))
-					}
-					
-					HStack {
-						HStack(spacing: 10) {
-							Image.Dinotis.coinIcon
-								.resizable()
-								.scaledToFit()
-								.frame(height: 15)
-							
-							if let dataPrice = detailVM.data {
-								if (dataPrice.price.orEmpty()) == "0" {
-									Text(NSLocalizedString("free_text", comment: ""))
-										.font(.montserratBold(size: 14))
-										.foregroundColor(.primaryViolet)
-								} else {
-									if dataPrice.slots.orZero() > 1 {
-										Text("\(dataPrice.price.orEmpty().toPriceFormat()) \(NSLocalizedString("person_suffix", comment: ""))")
-											.font(.montserratBold(size: 14))
-											.foregroundColor(.primaryViolet)
-									} else {
-										Text(dataPrice.price.orEmpty().toPriceFormat())
-											.font(.montserratBold(size: 14))
-											.foregroundColor(.primaryViolet)
-									}
-								}
-							}
-						}
-						.padding(.vertical, 10)
-						
-						Spacer()
-							.alert(isPresented: $talentMeetingVM.isRefreshFailed) {
-								Alert(
-									title: Text(LocaleText.attention),
-									message: Text(LocaleText.sessionExpireText),
-									dismissButton: .default(Text(LocaleText.returnText), action: {
-										viewModel.backToRoot()
-										stateObservable.userType = 0
-										stateObservable.isVerified = ""
-										stateObservable.refreshToken = ""
-										stateObservable.accessToken = ""
-										stateObservable.isAnnounceShow = false
-										OneSignal.setExternalUserId("")
-									}))
-							}
-						
-						if detailVM.data?.endedAt == nil {
-							Button(action: {
-								if (detailVM.data?.startAt).orEmpty().toDate(format: .utcV2).orCurrentDate().addingTimeInterval(-3600) > Date() {
-									viewModel.isRestricted.toggle()
-								} else {
-									viewModel.startPresented.toggle()
-								}
-							}, label: {
-								HStack {
-									Text(NSLocalizedString("start_now", comment: ""))
-										.font(.montserratSemiBold(size: 14))
-										.foregroundColor(.white)
-										.padding(10)
-										.padding(.horizontal, 5)
-										.padding(.vertical, 5)
-								}
-								.background(Color.primaryViolet)
-								.clipShape(RoundedRectangle(cornerRadius: 8))
-							})
-						}
-						
-					}
-					.padding()
-					.background(Color.white)
-					.alert(isPresented: $viewModel.isDeleteSuccess) {
-						Alert(
-							title: Text(LocaleText.successTitle),
-							message: Text(NSLocalizedString("meeting_deleted", comment: "")),
-							dismissButton: .default(Text(LocaleText.returnText), action: {
-								self.talentMeetingVM.getMeeting()
-								self.presentationMode.wrappedValue.dismiss()
-							}))
-					}
-					
-					if let meetId = detailVM.data?.id {
-						NavigationLink(
-							unwrapping: $viewModel.route,
-							case: /HomeRouting.videoCall,
-							destination: {viewModel in
-								PrivateVideoCallView(
-									randomId: $viewModel.randomId,
-									meetingId: .constant(meetId),
-									viewModel: viewModel.wrappedValue
-								)
 									.environmentObject(privateStreamViewModel)
 									.environmentObject(privateStreamManager)
 									.environmentObject(privateSpeakerViewModel)
 									.environmentObject(privateSpeakerSettingsManager)
-							},
-							onNavigate: {_ in},
+								},
+								onNavigate: {_ in},
+								label: {
+									EmptyView()
+								}
+							)
+							.alert(isPresented: $viewModel.successConfirm) {
+								Alert(
+									title: Text(LocaleText.successTitle),
+									message: Text(LocaleText.successConfirmRequestText),
+									dismissButton: .default(Text(LocaleText.okText), action: {
+										presentationMode.wrappedValue.dismiss()
+									})
+								)
+							}
+
+							NavigationLink(
+								unwrapping: $viewModel.route,
+								case: /HomeRouting.twilioLiveStream,
+								destination: {viewModel in
+									TwilioGroupVideoCallView(
+										viewModel: viewModel.wrappedValue,
+										meetingId: .constant(meetId), speaker: SpeakerVideoViewModel()
+									)
+									.environmentObject(streamViewModel)
+									.environmentObject(participantsViewModel)
+									.environmentObject(streamManager)
+									.environmentObject(speakerGridViewModel)
+									.environmentObject(presentationLayoutViewModel)
+									.environmentObject(speakerSettingsManager)
+									.environmentObject(hostControlsManager)
+									.environmentObject(chatManager)
+								},
+								onNavigate: {_ in},
+								label: {
+									EmptyView()
+								}
+							)
+							.alert(isPresented: $viewModel.isRestricted) {
+								Alert(
+									title: Text(LocaleText.attention),
+									message: Text(LocaleText.oneHourRestrictText),
+									dismissButton: .default(Text(LocaleText.okText))
+								)
+							}
+						}
+
+						NavigationLink(
+							destination: EmptyView(),
 							label: {
 								EmptyView()
-							}
-						)
-                        NavigationLink(
-                            unwrapping: $viewModel.route,
-                            case: /HomeRouting.twilioLiveStream,
-                            destination: {viewModel in
-															TwilioGroupVideoCallView(
-                                    viewModel: viewModel.wrappedValue,
-                                    meetingId: .constant(meetId), speaker: SpeakerVideoViewModel()
-                                )
-                                .environmentObject(streamViewModel)
-                                .environmentObject(participantsViewModel)
-                                .environmentObject(streamManager)
-                                .environmentObject(speakerGridViewModel)
-                                .environmentObject(presentationLayoutViewModel)
-                                .environmentObject(speakerSettingsManager)
-                                .environmentObject(hostControlsManager)
-                                .environmentObject(chatManager)
-                            },
-                            onNavigate: {_ in},
-                            label: {
-                                EmptyView()
-                            }
-                        )
-						.alert(isPresented: $viewModel.isRestricted) {
-							Alert(
-								title: Text(LocaleText.attention),
-								message: Text(NSLocalizedString("one_hour_restricted", comment: "")),
-								dismissButton: .default(Text("OK"))
-							)
-						}
+							})
 					}
-					
-					Color.white
-						.frame(height: 10)
-						.alert(isPresented: $viewModel.isRefreshFailed) {
-							Alert(
-								title: Text(LocaleText.attention),
-								message: Text(LocaleText.sessionExpireText),
-								dismissButton: .default(Text(LocaleText.returnText), action: {
-									viewModel.backToRoot()
-									stateObservable.userType = 0
-									stateObservable.isVerified = ""
-									stateObservable.refreshToken = ""
-									stateObservable.accessToken = ""
-									stateObservable.isAnnounceShow = false
-									OneSignal.setExternalUserId("")
-								}))
-						}
-					
-					NavigationLink(
-						destination: EmptyView(),
-						label: {
-							EmptyView()
-						})
-				}
-				.edgesIgnoringSafeArea(.all)
-                .onChange(of: detailVM.success) { newValue in
-                    if newValue {
+					.onChange(of: viewModel.successDetail) { _ in
+						guard let meet = viewModel.dataMeeting else {return}
 
-						guard let meet = detailVM.data else {return}
-
-						if detailVM.data?.isPrivate ?? false {
+						if meet.isPrivate ?? false {
 							privateStreamManager.meetingId = meet.id
 
 							let localParticipant = PrivateLocalParticipantManager()
@@ -540,164 +516,953 @@ struct TalentScheduleDetailView: View {
 							presentationLayoutViewModel.configure(roomManager: roomManager, speakersMap: speakersMap, speakerVideoViewModelFactory: speakerVideoViewModelFactory)
 						}
 					}
-				}
-				
-			}
-			
-			LoadingView(isAnimating: .constant(true))
-				.isHidden(
-					!startVM.isLoading || (!detailVM.isLoading && detailVM.data == nil),
-					remove: !startVM.isLoading || (!detailVM.isLoading && detailVM.data == nil)
+
+                }
+                .valueChanged(value: viewModel.successDetail, onChange: { value in
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                        withAnimation(.spring()) {
+                            if value {
+                                self.viewModel.isLoading = false
+                            }
+                        }
+                    })
+                })
+                .valueChanged(value: viewModel.isLoadingDetail) { value in
+                    DispatchQueue.main.async {
+                        withAnimation(.spring()) {
+                            if value {
+                                self.viewModel.isLoading = value
+                            }
+                        }
+                    }
+                }
+                
+                NavigationLink(
+                    unwrapping: $viewModel.route,
+                    case: /HomeRouting.editRateCardSchedule,
+                    destination: { viewModel in
+                        TalentEditRateCardScheduleView(viewModel: viewModel.wrappedValue)
+                    },
+                    onNavigate: { _ in },
+                    label: {
+                        EmptyView()
+                    }
+                )
+
+				NavigationLink(
+					unwrapping: $viewModel.route,
+					case: /HomeRouting.editScheduleMeeting,
+					destination: { viewModel in
+						EditTalentMeetingView(viewModel: viewModel.wrappedValue)
+					},
+					onNavigate: { _ in },
+					label: {
+						EmptyView()
+					}
 				)
-		}
-		.navigationBarTitle(Text(""))
-		.navigationBarHidden(true)
-		.dinotisSheet(isPresented: $viewModel.startPresented, options: .hideDismissButton, fraction: 0.7, content: {
-			VStack(spacing: 15) {
-				Image("img-popout")
-					.resizable()
-					.scaledToFit()
-					.frame(height: 200)
+				.alert(isPresented: $viewModel.isEndShow) {
+					Alert(
+						title: Text(LocaleText.attention),
+						message: Text(LocaleText.endedMeetingLabelText),
+						primaryButton: .default(
+							Text(LocaleText.noText)
+						),
+						secondaryButton: .destructive(
+							Text(LocaleText.yesDeleteText),
+							action: {
+								viewModel.endMeeting()
+							}
+						)
+					)
+				}
+                
+            }
+			.sheet(unwrapping: $viewModel.route, case: /HomeRouting.scheduleNegotiationChat, onDismiss: {
+				customerChatManager.hasUnreadMessage = false
+			}) { viewModel in
+				ScheduleNegotiationChatView(viewModel: viewModel.wrappedValue)
+					.environmentObject(customerChatManager)
+			}
+			.onChange(of: viewModel.tokenConversation) { newValue in
+				customerChatManager.connect(accessToken: newValue, conversationName: (viewModel.dataMeeting?.meetingRequest?.id).orEmpty())
+			}
+			.onDisappear {
+				customerChatManager.disconnect()
+			}
+            
+        }
+        .navigationBarTitle(Text(""))
+        .navigationBarHidden(true)
+        .sheet(isPresented: $viewModel.startPresented, content: {
+			if #available(iOS 16.0, *) {
+				VStack(spacing: 15) {
+					if viewModel.isLoadingStart {
+						ActivityIndicator(isAnimating: $viewModel.isLoadingStart, color: .black, style: .medium)
+					} else {
+						Image.Dinotis.popoutImage
+							.resizable()
+							.scaledToFit()
+							.frame(height: 150)
 
-				VStack(spacing: 35) {
-					VStack(spacing: 10) {
-						Text(NSLocalizedString("start_meeting_alert", comment: ""))
-							.font(Font.custom(FontManager.Montserrat.bold, size: 14))
-							.foregroundColor(.black)
-
-						Text(NSLocalizedString("talent_start_call", comment: ""))
-							.font(Font.custom(FontManager.Montserrat.regular, size: 12))
-							.foregroundColor(.black)
-							.multilineTextAlignment(.center)
-					}
-
-					HStack(spacing: 15) {
-						Button(action: {
-							viewModel.startPresented.toggle()
-						}, label: {
-							HStack {
-								Spacer()
-								Text(NSLocalizedString("cancel", comment: ""))
-									.font(Font.custom(FontManager.Montserrat.semibold, size: 12))
+						VStack(spacing: 35) {
+							VStack(spacing: 10) {
+								Text(LocaleText.startMeetingAlertTitle)
+									.font(.robotoBold(size: 14))
 									.foregroundColor(.black)
-								Spacer()
-							}
-							.padding()
-							.background(Color("btn-color-1"))
-							.cornerRadius(8)
-							.overlay(
-								RoundedRectangle(cornerRadius: 8)
-									.stroke(Color("btn-stroke-1"), lineWidth: 1.0)
-							)
-						})
 
-						Button(action: {
-
-							guard let detailMeet = detailVM.data else { return }
-
-							startVM.startMeet(by: detailMeet.id)
-
-							if detailMeet.slots.orZero() <= 1 {
-								viewModel.routeToVideoCall(meeting: viewModel.convertToUserMeet(meet: detailMeet))
-							} else if detailMeet.slots.orZero() > 1 {
-								viewModel.routeToTwilioLiveStream(
-									meeting: viewModel.convertToUserMeet(meet: detailMeet)
-								)
+								Text(LocaleText.talentStartCallLabel)
+									.font(.robotoRegular(size: 12))
+									.foregroundColor(.black)
+									.multilineTextAlignment(.center)
 							}
 
-						}, label: {
-							HStack {
-								Spacer()
-								Text(NSLocalizedString("start_now", comment: ""))
-									.font(Font.custom(FontManager.Montserrat.semibold, size: 12))
-									.foregroundColor(.white)
-								Spacer()
+							HStack(spacing: 15) {
+								Button(action: {
+									viewModel.startPresented.toggle()
+								}, label: {
+									HStack {
+										Spacer()
+										Text(LocaleText.cancelText)
+											.font(.robotoMedium(size: 12))
+											.foregroundColor(.black)
+										Spacer()
+									}
+									.padding()
+									.background(Color.secondaryViolet)
+									.cornerRadius(12)
+									.overlay(
+										RoundedRectangle(cornerRadius: 12)
+											.stroke(Color.DinotisDefault.primary, lineWidth: 1.0)
+									)
+								})
+
+								Button(action: {
+
+									viewModel.startMeeting()
+
+								}, label: {
+									HStack {
+										Spacer()
+
+
+										Text(LocaleText.startNowText)
+											.font(.robotoMedium(size: 12))
+											.foregroundColor(.white)
+
+										Spacer()
+									}
+									.padding()
+									.background(Color.DinotisDefault.primary)
+									.cornerRadius(12)
+								})
 							}
-							.padding()
-							.background(Color("btn-stroke-1"))
-							.cornerRadius(8)
-						})
+						}
 					}
 				}
+					.padding()
+					.padding(.vertical)
+					.presentationDetents([.fraction(0.8), .large])
+			} else {
+				VStack(spacing: 15) {
+					if viewModel.isLoadingStart {
+						ActivityIndicator(isAnimating: $viewModel.isLoadingStart, color: .black, style: .medium)
+					} else {
+						Image.Dinotis.popoutImage
+							.resizable()
+							.scaledToFit()
+							.frame(height: 150)
+
+						VStack(spacing: 35) {
+							VStack(spacing: 10) {
+								Text(LocaleText.startMeetingAlertTitle)
+									.font(.robotoBold(size: 14))
+									.foregroundColor(.black)
+
+								Text(LocaleText.talentStartCallLabel)
+									.font(.robotoRegular(size: 12))
+									.foregroundColor(.black)
+									.multilineTextAlignment(.center)
+							}
+
+							HStack(spacing: 15) {
+								Button(action: {
+									viewModel.startPresented.toggle()
+								}, label: {
+									HStack {
+										Spacer()
+										Text(LocaleText.cancelText)
+											.font(.robotoMedium(size: 12))
+											.foregroundColor(.black)
+										Spacer()
+									}
+									.padding()
+									.background(Color.secondaryViolet)
+									.cornerRadius(12)
+									.overlay(
+										RoundedRectangle(cornerRadius: 12)
+											.stroke(Color.DinotisDefault.primary, lineWidth: 1.0)
+									)
+								})
+
+								Button(action: {
+
+									viewModel.startMeeting()
+
+								}, label: {
+									HStack {
+										Spacer()
+
+
+										Text(LocaleText.startNowText)
+											.font(.robotoMedium(size: 12))
+											.foregroundColor(.white)
+
+										Spacer()
+									}
+									.padding()
+									.background(Color.DinotisDefault.primary)
+									.cornerRadius(12)
+								})
+							}
+						}
+					}
+				}
+					.padding()
+					.padding(.vertical)
 			}
-		})
-		.onAppear(perform: {
-			detailVM.getDetailMeeting(id: viewModel.bookingId)
+
+        })
+        .onAppear(perform: {
+            viewModel.getDetailMeeting()
             stateObservable.spotlightedIdentity = ""
-			StateObservable.shared.cameraPositionUsed = .front
-			StateObservable.shared.twilioRole = ""
-			StateObservable.shared.twilioUserIdentity = ""
-			StateObservable.shared.twilioAccessToken = ""
-		})
-		.onDisappear(perform: {
-			viewModel.startPresented = false
-		})
-		.dinotisSheet(isPresented: $viewModel.presentDelete, options: .hideDismissButton, content: {
-			VStack(spacing: 15) {
-				Image("remove-user-img")
-					.resizable()
-					.scaledToFit()
-					.frame(height: 184)
-
-				VStack(spacing: 35) {
-					VStack(spacing: 10) {
-						Text(NSLocalizedString("delete_participant_alert", comment: ""))
-							.font(Font.custom(FontManager.Montserrat.bold, size: 14))
-							.foregroundColor(.black)
-
-						Text(NSLocalizedString("delete_participant", comment: ""))
-							.font(Font.custom(FontManager.Montserrat.regular, size: 12))
-							.foregroundColor(.black)
-							.multilineTextAlignment(.center)
-					}
-
-					HStack(spacing: 15) {
-						Button(action: {
-							viewModel.presentDelete.toggle()
-						}, label: {
-							HStack {
-								Spacer()
-								Text(NSLocalizedString("cancel", comment: ""))
-									.font(Font.custom(FontManager.Montserrat.semibold, size: 12))
-									.foregroundColor(.black)
-								Spacer()
-							}
-							.padding()
-							.background(Color("btn-color-1"))
-							.cornerRadius(8)
-							.overlay(
-								RoundedRectangle(cornerRadius: 8)
-									.stroke(Color("btn-stroke-1"), lineWidth: 1.0)
-							)
-						})
-
-						Button(action: {
-
-						}, label: {
-							HStack {
-								Spacer()
-								Text(NSLocalizedString("delete_text", comment: ""))
-									.font(Font.custom(FontManager.Montserrat.semibold, size: 12))
-									.foregroundColor(.white)
-								Spacer()
-							}
-							.padding()
-							.background(Color("btn-stroke-1"))
-							.cornerRadius(8)
-						})
-					}
-				}
+            StateObservable.shared.cameraPositionUsed = .front
+            StateObservable.shared.twilioRole = ""
+            StateObservable.shared.twilioUserIdentity = ""
+            StateObservable.shared.twilioAccessToken = ""
+        })
+        .onDisappear(perform: {
+            viewModel.startPresented = false
+        })
+		.sheet(isPresented: $viewModel.confirmationSheet, content: {
+			if #available(iOS 16.0, *) {
+				DeclinedSheet(viewModel: viewModel, isOnSheet: true)
+			} else {
+				DeclinedSheet(viewModel: viewModel, isOnSheet: false)
 			}
 		})
-	}
-	
-	private func refreshList() {
-		detailVM.getDetailMeeting(id: viewModel.bookingId)
-	}
+        .sheet(isPresented: $viewModel.presentDelete, content: {
+			if #available(iOS 16.0, *) {
+				VStack(spacing: 15) {
+					Image.Dinotis.removeUserImage
+						.resizable()
+						.scaledToFit()
+						.frame(height: 184)
+
+					VStack(spacing: 35) {
+						VStack(spacing: 10) {
+							Text(LocaleText.deleteParticipantAlertTitle)
+								.font(.robotoBold(size: 14))
+								.foregroundColor(.black)
+
+							Text(LocaleText.deleteparticipantSubLabel)
+								.font(.robotoRegular(size: 12))
+								.foregroundColor(.black)
+								.multilineTextAlignment(.center)
+						}
+
+						HStack(spacing: 15) {
+							Button(action: {
+								viewModel.presentDelete.toggle()
+							}, label: {
+								HStack {
+									Spacer()
+									Text(LocaleText.cancelText)
+										.font(.robotoMedium(size: 12))
+										.foregroundColor(.black)
+									Spacer()
+								}
+								.padding()
+								.background(Color.secondaryViolet)
+								.cornerRadius(12)
+								.overlay(
+									RoundedRectangle(cornerRadius: 12)
+										.stroke(Color.DinotisDefault.primary, lineWidth: 1.0)
+								)
+							})
+
+							Button(action: {
+
+							}, label: {
+								HStack {
+									Spacer()
+									Text(LocaleText.deleteText)
+										.font(.robotoMedium(size: 12))
+										.foregroundColor(.white)
+									Spacer()
+								}
+								.padding()
+								.background(Color.DinotisDefault.primary)
+								.cornerRadius(12)
+							})
+						}
+					}
+				}
+					.padding()
+					.padding(.vertical)
+					.presentationDetents([.fraction(0.8), .large])
+			} else {
+				VStack(spacing: 15) {
+					Image.Dinotis.removeUserImage
+						.resizable()
+						.scaledToFit()
+						.frame(height: 184)
+
+					VStack(spacing: 35) {
+						VStack(spacing: 10) {
+							Text(LocaleText.deleteParticipantAlertTitle)
+								.font(.robotoBold(size: 14))
+								.foregroundColor(.black)
+
+							Text(LocaleText.deleteparticipantSubLabel)
+								.font(.robotoRegular(size: 12))
+								.foregroundColor(.black)
+								.multilineTextAlignment(.center)
+						}
+
+						HStack(spacing: 15) {
+							Button(action: {
+								viewModel.presentDelete.toggle()
+							}, label: {
+								HStack {
+									Spacer()
+									Text(LocaleText.cancelText)
+										.font(.robotoMedium(size: 12))
+										.foregroundColor(.black)
+									Spacer()
+								}
+								.padding()
+								.background(Color.secondaryViolet)
+								.cornerRadius(12)
+								.overlay(
+									RoundedRectangle(cornerRadius: 12)
+										.stroke(Color.DinotisDefault.primary, lineWidth: 1.0)
+								)
+							})
+
+							Button(action: {
+
+							}, label: {
+								HStack {
+									Spacer()
+									Text(LocaleText.deleteText)
+										.font(.robotoMedium(size: 12))
+										.foregroundColor(.white)
+									Spacer()
+								}
+								.padding()
+								.background(Color.DinotisDefault.primary)
+								.cornerRadius(12)
+							})
+						}
+					}
+				}
+					.padding()
+					.padding(.vertical)
+			}
+
+        })
+    }
+    
+    private func refreshList() {
+        viewModel.getDetailMeeting()
+    }
 }
 
 struct TalentScheduleDetailView_Previews: PreviewProvider {
-	static var previews: some View {
-		TalentScheduleDetailView(viewModel: ScheduleDetailViewModel(bookingId: "", backToRoot: {}, backToHome: {}))
+    static var previews: some View {
+        TalentScheduleDetailView(viewModel: ScheduleDetailViewModel(isActiveBooking: true, bookingId: "", backToRoot: {}, backToHome: {}, isDirectToHome: false))
+    }
+}
+
+extension TalentScheduleDetailView {
+
+	struct DeclinedSheet: View {
+
+		@ObservedObject var viewModel: ScheduleDetailViewModel
+		@State var selectedReason = [CancelOptionData]()
+		@State var report = ""
+		let isOnSheet: Bool
+
+		var body: some View {
+			VStack(spacing: 25) {
+				HStack {
+					Text(LocaleText.cancelConfirmationText)
+						.font(.robotoBold(size: 14))
+						.foregroundColor(.black)
+
+					Spacer()
+
+					Button(action: {
+						viewModel.confirmationSheet = false
+					}, label: {
+						Image(systemName: "xmark")
+							.resizable()
+							.scaledToFit()
+							.frame(height: 10)
+							.font(.system(size: 10, weight: .bold, design: .rounded))
+							.foregroundColor(.black)
+					})
+				}
+
+				LazyVStack(spacing: 15) {
+					ForEach(viewModel.cancelOptionData.unique(), id: \.id) { item in
+						Button {
+							if isSelected(item: item, arrSelected: selectedReason) {
+								if let itemToRemoveIndex = selectedReason.firstIndex(of: item) {
+									selectedReason.remove(at: itemToRemoveIndex)
+								}
+							} else {
+								selectedReason.append(item)
+							}
+						} label: {
+							HStack(alignment: .top) {
+								if isSelected(item: item, arrSelected: selectedReason) {
+									Image.Dinotis.filledChecklistIcon
+										.resizable()
+										.scaledToFit()
+										.frame(height: 15)
+								} else {
+									Image.Dinotis.emptyChecklistIcon
+										.resizable()
+										.scaledToFit()
+										.frame(height: 15)
+								}
+
+								Text(item.name.orEmpty())
+									.font(.robotoRegular(size: 12))
+									.foregroundColor(.black)
+									.multilineTextAlignment(.leading)
+
+								Spacer()
+							}
+						}
+					}
+
+					if selectedReason.contains(where: { $0.id == 5 }) {
+						TextField(LocaleText.reportNotesPlaceholder, text: $report)
+							.font(.robotoRegular(size: 12))
+							.foregroundColor(.black)
+							.accentColor(.black)
+							.disableAutocorrection(true)
+							.autocapitalization(.none)
+							.padding(10)
+							.background(
+								RoundedRectangle(cornerRadius: 12)
+									.foregroundColor(.white)
+							)
+							.clipped()
+							.overlay(
+								RoundedRectangle(cornerRadius: 12).stroke(Color(.systemGray5), lineWidth: 1)
+							)
+							.shadow(color: Color.dinotisShadow.opacity(0.06), radius: 40, x: 0.0, y: 0.0)
+					}
+				}
+
+				if isOnSheet {
+					Spacer()
+				}
+
+				Button {
+					Task {
+						let selected = selectedReason.compactMap({ $0.id })
+						await viewModel.confirmRequest(
+							isAccepted: false,
+							reasons: selected,
+							otherReason: report
+						)
+					}
+				} label: {
+					HStack {
+
+						Spacer()
+
+						Text(LocaleText.sendText)
+							.font(.robotoMedium(size: 12))
+							.foregroundColor(selectedReason.isEmpty || (selectedReason.contains(where: { $0.id == 5 }) && report.isEmpty) ? Color(.systemGray2) : .white)
+
+						Spacer()
+					}
+					.padding()
+					.background(
+						RoundedRectangle(cornerRadius: 12)
+							.foregroundColor(selectedReason.isEmpty || (selectedReason.contains(where: { $0.id == 5 }) && report.isEmpty) ? Color(.systemGray5) : .DinotisDefault.primary)
+					)
+				}
+				.disabled(selectedReason.isEmpty || (selectedReason.contains(where: { $0.id == 5 }) && report.isEmpty))
+
+			}
+            .padding()
+		}
+
+		func isSelected(item: CancelOptionData, arrSelected: [CancelOptionData]) -> Bool {
+			arrSelected.contains(where: { $0.id == item.id })
+		}
 	}
+    
+    struct RequestTimeline: View {
+        
+        @ObservedObject var viewModel: ScheduleDetailViewModel
+		@EnvironmentObject var customerChatManager: CustomerChatManager
+        
+        var body: some View {
+			if viewModel.dataMeeting?.meetingRequest != nil {
+                
+                if let detail = viewModel.dataMeeting {
+                    VStack {
+                        Text(LocaleText.detailScheduleStepTitle)
+                            .font(.robotoBold(size: 12))
+                            .foregroundColor(.black)
+                        
+                        HStack(spacing: 12) {
+							if UIDevice.current.userInterfaceIdiom == .pad {
+								Spacer()
+
+								VStack(alignment: .leading) {
+									ZStack(alignment: .topLeading) {
+										HStack(spacing: 53) {
+											Rectangle()
+												.foregroundColor(viewModel.isPaymentDone(status: detail.status.orEmpty()) ? .DinotisDefault.primary : Color(.systemGray4))
+												.frame(width: 50, height: 2)
+												.padding(.leading, 75)
+
+											Rectangle()
+												.foregroundColor(
+													viewModel.isWaitingCreatorConfirmationDone(
+														status: detail.status.orEmpty(),
+														isAccepted: detail.meetingRequest?.isAccepted
+													) ? .DinotisDefault.primary
+													: Color(.systemGray4)
+												)
+												.frame(width: 50, height: 2)
+
+											Rectangle()
+												.foregroundColor(
+													viewModel.isScheduleConfirmationDone(
+														status: detail.status.orEmpty(),
+														isConfirmed: detail.meetingRequest?.isConfirmed
+													) ? .DinotisDefault.primary
+													: Color(.systemGray4)
+												)
+												.frame(width: 50, height: 2)
+
+											Rectangle()
+												.foregroundColor(
+													viewModel.isScheduleStartedDone(status: detail.status.orEmpty()) ?
+														.DinotisDefault.primary :
+														Color(.systemGray4)
+												)
+												.frame(width: 50, height: 2)
+										}
+										.padding(.top, 17.5)
+
+										HStack(alignment: .top, spacing: 3) {
+											VStack(spacing: 6) {
+												(Image.Dinotis.stepCheckmark)
+													.resizable()
+													.scaledToFit()
+													.frame(width: 35, height: 35)
+													.opacity(viewModel.isPaymentDone(status: detail.status.orEmpty()) ? 1 : 0.2)
+
+												Text(LocaleText.detailScheduleStepOne)
+													.font(.robotoMedium(size: 10))
+													.foregroundColor(viewModel.isPaymentDone(status: detail.status.orEmpty()) ? .DinotisDefault.primary : Color(.systemGray4))
+											}
+											.multilineTextAlignment(.center)
+											.frame(width: 100)
+											.padding(.leading, -12)
+
+											VStack(spacing: 6) {
+												//FIXME: Fix the conditional logic
+												if viewModel.isWaitingCreatorConfirmationDone(
+													status: detail.status.orEmpty(),
+													isAccepted: detail.meetingRequest?.isAccepted
+												) {
+													Image.Dinotis.stepCheckmark
+														.resizable()
+														.scaledToFit()
+														.frame(width: 35, height: 35)
+
+													Text(LocaleText.waitingConfirmation)
+														.font(.robotoMedium(size: 10))
+														.foregroundColor(.DinotisDefault.primary)
+												} else if viewModel.isWaitingCreatorConfirmationFailed(
+													status: detail.status.orEmpty(),
+													isAccepted: detail.meetingRequest?.isAccepted
+												) {
+													Image.Dinotis.xmarkIcon
+														.resizable()
+														.scaledToFit()
+														.frame(width: 35, height: 35)
+
+													Text(LocaleText.waitingConfirmation)
+														.font(.robotoMedium(size: 10))
+														.foregroundColor(.red)
+												} else {
+													Image.Dinotis.stepCheckmark
+														.resizable()
+														.scaledToFit()
+														.frame(width: 35, height: 35)
+														.opacity(0.2)
+
+													Text(LocaleText.waitingConfirmation)
+														.font(.robotoMedium(size: 10))
+														.foregroundColor(Color(.systemGray4))
+												}
+
+											}
+											.multilineTextAlignment(.center)
+											.frame(width: 100)
+
+											VStack(spacing: 6) {
+												//FIXME: Fix the conditional logic
+												if viewModel.isScheduleConfirmationDone(
+													status: detail.status.orEmpty(),
+													isConfirmed: detail.meetingRequest?.isConfirmed
+												) {
+													(Image.Dinotis.stepCheckmark)
+														.resizable()
+														.scaledToFit()
+														.frame(width: 35, height: 35)
+
+													Text(LocaleText.setSessionTime)
+														.font(.robotoMedium(size: 10))
+														.foregroundColor(.DinotisDefault.primary)
+												} else if viewModel.isScheduleConfirmationFailed(
+													status: detail.status.orEmpty(),
+													isConfirmed: detail.meetingRequest?.isConfirmed
+												) {
+													Image.Dinotis.xmarkIcon
+														.resizable()
+														.scaledToFit()
+														.frame(width: 35, height: 35)
+
+													Text(LocaleText.setSessionTime)
+														.font(.robotoMedium(size: 10))
+														.foregroundColor(.red)
+												} else {
+													(Image.Dinotis.stepCheckmark)
+														.resizable()
+														.scaledToFit()
+														.frame(width: 35, height: 35)
+														.opacity(0.2)
+
+													Text(LocaleText.setSessionTime)
+														.font(.robotoMedium(size: 10))
+														.foregroundColor(Color(.systemGray4))
+												}
+
+											}
+											.multilineTextAlignment(.center)
+											.frame(width: 100)
+
+											VStack(spacing: 6) {
+
+												Image.Dinotis.stepCheckmark
+													.resizable()
+													.scaledToFit()
+													.frame(width: 35, height: 35)
+													.opacity(
+														viewModel.isScheduleStartedDone(status: detail.status.orEmpty()) ? 1 : 0.2
+													)
+
+												Text(LocaleText.detailScheduleStepThree)
+													.font(.robotoMedium(size: 10))
+													.foregroundColor(
+														viewModel.isScheduleStartedDone(status: detail.status.orEmpty()) ?
+															.DinotisDefault.primary :
+															Color(.systemGray4)
+													)
+
+											}
+											.multilineTextAlignment(.center)
+											.frame(width: 100)
+
+											VStack(spacing: 6) {
+												Image.Dinotis.stepCheckmark
+													.resizable()
+													.scaledToFit()
+													.frame(width: 35, height: 35)
+													.opacity(viewModel.isScheduleEndedDone(status: detail.status.orEmpty()) ? 1 : 0.2)
+
+												Text(LocaleText.detailScheduleStepFour)
+													.font(.robotoMedium(size: 10))
+													.foregroundColor(viewModel.isScheduleEndedDone(status: detail.status.orEmpty()) ? .DinotisDefault.primary : Color(.systemGray4))
+
+											}
+											.multilineTextAlignment(.center)
+											.frame(width: 100)
+										}
+										.padding(.horizontal, 10)
+									}
+								}
+
+								Spacer()
+							} else {
+								ScrollView(.horizontal, showsIndicators: false) {
+									VStack(alignment: .leading) {
+										ZStack(alignment: .topLeading) {
+											HStack(spacing: 53) {
+												Rectangle()
+													.foregroundColor(viewModel.isPaymentDone(status: detail.status.orEmpty()) ? .DinotisDefault.primary : Color(.systemGray4))
+													.frame(width: 50, height: 2)
+													.padding(.leading, 75)
+
+												Rectangle()
+													.foregroundColor(
+														viewModel.isWaitingCreatorConfirmationDone(
+															status: detail.status.orEmpty(),
+															isAccepted: detail.meetingRequest?.isAccepted
+														) ? .DinotisDefault.primary
+														: Color(.systemGray4)
+													)
+													.frame(width: 50, height: 2)
+
+												Rectangle()
+													.foregroundColor(
+														viewModel.isScheduleConfirmationDone(
+															status: detail.status.orEmpty(),
+															isConfirmed: detail.meetingRequest?.isConfirmed
+														) ? .DinotisDefault.primary
+														: Color(.systemGray4)
+													)
+													.frame(width: 50, height: 2)
+
+												Rectangle()
+													.foregroundColor(
+														viewModel.isScheduleStartedDone(status: detail.status.orEmpty()) ?
+															.DinotisDefault.primary :
+															Color(.systemGray4)
+													)
+													.frame(width: 50, height: 2)
+											}
+											.padding(.top, 17.5)
+
+											HStack(alignment: .top, spacing: 3) {
+												VStack(spacing: 6) {
+													(Image.Dinotis.stepCheckmark)
+														.resizable()
+														.scaledToFit()
+														.frame(width: 35, height: 35)
+														.opacity(viewModel.isPaymentDone(status: detail.status.orEmpty()) ? 1 : 0.2)
+
+													Text(LocaleText.detailScheduleStepOne)
+														.font(.robotoMedium(size: 10))
+														.foregroundColor(viewModel.isPaymentDone(status: detail.status.orEmpty()) ? .DinotisDefault.primary : Color(.systemGray4))
+												}
+												.multilineTextAlignment(.center)
+												.frame(width: 100)
+												.padding(.leading, -12)
+
+												VStack(spacing: 6) {
+													//FIXME: Fix the conditional logic
+													if viewModel.isWaitingCreatorConfirmationDone(
+														status: detail.status.orEmpty(),
+														isAccepted: detail.meetingRequest?.isAccepted
+													) {
+														Image.Dinotis.stepCheckmark
+															.resizable()
+															.scaledToFit()
+															.frame(width: 35, height: 35)
+
+														Text(LocaleText.waitingConfirmation)
+															.font(.robotoMedium(size: 10))
+															.foregroundColor(.DinotisDefault.primary)
+													} else if viewModel.isWaitingCreatorConfirmationFailed(
+														status: detail.status.orEmpty(),
+														isAccepted: detail.meetingRequest?.isAccepted
+													) {
+														Image.Dinotis.xmarkIcon
+															.resizable()
+															.scaledToFit()
+															.frame(width: 35, height: 35)
+
+														Text(LocaleText.waitingConfirmation)
+															.font(.robotoMedium(size: 10))
+															.foregroundColor(.red)
+													} else {
+														Image.Dinotis.stepCheckmark
+															.resizable()
+															.scaledToFit()
+															.frame(width: 35, height: 35)
+															.opacity(0.2)
+
+														Text(LocaleText.waitingConfirmation)
+															.font(.robotoMedium(size: 10))
+															.foregroundColor(Color(.systemGray4))
+													}
+
+												}
+												.multilineTextAlignment(.center)
+												.frame(width: 100)
+
+												VStack(spacing: 6) {
+													//FIXME: Fix the conditional logic
+													if viewModel.isScheduleConfirmationDone(
+														status: detail.status.orEmpty(),
+														isConfirmed: detail.meetingRequest?.isConfirmed
+													) {
+														(Image.Dinotis.stepCheckmark)
+															.resizable()
+															.scaledToFit()
+															.frame(width: 35, height: 35)
+
+														Text(LocaleText.setSessionTime)
+															.font(.robotoMedium(size: 10))
+															.foregroundColor(.DinotisDefault.primary)
+													} else if viewModel.isScheduleConfirmationFailed(
+														status: detail.status.orEmpty(),
+														isConfirmed: detail.meetingRequest?.isConfirmed
+													) {
+														Image.Dinotis.xmarkIcon
+															.resizable()
+															.scaledToFit()
+															.frame(width: 35, height: 35)
+
+														Text(LocaleText.setSessionTime)
+															.font(.robotoMedium(size: 10))
+															.foregroundColor(.red)
+													} else {
+														(Image.Dinotis.stepCheckmark)
+															.resizable()
+															.scaledToFit()
+															.frame(width: 35, height: 35)
+															.opacity(0.2)
+
+														Text(LocaleText.setSessionTime)
+															.font(.robotoMedium(size: 10))
+															.foregroundColor(Color(.systemGray4))
+													}
+
+												}
+												.multilineTextAlignment(.center)
+												.frame(width: 100)
+
+												VStack(spacing: 6) {
+
+													Image.Dinotis.stepCheckmark
+														.resizable()
+														.scaledToFit()
+														.frame(width: 35, height: 35)
+														.opacity(
+															viewModel.isScheduleStartedDone(status: detail.status.orEmpty()) ? 1 : 0.2
+														)
+
+													Text(LocaleText.detailScheduleStepThree)
+														.font(.robotoMedium(size: 10))
+														.foregroundColor(
+															viewModel.isScheduleStartedDone(status: detail.status.orEmpty()) ?
+																.DinotisDefault.primary :
+																Color(.systemGray4)
+														)
+
+												}
+												.multilineTextAlignment(.center)
+												.frame(width: 100)
+
+												VStack(spacing: 6) {
+													Image.Dinotis.stepCheckmark
+														.resizable()
+														.scaledToFit()
+														.frame(width: 35, height: 35)
+														.opacity(viewModel.isScheduleEndedDone(status: detail.status.orEmpty()) ? 1 : 0.2)
+
+													Text(LocaleText.detailScheduleStepFour)
+														.font(.robotoMedium(size: 10))
+														.foregroundColor(viewModel.isScheduleEndedDone(status: detail.status.orEmpty()) ? .DinotisDefault.primary : Color(.systemGray4))
+
+												}
+												.multilineTextAlignment(.center)
+												.frame(width: 100)
+											}
+											.padding(.horizontal, 10)
+										}
+									}
+								}
+							}
+                        }
+                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .foregroundColor(.white)
+							.shadow(color: .dinotisShadow.opacity(0.08), radius: 10, x: 0, y: 0)
+                    )
+                    .padding([.top, .horizontal])
+                }
+
+                if !(viewModel.dataMeeting?.meetingRequest?.isConfirmed ?? false) {
+                    HStack {
+                        Image.Dinotis.noticeIcon
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 23, height: 23)
+                        
+                        Text(LocaleText.setSessionTimeCaption)
+                            .font(.robotoRegular(size: 10))
+                            .foregroundColor(.black)
+                        
+                        Spacer()
+                    }
+                    .padding()
+                    .background(Color.infoColor)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.DinotisDefault.primary, lineWidth: 1)
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .padding(.top)
+                    .padding(.horizontal)
+                }
+
+				if viewModel.isShowingChatButton() {
+					Button {
+						viewModel.routeToScheduleNegotiationChat()
+					} label: {
+						HStack {
+							Image.Dinotis.messageIcon
+								.resizable()
+								.scaledToFit()
+								.frame(width: 16, height: 16)
+							
+							Text(LocaleText.discussWithAudience)
+								.font(.robotoMedium(size: 12))
+								.foregroundColor(.black)
+							
+							Spacer()
+							
+							Circle()
+								.foregroundColor(.DinotisDefault.primary)
+								.scaledToFit()
+								.frame(height: 15)
+								.isHidden(!customerChatManager.hasUnreadMessage, remove: !customerChatManager.hasUnreadMessage)
+							
+							Image(systemName: "chevron.right")
+								.resizable()
+								.scaledToFit()
+								.foregroundColor(.black)
+								.frame(width: 8)
+						}
+						.padding()
+						.background(
+							RoundedRectangle(cornerRadius: 12)
+								.foregroundColor(.white)
+								.shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 0)
+						)
+						.padding(.horizontal)
+						.padding(.top, 10)
+					}
+				}
+            }
+        }
+    }
 }

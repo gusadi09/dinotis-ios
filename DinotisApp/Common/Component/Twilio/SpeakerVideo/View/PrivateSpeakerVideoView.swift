@@ -55,7 +55,7 @@ struct PrivateSpeakerVideoView: View {
 								.frame(height: isMainView ? 20 : 10)
 								.foregroundColor(.white)
 								.padding(9)
-								.background(Color.primaryViolet.opacity(0.4))
+								.background(Color.DinotisDefault.primary.opacity(0.4))
 								.clipShape(Circle())
 								.padding(8)
 						}

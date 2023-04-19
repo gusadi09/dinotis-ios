@@ -7,16 +7,17 @@
 
 import SwiftUI
 import CountryPicker
+import DinotisDesignSystem
 
 struct CountryPicker: UIViewControllerRepresentable {
 	typealias UIViewControllerType = CountryPickerViewController
 
 	let configMaker = Config(
-		selectedCountryCodeBackgroundColor: UIColor(named: "btn-stroke-1") ?? UIColor.purple,
-		closeButtonTextColor: UIColor(named: "btn-stroke-1") ?? UIColor.purple,
-		closeButtonText: LocaleText.generalClose,
-		titleText: LocaleText.selectCountry,
-		searchBarPlaceholder: LocaleText.generalSearch
+        selectedCountryCodeBackgroundColor: UIColor(Color.DinotisDefault.primary),
+        closeButtonTextColor: UIColor(Color.DinotisDefault.primary),
+        closeButtonText: LocalizableText.closeLabel,
+        titleText: LocalizableText.titleCountryPicker,
+        searchBarPlaceholder: LocalizableText.hintCountryPicker
 	)
 
 	@Binding var country: Country

@@ -30,6 +30,7 @@ struct PrivateVideoCallView : View {
 	@EnvironmentObject var streamManager: PrivateStreamManager
 	@EnvironmentObject var speakerSettingsManager: PrivateSpeakerSettingsManager
 	@EnvironmentObject var speakerGridViewModel: PrivateVideoSpeakerViewModel
+    @EnvironmentObject var groupStreamManager: StreamManager
 	
 	var body: some View {
 		ZStack {
@@ -88,7 +89,12 @@ struct PrivateVideoCallView : View {
 								ZStack {
 									Color.black.edgesIgnoringSafeArea([.bottom, .horizontal])
 
-									ProgressHUD(title: LocaleText.waitingOtherToJoin, geo: geo)
+									ProgressHUD(
+                                        streamManager: _groupStreamManager,
+                                        title: LocaleText.waitingOtherToJoin,
+                                        geo: geo,
+                                        closeLive: {}
+                                    )
 										.padding()
 								}
 							}
@@ -141,20 +147,14 @@ struct PrivateVideoCallView : View {
 						}
 					}
 					.padding()
-
-					HStack(spacing: viewModel.isStarted ? 8 : 2) {
-
-						if viewModel.isStarted {
-							Image(systemName: "clock")
-								.resizable()
-								.scaledToFit()
-								.frame(height: 12)
-						} else {
-							Text(LocaleText.startInText)
-								.font(.montserratRegular(size: 12))
-								.foregroundColor(.white)
-						}
-
+					
+					HStack(spacing: 8) {
+						
+						Image(systemName: "clock")
+							.resizable()
+							.scaledToFit()
+							.frame(height: 12)
+						
 						Text(viewModel.stringTime)
 							.font(.montserratBold(size: 12))
 					}

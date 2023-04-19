@@ -8,130 +8,128 @@
 import Foundation
 import Combine
 import SwiftUI
+import DinotisData
 
 final class InvoicesBookingViewModel: ObservableObject {
 	
 	var backToRoot: () -> Void
 	var backToHome: () -> Void
+	var backToChoosePayment: () -> Void
 	
 	private var stateObservable = StateObservable.shared
 	
 	private var cancellables = Set<AnyCancellable>()
 	
-	private let bookingsRepository: BookingsRepository
+	private let getBookingDetailUseCase: GetBookingDetailUseCase
 	private let authRepository: AuthenticationRepository
+
+	@Published var bookingId: String
 	
 	@Published var route: HomeRouting?
 	
 	@Published var isLoading = false
 	@Published var isError = false
 	@Published var success = false
-	@Published var error: HMError?
+	@Published var error: String?
 	
-	@Published var bookingData: UserBooking?
+	@Published var bookingData: UserBookingData?
 	
 	@Published var isRefreshFailed = false
 	
 	init(
+		bookingId: String,
 		backToRoot: @escaping (() -> Void),
 		backToHome: @escaping (() -> Void),
-		bookingsRepository: BookingsRepository = BookingsDefaultRepository(),
+		backToChoosePayment: @escaping () -> Void,
+		getBookingDetailUseCase: GetBookingDetailUseCase = GetBookingDetailDefaultUseCase(),
 		authRepository: AuthenticationRepository = AuthenticationDefaultRepository()
 	) {
+		self.bookingId = bookingId
 		self.backToRoot = backToRoot
 		self.backToHome = backToHome
-		self.bookingsRepository = bookingsRepository
+		self.backToChoosePayment = backToChoosePayment
+		self.getBookingDetailUseCase = getBookingDetailUseCase
 		self.authRepository = authRepository
 	}
 	
 	func onStartFetch() {
-		withAnimation {
-			self.isLoading = true
+		DispatchQueue.main.async { [weak self] in
+			withAnimation {
+				self?.isLoading = true
+			}
+
+			self?.isError = false
+			self?.success = false
+			self?.error = nil
 		}
 
-		self.isError = false
-		self.success = false
-		self.error = nil
+	}
+
+	func handleDefaultError(error: Error) {
+		DispatchQueue.main.async { [weak self] in
+			self?.isLoading = false
+
+			if let error = error as? ErrorResponse {
+				self?.error = error.message.orEmpty()
+
+				if error.statusCode.orZero() == 401 {
+					self?.isRefreshFailed.toggle()
+				} else {
+					self?.isError = true
+				}
+			} else {
+				self?.isError = true
+				self?.error = error.localizedDescription
+			}
+
+		}
 	}
 	
-	func getBookingById(bookingId: String) {
+	func getBookingById() async {
 		onStartFetch()
-		
-		bookingsRepository
-			.provideGetBookingsById(bookingId: bookingId)
-			.sink { result in
-				switch result {
-				case .failure(let error):
-					DispatchQueue.main.async {[weak self] in
-						if error.statusCode.orZero() == 401 {
-							self?.refreshToken(onComplete: {self?.getBookingById(bookingId: bookingId)})
-						} else {
-							self?.isError = true
 
-							withAnimation {
-								self?.isLoading = false
-							}
-							
-							self?.error = .serverError(code: error.statusCode.orZero(), message: error.message.orEmpty())
-						}
-					}
-					
-				case .finished:
-					DispatchQueue.main.async { [weak self] in
-						self?.success = true
-						withAnimation {
-							self?.isLoading = false
-						}
-					}
+		let result = await getBookingDetailUseCase.execute(by: self.bookingId)
+
+		switch result {
+		case .success(let success):
+			DispatchQueue.main.async { [weak self] in
+				self?.success = true
+				withAnimation {
+					self?.isLoading = false
 				}
-			} receiveValue: { value in
-				self.bookingData = value
+
+				self?.bookingData = success
 			}
-			.store(in: &cancellables)
+		case .failure(let failure):
+			handleDefaultError(error: failure)
+		}
+
 	}
 	
 	func onStartRefresh() {
-		self.isRefreshFailed = false
-		withAnimation {
-			self.isLoading = true
+		DispatchQueue.main.async { [weak self] in
+			self?.isRefreshFailed = false
+			withAnimation {
+				self?.isLoading = true
+			}
+
+			self?.success = false
+			self?.error = nil
 		}
 
-		self.success = false
-		self.error = nil
 	}
-	
-	func refreshToken(onComplete: @escaping (() -> Void)) {
-		onStartRefresh()
-		
-		let refreshToken = authRepository.loadFromKeychain(forKey: KeychainKey.refreshToken)
-		
-		authRepository
-			.refreshToken(with: refreshToken)
-			.sink { result in
-				switch result {
-				case .finished:
-					DispatchQueue.main.async { [weak self] in
-						self?.success = true
-						withAnimation {
-							self?.isLoading = false
-						}
-						onComplete()
-					}
-					
-				case .failure(let error):
-					DispatchQueue.main.async {[weak self] in
-						self?.isRefreshFailed = true
-						withAnimation {
-							self?.isLoading = false
-						}
-						self?.error = .serverError(code: error.statusCode.orZero(), message: error.message.orEmpty())
-					}
-				}
-			} receiveValue: { value in
-				self.stateObservable.refreshToken = value.refreshToken
-				self.stateObservable.accessToken = value.accessToken
-			}
-			.store(in: &cancellables)
-		
+
+	func onGetBookingDetail() {
+		Task {
+			await getBookingById()
+		}
 	}
+    
+    func routeToDetailSchedule() {
+        let viewModel = ScheduleDetailViewModel(isActiveBooking: true, bookingId: (bookingData?.id).orEmpty(), backToRoot: self.backToRoot, backToHome: self.backToHome, isDirectToHome: true)
+        
+        DispatchQueue.main.async {[weak self] in
+            self?.route = .userScheduleDetail(viewModel: viewModel)
+        }
+    }
 }

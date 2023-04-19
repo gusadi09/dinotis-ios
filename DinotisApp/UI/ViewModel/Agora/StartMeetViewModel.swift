@@ -27,7 +27,7 @@ class StartMeetViewModel: ObservableObject {
 
 	@Published var statusCode = 0
 
-	func startMeet(by meetingId: String) {
+	func startMeet(by meetingId: String, completion: @escaping () -> Void) {
 		self.isLoading = true
 		self.isError = false
 		self.error = nil
@@ -40,6 +40,7 @@ class StartMeetViewModel: ObservableObject {
 					self.success = true
 
 					self.data = result!
+					completion()
 				}
 			} else {
 				if let error = error {
@@ -55,7 +56,7 @@ class StartMeetViewModel: ObservableObject {
 									self.stateObservable.accessToken = response.accessToken
 									self.stateObservable.refreshToken = response.refreshToken
 
-									self.startMeet(by: meetingId)
+									self.startMeet(by: meetingId, completion: completion)
 							}
 						}
 					} else {

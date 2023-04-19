@@ -13,9 +13,11 @@ import SDWebImageSVGCoder
 import SDWebImageSwiftUI
 import SwiftKeychainWrapper
 import OneSignal
+import Firebase
+import DinotisData
 
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 	
 	static var orientationLock = UIInterfaceOrientationMask.portrait
 	
@@ -23,12 +25,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Override point for customization after application launch.
 
 		OneSignal.setLogLevel(.LL_VERBOSE, visualLevel: .LL_NONE)
+        
+        UNUserNotificationCenter.current().delegate = self
 
 		OneSignal.initWithLaunchOptions(launchOptions)
 		OneSignal.setAppId(Configuration.shared.environment.oneSignalAppId)
+        OneSignal.setNotificationWillShowInForegroundHandler { notificationReceived, completion in
+            let content = notificationReceived.notificationId.orEmpty()
+            
+            // Check if the notification content has already been displayed
+            let notificationIDs = UserDefaults.standard.stringArray(forKey: "DisplayedNotificationIDs") ?? []
+            if notificationIDs.contains(content) {
+                // Notification has already been displayed, prevent it from being shown again
+                completion(nil)
+                return
+            }
+            
+            // Notification has not been displayed yet, add its ID to the list and show it
+            var updatedIDs = notificationIDs
+            updatedIDs.append(content)
+            UserDefaults.standard.set(updatedIDs, forKey: "DisplayedNotificationIDs")
+            completion(notificationReceived)
+        }
 
-		OneSignal.promptForPushNotifications(userResponse: { accepted in
-			print("User accepted notifications: \(accepted)")
+		OneSignal.promptForPushNotifications(userResponse: { _ in
+
 		})
 		
 		SDImageCodersManager.shared.addCoder(SDImageSVGCoder.shared)
@@ -36,12 +57,64 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		IQKeyboardManager.shared.enable = true
 		IQKeyboardManager.shared.shouldResignOnTouchOutside = true
 		IQKeyboardManager.shared.enableAutoToolbar = true
+
+		FirebaseApp.configure()
 		
 		return true
 	}
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        if response.actionIdentifier == UNNotificationDefaultActionIdentifier {
+            // User tapped on notification
+            let userInfo = response.notification.request.content.userInfo
+            
+            guard let payload = (userInfo["custom"] as? [String: String])?["u"] as? String else { return }
+            
+            if payload.contains("page/payment/settle/booking") {
+                
+                if let id = payload.components(separatedBy: "/").last {
+                    StateObservable.shared.bookId = id
+                }
+                
+                NotificationCenter.default.post(name: .audiencePaymentDetail, object: nil)
+                
+            } else if payload.contains("page/creator") {
+                if let id = payload.components(separatedBy: "/").last {
+                    StateObservable.shared.usernameCreator = id
+                }
+                
+                NotificationCenter.default.post(name: .creatorDetail, object: nil)
+            } else if payload.contains("page/booking") {
+                if let id = payload.components(separatedBy: "/").last {
+                    StateObservable.shared.bookId = id
+                }
+                
+                NotificationCenter.default.post(name: .audienceBookingDetail, object: nil)
+            } else if payload.contains("page/meeting") {
+                if let id = payload.components(separatedBy: "/").last {
+                    StateObservable.shared.meetingId = id
+                }
+                
+                NotificationCenter.default.post(name: .creatorMeetingDetail, object: nil)
+            } else if payload.contains("page/home/creator") {
+                NotificationCenter.default.post(name: .creatorHome, object: nil)
+                //BELUM
+            } else if payload.contains("page/payment/success/booking") || payload.contains("page/payment/failed/booking") {
+                if let id = payload.components(separatedBy: "/").last {
+                    StateObservable.shared.bookId = id
+                }
+                
+                NotificationCenter.default.post(name: .audienceSuccesPayment, object: nil)
+            } else if payload.contains("page/profile/audience") {
+                NotificationCenter.default.post(name: .audienceProfile, object: nil)
+            }
+        }
+        
+        completionHandler()
+      }
 
 	func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-		
+        
 	}
 
 	func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {

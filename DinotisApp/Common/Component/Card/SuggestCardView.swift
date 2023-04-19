@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import DinotisDesignSystem
 
 struct SuggestCardView: View {
 	@State var title: String
@@ -15,7 +16,7 @@ struct SuggestCardView: View {
 			selected.toggle()
 		}, label: {
 			Text(title)
-				.font(Font.custom(FontManager.Montserrat.regular, size: 14))
+                .font(.robotoRegular(size: 14))
 				.foregroundColor(.black)
 				.padding(.horizontal)
 				.padding(.vertical, 15)

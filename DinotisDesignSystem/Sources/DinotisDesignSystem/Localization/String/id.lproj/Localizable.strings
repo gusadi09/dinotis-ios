@@ -1,0 +1,350 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Gus Adi on 06/12/22.
+  
+*/
+
+"title_boarding_first" = "Ngobrol bareng Kreator Hebat!";
+"description_boarding_first" = "Ketemuan dengan kreator hebat dari berbagai bidang? hanya disini tempatnya";
+"title_boarding_second" = "Kapan saja dan di mana saja";
+"description_boarding_second" = "Denger suara doang emang puas? \nKalau ngobrol di sini bisa sambil tatap-tatapan!";
+"title_role_type" = "Berbagai sesi menarik untukmu";
+"description_role_type" = "Silahkan pilih tipe akun yang sesuai untukmu!";
+
+"label_skip" = "Lewati";
+"label_continue" = "Selanjutnya";
+"label_previous" = "Sebelumnya";
+
+"title_audience" = "Audiens";
+"description_audience_login" = "Mulai ngobrol dengan kreator";
+
+"title_creator" = "Kreators";
+"description_creator_login" = "Mulai ngobrol dengan Audiens";
+
+"title_login" = "Masuk Akun";
+"description_login" = "Silahkan masukan nomor handphone & kata sandi akun anda yang telah terdaftar untuk masuk ke aplikasi";
+"hint_phone" = "Masukan nomor handphone";
+"alert_phone_unregister" = "*Nomor telepon yang anda masukkan belum terdaftar";
+"alert_phone_wrong" = "*Nomor telepon yang anda masukkan tidak valid";
+"hint_password" = "Masukan Kata Sandi";
+"alert_password_wrong" = "*Kata sandi yang anda masukkan salah";
+"link_forgot" = "Lupa kata sandi?";
+"label_login_terms_higlighted" = "Persyaratan Layanan";
+"label_login_terms_first_part" = "Ketika masuk, Anda menyetujui ";
+"label_login_terms_second_part" = " Dinotis & mengakui bahwa Pemberitahuan Privasi kami berlaku.";
+"link_register_here" = "Belum punya akun? ";
+"link_register_here_highlighted" = "Daftar di sini";
+"label_login" = "Masuk";
+
+"title_register_audience" = "Daftar Akun";
+"description_register" = "Masukan nomor handphone yang valid untuk mendapatkan kode OTP";
+"label_register_terms_highlighted" = "Persyaratan Layanan";
+"label_register_terms_first_part" = "Ketika daftar, Anda menyetujui ";
+"label_register_terms_second_part" = " Dinotis & mengakui bahwa Pemberitahuan Privasi kami berlaku.";
+"link_login_here" = "Sudah punya akun? ";
+"link_login_here_highlighted" = "Masuk di sini";
+"label_send_otp" = "Kirim OTP";
+
+"title_register_creator" = "Daftar Kreator";
+"description_register_creator" = "Masukan nomor handphone dan kode undangan yang telah diterima sebelumnya";
+"hint_invitation_code" = "Masukan Kode Undangan";
+"alert_invitation_code_invalid" = "*Kode undangan yang anda masukan tidak valid";
+"link_request_invitation_code" = "Belum memiliki kode undangan?";
+"label_join_now" = "Gabung Sekarang";
+
+"title_country_picker" = "Pilih Negara";
+"hint_country_picker" = "Cari Negara";
+"link_country_picker" = "Reset Default";
+
+"title_otp_send_wa" = "Via Whatsapp";
+"description_otp_send_wa" = "Kami akan mengirim OTP via Whatsapp";
+"title_otp_send_sms" = "Via SMS";
+"description_otp_send_sms" = "Kami akan mengirim OTP via SMS";
+
+"hint_send_otp" = "Masukan kode OTP yang dikirim ke nomor";
+"alert_send_otp_invalid" = "*Kode OTP yang kamu masukan tidak valid";
+"hint_resend_otp" = "Kode OTP belum masuk?";
+"link_resend_otp" = "Kirim ulang (%lld detik)";
+"link_resend_otp_active" = "Kirim ulang";
+
+"title_form_register" = "Lengkapi Data Diri";
+"label_form_name" = "Nama";
+"hint_form_name" = "Gunakan nama aslimu";
+"alert_form_name_character_invalid" = "*Jumlah huruf tidak sesuai";
+"alert_form_name_character_minimum" = "*Minimal 3 karakter";
+"label_form_password" = "Kata Sandi";
+"hint_form_password" = "Masukan Kata Sandi…";
+"label_form_repassword" = "Ulangi Kata Sandi";
+"hint_form_repassword" = "Ulangi Kata Sandi…";
+"alert_form_repassword_not_match" = "*Kata sandi yang anda masukan tidak cocok";
+"label_form_username" = "Username";
+"hint_form_username" = "Masukan Username";
+"alert_form_username_taken" = "*Username telah digunakan oleh kreator lain";
+"label_form_bio" = "Bio";
+"hint_form_bio" = "Masukan Biodata";
+"label_form_profession" = "Profesi";
+"hint_form_profession" = "Pilih Profesimu";
+"label_save" = "Simpan";
+
+"title_form_register_dialog_success" = "Data Diri Berhasil Disimpan";
+"description_form_register_dialog_success" = "Terima kasih telah melengkapi data diri kamu";
+"label_close" = "Tutup";
+
+"title_forgot_password" = "Lupa Kata Sandi";
+"description_forgot_password" = "Masukan nomor handphone yang valid, OTP akan dikirim untuk mengatur ulang kata sandimu";
+"title_change_password" = "Ubah Kata Sandi";
+"description_change_password" = "Masukan kata sandi baru untuk merubah kata sandi lama anda";
+"hint_new_password" = "Masukan Kata Sandi Baru";
+"hint_new_repassword" = "Ulangi Kata Sandi Baru";
+"alert_new_repassword_not_match" = "*Kata sandi yang kamu masukan tidak cocok";
+
+"title_change_password_dialog_success" = "Kata Sandi Berhasil Diubah";
+"description_change_password_dialog_success" = "Selamat kata sandi kamu berhasil diperbarui";
+
+"label_your_coin" = "Coin Kamu";
+"label_add_coin" = "Tambah Coin";
+"description_add_coin" = "Coin ini hanya dapat digunakan untuk melakukan transaksi di dalam aplikasi DINOTIS dan tidak bisa ditarik tunai";
+
+"tab_profile" = "Profil";
+"description_setup_account" = "Pengaturan Akun";
+"label_edit_profile" = "Edit Profil";
+"label_followed_creator" = "Kreator Pilihanmu";
+"label_change_password" = "Ganti Kata Sandi";
+"label_help" = "Bantuan";
+"label_logout" = "Keluar";
+
+"title_followed_creator" = "Kreator Pilihanmu";
+
+"title_edit_profile" = "Edit Profil";
+"label_form_phone" = "Nomor Telepon";
+"label_change" = "Ubah";
+"label_change_now" = "Ubah Sekarang";
+
+"title_change_old_password" = "Ubah Kata Sandi";
+"link_forgot_old_password" = "Lupa Kata Sandi Lama?";
+"label_form_old_password" = "Kata Sandi Lama";
+"hint_form_old_password" = "Masukan kata sandi lama";
+"alert_form_old_password_character_minimum" = "*Minimal %lld karakter";
+"label_form_new_password" = "Kata Sandi Baru";
+"hint_form_new_password" = "Masukan kata sandi baru";
+"alert_form_new_password_character_minimum" = "*Minimal %lld karakter";
+"label_form_new_repassword" = "Ulangi Kata Sandi Baru";
+"hint_form_new_repassword" = "Ulangi masukan kata sandi baru";
+"alert_form_new_repassword_character_minimum" = "*Minimal %lld karakter";
+
+"title_change_phone" = "Ubah No. Handphone";
+"description_change_phone" = "Masukan nomor handphone barumu. Kode OTP akan dikirim ke nomor handphone barumu";
+
+"title_payment_success" = "Asik, Pembayaran kamu berhasil!";
+"label_invoice" = "No. Invoice";
+"label_order_name" = "Nama Pesanan";
+"label_payment_method" = "Metode Pembayaran";
+"label_payment_total" = "Total Pembayaran";
+"label_done" = "Selesai";
+
+"title_history_coin" = "Riwayat Coin";
+"title_no_history_coin" = "Belum ada transaksi coin";
+"tab_all" = "Semua";
+"tab_coin_income" = "Coin Masuk";
+"tab_coin_outcome" = "Coin Keluar";
+"ok_text" = "Okay";
+"return_text" = "Kembali";
+"attention_text" = "Perhatian";
+
+"tab_session" = "Sesi";
+"tab_creator" = "Kreator";
+
+"notification_title" = "Notifikasi";
+"notification_general_tab_text" = "Umum";
+"notification_transaction_tab_text" = "Transaksi";
+"notification_empty_title" = "Belum ada notifikasi...";
+"notification_transaction_empty_title" = "Belum ada notifikasi transaksi...";
+"notification_empty_description" = "Saat ini kamu belum mendapatkan notifikasi terbaru...";
+"notification_transaction_empty_description" = "Saat ini kamu belum mendapatkan notifikasi transaksi terbaru...";
+"notification_read_all" = "Baca Semua";
+
+"step_payment_done" = "Pembayaran Selesai";
+"step_waiting_for_session" = "Menunggu Sesi Dimulai";
+"step_session_start" = "Sesi Dimulai";
+"step_session_done" = "Sesi Telah Selesai";
+"step_waiting_confirmation" = "Waiting for Creator's Confirmation";
+"step_set_session_time" = "Setting Session Time";
+"video_call_rules" = "Aturan Video Call";
+"participant" = "Peserta";
+"group_session_label_with_emoji" = "🗣️ Sesi Group";
+"private_session_label_with_emoji" = "⚡ Sesi Privat";
+"group_session_participant_title" = "Peserta Sesi Group Call";
+"private_session_participant_title" = "Peserta Sesi Privat Call";
+"need_help_question" = "Butuh bantuan?";
+"contact_us_label" = "Hubungi kami";
+"start_now_label" = "Mulai Sekarang";
+"me_label" = "Saya";
+"and_more_participant" = "Dan %lld peserta lainnya";
+"not_confirmed_text" = "Belum Dikonfirmasi";
+"give_review_label" = "Beri Ulasan";
+"detail_schedule_title" = "Status Jadwal Sesi Kamu";
+"video_call_detail_title" = "Detail Video Call";
+"booking_ratecard_title" = "Booking Layanan";
+"booking_ratecard_show_full_text" = "Selengkapnya";
+"booking_ratecard_hide_full_text" = "Sembunyikan";
+"booking_rate_card_message_subtitle" = "* Masukkan hari & jam Private Call yang kamu harapkan";
+"minute_in_duration" = "%lld Menit";
+"private_video_call_label" = "Private Video Call";
+"price_label" = "Harga";
+"note_for_creator_placeholder" = "Masukkan pesan untuk kreator di sini...";
+"note_for_creator_title" = "Pesan";
+"next_label" = "Lanjut";
+"limited_quota_label" = "🔥 Kuota terbatas";
+"cancel_label" = "Batalkan";
+"pay_label" = "Bayar";
+"in_app_purchase_label" = "In-App Purchase";
+"other_payment_method_title" = "Pembayaran dengan metode lain";
+"other_payment_method_description" = "Kamu bisa pilih metode pemabayaran lain";
+"payment_confirmation_title" = "Konfirmasi Pembayaran";
+"promo_code_title" = "Masukkan kode promo";
+"promo_code_label" = "Kode Promo";
+"enter_label" = "Pasang";
+"payment_label" = "Pembayaran";
+"fee_sub_total_label" = "Sub-total";
+"fee_application" = "Penggunaan Aplikasi";
+"fee_service" = "Biaya Layanan";
+"total_label" = "Total";
+"payment_promo_not_found" = "Kode promo tidak ditemukan";
+"apple_pay_text" = "Apple Pay";
+"discount_label" = "Diskon";
+"continue_payment_label" = "Lanjutkan Pembayaran";
+"session_completed" = "Sesi Selesai";
+"in_app_purchase_error_trx" = "Tidak bisa memuat transaksi.";
+
+"cancel_payment_question" = "Ingin membatalkan pembayaran?";
+"cancel_payment_title_question" = "Yakin mau membatalkan pembayaran?";
+"cancel_payment_description" = "Dengan membatalkan, data pesanan ini akan hilang.";
+"cancel_payment_confirmation" = "Ya, Saya ingin membatalkan";
+
+"logout_title_question" = "Kamu mau keluar?";
+"logout_description" = "Jangan lama-lama ya... Dinotis bakal rindu kamu.";
+
+"see_details_label" = "Lihat Detail";
+"detail_payment_title" = "Rincian Pembayaran";
+
+"withdraw_error_amount_over" = "Transaksi melebihi maksimal";
+"withdraw_error_less" = "Transaksi kurang dari Rp50.000";
+"withdraw_error_over_balance" = "Transaksi melebihi saldo";
+
+"invoice_item_name" = "Nama Pesanan";
+"invoice_failed_payment" = "Waduh, Kamu gagal melakukan pembayaran!";
+"general_order_again" = "Pesan Ulang";
+"detail_payment_cancel_confirmation" = "Ya, Saya ingin membatalkan";
+"profile_choosen_creator" = "Kreator Pilihanmu";
+"choosen_creator_empty" = "Kamu belum menambahkan kreator pilihan";
+"profession_management" = "Manajemen";
+"management_name" = "Dikelola Oleh ";
+"search_placeholder" = "Cari sesi, kreator, atau management di sini...";
+"search_recommendation_title" = "Rekomendasi pencarian";
+"search_related_creator_title" = "Kreator Terkait";
+"search_related_session_title" = "Sesi Terkait";
+"search_see_all_label" = "Lihat semua";
+"search_general_not_found" = "Wahhh... Sepertinya yang kamu cari belum ada nih!";
+"search_tell_us_label" = "Beritahu Kami";
+"search_creator_not_found_title" = "Kreator yang kamu cari tidak ada";
+"search_creator_not_found_desc" = "Yuk, cari kreator lain!";
+"search_session_not_found_title" = "Belum ada sesi yang sesuai pencarian";
+"search_session_not_found_desc" = "Yuk, cari sesi lain!";
+"search_text" = "Pencarian";
+
+"talent_detail_session" = "Sesi";
+"talent_detail_follower" = "Pengikut";
+"talent_detail_rating" = "Penilaian";
+"talent_detail_follow" = "Ikuti";
+"talent_detail_following" = "Mengikuti";
+"talent_detail_information" = "Informasi";
+"talent_detail_services" = "Layanan";
+"talent_detail_review" = "Ulasan";
+"talent_detail_about_me" = "Tentang Aku";
+"talent_detail_gallery" = "Galeri";
+"talent_detail_empty_review_title" = "Wahhh, ulasan kreator ini masih kosong nih";
+"talent_detail_empty_review_content" = "Buat kamu yang pernah ikut sesi kreator ini, jangan lupa kasih ulasan ya ☺️💜";
+"talent_detail_available_sessions" = "Jadwal Yang Tersedia";
+
+"see_text" = "Lihat";
+"free_text" = "Gratis";
+
+"bundling_text" = "Paket Bundling";
+"session_value_text" = "%lld Sesi";
+"bundling_session" = "Sesi Bundling";
+"see_bundling" = "Lihat Bundling";
+"total_session_value" = "Total %lld Sesi";
+"booking_text" = "Pesan";
+"request_session" = "Request Sesi";
+"gallery_empty" = "Belum ada galeri yang ditambahkan";
+
+"schedule_today_agenda" = "Agenda Hari Ini";
+"schedule_tab_waiting" = "Menunggu Pembayaran";
+"schedule_tab_upcoming" = "Akan Datang";
+"schedule_tab_cancel" = "Dibatalkan";
+"schedule_empty_today_agenda" = "Belum ada agenda hari ini";
+"schedule_empty_session_title" = "Wahhh, sesi kamu masih kosong";
+"schedule_empty_session_desc" = "Yuk, cari sesi yang kamu suka!";
+"schedule_search_session_label" = "Mulai Cari Sesi";
+"total_price_label" = "Total Harga";
+"payment_failed_text" = "Pembayaran Gagal";
+"pay_now_label" = "Bayar Sekarang";
+"your_comment_title" = "Komentar Kamu";
+"your_comment_placeholder" = "Tulis komentar kamu disini...";
+"send_review_label" = "Kirim Ulasan";
+"review_success_title" = "Ulasan Kamu Berhasil Terkirim";
+"review_success_message" = "Terima kasih telah mengirimkan ulasan kepada kreator";
+
+"resend_label" = "Kirim Ulang";
+"see_agenda_label" = "Lihat Agenda";
+
+"alert_success_change_profile_title" = "Profil Berhasil Diubah";
+"alert_success_change_profile_message" = "Selamat data diri kamu berhasil diperbarui";
+"alert_failed_change_profile_title" = "Profil Gagal Diubah";
+"alert_failed_change_profile_message" = "Data diri kamu gagal diperbarui, mohon coba lagi";
+
+"alert_failed_change_password_title" = "Kata Sandi Gagal Diubah";
+"alert_failed_change_password_message" = "Terjadi kesalahan, kata sandi kamu gagal diperbarui";
+
+"alert_failed_give_review_title" = "Ulasan Kamu Gagal Terkirim";
+"alert_failed_give_review_message" = "Ulasan kamu gagal terkirim kepada kreator, mohon coba lagi";
+
+"alert_success_request_session_title" = "Request Layanan/Sesi Berhasil";
+"alert_success_request_session_message" = "Request layanan kamu berhasil dikirim ke kreator";
+"alert_failed_request_session_title" = "Request Layanan/Sesi Gagal";
+"alert_failed_request_session_message" = "Telah terjadi kesalahan ketika request layanan/sesi, mohon coba lagi untuk request layanan/sesi";
+
+"alert_success_booking_title" = "Yeay! Selamat Sesi Berhasil di Booking";
+"alert_success_booking_message" = "Sesi yang kamu booking telah ditambahkan kedalam agenda kamu";
+"alert_failed_booking_title" = "Oops! Sesi Gagal di Booking";
+"alert_failed_booking_message" = "Gagal melakukan booking sesi, mohon coba lagi untuk melakukan booking sesi";
+
+"alert_success_follow_title" = "Yeay! Berhasil mengikuti kreator ini";
+"alert_success_follow_message" = "Kreator yang kamu ikuti akan tampil di daftar kreator pilihanmu";
+"alert_failed_follow_title" = "Gagal mengikuti kreator ini";
+"alert_failed_follow_message" = "Terjadi kesalahan ketika mengikuti kreator";
+
+"alert_success_change_phone_title" = "Yeay! Berhasil Mengubah No. Handphone";
+"alert_success_change_phone_message" = "Kamu telah berhasil mengubah nomor handphone menjadi";
+"alert_failed_change_phone_title" = "Oops! Gagal mengubah no. handphone";
+"alert_failed_change_phone_message" = "Terjadi kesalahan, kamu gagal mengubah nomor handphone";
+
+"alert_session_expired" = "Sesi kamu telah berakhir, silahkan masuk kembali.";
+
+"session_card_booked" = "Telah Dipesan";
+"list_management_label" = "List Management";
+
+"attachments_text" = "Dokumen Pendukung";
+"general_revenue_purpose" = "Tujuan Pendapatan";
+"general_private_wallet" = "Dompet Pribadi";
+"url_link_text" = "Link URL";
+"add_url_link_label" = "Tambah Link URL";
+"delete_url_link_label" = "Hapus Link URL";
+"url_link_title_placeholder" = "Judul Link URL";
+"see_additional_menu_label" = "Lihat Menu Tambahan";
+"hide_additional_menu_label" = "Tutup Menu Tambahan";
+
+"empty_file_message" = "Wahh.. File yang kamu cari tidak ditemukan :(";
+"invalid_url" = "Mohon masukkan url dengan format yang sesuai";

@@ -7,12 +7,6 @@
 
 import Foundation
 
-struct ParticipantData: Codable {
-	var user: Users?
-	var isHost: Bool?
-	let isCoHost: Bool?
-}
-
 struct UserParticipant: Codable {
 	var id: String
 	var name: String?
@@ -21,11 +15,12 @@ struct UserParticipant: Codable {
 	var password: String?
 	var profilePhoto: String?
 	var profileDescription: String?
-	var emailVerifiedAt: String?
+	var emailVerifiedAt: Date?
 	var isVerified, isPasswordFilled: Bool?
 	var registeredWith: Int?
-	var lastLoginAt, professionID: String?
-	var createdAt, updatedAt: String?
+	var lastLoginAt: Date?
+	let professionID: String?
+	var createdAt, updatedAt: Date?
 	
 	enum CodingKeys: String, CodingKey {
 		case id, name, username, email, password, profilePhoto, profileDescription, emailVerifiedAt, isVerified, isPasswordFilled, registeredWith, lastLoginAt
@@ -33,5 +28,3 @@ struct UserParticipant: Codable {
 		case createdAt, updatedAt
 	}
 }
-
-typealias Participant = [ParticipantData]

@@ -6,6 +6,7 @@
 //
 
 import Combine
+import DinotisData
 import Foundation
 
 class PrivateSpeakerSettingsManager: ObservableObject {

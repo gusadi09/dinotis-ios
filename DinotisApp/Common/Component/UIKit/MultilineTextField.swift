@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import UIKit
+import DinotisDesignSystem
 
 private struct UITextViewWrapper: UIViewRepresentable {
 	typealias UIViewType = UITextView
@@ -23,7 +24,7 @@ private struct UITextViewWrapper: UIViewRepresentable {
 		textField.delegate = context.coordinator
 		
 		textField.isEditable = true
-		textField.font = UIFont(name: FontManager.Montserrat.regular, size: 12)
+		textField.font = UIFont(name: "Roboto-Regular", size: 12)
 		textField.isSelectable = true
 		textField.isUserInteractionEnabled = true
 		textField.isScrollEnabled = true
@@ -139,9 +140,9 @@ struct MultilineTextField: View {
 	
 	var body: some View {
 		ZStack(alignment: .topLeading) {
-			if isShowingPlaceholder {
+			if isShowingPlaceholder && text.isEmpty {
 				Text(placeholder)
-					.font(.montserratRegular(size: 12))
+					.font(.robotoRegular(size: 12))
 					.foregroundColor(UIApplication.shared.windows.first?.overrideUserInterfaceStyle == .dark ? .white.opacity(0.5) : Color.black.opacity(0.5))
 					.padding(5)
 					.padding(.top, 2)
@@ -159,7 +160,7 @@ struct MultilineTextField: View {
 				}
 			)
 			.frame(minHeight: abs(dynamicHeight) >= 200 ? abs(200) : abs(dynamicHeight), maxHeight: abs(dynamicHeight) >= 200 ? abs(200) : abs(dynamicHeight))
-			.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+            .font(.robotoRegular(size: 12))
 			.disableAutocorrection(true)
 		}
 	}

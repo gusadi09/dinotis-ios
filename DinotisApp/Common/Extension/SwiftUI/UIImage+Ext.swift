@@ -12,8 +12,8 @@ extension UIImage {
 		guard let data = self.pngData() else { return }
 		do {
 			try data.write(to: url)
-		} catch (let error) {
-			print("Error \(error.localizedDescription)")
+		} catch {
+
 		}
 	}
 	

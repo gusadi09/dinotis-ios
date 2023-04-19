@@ -12,8 +12,8 @@ struct Bank: Codable {
 	let name: String?
 	let iconUrl: String?
 	let xenditCode: String?
-	let createdAt: String?
-	let updatedAt: String?
+	let createdAt: Date?
+	let updatedAt: Date?
 }
 
 typealias BankResponse = [Bank]

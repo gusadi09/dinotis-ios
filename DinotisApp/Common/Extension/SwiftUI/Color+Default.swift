@@ -24,4 +24,7 @@ extension Color {
 	static let homeBgColor = Color("home-background-color")
     static let secondaryBackground = Color("secondary-background")
 	static let playerBackgroundColor = Color("player-bg-color")
+    static let attentionPink = Color("attention-pink")
+    static let infoColor = Color("info-color")
+	static let softYellowDinotis = Color("yellow-dinotis")
 }

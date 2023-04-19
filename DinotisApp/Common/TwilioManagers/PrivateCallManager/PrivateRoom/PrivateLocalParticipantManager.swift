@@ -8,6 +8,7 @@
 import Combine
 import TwilioVideo
 import Foundation
+import DinotisData
 
 class PrivateLocalParticipantManager: NSObject {
     let changePublisher = PassthroughSubject<PrivateLocalParticipantManager, Never>()
@@ -21,7 +22,7 @@ class PrivateLocalParticipantManager: NSObject {
         }
         set {
             guard let newValue = newValue, let captureDevice = CameraSource.captureDevice(position: newValue) else {
-                print("Unable to create capture device."); return
+                return
             }
             
             cameraSource?.selectCaptureDevice(captureDevice) { _, _, error in
@@ -29,7 +30,7 @@ class PrivateLocalParticipantManager: NSObject {
                     print("Select capture device error: \(error)")
                 }
 
-				StateObservable.shared.cameraPositionUsed = newValue
+                StateObservable.shared.cameraPositionUsed = newValue
             }
         }
     }
@@ -64,8 +65,10 @@ class PrivateLocalParticipantManager: NSObject {
             guard oldValue != isCameraOn else { return }
             
             if isCameraOn {
+                guard let window = self.app.connectedScenes.first(where: { $0 is UIWindowScene }) as? UIWindowScene else { return }
+                guard let layer = window.windows.first else { return }
                 let sourceOptions = CameraSourceOptions { builder in
-                    guard let scene = self.app.windows.filter({ $0.isKeyWindow }).first?.windowScene else { return }
+                    guard let scene = layer.windowScene else { return }
                     
                     builder.orientationTracker = UserInterfaceTracker(scene: scene)
                 }
@@ -154,4 +157,5 @@ extension PrivateLocalParticipantManager: CameraSourceDelegate {
         changePublisher.send(self)
     }
 }
+
 
