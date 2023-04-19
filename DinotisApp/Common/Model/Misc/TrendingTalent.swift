@@ -6,30 +6,15 @@
 //
 
 import Foundation
+import DinotisData
 
 struct TrendingTalent: Codable {
 	let id: String
-	let createdAt: String?
-	let updatedAt: String?
+	let createdAt: Date?
+	let updatedAt: Date?
 	let talentId: String?
 	let updatedById: String?
 	let talent: TalentData
-}
-
-struct TalentData: Codable {
-	let id: String
-	var name: String?
-	let username: String?
-	let email: String?
-	var profilePhoto: String?
-	let profileDescription: String?
-	let emailVerifiedAt: String?
-	let isVerified: Bool?
-	let professions: [ProfessionData]?
-}
-
-struct ProfessionData: Codable {
-	let profession: ProfessionTrendingTalent
 }
 
 struct ProfessionTrendingTalent: Codable {

@@ -1,0 +1,14 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Gus Adi on 16/01/23.
+  
+*/
+
+"internal_server_error_text" = "Maaf atas ketidaknyamanan kamu, saat ini server kami sedang dalam perbaikan, silahkan coba beberapa saat lagi.";
+"cashback_coin_text" = "Selamat!! Kamu mendapat cashback sebesar %@ koin";
+"cashback_percentage_text" = "Selamat!! Kamu mendapat cashback sebesar %@%%";
+"discount_coin_text" = "Selamat!! Kamu mendapat potongan sebesar %@ koin";
+"discount_price_text" = "Selamat!! Kamu mendapat potongan sebesar %@";
+"discount_percentage_text" = "Selamat!! Kamu mendapat potongan sebesar %@%%";

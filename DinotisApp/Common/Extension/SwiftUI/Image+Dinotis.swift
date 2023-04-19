@@ -124,6 +124,19 @@ extension Image {
 		static let deleteAccountIcon = Image("ic-delete-acc-btn")
 		static let otpWhatsappIcon = Image("ic-whatsapp-otp")
 		static let otpSmsIcon = Image("ic-sms")
+        static let redPricetagIcon = Image("ic-pricetag-red")
+        static let redCameraVideoIcon = Image("ic-red-camera-video")
+        static let formNoteIcon = Image("ic-form-note")
+        static let messageIcon = Image("ic-message")
+        static let xmarkIcon = Image("ic-xmark")
+        static let flatPlaneButtonIcon = Image("ic-flat-plane")
+        static let rateCardIcon = Image("ic-ratecard")
+        static let newBadgeIcon = Image("ic-new-badge")
+	}
+
+	enum dinotisV3 {
+		static let splashscreenImage = Image("img-splashscreen-v3")
+		static let splashscreenBackgroundImage = Image("splashscreen-bg-img")
 	}
 	
 	static func base64Image(with url: String) -> Image {

@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import DinotisDesignSystem
+import DinotisData
 
 struct HomePrivateFeatureCard: View {
-	@Binding var user: User
-	@Binding var meeting: UserMeeting
+	@Binding var user: UserResponse
+	@Binding var meeting: UserMeetingData
 	
 	var onTapProfile: () -> Void
 	
@@ -20,12 +22,12 @@ struct HomePrivateFeatureCard: View {
 					onTapProfile()
 				}, label: {
 					HStack {
-						ProfileImageContainer(profilePhoto: $user.profilePhoto, name: $user.name, width: 40, height: 40)
+                        ProfileImageContainer(profilePhoto: .constant(user.profilePhoto), name: .constant(user.name), width: 40, height: 40)
 						
 						if let name = user.name, let isVerif = user.isVerified {
 							VStack(alignment: .leading) {
 								Text(name)
-									.font(.montserratSemiBold(size: 14))
+									.font(.robotoMedium(size: 14))
 									.foregroundColor(.black)
 									.lineLimit(2)
 								
@@ -37,7 +39,7 @@ struct HomePrivateFeatureCard: View {
 											.frame(height: 13)
 										
 										Text(LocaleText.homeScreenVerified)
-											.font(.montserratSemiBold(size: 12))
+											.font(.robotoMedium(size: 12))
 											.foregroundColor(.black)
 										
 										Spacer()
@@ -52,7 +54,7 @@ struct HomePrivateFeatureCard: View {
 				.padding(.bottom, 10)
 				
 				Text(meeting.title.orEmpty())
-					.font(.montserratBold(size: 14))
+					.font(.robotoBold(size: 14))
 					.foregroundColor(.black)
 				
 				HStack(spacing: 10) {
@@ -60,9 +62,9 @@ struct HomePrivateFeatureCard: View {
 						.resizable()
 						.scaledToFit()
 						.frame(height: 18)
-					if let dateStart = dateISOFormatter.date(from: meeting.startAt.orEmpty()) {
-						Text(dateFormatter.string(from: dateStart))
-							.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+					if let dateStart = meeting.startAt {
+						Text(DateUtils.dateFormatter(dateStart, forFormat: .EEEEddMMMMyyyy))
+                            .font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 					}
 				}
@@ -73,10 +75,10 @@ struct HomePrivateFeatureCard: View {
 						.scaledToFit()
 						.frame(height: 18)
 					
-					if let timeStart = dateISOFormatter.date(from: meeting.startAt.orEmpty()),
-						 let timeEnd = dateISOFormatter.date(from: meeting.endAt.orEmpty()) {
-						Text("\(timeFormatter.string(from: timeStart)) - \(timeFormatter.string(from: timeEnd))")
-							.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+					if let timeStart = meeting.startAt,
+						 let timeEnd = meeting.endAt {
+						Text("\(DateUtils.dateFormatter(timeStart, forFormat: .HHmm)) - \(DateUtils.dateFormatter(timeEnd, forFormat: .HHmm))")
+                            .font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 					}
 				}
@@ -97,7 +99,7 @@ struct HomePrivateFeatureCard: View {
 								Spacer()
 								
 								Text(LocaleText.homeScreenSeeSchedule)
-									.font(.montserratSemiBold(size: 12))
+									.font(.robotoMedium(size: 12))
 									.foregroundColor(.white)
 								
 								Spacer()
@@ -105,7 +107,7 @@ struct HomePrivateFeatureCard: View {
 							.padding(13)
 							.background(
 								RoundedRectangle(cornerRadius: 12)
-									.foregroundColor(.primaryViolet)
+									.foregroundColor(.DinotisDefault.primary)
 							)
 						}
 					)
@@ -118,29 +120,6 @@ struct HomePrivateFeatureCard: View {
 		.frame(width: 290)
 		.background(Color.white)
 		.cornerRadius(12)
-		.shadow(color: Color("dinotis-shadow-1").opacity(0.15), radius: 10, x: 0.0, y: 0.0)
+		.shadow(color: Color("dinotis-shadow-1").opacity(0.1), radius: 8, x: 0.0, y: 0.0)
 	}
 }
-
-private let dateFormatter: DateFormatter = {
-	let formatter = DateFormatter()
-	formatter.dateStyle = .short
-	formatter.locale = Locale.current
-	formatter.dateFormat = "EEEE, dd MMMM yyyy"
-	return formatter
-}()
-
-private let dateISOFormatter: DateFormatter = {
-	let dateFormatter = DateFormatter()
-	dateFormatter.locale = Locale.current
-	dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-	return dateFormatter
-}()
-
-private let timeFormatter: DateFormatter = {
-	let formatter = DateFormatter()
-	formatter.dateStyle = .short
-	formatter.locale = Locale.current
-	formatter.dateFormat = "HH.mm"
-	return formatter
-}()

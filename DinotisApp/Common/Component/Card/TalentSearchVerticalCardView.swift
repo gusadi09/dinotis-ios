@@ -6,13 +6,10 @@
 //
 
 import SwiftUI
+import DinotisDesignSystem
 
 struct TalentSearchVerticalCardView: View {
 	@State var user: Talent
-	
-	@State var isLast: Bool
-	
-	@Binding var take: Int
 	
 	var body: some View {
 		HStack(spacing: 15) {
@@ -21,7 +18,7 @@ struct TalentSearchVerticalCardView: View {
 			VStack(alignment: .leading, spacing: 10) {
 				HStack {
 					Text(user.name ?? "")
-						.font(Font.custom(FontManager.Montserrat.bold, size: 14))
+                        .font(.robotoBold(size: 14))
 						.minimumScaleFactor(0.9)
 						.lineLimit(1)
 						.foregroundColor(.black)
@@ -33,24 +30,11 @@ struct TalentSearchVerticalCardView: View {
 							.frame(height: 15)
 					}
 				}
-				
-				if isLast {
-					HStack {
-						Text((user.professions?.first?.profession.name).orEmpty())
-							.font(Font.custom(FontManager.Montserrat.regular, size: 12))
-							.foregroundColor(.black)
-					}
-					.onAppear {
-						DispatchQueue.main.async {
-							take += 30
-						}
-					}
-				} else {
-					HStack {
-						Text((user.professions?.first?.profession.name).orEmpty())
-							.font(Font.custom(FontManager.Montserrat.regular, size: 12))
-							.foregroundColor(.black)
-					}
+
+				HStack {
+					Text((user.professions?.first?.profession?.name).orEmpty())
+                        .font(.robotoRegular(size: 12))
+						.foregroundColor(.black)
 				}
 			}
 			

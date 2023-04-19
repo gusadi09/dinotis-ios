@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Introspect
+import DinotisDesignSystem
 
 public struct OTPField: View {
 	
@@ -35,7 +36,7 @@ public struct OTPField: View {
 								.shadow(color: Color.dinotisShadow.opacity(0.25), radius: 30, x: 0, y: 0)
 							
 							Text(self.getDigits(at: index))
-								.font(.montserratBold(size: 25))
+								.font(.robotoBold(size: 25))
 								.foregroundColor(.black)
 						}
 					}

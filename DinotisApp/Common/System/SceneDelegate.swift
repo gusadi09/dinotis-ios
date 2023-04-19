@@ -8,6 +8,7 @@
 import UIKit
 import SwiftUI
 import TwilioVideo
+import DinotisData
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	
@@ -58,13 +59,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 					}
 				}
 
-			} else if urlString.contains("meeting") {
+			} else if urlString.contains("booking") {
 				let component = urlString.components(separatedBy: "/")
 
 				if let id = component.last {
-					print(id)
 					state.isGoToDetailSchedule.toggle()
-					state.meetingId = id
+					state.bookId = id
 				}
 			}
 

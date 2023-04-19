@@ -8,11 +8,13 @@
 import Foundation
 import SwiftUI
 
-struct RefreshableScrollView<Content:View>: View {
+struct RefreshableScrollViews<Content:View>: View {
+
 	init(action: @escaping () -> Void, @ViewBuilder content: @escaping () -> Content) {
 		self.content = content
 		self.refreshAction = action
 	}
+	
 	var body: some View {
 		GeometryReader { geometry in
 			ScrollView(showsIndicators: false) {

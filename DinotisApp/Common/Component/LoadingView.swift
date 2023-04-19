@@ -28,19 +28,29 @@ struct ActivityIndicator: UIViewRepresentable {
 struct LoadingView: View {
 	
 	@Binding var isAnimating: Bool
+    var isFullBackground = false
 	
 	var body: some View {
 		VStack {
-			Spacer()
-			HStack {
-				Spacer()
-				ActivityIndicator(isAnimating: $isAnimating, color: .white, style: .medium)
-					.padding(40)
-					.background(Color.black.opacity(0.5))
-					.cornerRadius(10)
-				Spacer()
-			}
-			Spacer()
+            if isFullBackground {
+                ZStack {
+                    Color.black.opacity(0.5)
+                        .edgesIgnoringSafeArea(.all)
+                    
+                    ActivityIndicator(isAnimating: $isAnimating, color: .white, style: .medium)
+                }
+            } else {
+                Spacer()
+                HStack {
+                    Spacer()
+                    ActivityIndicator(isAnimating: $isAnimating, color: .white, style: .medium)
+                        .padding(40)
+                        .background(Color.black.opacity(0.5))
+                        .cornerRadius(10)
+                    Spacer()
+                }
+                Spacer()
+            }
 		}
 	}
 }

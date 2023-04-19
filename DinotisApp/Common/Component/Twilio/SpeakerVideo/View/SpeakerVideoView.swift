@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import DinotisData
+import DinotisDesignSystem
 
 struct SpeakerVideoView: View {
 	@EnvironmentObject var streamManager: StreamManager
@@ -13,6 +15,7 @@ struct SpeakerVideoView: View {
 	@EnvironmentObject var viewModel: TwilioLiveStreamViewModel
     @EnvironmentObject var streamViewModel: StreamViewModel
 	@Binding var speaker: SpeakerVideoViewModel
+	@Binding var firebaseSpeaker: [SpeakerRealtimeResponse]
 	let showHostControls: Bool
 	let isOnSpotlight: Bool
 	
@@ -53,7 +56,7 @@ struct SpeakerVideoView: View {
 						Image(systemName: "pin.fill")
 							.foregroundColor(.white)
 							.padding(9)
-							.background(Color.primaryViolet.opacity(0.4))
+							.background(Color.DinotisDefault.primary.opacity(0.4))
 							.clipShape(Circle())
 							.padding(8)
 					}
@@ -64,24 +67,29 @@ struct SpeakerVideoView: View {
 						Image(systemName: "mic.slash")
 							.foregroundColor(.white)
 							.padding(9)
-							.background(Color.primaryViolet.opacity(0.4))
+							.background(Color.DinotisDefault.primary.opacity(0.4))
 							.clipShape(Circle())
 							.padding(8)
 					}
 				}
 				Spacer()
 				HStack(alignment: .bottom) {
-					Text(speaker.displayName)
-						.lineLimit(1)
+					HStack(spacing: 3) {
+						Text(speaker.isYou ? LocaleText.you : (firebaseSpeaker.unique().first(where: { $0.identity == speaker.identity })?.identity).orEmpty())
+							.lineLimit(1)
+
+						Text("\((firebaseSpeaker.unique().first(where: { $0.identity == speaker.identity })?.coHost ?? false) ? "(Co-Host)" : "")")
+						Text("\((firebaseSpeaker.unique().first(where: { $0.identity == speaker.identity })?.host ?? false) ? "(Host)" : "")")
+					}
 						.foregroundColor(.white)
 						.padding(.horizontal, 6)
 						.padding(.vertical, 2)
 						.background(
 							RoundedRectangle(cornerRadius: 8)
-								.foregroundColor(.primaryViolet.opacity(0.7))
+								.foregroundColor(.DinotisDefault.primary.opacity(0.7))
 						)
 						.cornerRadius(2)
-						.font(.montserratSemiBold(size: 14))
+						.font(.robotoMedium(size: 14))
 					Spacer()
 					
 					if showHostControls && !speaker.isYou {
@@ -97,9 +105,9 @@ struct SpeakerVideoView: View {
 								Button(
 									action: {
 										let message = RoomMessage(messageType: .spotlight, toParticipantIdentity: speaker.identity)
-										streamManager.roomManager.localParticipant.sendMessage(message)
+										streamManager.roomManager?.localParticipant.sendMessage(message)
 										
-										let body = SyncSpotlightSpeaker(roomSid: streamManager.roomManager.roomSID.orEmpty(), userIdentity: speaker.identity)
+										let body = SyncSpotlightSpeaker(roomSid: (streamManager.roomManager?.roomSID).orEmpty(), userIdentity: speaker.identity)
 										
 										hostControlsManager.spotlightSpeaker(on: streamManager.meetingId, by: body) {
 											streamManager.isLoading = true
@@ -140,9 +148,9 @@ struct SpeakerVideoView: View {
                                 Button(
                                     action: {
                                         let message = RoomMessage(messageType: .spotlight, toParticipantIdentity: speaker.identity)
-                                        streamManager.roomManager.localParticipant.sendMessage(message)
+                                        streamManager.roomManager?.localParticipant.sendMessage(message)
                                         
-                                        let body = SyncSpotlightSpeaker(roomSid: streamManager.roomManager.roomSID.orEmpty(), userIdentity: speaker.identity)
+                                        let body = SyncSpotlightSpeaker(roomSid: (streamManager.roomManager?.roomSID).orEmpty(), userIdentity: speaker.identity)
                                         
                                         hostControlsManager.spotlightSpeaker(on: streamManager.meetingId, by: body) {
                                             streamManager.isLoading = true
@@ -152,6 +160,7 @@ struct SpeakerVideoView: View {
                                     },
                                     label: { Label(streamViewModel.spotlightUser == speaker.identity ? LocaleText.removeSpotlight : LocaleText.spotlightMe, systemImage: "person.crop.rectangle") }
                                 )
+
                             },
                             label: {
                                 Image(systemName: "ellipsis")
@@ -204,7 +213,7 @@ struct SpeakerVideoView: View {
 //									.padding(5)
 //									.background(
 //										Circle()
-//											.foregroundColor(.primaryViolet.opacity(0.4))
+//											.foregroundColor(.DinotisDefault.primary.opacity(0.4))
 //									)
 //							}
 //						)

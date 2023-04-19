@@ -14,7 +14,7 @@ class SyncManager: NSObject {
 		let userDocument: String?
 		let roomDocument: String?
 	}
-	
+
 	let errorPublisher = PassthroughSubject<Error, Never>()
 	var isConnected: Bool { client != nil }
 	private var client: TwilioSyncClient?

@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import DinotisDesignSystem
 
 struct EmptySchedule: View {
     
@@ -28,11 +29,11 @@ struct EmptySchedule: View {
                     )
 
                 Text(NSLocalizedString("no_schedule_label", comment: ""))
-                    .font(Font.custom(FontManager.Montserrat.bold, size: 14))
+                    .font(.robotoBold(size: 14))
                     .foregroundColor(.black)
 
                 Text(NSLocalizedString("talent_detail_empty_label", comment: ""))
-                    .font(Font.custom(FontManager.Montserrat.regular, size: 12))
+                    .font(.robotoRegular(size: 12))
                     .multilineTextAlignment(.center)
                     .foregroundColor(.black)
             }

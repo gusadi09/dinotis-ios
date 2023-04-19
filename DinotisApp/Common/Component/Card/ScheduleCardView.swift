@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CurrencyFormatter
+import DinotisDesignSystem
 
 struct ScheduleCardView: View {
 	@State var isShowMenu = false
@@ -31,7 +32,7 @@ struct ScheduleCardView: View {
 					
 					if data.endedAt != nil {
 						Text(NSLocalizedString("ended_meeting_card_label", comment: ""))
-							.font(.custom(FontManager.Montserrat.regular, size: 12))
+							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 							.padding(.vertical, 3)
 							.padding(.horizontal, 8)
@@ -51,7 +52,7 @@ struct ScheduleCardView: View {
 										.frame(height: 15)
 
 									Text(NSLocalizedString("edit_schedule", comment: ""))
-										.font(Font.custom(FontManager.Montserrat.semibold, size: 12))
+                                        .font(.robotoMedium(size: 12))
 										.foregroundColor(.black)
 								}
 							})
@@ -70,7 +71,7 @@ struct ScheduleCardView: View {
 											.frame(height: 15)
 
 										Text(NSLocalizedString("delete_schedule", comment: ""))
-											.font(Font.custom(FontManager.Montserrat.semibold, size: 12))
+                                            .font(.robotoMedium(size: 12))
 											.foregroundColor(.black)
 									}
 								})
@@ -88,17 +89,18 @@ struct ScheduleCardView: View {
 									.frame(height: 5)
 							}
 							.foregroundColor(Color("btn-stroke-1"))
+                            .contentShape(Rectangle())
 						}
 
 					}
 				}
 				
 				Text(data.title.orEmpty())
-					.font(Font.custom(FontManager.Montserrat.bold, size: 14))
+                    .font(.robotoBold(size: 14))
 					.foregroundColor(.black)
 				
 				Text(data.meetingDescription.orEmpty())
-					.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+					.font(.robotoRegular(size: 12))
 					.foregroundColor(.black)
 					.padding(.bottom, 10)
 				
@@ -108,9 +110,9 @@ struct ScheduleCardView: View {
 						.scaledToFit()
 						.frame(height: 18)
 					
-					if let dateStart = dateISOFormatter.date(from: data.startAt.orEmpty()) {
-						Text(dateFormatter.string(from: dateStart))
-							.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+					if let dateStart = data.startAt {
+                        Text(DateUtils.dateFormatter(dateStart, forFormat: .EEEEddMMMMyyyy))
+							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 					}
 				}
@@ -121,10 +123,10 @@ struct ScheduleCardView: View {
 						.scaledToFit()
 						.frame(height: 18)
 					
-					if let timeStart =  data.startAt.orEmpty().toDate(format: .utcV2),
-						 let timeEnd = data.endAt.orEmpty().toDate(format: .utcV2) {
-						Text("\(timeStart.toString(format: .HHmm)) - \(timeEnd.toString(format: .HHmm))")
-							.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+					if let timeStart =  data.startAt,
+						 let timeEnd = data.endAt {
+                        Text("\(DateUtils.dateFormatter(timeStart, forFormat: .HHmm)) - \(DateUtils.dateFormatter(timeEnd, forFormat: .HHmm))")
+							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 					}
 				}
@@ -136,13 +138,13 @@ struct ScheduleCardView: View {
 							.scaledToFit()
 							.frame(height: 18)
 						
-						Text("\(String.init((data.bookings.filter({ items in items.bookingPayment?.paidAt != nil }).count)))/\(String.init(data.slots.orZero())) \(NSLocalizedString("participant", comment: ""))")
-							.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+						Text("\(String.init((data.participants).orZero()))/\(String.init(data.slots.orZero())) \(NSLocalizedString("participant", comment: ""))")
+							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 						
 						if data.slots.orZero() > 1 && !(data.isLiveStreaming ?? false) {
 							Text(NSLocalizedString("group", comment: ""))
-								.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+								.font(.robotoRegular(size: 12))
 								.foregroundColor(.black)
 								.padding(.vertical, 5)
 								.padding(.horizontal)
@@ -155,7 +157,7 @@ struct ScheduleCardView: View {
 							
 						} else if data.isLiveStreaming ?? false {
 							Text(LocaleText.liveStreamText)
-								.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+								.font(.robotoRegular(size: 12))
 								.foregroundColor(.black)
 								.padding(.vertical, 5)
 								.padding(.horizontal)
@@ -167,7 +169,7 @@ struct ScheduleCardView: View {
 								)
 						} else {
 							Text(NSLocalizedString("private", comment: ""))
-								.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+                                .font(.robotoRegular(size: 12))
 								.foregroundColor(.black)
 								.padding(.vertical, 5)
 								.padding(.horizontal)
@@ -194,16 +196,14 @@ struct ScheduleCardView: View {
 					
 					if data.price == "0" {
 						Text(NSLocalizedString("free_text", comment: ""))
-							.font(.montserratBold(size: 14))
-							.foregroundColor(.primaryViolet)
+							.font(.robotoBold(size: 14))
+							.foregroundColor(.DinotisDefault.primary)
 							.multilineTextAlignment(.center)
-					} else {
-						if data.slots.orZero() <= 1 {
-							Text(data.price.orEmpty().toPriceFormat())
-								.font(.montserratBold(size: 14))
-								.foregroundColor(.primaryViolet)
-						}
-					}
+                    } else {
+                        Text(data.price.orEmpty().toPriceFormat())
+                            .font(.robotoBold(size: 14))
+                            .foregroundColor(.DinotisDefault.primary)
+                    }
 					
 					Spacer()
 					
@@ -211,7 +211,7 @@ struct ScheduleCardView: View {
 						onTapButton()
 					}, label: {
 						Text(NSLocalizedString("view_details", comment: ""))
-							.font(Font.custom(FontManager.Montserrat.semibold, size: 12))
+							.font(.robotoMedium(size: 12))
 							.foregroundColor(.black)
 							.padding()
 							.padding(.horizontal, 10)

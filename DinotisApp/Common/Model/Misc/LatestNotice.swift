@@ -13,8 +13,8 @@ struct LatestNoticeResponse: Codable {
 	let title: String?
 	let description: String?
 	let isActive: Bool?
-	let createdAt: String?
-	let updatedAt: String?
+	let createdAt: Date?
+	let updatedAt: Date?
 }
 
 typealias LatestResponse = [LatestNoticeResponse]

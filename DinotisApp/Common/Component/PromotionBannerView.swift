@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SDWebImageSwiftUI
+import DinotisData
 
 struct PromotionBannerView: View {
 	
@@ -21,7 +22,7 @@ struct PromotionBannerView: View {
 }
 
 struct BannerImage: View {
-	var content: Banner?
+	var content: BannerData?
 	var action: (() -> Void)
 	var geo: GeometryProxy
 	
@@ -47,12 +48,12 @@ struct BannerImage: View {
 
 struct PageViewController: UIViewControllerRepresentable {
 	var controllers: [UIViewController]
-	@Binding var currentPage: Int
-	@State private var previousPage = 0
+	@Binding var currentPage: Int?
+    @State private var previousPage: Int? = 0
 	
 	init(
 		controllers: [UIViewController],
-		currentPage: Binding<Int>
+		currentPage: Binding<Int?>
 	) {
 		self.controllers = controllers
 		self._currentPage = currentPage
@@ -83,7 +84,7 @@ struct PageViewController: UIViewControllerRepresentable {
 		context.coordinator.parent = self
 		
 		pageViewController.setViewControllers(
-			[controllers[currentPage]], direction: .forward, animated: true)
+            [controllers[currentPage.orZero()]], direction: .forward, animated: true)
 	}
 	
 	class Coordinator: NSObject, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
@@ -143,7 +144,7 @@ struct PageViewController: UIViewControllerRepresentable {
 
 struct PageControl: UIViewRepresentable {
 	var numberOfPages: Int
-	@Binding var currentPage: Int
+	@Binding var currentPage: Int?
 	
 	func makeCoordinator() -> Coordinator {
 		Coordinator(self)
@@ -163,7 +164,7 @@ struct PageControl: UIViewRepresentable {
 	}
 	
 	func updateUIView(_ uiView: UIPageControl, context: Context) {
-		uiView.currentPage = currentPage
+        uiView.currentPage = currentPage.orZero()
 		uiView.numberOfPages = numberOfPages
 	}
 	
@@ -180,26 +181,84 @@ struct PageControl: UIViewRepresentable {
 	}
 }
 
+struct PageControlPromotion: UIViewRepresentable {
+    var numberOfPages: Int
+    @Binding var currentPage: Int
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    
+    func makeUIView(context: Context) -> UIPageControl {
+        let control = UIPageControl()
+        control.numberOfPages = numberOfPages
+        control.pageIndicatorTintColor = UIColor.systemGray5
+        control.currentPageIndicatorTintColor = UIColor(named: "btn-stroke-1")
+        control.addTarget(
+            context.coordinator,
+            action: #selector(Coordinator.updateCurrentPage(sender:)),
+            for: .valueChanged)
+        
+        return control
+    }
+    
+    func updateUIView(_ uiView: UIPageControl, context: Context) {
+        uiView.currentPage = currentPage
+        uiView.numberOfPages = numberOfPages
+    }
+    
+    class Coordinator: NSObject {
+        var control: PageControlPromotion
+        
+        init(_ control: PageControlPromotion) {
+            self.control = control
+        }
+        @objc
+        func updateCurrentPage(sender: UIPageControl) {
+            control.currentPage = sender.currentPage
+        }
+    }
+}
+
 struct PageView<Page: View>: View {
 	var viewControllers: [UIHostingController<Page>]
 	var geo: GeometryProxy
-	@State var currentPage = 0
+    var view: [Page]
+    @State var currentPage = 0
 	init(_ views: [Page], geo: GeometryProxy) {
 		self.viewControllers = views.map { UIHostingController(rootView: $0) }
 		self.geo = geo
+        self.view = views
 	}
 	
 	var body: some View {
-		VStack(alignment: .center) {
-			PageViewController(controllers: viewControllers, currentPage: $currentPage)
-				.frame(height: geo.size.width/2.2)
-			
-			PageControl(numberOfPages: viewControllers.count, currentPage: $currentPage)
-		}
-		.frame(height: geo.size.width/2.1)
-		.onAppear {
-			currentPage = 0
-		}
+        VStack(alignment: .center) {
+            Group {
+                if view.count <= 1 {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        ForEach(view.indices, id: \.self) {
+                            view[$0]
+                                .tag($0)
+                        }
+                    }
+                } else {
+                    TabView(selection: $currentPage) {
+                        ForEach(view.indices, id: \.self) {
+                            view[$0]
+                                .tag($0)
+                        }
+                    }
+                    .tabViewStyle(.page(indexDisplayMode: .never))
+                }
+            }
+            .frame(height: geo.size.width/2.2)
+            
+            PageControlPromotion(numberOfPages: view.count, currentPage: $currentPage)
+        }
+        .frame(height: geo.size.width/2)
+        .onAppear {
+            currentPage = 0
+        }
 	}
 }
 
@@ -217,7 +276,7 @@ struct ProfileBannerView: View {
 }
 
 struct ProfileBannerImage: View {
-    var content: Highlights?
+    var content: HighlightData?
     
     private let config = Configuration.shared
     
@@ -243,7 +302,39 @@ struct ProfileBannerImage: View {
                     .padding()
             }
         }
-        .background(Color.secondaryBackground)
+        .background(Color.clear)
+        .buttonStyle(.plain)
+    }
+}
+
+struct ProfileBannerImageTemp: View {
+    var content: Highlights?
+    
+    private let config = Configuration.shared
+    
+    var body: some View {
+            Group {
+            if content?.imgUrl?.prefix(5) != "https" {
+                WebImage(url: URL(string: "\(config.environment.baseURL)/uploads/" + (content?.imgUrl).orEmpty()))
+                    .resizable()
+                    .customLoopCount(1)
+                    .playbackRate(2.0)
+                    .placeholder {RoundedRectangle(cornerRadius: 12).foregroundColor(Color(.systemGray3))}
+                    .indicator(.activity)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .padding()
+            } else {
+                WebImage(url: URL(string: (content?.imgUrl).orEmpty()))
+                    .resizable()
+                    .customLoopCount(1)
+                    .playbackRate(2.0)
+                    .placeholder {RoundedRectangle(cornerRadius: 12).foregroundColor(Color(.systemGray3))}
+                    .indicator(.activity)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .padding()
+            }
+        }
+        .background(Color.clear)
         .buttonStyle(.plain)
     }
 }
@@ -251,7 +342,7 @@ struct ProfileBannerImage: View {
 struct ProfilePageView<Page: View>: View {
     var viewControllers: [UIHostingController<Page>]
     var geo: GeometryProxy
-    @State var currentPage = 0
+    @State var currentPage: Int? = 0
     init(_ views: [Page], geo: GeometryProxy) {
         self.viewControllers = views.map { UIHostingController(rootView: $0) }
         self.geo = geo
@@ -350,7 +441,7 @@ struct SingleProfileImageBanner: View {
 struct PagesView: View {
 	var geo: GeometryProxy
 	var pages: [AnyView]
-	@State var currentPage = 0
+	@State var currentPage: Int? = 0
 	init(geo: GeometryProxy, @PagesBuilder pages: () -> [AnyView]) {
 		self.pages = pages()
 		self.geo = geo

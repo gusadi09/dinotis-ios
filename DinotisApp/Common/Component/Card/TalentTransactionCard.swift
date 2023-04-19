@@ -7,9 +7,11 @@
 
 import SwiftUI
 import CurrencyFormatter
+import DinotisDesignSystem
+import DinotisData
 
 struct TalentTransactionCard: View {
-	@Binding var data: BalanceDetails
+	@Binding var data: BalanceDetailData
 	
 	var body: some View {
 		HStack {
@@ -20,12 +22,12 @@ struct TalentTransactionCard: View {
 			
 			VStack(alignment: .leading, spacing: 8) {
 				Text(!(data.isOut ?? true) ? NSLocalizedString("revenue", comment: "") : NSLocalizedString("withdraw", comment: ""))
-					.font(Font.custom(FontManager.Montserrat.bold, size: 14))
+                    .font(.robotoBold(size: 14))
 					.foregroundColor(.black)
 				
-				if let dateISO = dateISOFormatter.date(from: data.createdAt ?? ""), let dateStr = dateFormatter.string(from: dateISO) {
-					Text(dateStr)
-						.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+				if let dateISO = data.createdAt {
+                    Text(DateUtils.dateFormatter(dateISO, forFormat: .EEEEddMMMMyyyy))
+                        .font(.robotoRegular(size: 12))
 						.foregroundColor(.black)
 				}
 			}
@@ -35,11 +37,11 @@ struct TalentTransactionCard: View {
 			VStack(alignment: .trailing) {
 				HStack {
 					Text(!(data.isOut ?? true) ? "+" : "-")
-						.font(Font.custom(FontManager.Montserrat.bold, size: 14))
+                        .font(.robotoBold(size: 14))
 						.foregroundColor(!(data.isOut ?? true) ? .green : .black)
 					
 					Text(currencyFormatter.string(from: Double(data.amount ?? 0)) ?? "")
-						.font(Font.custom(FontManager.Montserrat.bold, size: 14))
+                        .font(.robotoBold(size: 14))
 						.foregroundColor(!(data.isOut ?? true) ? .green : .black)
 				}
 				
@@ -47,7 +49,7 @@ struct TalentTransactionCard: View {
 					if let dataIsFailed = data.withdraw?.isFailed {
 						if data.withdraw?.doneAt != nil && !dataIsFailed {
 							Text(NSLocalizedString("finished", comment: ""))
-								.font(.custom(FontManager.Montserrat.regular, size: 12))
+								.font(.robotoRegular(size: 12))
 								.foregroundColor(.black)
 								.padding(.vertical, 5)
 								.padding(.horizontal, 8)
@@ -59,7 +61,7 @@ struct TalentTransactionCard: View {
 								)
 						} else if dataIsFailed {
 							Text(NSLocalizedString("fail", comment: ""))
-								.font(.custom(FontManager.Montserrat.regular, size: 12))
+								.font(.robotoRegular(size: 12))
 								.foregroundColor(.black)
 								.padding(.vertical, 3)
 								.padding(.horizontal, 8)
@@ -74,7 +76,7 @@ struct TalentTransactionCard: View {
 				} else {
 					if data.withdraw?.doneAt != nil || (data.amount ?? 0) >= 0 {
 						Text(NSLocalizedString("finished", comment: ""))
-							.font(.custom(FontManager.Montserrat.regular, size: 12))
+							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 							.padding(.vertical, 5)
 							.padding(.horizontal, 8)

@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import DinotisData
+import DinotisDesignSystem
 
 struct SpeakerGridView: View {
 	@EnvironmentObject var viewModel: SpeakerGridViewModel
@@ -40,12 +42,12 @@ struct SpeakerGridView: View {
 
 	private var columnCount: Int {
 		if UIDevice.current.userInterfaceIdiom == .pad {
-			return gridItemCount < 4 ? 1 : 2
+			return viewModel.onscreenSpeakers.count >= 4 ? 4 : viewModel.onscreenSpeakers.count
 		} else {
 			if isPortraitOrientation {
-				return gridItemCount < 4 ? 1 : 2
+				return 2
 			} else {
-				return (gridItemCount + gridItemCount % rowCount) / rowCount
+				return viewModel.onscreenSpeakers.count >= 4 ? 4 : viewModel.onscreenSpeakers.count
 			}
 		}
 	}
@@ -67,9 +69,10 @@ struct SpeakerGridView: View {
 						TabView {
 							
 							VStack {
-								if let indexPath = viewModel.pages.indexPathOfParticipant(identity: streamViewModel.spotlightUser), let dataUser = $viewModel.pages[indexPath.section].speakerPage[indexPath.item] {
+								if let indexPath = viewModel.pages.indexPathOfParticipant(identity: streamViewModel.spotlightUser)  {
 									SpeakerVideoView(
-										speaker: dataUser,
+										speaker: $viewModel.pages[indexPath.section].speakerPage[indexPath.item],
+										firebaseSpeaker: $streamManager.speakerArrayRealtime,
 										showHostControls: role == "host",
 										isOnSpotlight: true
 									)
@@ -77,72 +80,101 @@ struct SpeakerGridView: View {
 									.padding(.top, 10)
 									.padding([.horizontal, .bottom])
 								}
-							}
-
-							if let data = $viewModel.pages {
-								if data.isEmpty {
-									VStack {
-										Spacer()
-
-										Text(LocaleText.onlyYouOnRoom)
-											.font(.montserratBold(size: 14))
-											.foregroundColor(.white)
-
-										Spacer()
-									}
-								} else {
-									ForEach(data, id: \.identifier) { page in
-										LazyVGrid(columns: columns, spacing: spacing) {
-											ForEach(page.speakerPage, id: \.identity) { $participant in
-													SpeakerVideoView(
-														speaker: $participant,
-														showHostControls: role == "host",
-														isOnSpotlight: false
-													)
-													.frame(height: geometry.size.height / CGFloat(rowCount) - spacing)
-													.clipShape(RoundedRectangle(cornerRadius: 8))
-
-											}
-										}
-										.padding([.horizontal, .bottom])
-										.padding(.bottom)
-										.padding(.top)
-									}
-								}
-							}
+                            }
+                            
+                            VStack {
+                                if $viewModel.onscreenSpeakers.isEmpty {
+                                    VStack {
+                                        Spacer()
+                                        
+                                        Text(LocaleText.onlyYouOnRoom)
+                                            .font(.robotoBold(size: 14))
+                                            .foregroundColor(.white)
+                                        
+                                        Spacer()
+                                    }
+                                } else {
+                                    
+                                    ScrollView {
+                                        LazyVGrid(columns: columns, spacing: spacing) {
+                                            ForEach($viewModel.onscreenSpeakers, id: \.identity) { $participant in
+                                                SpeakerVideoView(
+                                                    speaker: $participant,
+                                                    firebaseSpeaker: $streamManager.speakerArrayRealtime,
+                                                    showHostControls: role == "host",
+                                                    isOnSpotlight: false
+                                                )
+                                                .frame(
+                                                    height: UIDevice.current.userInterfaceIdiom == .pad ? 400 : 200
+                                                )
+                                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                                                
+                                            }
+                                        }
+                                        .padding([.horizontal, .bottom])
+                                        .padding(.bottom)
+                                        .padding(.top)
+                                    }
+                                    
+                                }
+                            }
 
 						}
 						.tabViewStyle(.page)
 
 					} else {
-						TabView {
-							if presentationLayoutViewModel.isPresenting {
-								PresentationLayoutView(
-									spacing: spacing,
-									role: StateObservable.shared.twilioRole
-								)
-								.padding([.top, .horizontal])
-							}
-							
-							ForEach($viewModel.pages, id: \.identifier) { $page in
-								LazyVGrid(columns: columns, spacing: spacing) {
-									ForEach($page.speakerPage, id: \.identity) { $participant in
-										SpeakerVideoView(
-											speaker: $participant,
-											showHostControls: role == "host",
-											isOnSpotlight: false
-										)
-										.frame(height: geometry.size.height / CGFloat(rowCount) - spacing)
-										.clipShape(RoundedRectangle(cornerRadius: 8))
-									}
-								}
-								.padding(.top)
-								.padding([.horizontal, .bottom])
-								.padding(.bottom)
-							}
-						}
-						.tabViewStyle(PageTabViewStyle())
-					}
+                        TabView {
+                            if presentationLayoutViewModel.isPresenting {
+                                PresentationLayoutView(
+                                    spacing: spacing,
+                                    role: StateObservable.shared.twilioRole
+                                )
+                                .padding([.top, .horizontal])
+                            }
+                            
+                            VStack {
+                                if $viewModel.onscreenSpeakers.count <= 1 {
+                                    VStack {
+                                        ForEach($viewModel.onscreenSpeakers, id: \.identity) { $participant in
+                                            SpeakerVideoView(
+                                                speaker: $participant,
+                                                firebaseSpeaker: $streamManager.speakerArrayRealtime,
+                                                showHostControls: role == "host",
+                                                isOnSpotlight: false
+                                            )
+                                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                                            
+                                        }
+                                    }
+                                    .padding([.horizontal, .bottom])
+                                    .padding(.bottom)
+                                    .padding(.top)
+                                } else {
+                                    ScrollView {
+                                        LazyVGrid(columns: columns, spacing: spacing) {
+                                            ForEach($viewModel.onscreenSpeakers, id: \.identity) { $participant in
+                                                SpeakerVideoView(
+                                                    speaker: $participant,
+                                                    firebaseSpeaker: $streamManager.speakerArrayRealtime,
+                                                    showHostControls: role == "host",
+                                                    isOnSpotlight: false
+                                                )
+                                                .frame(
+                                                    height: UIDevice.current.userInterfaceIdiom == .pad ? 400 : 200
+                                                )
+                                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                                                
+                                            }
+                                        }
+                                        .padding([.horizontal, .bottom])
+                                        .padding(.bottom)
+                                        .padding(.top)
+                                    }
+                                }
+                            }
+                        }
+                        .tabViewStyle(PageTabViewStyle())
+                    }
 				}
 			}
 		}

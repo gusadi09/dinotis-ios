@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import DinotisData
 
 struct ProfileImageContainer: View {
 	@Binding var profilePhoto: String?
@@ -21,8 +22,9 @@ struct ProfileImageContainer: View {
         if isChatBox {
 			ImageLoader(
 				url: (profilePhoto != nil ?
-					  "\(config.environment.openURL)" + profilePhoto.orEmpty() : "https://avatar.oxro.io/avatar.svg?name=" +
-					  (name?.replacingOccurrences(of: " ", with: "+")).orEmpty()),
+					  "\(config.environment.openURL)" + profilePhoto.orEmpty() : "https://ui-avatars.com/api/?background=random&format=png&name=" +
+					  name.orEmpty().replacingOccurrences(of: " ", with: "+")
+				),
 				width: width,
 				height: height
 			)
@@ -30,9 +32,11 @@ struct ProfileImageContainer: View {
 		} else {
 			if profilePhoto?.prefix(5) != "https" {
 				ImageLoader(
-					url: (profilePhoto != nil ?
-						  "\(config.environment.baseURL)/uploads/" + (profilePhoto.orEmpty()) : "https://avatar.oxro.io/avatar.svg?name=" +
-						  (name?.replacingOccurrences(of: " ", with: "+")).orEmpty()),
+					url: (
+						profilePhoto != nil ?
+						  "\(config.environment.baseURL)/uploads/" + (profilePhoto.orEmpty()) : "https://ui-avatars.com/api/?background=random&format=png&name=" +
+						  name.orEmpty().replacingOccurrences(of: " ", with: "+")
+					),
 					width: width,
 					height: height
 				)
@@ -48,7 +52,7 @@ struct ProfileImageContainer: View {
 				ImageLoader(
 					url: (
 						profilePhoto != nil ?
-						profilePhoto.orEmpty() : "https://avatar.oxro.io/avatar.svg?name=" + (name?.replacingOccurrences(of: " ", with: "+")).orEmpty()
+						profilePhoto.orEmpty() : "https://ui-avatars.com/api/?background=random&format=png&name=" + name.orEmpty().replacingOccurrences(of: " ", with: "+")
 					),
 					width: width,
 					height: height

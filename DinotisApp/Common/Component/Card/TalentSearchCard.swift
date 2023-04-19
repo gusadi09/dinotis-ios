@@ -6,51 +6,44 @@
 //
 
 import SwiftUI
+import DinotisDesignSystem
+import DinotisData
 
 struct TalentSearchCard: View {
 	var onTapSee: (() -> Void)
 	
-	@Binding var user: Talent
+	@Binding var user: UserResponse
 	
 	var body: some View {
 		VStack(spacing: 0) {
-			GeometryReader { geo in
 				VStack(spacing: 0) {
-					TalentPhotoProfile(profilePhoto: $user.profilePhoto, name: $user.name, width: geo.size.width, height: geo.size.height/1.3)
-						.frame(height: geo.size.height/1.3)
+                    TalentPhotoProfile(profilePhoto: .constant(user.profilePhoto), name: .constant(user.name), width: 195, height: 200)
+						.frame(height: 200)
 					
 					VStack(spacing: 5) {
-						Text(user.name.orEmpty())
-							.font(Font.custom(FontManager.Montserrat.bold, size: 12))
-							.lineLimit(2)
-							.foregroundColor(.black)
-							.multilineTextAlignment(.center)
-							.minimumScaleFactor(0.9)
-						
-						if let verified = user.isVerified {
-							if verified {
-								HStack {
-									Image.Dinotis.accountVerifiedIcon
-										.resizable()
-										.scaledToFit()
-										.frame(height: 12)
-									
-									Text(LocaleText.homeScreenVerified)
-										.font(.montserratSemiBold(size: 11))
-										.foregroundColor(.black)
-								}
-								.padding(.bottom, 4)
-							}
-						}
+                        if user.isVerified ?? false {
+                            Text("\(user.name.orEmpty()) \(Image.Dinotis.accountVerifiedIcon)")
+                                .font(.robotoBold(size: 12))
+                                .lineLimit(2)
+                                .foregroundColor(.black)
+                                .multilineTextAlignment(.center)
+                        } else {
+                            Text("\(user.name.orEmpty())")
+                                .font(.robotoBold(size: 12))
+                                .lineLimit(2)
+                                .foregroundColor(.black)
+                                .multilineTextAlignment(.center)
+                        }
 					}
-					.padding(8)
+                    .padding(.top, 8)
+                    .padding(.horizontal)
+                    .padding(.bottom, 10)
 				}
-			}
 		}
-		.frame(width: 195, height: 225)
+		.frame(width: 195)
 		.background(Color.white)
 		.clipShape(RoundedRectangle(cornerRadius: 12))
-		.shadow(color: Color("dinotis-shadow-1").opacity(0.08), radius: 10, x: 0.0, y: 0.0)
+		.shadow(color: Color.dinotisShadow.opacity(0.08), radius: 8, x: 0.0, y: 0.0)
 		.onTapGesture {
 			onTapSee()
 		}

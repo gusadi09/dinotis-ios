@@ -62,6 +62,8 @@ class PrivateVideoSpeakerViewModel: ObservableObject {
             .sink { [weak self] participant in
                 guard let self = self else { return }
                 
+                print("participant: ", participant)
+                
                 self.remoteSpeakers = self.speakerVideoViewModelFactory.makeSpeaker(participant: participant)
                 
             }

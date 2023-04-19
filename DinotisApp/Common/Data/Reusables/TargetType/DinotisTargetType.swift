@@ -7,6 +7,7 @@
 
 import Foundation
 import Moya
+import DinotisData
 
 protocol DinotisTargetType: TargetType {
 	var parameters: [String: Any] {

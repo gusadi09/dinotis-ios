@@ -8,39 +8,16 @@
 import SwiftUI
 import SwiftUITrackableScrollView
 import SDWebImageSwiftUI
-import CurrencyFormatter
-import SwiftKeychainWrapper
 import SwiftUINavigation
-import OneSignal
+import DinotisDesignSystem
+import DinotisData
 
+//MARK: - Need Revamp
 struct DetailPaymentView: View {
-	@State var contentOffset: CGFloat = 0
-	@State var colorTab = Color.clear
-	
-	@State var selected = false
-	@State var selectItem: Int?
-	
-	@State var selectItem2: Int?
-	
-	@State var isGoToInvoiceBerhasil = false
-	
-	@State var isGoToHomeUser = false
-	@State var isGoToHomeTalent = false
-	
-	@State var selectedTab = 0
-	
-	@Binding var methodId: Int
-	
-	@State var isErrorShow = false
-	
-	@Binding var price: Int
 	
 	@ObservedObject var stateObservable = StateObservable.shared
 	
-	@ObservedObject var invoiceVM = InvoiceViewModel.shared
 	@ObservedObject var viewModel: DetailPaymentViewModel
-	
-	@ObservedObject var bookingVM = UserBookingViewModel.shared
 	
 	@Environment(\.viewController) private var viewControllerHolder: ViewControllerHolder
 	
@@ -50,17 +27,37 @@ struct DetailPaymentView: View {
 	
 	@Environment(\.presentationMode) var presentationMode
 	
-	@State var isShowConnection = false
-	
-	@ObservedObject var usersVM = UsersViewModel.shared
-	
-	@State var isLoading = false
-	
 	var body: some View {
 		ZStack {
-			Image("user-type-bg")
+			Image.Dinotis.userTypeBackground
 				.resizable()
 				.edgesIgnoringSafeArea(.all)
+				.alert(isPresented: $viewModel.isRefreshFailed) {
+					Alert(
+						title: Text(LocaleText.attention),
+						message: Text(LocaleText.sessionExpireText),
+						dismissButton: .default(
+							Text(LocaleText.returnText),
+							action: {
+								viewModel.routeToRoot()
+							}
+						)
+					)
+				}
+
+			NavigationLink(
+				unwrapping: $viewModel.route,
+				case: /HomeRouting.bookingInvoice,
+				destination: { viewModel in
+					UserInvoiceBookingView(
+						viewModel: viewModel.wrappedValue
+					)
+				},
+				onNavigate: {_ in},
+				label: {
+					EmptyView()
+				}
+			)
 			
 			VStack(spacing: 0) {
 				VStack(spacing: 0) {
@@ -71,7 +68,7 @@ struct DetailPaymentView: View {
 						Button(action: {
 							viewModel.backToHome()
 						}, label: {
-							Image("ic-chevron-back")
+							Image.Dinotis.arrowBackIcon
 								.padding()
 								.background(Color.white)
 								.clipShape(Circle())
@@ -79,8 +76,8 @@ struct DetailPaymentView: View {
 						
 						Spacer()
 						
-						Text(NSLocalizedString("complete_payment", comment: ""))
-							.font(.custom(FontManager.Montserrat.bold, size: 14))
+						Text(LocaleText.completePaymentText)
+							.font(.robotoBold(size: 14))
 							.padding(.horizontal)
 						
 						Spacer()
@@ -88,121 +85,140 @@ struct DetailPaymentView: View {
 					}
 					.padding()
 					.background(Color.white)
-					.alert(isPresented: $invoiceVM.isRefreshFailed) {
+					.alert(isPresented: $viewModel.isError) {
 						Alert(
-							title: Text(NSLocalizedString("attention", comment: "")),
-							message: Text(NSLocalizedString("session_expired", comment: "")),
-							dismissButton: .default(Text(NSLocalizedString("return", comment: "")), action: {
-								viewModel.backToRoot()
-								stateObservable.userType = 0
-								stateObservable.isVerified = ""
-								stateObservable.refreshToken = ""
-								stateObservable.accessToken = ""
-								stateObservable.isAnnounceShow = false
-								OneSignal.setExternalUserId("")
-							}))
+							title: Text(LocaleText.attention),
+							message: Text(viewModel.error.orEmpty()),
+							dismissButton: .default(Text(LocaleText.returnText))
+						)
 					}
 				}
-				
-				RefreshableScrollView(action: refreshInvoice) {
-					if isLoading {
-						ActivityIndicator(isAnimating: $isLoading, color: .black, style: .medium)
-							.padding(.top)
+
+				DinotisList {
+					viewModel.refreshInvoice()
+				} introspectConfig: { view in
+					view.separatorStyle = .none
+					view.showsVerticalScrollIndicator = false
+					viewModel.use(for: view) { refresh in
+						viewModel.refreshInvoice()
+						refresh.endRefreshing()
 					}
-					
+				} content: {
 					VStack {
 						VStack(alignment: .leading) {
 							HStack {
-								Text(viewModel.methodName)
-									.font(.custom(FontManager.Montserrat.bold, size: 14))
+								Text((viewModel.bookingPayment?.paymentMethod?.name).orEmpty())
+									.font(.robotoBold(size: 14))
 									.foregroundColor(.black)
-								
+
 								Spacer()
-								
-								AnimatedImage(url: URL(string: viewModel.methodIcon)!)
-									.resizable()
-									.scaledToFit()
-									.frame(height: 30)
+
+								if let url = URL(string: (viewModel.bookingPayment?.paymentMethod?.iconURL).orEmpty()) {
+									AnimatedImage(url: url)
+										.resizable()
+										.scaledToFit()
+										.frame(height: 45)
+								}
 							}
-							
+
 							Divider()
-								.padding(.vertical)
-							
+								.padding(.bottom)
+
 							VStack(alignment: .leading, spacing: 15) {
 								VStack(alignment: .leading, spacing: 5) {
-									Text(NSLocalizedString("no_invoice", comment: ""))
-										.font(.custom(FontManager.Montserrat.regular, size: 12))
+									Text(LocaleText.invoiceNumberTitle)
+										.font(.robotoRegular(size: 12))
 										.foregroundColor(.black)
-									
-									Text(viewModel.bookingId)
-										.font(.custom(FontManager.Montserrat.bold, size: 14))
+
+									Text((viewModel.bookingData?.invoiceId).orEmpty())
+										.font(.robotoBold(size: 14))
+										.foregroundColor(.black)
+								}
+
+								VStack(alignment: .leading, spacing: 5) {
+									Text(LocalizableText.invoiceItemName)
+										.font(.robotoRegular(size: 12))
+										.foregroundColor(.black)
+
+									Text((viewModel.bookingData?.meeting?.title).orEmpty())
+										.font(.robotoBold(size: 14))
 										.foregroundColor(.black)
 								}
 								
-								if !viewModel.isQR && !viewModel.isEwallet {
+								if viewModel.isNotQRandEwallet() {
 									VStack(alignment: .leading, spacing: 5) {
-										Text(NSLocalizedString("no_virtual_account", comment: ""))
-											.font(.custom(FontManager.Montserrat.regular, size: 12))
+										Text(LocaleText.vaNumberTitle)
+											.font(.robotoRegular(size: 12))
 											.foregroundColor(.black)
-										
+
 										HStack {
-											if let number = invoiceVM.data?.number {
+											if let number = viewModel.invoiceData?.number {
 												Text(number)
-													.font(.custom(FontManager.Montserrat.bold, size: 14))
+													.font(.robotoBold(size: 14))
 													.foregroundColor(.black)
-												
+
 												Spacer()
-												
+
 												Button(action: {
 													UIPasteboard.general.string = number
 												}, label: {
-													Text(NSLocalizedString("copy", comment: ""))
-														.font(.custom(FontManager.Montserrat.bold, size: 12))
-														.foregroundColor(Color("btn-stroke-1"))
+													Text(LocaleText.copyText)
+														.font(.robotoBold(size: 12))
+														.foregroundColor(.DinotisDefault.primary)
 												})
 											}
 										}
 									}
 								}
-								
+
 								VStack(alignment: .leading, spacing: 5) {
-									Text(NSLocalizedString("total_payment", comment: ""))
-										.font(.custom(FontManager.Montserrat.regular, size: 12))
+									Text(LocaleText.totalPaymentText)
+										.font(.robotoRegular(size: 12))
 										.foregroundColor(.black)
-									
-									if let doublePrice = String(price).toCurrency() {
-										Text(doublePrice)
-											.font(.custom(FontManager.Montserrat.bold, size: 14))
-											.foregroundColor(.black)
-									}
-								}
-								
-								if viewModel.isEwallet {
+
+                                    HStack {
+                                        Text((viewModel.bookingPayment?.amount).orEmpty().toCurrency())
+                                            .font(.robotoBold(size: 14))
+                                            .foregroundColor(.black)
+                                        
+                                        Spacer()
+                                        
+                                        Button {
+                                            viewModel.isShowDetailPayment.toggle()
+                                        } label: {
+                                            Text(LocalizableText.seeDetailsLabel)
+                                                .font(.robotoBold(size: 12))
+                                                .foregroundColor(.DinotisDefault.primary)
+                                        }
+                                    }
+                                }
+
+								if viewModel.isEwallet() {
 									Button {
 										self.viewModel.backToHome()
-										if let url = URL(string: viewModel.redirectUrl.orEmpty()) {
+										if let url = URL(string: (viewModel.bookingPayment?.redirectUrl).orEmpty()) {
 											UIApplication.shared.open(url, options: [:])
 										}
 									} label: {
 										HStack {
 											Spacer()
-											
+
 											Text(LocaleText.payNowText)
 												.foregroundColor(.white)
-												.font(.montserratSemiBold(size: 12))
-											
+												.font(.robotoMedium(size: 12))
+
 											Spacer()
 										}
 										.padding()
 										.background(
 											RoundedRectangle(cornerRadius: 10)
-												.foregroundColor(.primaryViolet)
+												.foregroundColor(.DinotisDefault.primary)
 										)
 									}
-									
-								} else if viewModel.isQR {
-									
-									Image.base64Image(with: viewModel.qrCodeUrl.orEmpty())
+
+								} else if viewModel.isQR() {
+
+									Image.base64Image(with: (viewModel.bookingPayment?.qrCodeUrl).orEmpty())
 										.resizable()
 										.scaledToFit()
 										.frame(height: 250)
@@ -211,87 +227,82 @@ struct DetailPaymentView: View {
 											RoundedRectangle(cornerRadius: 15)
 												.stroke(Color(.systemGray3), lineWidth: 1.5)
 										)
-									
+
 									VStack(spacing: 10) {
 										HStack {
 											Text(LocaleText.howToPayTitle)
-												.font(.montserratBold(size: 14))
+												.font(.robotoBold(size: 14))
 												.foregroundColor(.black)
-											
+
 											Spacer()
 										}
-										
+
 										HStack {
 											Text(LocaleText.howToPayFirstText)
-												.font(.montserratRegular(size: 12))
+												.font(.robotoRegular(size: 12))
 												.multilineTextAlignment(.leading)
 												.foregroundColor(.black)
-											
+
 											Spacer()
 										}
-										
+
 										HStack {
 											Text(LocaleText.howToPaySecondText)
-												.font(.montserratRegular(size: 12))
+												.font(.robotoRegular(size: 12))
 												.multilineTextAlignment(.leading)
 												.foregroundColor(.black)
-											
+
 											Spacer()
 										}
-										
+
 										HStack {
 											Text(LocaleText.howToPayThirdText)
-												.font(.montserratRegular(size: 12))
+												.font(.robotoRegular(size: 12))
 												.multilineTextAlignment(.leading)
 												.foregroundColor(.black)
-											
+
 											Spacer()
 										}
-										
+
 										HStack {
 											Text(LocaleText.howToPayFourthText)
-												.font(.montserratRegular(size: 12))
+												.font(.robotoRegular(size: 12))
 												.multilineTextAlignment(.leading)
 												.foregroundColor(.black)
-											
+
 											Spacer()
 										}
 									}
 									.padding(.vertical, 5)
 								}
-								
+
 								HStack {
-									Text(NSLocalizedString("complete_payment_before", comment: ""))
-										.font(.custom(FontManager.Montserrat.regular, size: 12))
+									Text(LocaleText.completePaymentBefore)
+										.font(.robotoRegular(size: 12))
 										.foregroundColor(.black)
-									
+
 									Spacer()
-									
-									if let expired = (invoiceVM.data?.expiredAt).orEmpty().toDate(format: .utcV2),
-										 let isoDate = expired.toString(format: .HHmm) {
-										Text("\(isoDate)")
-											.font(.custom(FontManager.Montserrat.bold, size: 12))
+
+									if let expired = viewModel.invoiceData?.expiredAt {
+                                        Text("\(DateUtils.dateFormatter(expired, forFormat: .HHmm))")
+											.font(.robotoBold(size: 12))
 											.foregroundColor(.black)
-									} else if let anotherExp = bookingVM.data?.data.filter({ value in
-										value.bookingPayment.bookingID == viewModel.bookingId
-									}).first?.createdAt,
-														let expDate = anotherExp.toDate(format: .utcV2)?.addingTimeInterval(1800),
-														let hour = expDate.toString(format: .HHmm) {
-										Text("\(hour)")
-											.font(.custom(FontManager.Montserrat.bold, size: 12))
+									} else if let anotherExp = viewModel.bookingData?.createdAt {
+                                        Text("\(DateUtils.dateFormatter(anotherExp.addingTimeInterval(1800), forFormat: .HHmm))")
+											.font(.robotoBold(size: 12))
 											.foregroundColor(.black)
 									}
 								}
 								.padding(10)
-								.background(Color("btn-color-1"))
+								.background(Color.secondaryViolet)
 								.cornerRadius(5)
-								
-								if viewModel.methodName.contains("QRIS") {
+
+								if viewModel.isQR() {
 									HStack {
 										Text(LocaleText.attentionQrisText)
-											.font(.montserratRegular(size: 12))
+											.font(.robotoRegular(size: 12))
 											.foregroundColor(.black)
-										
+
 										Spacer()
 									}
 									.padding()
@@ -300,91 +311,63 @@ struct DetailPaymentView: View {
 											.foregroundColor(Color(.systemGray3))
 									)
 								}
+                                
+                                HStack {
+                                    Spacer()
+                                    DinotisUnderlineButton(
+                                        text: LocalizableText.cancelPaymentQuestion,
+                                        textColor: .DinotisDefault.primary,
+                                        fontSize: 12) {
+                                            viewModel.isCancelSheetShow.toggle()
+                                        }
+                                    Spacer()
+                                }
 							}
 						}
 						.padding()
 						.background(Color.white)
 						.clipShape(RoundedRectangle(cornerRadius: 12))
-						.shadow(color: Color("dinotis-shadow-1").opacity(0.1), radius: 10, x: 0.0, y: 0.0)
-						.padding()
-						.alert(isPresented: $isErrorShow) {
-							Alert(
-								title: Text(NSLocalizedString("error", comment: "")),
-								message: Text((invoiceVM.error?.errorDescription).orEmpty()),
-								dismissButton: .default(Text(NSLocalizedString("return", comment: "")))
-							)
-						}
-						.valueChanged(value: invoiceVM.success, onChange: { value in
-							DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
-								withAnimation(.spring()) {
-									if value {
-										self.isLoading = false
-									}
-								}
-							})
-						})
-						.valueChanged(value: invoiceVM.isLoading) { value in
-							DispatchQueue.main.async {
-								withAnimation(.spring()) {
-									if value {
-										self.isLoading = true
-									}
-								}
-							}
-						}
-						
+						.shadow(color: Color.dinotisShadow.opacity(0.1), radius: 10, x: 0.0, y: 0.0)
+						.padding(.vertical)
+
 						Spacer()
-						
-						NavigationLink(
-							unwrapping: $viewModel.route,
-							case: /HomeRouting.bookingInvoice,
-							destination: { viewModel in
-								UserInvoiceBookingView(
-									bookingId: self.viewModel.bookingId,
-									viewModel: viewModel.wrappedValue
-								)
-							},
-							onNavigate: {_ in},
-							label: {
-								EmptyView()
-							}
-						)
-						
-						if let instructionData = invoiceVM.instruction {
+
+						if let instructionData = viewModel.instruction {
 							VStack(spacing: 0) {
 								TopBarInstructionView(
-									selected: $selectedTab,
+									selected: $viewModel.selectedTab,
 									instruction: .constant(
 										instructionData
 									),
-									virtualNumber: .constant(invoiceVM.data?.number ?? "")
+									virtualNumber: .constant((viewModel.invoiceData?.number).orEmpty())
 								)
-								
+
 								ScrollView(.vertical, showsIndicators: false, content: {
-									ForEach((instructionData.instructions?[selectedTab].instruction ?? []).indices, id: \.self) { item in
+									ForEach((instructionData.instructions?[viewModel.selectedTab].instruction ?? []).indices, id: \.self) { item in
 										HStack {
 											Text("\(item+1)")
-												.font(.custom(FontManager.Montserrat.medium, size: 13))
+												.font(.robotoMedium(size: 13))
 												.padding(10)
 												.overlay(
 													Circle()
-														.stroke(Color("btn-stroke-1"), lineWidth: 1.5)
+														.stroke(Color.DinotisDefault.primary, lineWidth: 1.5)
 												)
-											
+
 											Text(
 												LocalizedStringKey(
 													(instructionData
-														.instructions?[selectedTab]
+														.instructions?[viewModel.selectedTab]
 														.instruction?[item] ?? "")
 													.replacingOccurrences(
 														of: "${number}",
-														with: invoiceVM.data?.number ?? ""
+														with: (viewModel.invoiceData?.number).orEmpty()
 													)
 												)
-												
+
 											)
-											.font(.custom(FontManager.Montserrat.regular, size: 13))
-											
+											.font(.robotoRegular(size: 13))
+											.multilineTextAlignment(.leading)
+
 											Spacer()
 										}
 										.padding(.horizontal)
@@ -394,78 +377,282 @@ struct DetailPaymentView: View {
 							}
 							.background(Color.white)
 							.clipShape(RoundedRectangle(cornerRadius: 10))
-							.padding()
+							.padding(.vertical)
 						}
 					}
-					.valueChanged(value: bookingVM.success, onChange: { value in
-						if value {
-							if let data = bookingVM.data?.data {
-								for item in data.filter({ value in
-									value.bookingPayment.bookingID == viewModel.bookingId
-								}) where item.bookingPayment.paidAt != nil {
-									isGoToInvoiceBerhasil.toggle()
-								}
-							}
+					.listRowBackground(Color.clear)
+
+					if viewModel.isLoading {
+						HStack {
+							Spacer()
+
+							ActivityIndicator(isAnimating: $viewModel.isLoading, color: .black, style: .medium)
+								.padding(.top)
+
+							Spacer()
 						}
-					})
-					.valueChanged(value: invoiceVM.isError) { value in
-						if value {
-							isErrorShow.toggle()
-							
-						}
+						.listRowBackground(Color.clear)
 					}
 				}
 			}
 			.edgesIgnoringSafeArea(.vertical)
 			.onAppear {
-				if !(viewModel.methodName.contains("Shopeepay") || viewModel.methodName.contains("QRIS") || viewModel.methodName.contains("Gopay")) {
-					invoiceVM.getInvoice(by: viewModel.bookingId)
-					
-					invoiceVM.getInstruction(
-						methodId: methodId == 0 ?
-						bookingVM.data?.data.filter({ value in
-							value.bookingPayment.bookingID == viewModel.bookingId
-						}).first?.bookingPayment.paymentMethod?.id ?? 0 :
-							methodId
-					)
-				}
-				
-				bookingVM.getBookings()
+				viewModel.onAppear()
 			}
 		}
+        .sheet(
+            isPresented: $viewModel.isCancelSheetShow,
+            content: {
+				if #available(iOS 16.0, *) {
+					VStack(spacing: 10) {
+						HStack {
+							Spacer()
+
+							Button {
+								viewModel.isCancelSheetShow = false
+							} label: {
+								Image(systemName: "xmark.circle.fill")
+									.resizable()
+									.scaledToFit()
+									.frame(width: 20)
+									.foregroundColor(Color(UIColor.systemGray4))
+							}
+						}
+
+						Image.paymentCancelImage
+							.resizable()
+							.scaledToFit()
+							.frame(height: 188)
+
+						Text(LocalizableText.cancelPaymentTitleQuestion)
+							.font(.robotoBold(size: 14))
+							.foregroundColor(.black)
+
+						Text(LocalizableText.cancelPaymentDescription)
+							.font(.robotoRegular(size: 12))
+							.foregroundColor(.black)
+
+						Spacer()
+
+						DinotisSecondaryButton(
+							text: LocalizableText.detailPaymentCancelConfirmation,
+							type: .adaptiveScreen,
+							textColor: .DinotisDefault.black1,
+							bgColor: .DinotisDefault.lightPrimary,
+							strokeColor: .DinotisDefault.primary) {
+								viewModel.isCancelSheetShow = false
+								viewModel.onDeleteBookings()
+							}
+					}
+						.padding()
+						.padding(.vertical)
+						.presentationDetents([.fraction(0.5), .large])
+				} else {
+					VStack(spacing: 10) {
+						HStack {
+							Spacer()
+
+							Button {
+								viewModel.isCancelSheetShow = false
+							} label: {
+								Image(systemName: "xmark.circle.fill")
+									.resizable()
+									.scaledToFit()
+									.frame(width: 20)
+									.foregroundColor(Color(UIColor.systemGray4))
+							}
+						}
+
+						Image.paymentCancelImage
+							.resizable()
+							.scaledToFit()
+							.frame(height: 188)
+
+						Text(LocalizableText.cancelPaymentTitleQuestion)
+							.font(.robotoBold(size: 14))
+							.foregroundColor(.black)
+
+						Text(LocalizableText.cancelPaymentDescription)
+							.font(.robotoRegular(size: 12))
+							.foregroundColor(.black)
+
+						Spacer()
+
+						DinotisSecondaryButton(
+							text: LocalizableText.paymentConfirmationTitle,
+							type: .adaptiveScreen,
+							textColor: .DinotisDefault.black1,
+							bgColor: .DinotisDefault.lightPrimary,
+							strokeColor: .DinotisDefault.primary) {
+								viewModel.isCancelSheetShow = false
+								viewModel.onDeleteBookings()
+							}
+					}
+						.padding()
+						.padding(.vertical)
+				}
+            }
+        )
+        .sheet(
+            isPresented: $viewModel.isShowDetailPayment,
+            content: {
+				if #available(iOS 16.0, *) {
+					VStack(spacing: 24) {
+						HStack {
+							Text(LocalizableText.detailPaymentTitle)
+								.font(.robotoBold(size: 14))
+								.foregroundColor(.black)
+
+							Spacer()
+
+							Button {
+								viewModel.isShowDetailPayment = false
+							} label: {
+								Image(systemName: "xmark.circle.fill")
+									.resizable()
+									.scaledToFit()
+									.frame(width: 20)
+									.foregroundColor(Color(UIColor.systemGray4))
+							}
+						}
+
+						ScrollView(.vertical, showsIndicators: false) {
+							VStack(spacing: 6) {
+								HStack {
+									Text(LocalizableText.feeSubTotalLabel)
+
+									Spacer()
+
+									Text(viewModel.subtotal.toCurrency())
+								}
+								.font(.robotoRegular(size: 12))
+								.foregroundColor(.black)
+
+								HStack {
+									Text(LocalizableText.feeApplication)
+
+									Spacer()
+
+									Text(viewModel.extraFee.toCurrency())
+								}
+								.font(.robotoRegular(size: 12))
+								.foregroundColor(.black)
+
+								HStack {
+									Text(LocalizableText.feeService)
+
+									Spacer()
+
+									Text(viewModel.serviceFee)
+								}
+								.font(.robotoRegular(size: 12))
+								.foregroundColor(.black)
+
+								HStack {
+									Text(LocalizableText.totalLabel)
+										.font(.robotoRegular(size: 12))
+
+									Spacer()
+
+									Text((viewModel.bookingPayment?.amount).orEmpty().toCurrency())
+										.font(.robotoBold(size: 14))
+								}
+								.foregroundColor(.black)
+							}
+						}
+					}
+						.padding()
+						.padding(.vertical)
+						.presentationDetents([.fraction(0.35), .large])
+				} else {
+					VStack(spacing: 24) {
+						HStack {
+							Text(LocalizableText.detailPaymentTitle)
+								.font(.robotoBold(size: 14))
+								.foregroundColor(.black)
+
+							Spacer()
+
+							Button {
+								viewModel.isShowDetailPayment = false
+							} label: {
+								Image(systemName: "xmark.circle.fill")
+									.resizable()
+									.scaledToFit()
+									.frame(width: 20)
+									.foregroundColor(Color(UIColor.systemGray4))
+							}
+						}
+
+						ScrollView(.vertical, showsIndicators: false) {
+							VStack(spacing: 6) {
+								HStack {
+									Text(LocalizableText.feeSubTotalLabel)
+
+									Spacer()
+
+									Text(viewModel.subtotal.toCurrency())
+								}
+								.font(.robotoRegular(size: 12))
+								.foregroundColor(.black)
+
+								HStack {
+									Text(LocalizableText.feeApplication)
+
+									Spacer()
+
+									Text(viewModel.extraFee.toCurrency())
+								}
+								.font(.robotoRegular(size: 12))
+								.foregroundColor(.black)
+
+								HStack {
+									Text(LocalizableText.feeService)
+
+									Spacer()
+
+									Text(viewModel.serviceFee)
+								}
+								.font(.robotoRegular(size: 12))
+								.foregroundColor(.black)
+
+								HStack {
+									Text(LocalizableText.totalLabel)
+										.font(.robotoRegular(size: 12))
+
+									Spacer()
+
+									Text((viewModel.bookingPayment?.amount).orEmpty().toCurrency())
+										.font(.robotoBold(size: 14))
+								}
+								.foregroundColor(.black)
+							}
+						}
+					}
+						.padding()
+						.padding(.vertical)
+				}
+
+            }
+        )
 		.navigationBarTitle(Text(""))
 		.navigationBarHidden(true)
 	}
 	
-	private func refreshInvoice() {
-		if !(viewModel.methodName.contains("Shopeepay") || viewModel.methodName.contains("QRIS")) {
-			invoiceVM.getInvoice(by: viewModel.bookingId)
-			
-			invoiceVM.getInstruction(methodId: methodId == 0 ? bookingVM.data?.data.filter({ value in
-				value.bookingPayment.bookingID == viewModel.bookingId
-			}).first?.bookingPayment.paymentMethod?.id ?? 0 : methodId)
-		}
-		
-		bookingVM.getBookings()
-		
-	}
+	
 }
 
 struct InvoiceView_Previews: PreviewProvider {
 	static var previews: some View {
 		DetailPaymentView(
-			methodId: .constant(0),
-			price: .constant(0),
 			viewModel: DetailPaymentViewModel(
 				backToRoot: {},
 				backToHome: {},
-				methodName: "",
-				methodIcon: "",
-				redirectUrl: nil,
-				qrCodeUrl: nil,
+				backToChoosePayment: {},
 				bookingId: "",
-				isQR: false,
-				isEwallet: false
+                subtotal: "",
+                extraFee: "",
+                serviceFee: ""
 			)
 		)
 	}

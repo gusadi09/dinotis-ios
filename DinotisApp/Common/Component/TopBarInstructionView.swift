@@ -6,41 +6,41 @@
 //
 
 import SwiftUI
+import DinotisData
+import DinotisDesignSystem
 
 struct TopBarInstructionView: View {
 	@Binding var selected : Int
-	@Binding var instruction: PaymentInstruction
+	@Binding var instruction: PaymentInstructionData
 	@Binding var virtualNumber: String
 	
 	var body : some View {
 		HStack(alignment: .bottom, spacing: 0) {
 			
 			ForEach((instruction.instructions ?? []).indices, id: \.self) { item in
-				Button(action: {
+				VStack {
+					Text(instruction.instructions?[item].name ?? "")
+						.padding(.vertical, 10)
+						.padding(.horizontal)
+						.font(self.selected == item ?
+                              .robotoBold(size: 14) :
+                                .robotoRegular(size: 14))
+						.foregroundColor(.black)
+						.lineLimit(2)
+						.minimumScaleFactor(0.8)
+						.multilineTextAlignment(.center)
+
+					Capsule()
+						.frame(height: 2)
+						.foregroundColor(self.selected == item ? Color("btn-stroke-1") : .white)
+						.padding(.horizontal)
+
+				}
+				.padding(.top, 10)
+				.background(Color(.white))
+				.clipShape(Rectangle())
+				.onTapGesture {
 					self.selected = item
-				}) {
-					
-					VStack {
-						Text(instruction.instructions?[item].name ?? "")
-							.padding(.vertical, 10)
-							.padding(.horizontal)
-							.font(self.selected == item ?
-										Font.custom(FontManager.Montserrat.bold, size: 14) :
-											Font.custom(FontManager.Montserrat.regular, size: 14))
-							.foregroundColor(.black)
-							.lineLimit(2)
-							.minimumScaleFactor(0.8)
-						
-						Capsule()
-							.frame(height: 2)
-							.isHidden(self.selected == item ? false : true)
-							.foregroundColor(Color("btn-stroke-1"))
-							.padding(.horizontal)
-						
-					}
-					.background(Color(.white))
-					.clipShape(Rectangle())
-					
 				}
 			}
 		}

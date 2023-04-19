@@ -5,242 +5,154 @@
 //  Created by Gus Adi on 03/09/21.
 //
 
+import CurrencyFormatter
+import DinotisDesignSystem
 import SwiftUI
 import SwiftUITrackableScrollView
-import CurrencyFormatter
 
 struct TalentWithdrawView: View {
-	@State var colorTab = Color.clear
-	@State var contentOffset: CGFloat = 0
-	@State var minTrans = 50000
-	
-	@State var money = ""
-	@State var value: Double?
-	@State var unformattedText: String?
-	@State var inputAmount: Double?
-	
-	@State var biayaAdmin = 5500
-	
-	@State var moneyInt = 0
-	
-	@State var isShowAlert = false
-	@State var isShowError = false
-	
-	@State var total = 0
-	
-	@State var isPresent = false
-	
-	@State var toggleErrorMin = true
-	@State var toggleErrorMaks = true
-	@State var toggleErrorSaldo = true
-	
-	@State var toggleError = false
 	
 	@Environment(\.presentationMode) var presentationMode
-	
-	@ObservedObject var userVM = UsersViewModel.shared
-	
-	@ObservedObject var withdrawVM = WithdrawViewModel.shared
-	
-	@State var isShowConnection = false
-	
-	@ObservedObject var bankAccVM = BankAccountViewModel.shared
 	
 	@Environment(\.viewController) private var viewControllerHolder: ViewControllerHolder
 	
 	private var viewController: UIViewController? {
 		self.viewControllerHolder.value
 	}
+
+	@ObservedObject var viewModel: TalentWithdrawalViewModel
 	
 	var body: some View {
 		ZStack {
-			Image("user-type-bg")
+			Image.Dinotis.userTypeBackground
 				.resizable()
 				.edgesIgnoringSafeArea(.all)
-				.alert(isPresented: $isShowConnection) {
+				.alert(isPresented: $viewModel.isRefreshFailed) {
 					Alert(
-						title: Text(NSLocalizedString("attention", comment: "")),
-						message: Text(NSLocalizedString("connection_warning", comment: "")),
-						dismissButton: .cancel(Text(NSLocalizedString("return", comment: "")))
+						title: Text(LocaleText.attention),
+						message: Text(LocaleText.sessionExpireText),
+						dismissButton: .default(
+							Text(LocaleText.returnText),
+							action: {
+								viewModel.routeToRoot()
+							}
+						)
 					)
 				}
 			
 			VStack(spacing: 0) {
 				VStack(spacing: 0) {
-					colorTab
-						.frame(height: 20)
 					
 					HStack {
 						Button(action: {
 							presentationMode.wrappedValue.dismiss()
 						}, label: {
-							Image("ic-chevron-back")
+							Image.Dinotis.arrowBackIcon
 								.padding()
 								.background(Color.white)
 								.clipShape(Circle())
 						})
+						.alert(isPresented: $viewModel.isError) {
+							Alert(
+								title: Text(LocaleText.attention),
+								message: Text(viewModel.error.orEmpty()),
+								dismissButton: .default(Text(LocaleText.returnText))
+							)
+						}
 						
 						Spacer()
 						
-						Text(NSLocalizedString("withdrawal_amount", comment: ""))
-							.font(.custom(FontManager.Montserrat.bold, size: 14))
+						Text(LocaleText.withdrawAmountText)
+							.font(.robotoBold(size: 14))
 							.padding(.horizontal)
+							.alert(isPresented: $viewModel.success) {
+								Alert(
+									title: Text(LocaleText.successTitle),
+									message: Text(LocaleText.withdrawUnderProcessText),
+									dismissButton: .default(Text(LocaleText.returnText), action: {
+										viewModel.isPresent.toggle()
+										presentationMode.wrappedValue.dismiss()
+									}))
+							}
 						
 						Spacer()
 						Spacer()
 					}
 					.padding()
-					.background(colorTab)
-					.alert(isPresented: $withdrawVM.isRefreshFailed) {
-						Alert(
-							title: Text(NSLocalizedString("attention", comment: "")),
-							message: Text(NSLocalizedString("session_expired", comment: "")),
-							dismissButton: .default(Text(NSLocalizedString("return", comment: "")), action: {
-								
-							}))
-					}
+					.background(
+						viewModel.colorTab
+							.edgesIgnoringSafeArea(.vertical)
+					)
+
 				}
 				
-				TrackableScrollView(.vertical, showIndicators: false, contentOffset: $contentOffset) {
+				TrackableScrollView(.vertical, showIndicators: false, contentOffset: $viewModel.contentOffset) {
 					VStack(alignment: .leading) {
 						VStack(alignment: .leading) {
 							HStack {
-								Image("ic-debit-card")
+								Image.Dinotis.handPickedDebitCardIcon
 									.resizable()
 									.scaledToFit()
 									.frame(height: 24)
 								
-								Text(NSLocalizedString("withdraw_balance_to_account", comment: ""))
-									.font(.custom(FontManager.Montserrat.semibold, size: 12))
+								Text(LocaleText.withdrawToAccount)
+									.font(.robotoMedium(size: 12))
 									.foregroundColor(.black)
 								
 								Spacer()
 							}
 							
-							if let dataBank = bankAccVM.data?.first {
+							if let dataBank = viewModel.bankData.first {
 								HStack {
 									VStack(alignment: .leading, spacing: 10) {
 										Text("\(dataBank.bank?.name ?? "") \u{2022} \(dataBank.accountName ?? "")")
-											.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+											.font(.robotoRegular(size: 12))
 											.foregroundColor(.black)
 											.fixedSize(horizontal: false, vertical: true)
+											.multilineTextAlignment(.leading)
 										
-										Text(dataBank.accountNumber ?? "")
-											.font(Font.custom(FontManager.Montserrat.bold, size: 14))
+										Text(dataBank.accountNumber.orEmpty())
+											.font(.robotoBold(size: 14))
 											.foregroundColor(.black)
+											.multilineTextAlignment(.leading)
 									}
 									
 									Spacer()
 								}
 								.padding()
-								.background(Color("bg-profile-text"))
+								.background(Color.backgroundProfile)
 								.cornerRadius(12)
 							}
 						}
 						.padding()
 						.background(Color.white)
 						.clipShape(RoundedRectangle(cornerRadius: 12))
-						.shadow(color: Color("dinotis-shadow-1").opacity(0.1), radius: 10, x: 0.0, y: 0.0)
+						.shadow(color: Color.dinotisShadow.opacity(0.1), radius: 10, x: 0.0, y: 0.0)
 						
 						VStack {
+                            DinotisCurrencyTextField(
+                                amount: $viewModel.inputAmount,
+                                label: LocaleText.enterAmountLabel,
+                                errorText: $viewModel.amountError
+                            )
+                            .padding(.vertical, 10)
+                            .valueChanged(value: viewModel.inputAmount.orZero()) { value in
+                                viewModel.balanceInputErrorChecker(amount: value)
+                            }
+                            
 							HStack {
-								Text(NSLocalizedString("enter_amount_label", comment: ""))
-									.font(.custom(FontManager.Montserrat.regular, size: 12))
-									.foregroundColor(.black)
-								
-								Spacer()
-							}
-							
-							VStack(spacing: 12) {
-								CurrencyTextField("Rp0", value: self.$inputAmount, alwaysShowFractions: false, numberOfDecimalPlaces: 0, currencySymbol: "Rp", font: UIFont(name: FontManager.Montserrat.bold, size: 24))
-									.foregroundColor(.black)
-									.accentColor(.black)
-								
-								Capsule()
-									.frame(height: 1)
-									.foregroundColor(toggleError ? Color(.red) : Color(.systemGray5))
-								
-								HStack {
-									Image("icn-exclamation-circle")
-										.resizable()
-										.scaledToFit()
-										.frame(height: 10)
-										.foregroundColor(.red)
-									Text(NSLocalizedString("withdraw_amount_over", comment: ""))
-										.font(.custom(FontManager.Montserrat.regular, size: 10))
-										.foregroundColor(.red)
-									
-									Spacer()
-								}
-								.isHidden(toggleErrorMaks, remove: toggleErrorMaks)
-								
-								HStack {
-									Image("icn-exclamation-circle")
-										.resizable()
-										.scaledToFit()
-										.frame(height: 10)
-										.foregroundColor(.red)
-									Text(NSLocalizedString("withdraw_less", comment: ""))
-										.font(.custom(FontManager.Montserrat.regular, size: 10))
-										.foregroundColor(.red)
-									
-									Spacer()
-								}
-								.isHidden(toggleErrorMin, remove: toggleErrorMin)
-								
-								HStack {
-									Image("icn-exclamation-circle")
-										.resizable()
-										.scaledToFit()
-										.frame(height: 10)
-										.foregroundColor(.red)
-									Text(NSLocalizedString("over_balance", comment: ""))
-										.font(.custom(FontManager.Montserrat.regular, size: 10))
-										.foregroundColor(.red)
-									
-									Spacer()
-								}
-								.isHidden(toggleErrorSaldo, remove: toggleErrorSaldo)
-								
-							}
-							.padding(.vertical, 10)
-							.valueChanged(value: inputAmount) { value in
-								if value ?? 0 < 50000.0 {
-									toggleErrorSaldo = true
-									toggleErrorMin = false
-									toggleErrorMaks = true
-									toggleError = true
-								} else if value ?? 0 > 50000000.0 {
-									toggleErrorMin = true
-									toggleErrorMaks = false
-									toggleError = true
-									toggleErrorSaldo = true
-								} else if value ?? 0 > Double(userVM.currentBalances) {
-									toggleErrorSaldo = false
-									toggleErrorMin = true
-									toggleErrorMaks = true
-									toggleError = true
-								} else {
-									toggleErrorSaldo = true
-									toggleError = false
-									toggleErrorMin = true
-									toggleErrorMaks = true
-								}
-							}
-							
-							HStack {
-								Image("ic-btn-wallet")
+								Image.Dinotis.walletButtonIcon
 									.resizable()
 									.scaledToFit()
 									.frame(height: 24)
 								
 								HStack(spacing: 4) {
-									Text(NSLocalizedString("wallet_balance", comment: ""))
-										.font(.custom(FontManager.Montserrat.regular, size: 12))
+									Text(LocaleText.walletBalance)
+										.font(.robotoRegular(size: 12))
 										.foregroundColor(.black)
 									
-									Text(userVM.currentBalances.numberString.toCurrency())
-										.font(.custom(FontManager.Montserrat.bold, size: 12))
+									Text(viewModel.currentBalances.toCurrency())
+										.font(.robotoBold(size: 12))
 										.foregroundColor(.black)
 									
 									Spacer()
@@ -250,87 +162,64 @@ struct TalentWithdrawView: View {
 						.padding()
 						.background(Color.white)
 						.clipShape(RoundedRectangle(cornerRadius: 12))
-						.shadow(color: Color("dinotis-shadow-1").opacity(0.1), radius: 10, x: 0.0, y: 0.0)
+						.shadow(color: Color.dinotisShadow.opacity(0.1), radius: 10, x: 0.0, y: 0.0)
 						.padding(.top, 10)
 					}
 					.padding()
-					.valueChanged(value: contentOffset) { val in
-						colorTab = val > 0 ? Color.white : Color.clear
+					.valueChanged(value: viewModel.contentOffset) { val in
+						viewModel.colorTab = val > 0 ? Color.white : Color.clear
 					}
-				}
-				.alert(isPresented: $isShowError) {
-					Alert(title: Text(NSLocalizedString("fail", comment: "")), message: Text(withdrawVM.error?.errorDescription ?? ""), dismissButton: .cancel(Text(NSLocalizedString("return", comment: ""))))
-				}
-				.onAppear {
-					bankAccVM.getBankAcc()
-					userVM.currentBalance()
 				}
 				
 				Spacer()
 				
 				VStack {
 					Button(action: {
-						isPresent.toggle()
+						viewModel.isPresent.toggle()
 						
-						total = biayaAdmin + Int(inputAmount ?? 0)
+						viewModel.total = viewModel.adminFee + Int(viewModel.inputAmount.orZero())
 						
 					}, label: {
 						HStack {
 							Spacer()
-							Text(NSLocalizedString("continue", comment: ""))
-								.font(.custom(FontManager.Montserrat.bold, size: 12))
+							Text(LocaleText.continueAlt)
+								.font(.robotoBold(size: 12))
 								.foregroundColor(.white)
 							
 							Spacer()
 						}
 						.padding()
 						.background(
-							inputAmount ?? 0 < 50000.0 ||
-							inputAmount ?? 0 > 50000000.0 || inputAmount ?? 0 > Double(userVM.currentBalances) ?
-							Color("btn-stroke-1").opacity(0.5) : Color("btn-stroke-1"))
+							viewModel.isEnableWithdraw() ? Color.DinotisDefault.primary.opacity(0.5) : Color.DinotisDefault.primary
+						)
 						.cornerRadius(8)
 						.padding()
 					})
-					.disabled(inputAmount ?? 0 < 50000.0 || inputAmount ?? 0 > 50000000.0 || inputAmount ?? 0 > Double(userVM.currentBalances) )
-					.valueChanged(value: withdrawVM.isSuccessPost) { value in
-						isPresent.toggle()
-						if value {
-							isShowAlert.toggle()
-						}
-					}
-					.valueChanged(value: withdrawVM.isError) { value in
-						if value {
-							isShowError.toggle()
-						}
-					}
+					.disabled(viewModel.isEnableWithdraw())
 					
 					Color.white
 						.frame(height: 2)
 				}
-				.background(Color.white)
-				.alert(isPresented: $isShowAlert) {
-					Alert(
-						title: Text(NSLocalizedString("success", comment: "")),
-						message: Text(NSLocalizedString("withdraw_under_process", comment: "")),
-						dismissButton: .default(Text(NSLocalizedString("return", comment: "")), action: {
-							presentationMode.wrappedValue.dismiss()
-						}))
-				}
+				.background(Color.white.edgesIgnoringSafeArea(.vertical))
+
 			}
-			.edgesIgnoringSafeArea(.vertical)
-			.dinotisSheet(isPresented: $isPresent, options: .hideDismissButton, fraction: 0.6, content: {
+			
+            DinotisLoadingView(.fullscreen, hide: !viewModel.isLoading)
+		}
+		.sheet(isPresented: $viewModel.isPresent, content: {
+			if #available(iOS 16.0, *) {
 				VStack {
 					HStack {
-						Image("ic-debit-rounded")
+						Image.Dinotis.handPickedDebitCardWithRoundedRectangle
 							.resizable()
 							.scaledToFit()
 							.frame(height: 40)
 
 						VStack(alignment: .leading) {
-							if let dataBank = bankAccVM.data?.first {
+							if let dataBank = viewModel.bankData.first {
 								HStack {
-									Text(dataBank.bank?.name ?? "")
-										.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+									Text((dataBank.bank?.name).orEmpty())
+										.font(.robotoRegular(size: 12))
 										.foregroundColor(.black)
 
 									Circle()
@@ -338,13 +227,13 @@ struct TalentWithdrawView: View {
 										.frame(height: 3)
 										.foregroundColor(.black)
 
-									Text(dataBank.accountName ?? "")
-										.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+									Text(dataBank.accountName.orEmpty())
+										.font(.robotoRegular(size: 12))
 										.foregroundColor(.black)
 								}
 
-								Text(dataBank.accountNumber ?? "")
-									.font(Font.custom(FontManager.Montserrat.semibold, size: 14))
+								Text(dataBank.accountNumber.orEmpty())
+									.font(.robotoMedium(size: 14))
 									.foregroundColor(.black)
 							}
 						}
@@ -353,28 +242,28 @@ struct TalentWithdrawView: View {
 					}
 
 					HStack {
-						Text(NSLocalizedString("withdrawal_amount", comment: ""))
-							.font(.custom(FontManager.Montserrat.regular, size: 12))
+						Text(LocaleText.withdrawAmountText)
+							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 
 						Spacer()
 
-						Text("\(inputAmount.orZero().toCurrency())")
-							.font(.custom(FontManager.Montserrat.bold, size: 16))
+						Text("\(viewModel.inputAmount.orZero().toCurrency())")
+							.font(.robotoBold(size: 16))
 							.foregroundColor(.black)
 					}
 					.padding(.top)
 					.padding(.bottom, 5)
 
 					HStack {
-						Text(NSLocalizedString("admin_fee", comment: ""))
-							.font(.custom(FontManager.Montserrat.regular, size: 12))
+						Text(LocaleText.adminFeeText)
+							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 
 						Spacer()
 
-						Text("\(biayaAdmin.numberString.toCurrency())")
-							.font(.custom(FontManager.Montserrat.bold, size: 16))
+						Text("\(viewModel.adminFee.numberString.toCurrency())")
+							.font(.robotoBold(size: 16))
 							.foregroundColor(.black)
 					}
 
@@ -382,72 +271,179 @@ struct TalentWithdrawView: View {
 						.padding(.vertical)
 
 					HStack {
-						Text(NSLocalizedString("total_balance_withheld", comment: ""))
-							.font(.custom(FontManager.Montserrat.regular, size: 12))
+						Text(LocaleText.totalBalanceWithHeld)
+							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 
 						Spacer()
 
-						Text("\(total.numberString.toCurrency())")
-							.font(.custom(FontManager.Montserrat.bold, size: 16))
+						Text("\(viewModel.total.numberString.toCurrency())")
+							.font(.robotoBold(size: 16))
 							.foregroundColor(.black)
 					}
 					.padding(.bottom)
 
 					HStack(spacing: 15) {
 						Button(action: {
-							isPresent.toggle()
+							viewModel.isPresent.toggle()
 						}, label: {
 							HStack {
 								Spacer()
-								Text(NSLocalizedString("cancel", comment: ""))
-									.font(Font.custom(FontManager.Montserrat.semibold, size: 12))
+								Text(LocaleText.cancelText)
+									.font(.robotoMedium(size: 12))
 									.foregroundColor(.black)
 								Spacer()
 							}
 							.padding()
-							.background(Color("btn-color-1"))
+							.background(Color.secondaryViolet)
 							.cornerRadius(8)
 							.overlay(
 								RoundedRectangle(cornerRadius: 8)
-									.stroke(Color("btn-stroke-1"), lineWidth: 1.0)
+									.stroke(Color.DinotisDefault.primary, lineWidth: 1.0)
 							)
 						})
 
 						Button(action: {
-							if let dataBank = bankAccVM.data?.first {
-								withdrawVM.withdraw(
-									params: WithdrawParams(
-										amount: Int(inputAmount ?? 0.0),
-										bankId: dataBank.bank?.id ?? 0,
-										accountName: dataBank.accountName ?? "",
-										accountNumber: dataBank.accountNumber ?? ""
-									)
-								)
-
-								isPresent.toggle()
-							}
+                            Task {
+                                await viewModel.withdraw()
+                            }
 						}, label: {
 							HStack {
 								Spacer()
-								Text(NSLocalizedString("withdraw_balance", comment: ""))
-									.font(Font.custom(FontManager.Montserrat.semibold, size: 12))
+								Text(LocaleText.withdrawBalance)
+									.font(.robotoMedium(size: 12))
 									.foregroundColor(.white)
 								Spacer()
 							}
 							.padding()
-							.background(Color("btn-stroke-1"))
+							.background(Color.DinotisDefault.primary)
 							.cornerRadius(8)
 						})
 					}
 				}
-			})
-			
-			LoadingView(isAnimating: $withdrawVM.isLoading)
-				.isHidden(
-					!withdrawVM.isLoading,
-					remove: !withdrawVM.isLoading
-				)
+					.padding()
+					.padding(.vertical)
+					.presentationDetents([.fraction(0.6), .large])
+			} else {
+				VStack {
+					HStack {
+						Image.Dinotis.handPickedDebitCardWithRoundedRectangle
+							.resizable()
+							.scaledToFit()
+							.frame(height: 40)
+
+						VStack(alignment: .leading) {
+							if let dataBank = viewModel.bankData.first {
+								HStack {
+									Text((dataBank.bank?.name).orEmpty())
+										.font(.robotoRegular(size: 12))
+										.foregroundColor(.black)
+
+									Circle()
+										.scaledToFit()
+										.frame(height: 3)
+										.foregroundColor(.black)
+
+									Text(dataBank.accountName.orEmpty())
+										.font(.robotoRegular(size: 12))
+										.foregroundColor(.black)
+								}
+
+								Text(dataBank.accountNumber.orEmpty())
+									.font(.robotoMedium(size: 14))
+									.foregroundColor(.black)
+							}
+						}
+
+						Spacer()
+					}
+
+					HStack {
+						Text(LocaleText.withdrawAmountText)
+							.font(.robotoRegular(size: 12))
+							.foregroundColor(.black)
+
+						Spacer()
+
+						Text("\(viewModel.inputAmount.orZero().toCurrency())")
+							.font(.robotoBold(size: 16))
+							.foregroundColor(.black)
+					}
+					.padding(.top)
+					.padding(.bottom, 5)
+
+					HStack {
+						Text(LocaleText.adminFeeText)
+							.font(.robotoRegular(size: 12))
+							.foregroundColor(.black)
+
+						Spacer()
+
+						Text("\(viewModel.adminFee.numberString.toCurrency())")
+							.font(.robotoBold(size: 16))
+							.foregroundColor(.black)
+					}
+
+					Divider()
+						.padding(.vertical)
+
+					HStack {
+						Text(LocaleText.totalBalanceWithHeld)
+							.font(.robotoRegular(size: 12))
+							.foregroundColor(.black)
+
+						Spacer()
+
+						Text("\(viewModel.total.numberString.toCurrency())")
+							.font(.robotoBold(size: 16))
+							.foregroundColor(.black)
+					}
+					.padding(.bottom)
+
+					HStack(spacing: 15) {
+						Button(action: {
+							viewModel.isPresent.toggle()
+						}, label: {
+							HStack {
+								Spacer()
+								Text(LocaleText.cancelText)
+									.font(.robotoMedium(size: 12))
+									.foregroundColor(.black)
+								Spacer()
+							}
+							.padding()
+							.background(Color.secondaryViolet)
+							.cornerRadius(8)
+							.overlay(
+								RoundedRectangle(cornerRadius: 8)
+									.stroke(Color.DinotisDefault.primary, lineWidth: 1.0)
+							)
+						})
+
+						Button(action: {
+                            Task {
+                                await viewModel.withdraw()
+                            }
+						}, label: {
+							HStack {
+								Spacer()
+								Text(LocaleText.withdrawBalance)
+									.font(.robotoMedium(size: 12))
+									.foregroundColor(.white)
+								Spacer()
+							}
+							.padding()
+							.background(Color.DinotisDefault.primary)
+							.cornerRadius(8)
+						})
+					}
+				}
+					.padding()
+					.padding(.vertical)
+			}
+		})
+		.onAppear {
+			viewModel.onAppear()
 		}
 		.navigationBarTitle(Text(""))
 		.navigationBarHidden(true)
@@ -456,6 +452,6 @@ struct TalentWithdrawView: View {
 
 struct TalentWithdrawView_Previews: PreviewProvider {
 	static var previews: some View {
-		TalentWithdrawView()
+		TalentWithdrawView(viewModel: TalentWithdrawalViewModel(backToRoot: {}, backToHome: {}))
 	}
 }

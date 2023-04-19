@@ -6,14 +6,22 @@
 //
 
 import SwiftUI
+import DinotisDesignSystem
 
 struct ContentView: View {
+
+	init() {
+		FontInjector.registerFonts()
+	}
 	
 	var body: some View {
 		NavigationView {
-			UserTypeView()
+			OnboardingView()
 		}
 		.navigationViewStyle(StackNavigationViewStyle())
+        .onAppear {
+            UIScrollView.appearance().backgroundColor = .clear
+        }
 		
 	}
 }

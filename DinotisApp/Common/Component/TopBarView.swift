@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import DinotisDesignSystem
 
 struct TopBarView: View {
 	@Binding var selected : Int
@@ -26,8 +27,8 @@ struct TopBarView: View {
 							.padding(.vertical, 10)
 							.padding(.horizontal)
 							.font(self.selected == 0 ?
-										Font.custom(FontManager.Montserrat.bold, size: 14) :
-											Font.custom(FontManager.Montserrat.regular, size: 14))
+                                .robotoBold(size: 14) :
+                                    .robotoRegular(size: 14))
 							.foregroundColor(.black)
 							.lineLimit(2)
 							.minimumScaleFactor(0.8)
@@ -56,8 +57,8 @@ struct TopBarView: View {
 						Text(selection2)
 							.padding(10)
 							.font(self.selected == 1 ?
-										Font.custom(FontManager.Montserrat.bold, size: 14) :
-											Font.custom(FontManager.Montserrat.regular, size: 14))
+                                .robotoBold(size: 14) :
+                                    .robotoRegular(size: 14))
 							.foregroundColor(.black)
 							.lineLimit(2)
 							.minimumScaleFactor(0.8)
@@ -86,8 +87,9 @@ struct TopBarView: View {
 							.padding(.vertical, 10)
 							.padding(.horizontal)
 							.font(self.selected == 2 ?
-										Font.custom(FontManager.Montserrat.bold, size: 14) :
-											Font.custom(FontManager.Montserrat.regular, size: 14))
+                                .robotoBold(size: 14) :
+                                    .robotoRegular(size: 14)
+                            )
 							.foregroundColor(.black)
 							.lineLimit(2)
 							.minimumScaleFactor(0.8)

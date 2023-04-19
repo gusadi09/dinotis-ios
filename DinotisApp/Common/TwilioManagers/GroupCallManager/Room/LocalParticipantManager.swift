@@ -5,6 +5,7 @@
 import Combine
 import TwilioVideo
 import Foundation
+import DinotisData
 
 /// Maintains local participant state and uses a publisher to notify subscribers of state changes.
 ///
@@ -21,7 +22,7 @@ class LocalParticipantManager: NSObject {
 		}
 		set {
 			guard let newValue = newValue, let captureDevice = CameraSource.captureDevice(position: newValue) else {
-				print("Unable to create capture device."); return
+				return
 			}
 			
 			cameraSource?.selectCaptureDevice(captureDevice) { _, _, error in

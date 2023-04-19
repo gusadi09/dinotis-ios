@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import DinotisData
 
 struct SearchResponse: Codable {
 	var data: [Talent]
@@ -33,14 +34,22 @@ struct Talent: Codable, Hashable {
 }
 
 // MARK: - ProfessionElement
-struct ProfessionTalent: Codable {
-	var profession: Professions
+struct ProfessionTalent: Codable, Equatable {
+	var profession: Professions?
+  
+  static func ==(lhs: ProfessionTalent, rhs: ProfessionTalent) -> Bool {
+    return lhs.profession == rhs.profession
+  }
 }
 
 // MARK: - ProfessionProfession
-struct Professions: Codable {
+struct Professions: Codable, Equatable {
 	var id: Int?
 	var name: String?
+  
+  static func ==(lhs: Professions, rhs: Professions) -> Bool {
+    return lhs.id == rhs.id
+  }
 }
 
 struct QuerySearch: Codable {
@@ -51,15 +60,19 @@ struct QuerySearch: Codable {
 }
 
 struct TalentFromSearch: Codable {
-	let id: String
-	var name, username, profileDescription: String?
-	var profilePhoto: String?
-	var isVerified: Bool
-	let userManagement: ManagementUserData?
-	let userManagementTalent: ManagementData?
-	var professions: [ProfessionTalent]
-	var meetings: [Meeting]
-	var userHighlights: [Highlights]?
+	let id: String?
+	let name, username, profileDescription: String?
+	let profilePhoto: String?
+	let isVerified: Bool?
+	let isFollowed: Bool?
+	let rating: String?
+	let meetingCount: Int?
+	let followerCount: Int?
+	let management: ManagementUserData?
+	let managements: [ManagementData]?
+	let professions: [ProfessionTalent]?
+	let meetings: [Meeting]
+	let userHighlights: [Highlights]?
 }
 
 struct FilterData: Codable {
@@ -82,7 +95,7 @@ struct ManagementUserData: Codable, Hashable {
 	let id: Int?
 	let code: String?
 	let userId: String?
-	let userManagementTalents: [ManagementUser]?
+	let managementTalents: [ManagementUser]?
 
 	static func == (lhs: ManagementUserData, rhs: ManagementUserData) -> Bool {
 		lhs.id.orZero() == rhs.id.orZero()
@@ -95,9 +108,8 @@ struct ManagementUserData: Codable, Hashable {
 
 struct ManagementUser: Codable, Hashable {
 	let id: Int?
-	let userManagementId: Int?
 	let userId: String?
-	let user: Talent?
+	let user: UserResponse?
 
 	static func == (lhs: ManagementUser, rhs: ManagementUser) -> Bool {
 		lhs.id.orZero() == rhs.id.orZero()
@@ -110,9 +122,9 @@ struct ManagementUser: Codable, Hashable {
 
 struct ManagementData: Codable, Hashable {
 	let id: Int?
-	let userManagementId: Int?
-	let userId: String?
-	let userManagement: UserManagement?
+	let managementId: Int?
+    let userId: String?
+	let management: UserManagement?
 
 	static func == (lhs: ManagementData, rhs: ManagementData) -> Bool {
 		lhs.id.orZero() == rhs.id.orZero()
@@ -127,9 +139,9 @@ struct UserManagement: Codable, Hashable {
 	let id: Int?
 	let code: String?
 	let userId: String?
-	let createdAt: String?
-	let updatedAt: String?
-	let user: Users
+	let createdAt: Date?
+	let updatedAt: Date?
+	let user: Users?
 
 	static func == (lhs: UserManagement, rhs: UserManagement) -> Bool {
 		lhs.id.orZero() == rhs.id.orZero()
@@ -152,8 +164,8 @@ struct Highlights: Codable {
     var id: Int?
     var imgUrl: String?
     var userId: String?
-    var createdAt: String?
-    var updateAt: String?
+    var createdAt: Date?
+    var updateAt: Date?
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -165,23 +177,37 @@ struct Highlights: Codable {
 struct Meeting: Codable, Hashable {
 
 	var id, title, meetingDescription, price: String?
-	var startAt, endAt: String?
+	var startAt, endAt: Date?
 	var isPrivate: Bool?
 	var isLiveStreaming: Bool?
 	var slots: Int?
-	var userID: String
-	var startedAt: String?
-	var endedAt: String?
-	var createdAt, updatedAt: String
-	var deletedAt: String?
-	var bookings: [Booking]
+	var userID: String?
+	var startedAt: Date?
+	var endedAt: Date?
+	var createdAt, updatedAt: Date?
+	var deletedAt: Date?
+	var booking: Booking?
+    var isSelected: Bool?
+	let participants: Int?
+	let isAlreadyBooked: Bool?
+	let isFailed: Bool?
+    var uid: Int?
+    var isBundling: Bool?
+    let roomSid: String?
+    let meetingBundleId: String?
+	let meetingRequest: MeetingRequestData?
+	let background: [String]?
+    let user: UserResponse?
+    let meetingCollaborations: [MeetingCollaborationData]?
+    let meetingUrls: [MeetingURLData]?
+    let meetingUploads: [MeetingUploadData]?
 	
 	enum CodingKeys: String, CodingKey {
 		case id, title
 		case meetingDescription = "description"
-		case price, startAt, endAt, isPrivate, slots, isLiveStreaming
+		case price, startAt, endAt, isPrivate, slots, isLiveStreaming, meetingRequest
 		case userID = "userId"
-		case startedAt, endedAt, createdAt, updatedAt, deletedAt, bookings
+		case startedAt, endedAt, createdAt, updatedAt, deletedAt, booking, isBundling, participants, roomSid, meetingBundleId, isFailed, isAlreadyBooked, background, meetingCollaborations, meetingUrls, meetingUploads, user
 	}
 
 	static func == (lhs: Meeting, rhs: Meeting) -> Bool {
@@ -195,9 +221,11 @@ struct Meeting: Codable, Hashable {
 
 // MARK: - Booking
 struct Booking: Codable {
-	var id, bookedAt: String
-	var canceledAt, doneAt: String?
-	var meetingID, userID, createdAt, updatedAt: String?
+	var id: String
+	let bookedAt: Date?
+	var canceledAt, doneAt: Date?
+	var meetingID, userID: String?
+	let createdAt, updatedAt: Date?
 	var bookingPayment: BookingPayment?
 	
 	enum CodingKeys: String, CodingKey {
@@ -212,8 +240,8 @@ struct Booking: Codable {
 struct BookingPayment: Codable {
 	var id: String
 	var amount: String?
-	var paidAt: String?
-	var failedAt: String?
+	var paidAt: Date?
+	var failedAt: Date?
 	var bookingID: String?
 	var paymentMethodID: Int?
 	var paymentMethod: PaymentMethod?

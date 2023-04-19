@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SDWebImageSwiftUI
+import DinotisData
 
 struct AnnouncementView: View {
 
@@ -77,8 +78,8 @@ struct AnnouncementView_Previews: PreviewProvider {
 						url: "",
 						caption: "",
 						description: "",
-						createdAt: "",
-						updatedAt: ""
+						createdAt: Date(),
+						updatedAt: Date()
 					)
 				),
 				action: { }

@@ -4,6 +4,7 @@
 
 import Combine
 import TwilioVideo
+import DinotisData
 
 /// Configures the video room connection and uses publishers to notify subscribers of state changes.
 class RoomManager: NSObject {
@@ -33,8 +34,8 @@ class RoomManager: NSObject {
 	func connect(roomName: String, accessToken: String) {
 		let options = ConnectOptions(token: accessToken) { builder in
 			builder.roomName = roomName
-			builder.audioTracks = [self.localParticipant.micTrack].compactMap { $0 }
-			builder.videoTracks = [self.localParticipant.cameraTrack].compactMap { $0 }
+            builder.audioTracks = [self.localParticipant.micTrack].compactMap { $0 }
+            builder.videoTracks = [self.localParticipant.cameraTrack].compactMap { $0 }
 			builder.dataTracks = [self.localParticipant.dataTrack].compactMap { $0 }
 			builder.isDominantSpeakerEnabled = true
 			builder.bandwidthProfileOptions = BandwidthProfileOptions(
@@ -57,7 +58,7 @@ class RoomManager: NSObject {
 	private func cleanUp() {
 		room?.disconnect()
 		room = nil
-		localParticipant.participant = nil
+		localParticipant?.participant = nil
 		remoteParticipants.removeAll()
 	}
 	
@@ -69,7 +70,7 @@ class RoomManager: NSObject {
 
 extension RoomManager: RoomDelegate {
 	func roomDidConnect(room: Room) {
-		localParticipant.participant = room.localParticipant
+		localParticipant?.participant = room.localParticipant
 		remoteParticipants = room.remoteParticipants
 			.filter { !$0.isVideoComposer } // Hide the video composer participant because it is not a human
 			.map { RemoteParticipantManager(participant: $0, delegate: self) }

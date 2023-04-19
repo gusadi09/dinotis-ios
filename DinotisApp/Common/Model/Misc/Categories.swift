@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CategoriesResponse: Codable {
+struct CategoriesResponseV1: Codable {
 	let data: [Categories]?
 	let nextCursor: Int?
 }
@@ -17,8 +17,8 @@ struct Categories: Codable, Identifiable {
 	let name: String?
 	let icon: String?
 	let professions: [CategoriesProfession]?
-	let createdAt: String?
-	let updatedAt: String?
+	let createdAt: Date?
+	let updatedAt: Date?
 }
 
 struct CategoriesProfession: Codable {
@@ -26,6 +26,6 @@ struct CategoriesProfession: Codable {
 	let name: String?
 	let professionCategoryId: Int?
 	let professionCategory: String?
-	let createdAt: String?
-	let updatedAt: String?
+	let createdAt: Date?
+	let updatedAt: Date?
 }

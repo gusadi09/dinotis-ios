@@ -6,104 +6,91 @@
 //
 
 import SwiftUI
+import DinotisDesignSystem
 
 struct SelectChannelView: View {
-	@Binding var channel: DeliveryOTPVia
-	let geo: GeometryProxy
-	var action: () -> Void
-
+    @Binding var channel: DeliveryOTPVia
+    let geo: GeometryProxy
+    var action: () -> Void
+    
     var body: some View {
-				VStack(spacing: 35) {
-					Text(LocaleText.selectDeliveryOptionOTP)
-						.font(.montserratBold(size: 16))
-						.foregroundColor(.black)
-
-					VStack(spacing: 15) {
-						Button {
-							channel = .whatsapp
-							action()
-						} label: {
-
-							HStack(spacing: 15) {
-								Image.Dinotis.otpWhatsappIcon
-									.resizable()
-									.scaledToFit()
-									.frame(height: geo.size.height/22)
-									.foregroundColor(.primaryViolet)
-
-								VStack(alignment: .leading, spacing: 5) {
-									Text(LocaleText.viaWhatsapp)
-										.font(.montserratSemiBold(size: 14))
-
-									Text(LocaleText.viaWhatsappCaption)
-										.font(.montserratRegular(size: 12))
-										.multilineTextAlignment(.leading)
-								}
-								.foregroundColor(.black)
-
-								Spacer()
-
-								Image.Dinotis.chevronLeftCircleIcon
-
-							}
-							.padding()
-							.background(
-								RoundedRectangle(cornerRadius: 10)
-									.foregroundColor(.clear)
-							)
-							.overlay(
-								RoundedRectangle(cornerRadius: 10)
-									.stroke(Color.dinotisStrokeSecondary, lineWidth: 1)
-							)
-						}
-
-						Button {
-							channel = .sms
-							action()
-						} label: {
-							HStack(spacing: 15) {
-								Image.Dinotis.otpSmsIcon
-									.resizable()
-									.scaledToFit()
-									.frame(height: geo.size.height/22)
-									.foregroundColor(.primaryViolet)
-
-								VStack(alignment: .leading, spacing: 5) {
-									Text(LocaleText.viaSms)
-										.font(.montserratSemiBold(size: 14))
-
-									Text(LocaleText.viaSmsCaption)
-										.font(.montserratRegular(size: 12))
-										.multilineTextAlignment(.leading)
-								}
-								.foregroundColor(.black)
-
-								Spacer()
-
-								Image.Dinotis.chevronLeftCircleIcon
-
-							}
-							.padding()
-							.background(
-								RoundedRectangle(cornerRadius: 10)
-									.foregroundColor(.clear)
-							)
-							.overlay(
-								RoundedRectangle(cornerRadius: 10)
-									.stroke(Color.dinotisStrokeSecondary, lineWidth: 1)
-							)
-						}
-
-					}
-
-				}
+        VStack(spacing: 10) {
+            Button {
+                channel = .whatsapp
+                action()
+            } label: {
+                
+                HStack(spacing: 8) {
+                    Image.otpWhatsappIcon
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 40)
+                    
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text(LocalizableText.titleOTPSendWA)
+                            .font(.robotoBold(size: 16))
+                        
+                        Text(LocalizableText.descriptionOTPSendWA)
+                            .font(.robotoRegular(size: 12))
+                            .multilineTextAlignment(.leading)
+                    }
+                    
+                    Spacer()
+                    
+                    Image(systemName: "chevron.right")
+                        .font(Font.system(size: 24, weight: .bold))
+                    
+                }
+                .foregroundColor(.DinotisDefault.white)
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .foregroundColor(.DinotisDefault.primary)
+                )
+            }
+            
+            Button {
+                channel = .sms
+                action()
+            } label: {
+                HStack(spacing: 8) {
+                    Image.otpSmsIcon
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 40)
+                    
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text(LocalizableText.titleOTPSendSMS)
+                            .font(.robotoBold(size: 16))
+                        
+                        Text(LocalizableText.descriptionOTPSendSMS)
+                            .font(.robotoRegular(size: 12))
+                            .multilineTextAlignment(.leading)
+                    }
+                    
+                    Spacer()
+                    
+                    Image(systemName: "chevron.right")
+                        .font(Font.system(size: 24, weight: .bold))
+                    
+                }
+                .foregroundColor(.DinotisDefault.white)
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .foregroundColor(.DinotisDefault.secondary)
+                )
+            }
+            
+        }
+        
     }
 }
 
 struct SelectChannelView_Previews: PreviewProvider {
     static var previews: some View {
-			GeometryReader { geo in
-				SelectChannelView(channel: .constant(.sms), geo: geo, action: {})
-			}
+        GeometryReader { geo in
+            SelectChannelView(channel: .constant(.sms), geo: geo, action: {})
+        }
     }
 }

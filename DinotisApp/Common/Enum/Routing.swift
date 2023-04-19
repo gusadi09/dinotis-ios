@@ -8,15 +8,16 @@
 import Foundation
 
 enum PrimaryRouting {
+	case userType
 	case userLogin(viewModel: LoginViewModel)
 	case talentLogin(viewModel: LoginViewModel)
 	case verificationOtp(viewModel: OtpVerificationViewModel)
+	case tabContainer(viewModel: TabViewContainerViewModel)
 	case homeUser(viewModel: UserHomeViewModel)
 	case homeTalent(viewModel: TalentHomeViewModel)
 	case biodataUser(viewModel: BiodataViewModel)
 	case biodataTalent(viewModel: BiodataViewModel)
 	case forgotPassword(viewModel: ForgotPasswordViewModel)
-	case loginResetPassword(viewModel: LoginPasswordResetViewModel)
 	case resetPassword(viewModel: ResetPasswordViewModel)
 }
 
@@ -34,7 +35,6 @@ enum HomeRouting {
 	case talentWallet(viewModel: TalentWalletViewModel)
 	case talentProfileDetail(viewModel: TalentProfileDetailViewModel)
 	case scheduleList(viewModel: ScheduleListViewModel)
-	case historyList(viewModel: UserHistoryViewModel)
 	case videoCall(viewModel: PrivateVideoCallViewModel)
 	case afterCall(viewModel: AfterCallViewModel)
 	case searchTalent(viewModel: SearchTalentViewModel)
@@ -42,8 +42,23 @@ enum HomeRouting {
 	case detailPayment(viewModel: DetailPaymentViewModel)
 	case bookingInvoice(viewModel: InvoicesBookingViewModel)
     case twilioLiveStream(viewModel: TwilioLiveStreamViewModel)
-	case loginResetPassword(viewModel: LoginPasswordResetViewModel)
 	case changePassword(viewModel: ChangesPasswordViewModel)
 	case previewTalent(viewModel: PreviewTalentViewModel)
 	case coinHistory(viewModel: CoinHistoryViewModel)
+    case bundlingMenu(viewModel: BundlingViewModel)
+    case createBundling(viewModel: TalentCreateBundlingViewModel)
+    case bundlingDetail(viewModel: BundlingDetailViewModel)
+    case bundlingForm(viewModel: BundlingFormViewModel)
+    case talentRateCardList(viewModel: TalentCardListViewModel)
+    case rateCardServiceBookingForm(viewModel: RateCardServiceBookingFormViewModel)
+    case talentCreateRateCardForm(viewModel: CreateTalentRateCardFormViewModel)
+    case scheduleNegotiationChat(viewModel: ScheduleNegotiationChatViewModel)
+	case editScheduleMeeting(viewModel: EditTalentMeetingViewModel)
+	case addBankAccount(viewModel: TalentAddBankAccountViewModel)
+	case withdrawTransactionDetail(viewModel: TalentTransactionDetailViewModel)
+	case revenueTransactionDetail(viewModel: TalentTransactionDetailViewModel)
+	case withdrawBalance(viewModel: TalentWithdrawalViewModel)
+    case editRateCardSchedule(viewModel: TalentEditRateCardScheduleViewModel)
+	case notification(viewModel: NotificationViewModel)
+	case followedCreator(viewModel: FollowedCreatorViewModel)
 }

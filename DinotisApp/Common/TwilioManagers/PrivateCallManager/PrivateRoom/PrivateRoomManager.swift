@@ -83,18 +83,18 @@ extension PrivateRoomManager: RoomDelegate {
     
     func roomDidDisconnect(room: Room, error: Error?) {
         if let error = error {
-			if (error as NSError).isRoomCompletedError {
-				handleError(LiveVideoError.streamEndedByHost)
-			} else if (error as NSError).isParticipantNotFoundError {
-				handleError(LiveVideoError.speakerMovedToViewersByHost)
-			} else {
-				handleError(error)
-			}
-		} else {
-			handleError(LiveVideoError.speakerMovedToViewersByHost)
-		}
-	}
-
+            if (error as NSError).isRoomCompletedError {
+                handleError(LiveVideoError.streamEndedByHost)
+            } else if (error as NSError).isParticipantNotFoundError {
+                handleError(LiveVideoError.speakerMovedToViewersByHost)
+            } else {
+                handleError(error)
+            }
+        } else {
+            handleError(LiveVideoError.speakerMovedToViewersByHost)
+        }
+    }
+    
     func participantDidConnect(room: Room, participant: RemoteParticipant) {
         guard !participant.isVideoComposer else { return }
         

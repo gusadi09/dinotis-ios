@@ -50,14 +50,12 @@ extension PlayerManager: PlayerDelegate {
 	func playerDidChangePlayerState(player: Player, playerState state: Player.State) {
 		switch state {
 		case .ready:
-			print("ready play")
 			play()
 		case .ended:
 			// Use ended state to detect when the host ends the stream so that the user receives the entire
 			// stream and does not miss the last 2 seconds because of delay.
 			handleError(LiveVideoError.streamEndedByHost)
 		case .playing:
-			print("playing")
 			delegate?.playerManagerDidConnect(self)
 		case .idle, .buffering:
 			break
@@ -67,14 +65,14 @@ extension PlayerManager: PlayerDelegate {
 	}
 	
 	func playerWillRebuffer(player: Player) {
-		print("Player will rebuffer.")
+
 	}
 	
 	func playerNetworkDidBecomeUnavailable(player: Player) {
-		print("Player network did become unavailable.")
+
 	}
 	
 	func playerDidReceiveTimedMetadata(player: Player, metadata: TimedMetadata) {
-		print("Received time metadata = \(metadata)")
+		
 	}
 }

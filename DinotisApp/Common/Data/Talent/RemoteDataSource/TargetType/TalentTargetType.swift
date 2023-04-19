@@ -48,13 +48,13 @@ extension TalentTargetType: DinotisTargetType, AccessTokenAuthorizable {
     var parameterEncoding: Moya.ParameterEncoding {
         switch self {
         case .getSearchedTalent:
-            return URLEncoding.default
+            return URLEncoding.queryString
         case .getRecommendationTalent:
-            return URLEncoding.default
+            return URLEncoding.queryString
         case .getCrowdedTalent:
-            return URLEncoding.default
+            return URLEncoding.queryString
         case .getTalentDetail:
-            return URLEncoding.default
+            return URLEncoding.queryString
 				case .sendRequestSchedule(_, _):
 					return JSONEncoding.default
 				}
@@ -71,14 +71,14 @@ extension TalentTargetType: DinotisTargetType, AccessTokenAuthorizable {
         case .getRecommendationTalent:
             return "/talents/recommendation"
         case .getSearchedTalent:
-            return "/talents"
-        case .getTalentDetail(let username):
-            return "/talents/\(username)"
-				case .sendRequestSchedule(let talentId, _):
-					return "/users/request/schedule/\(talentId)"
-				}
-    }
-    
+			return "/talents"
+		case .getTalentDetail(let username):
+			return "/talents/\(username)/user"
+		case .sendRequestSchedule(let talentId, _):
+			return "/users/request/schedule/\(talentId)"
+		}
+	}
+	
     var sampleData: Data {
         switch self {
         case .getCrowdedTalent(_):
@@ -95,8 +95,8 @@ extension TalentTargetType: DinotisTargetType, AccessTokenAuthorizable {
 						userId: talentId,
 						requestUserId: body.requestUserId,
 						type: body.type,
-						createdAt: Date().toString(format: .utc),
-						updatedAt: Date().toString(format: .utc)
+						createdAt: Date(),
+						updatedAt: Date()
 					)
 
 					return response.toJSONData()

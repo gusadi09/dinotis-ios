@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CurrencyFormatter
+import DinotisDesignSystem
 
 struct TalentDetailScheduleCardView: View {
 	@Binding var data: DetailMeeting
@@ -32,91 +33,123 @@ struct TalentDetailScheduleCardView: View {
 					
 					if data.endedAt != nil {
 						Text(NSLocalizedString("ended_meeting_card_label", comment: ""))
-							.font(.custom(FontManager.Montserrat.regular, size: 12))
+							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 							.padding(.vertical, 3)
 							.padding(.horizontal, 8)
 							.background(Color(.systemGray5))
 							.clipShape(Capsule())
 					} else {
-						Menu {
-							Button(action: {
-								onTapEdit()
-							}, label: {
+						if data.meetingRequest != nil && data.startedAt == nil {
+                            Button {
+                                onTapEdit()
+                            } label: {
+                                HStack {
+                                    Text(LocaleText.edit)
+                                        .font(.robotoMedium(size: 12))
+                                        .foregroundColor(.DinotisDefault.primary)
+                                        
+                                }
+                                .padding(.vertical, 8)
+                                .padding(.horizontal)
+                                .background(Color.secondaryViolet)
+                                .cornerRadius(8)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.DinotisDefault.primary, lineWidth: 1)
+                                )
+                            }
+						} else if data.meetingRequest != nil && data.startedAt != nil {
+							Button {
+								onTapEnd()
+							} label: {
 								HStack {
-									Image("ic-menu-edit")
-										.renderingMode(.template)
-										.resizable()
-										.scaledToFit()
-										.foregroundColor(.white)
-										.frame(height: 15)
+									Text(NSLocalizedString("finish_video_call_detail", comment: ""))
+										.font(.robotoMedium(size: 12))
+										.foregroundColor(.DinotisDefault.primary)
 
-									Text(NSLocalizedString("edit_schedule", comment: ""))
-										.font(Font.custom(FontManager.Montserrat.semibold, size: 12))
-										.foregroundColor(.black)
 								}
-							})
-
-							if data.startedAt == nil {
-								Button(action: {
-									onTapDelete()
-								}, label: {
-									HStack {
-										Image("ic-menu-delete")
-											.renderingMode(.template)
-											.resizable()
-											.scaledToFit()
-											.foregroundColor(.white)
-											.frame(height: 15)
-
-										Text(NSLocalizedString("delete_schedule", comment: ""))
-											.font(Font.custom(FontManager.Montserrat.semibold, size: 12))
-											.foregroundColor(.black)
-									}
-								})
-							} else {
-								Button(action: {
-									onTapEnd()
-								}, label: {
-									HStack {
-										Image(systemName: "checkmark.circle")
-											.renderingMode(.template)
-											.resizable()
-											.scaledToFit()
-											.foregroundColor(.white)
-											.frame(height: 15)
-
-										Text(NSLocalizedString("finish_video_call_detail", comment: ""))
-											.font(Font.custom(FontManager.Montserrat.semibold, size: 12))
-											.foregroundColor(.black)
-									}
-								})
+								.padding(.vertical, 8)
+								.padding(.horizontal)
+								.background(Color.secondaryViolet)
+								.cornerRadius(8)
+								.overlay(
+									RoundedRectangle(cornerRadius: 8)
+										.stroke(Color.DinotisDefault.primary, lineWidth: 1)
+								)
 							}
-						} label: {
-							HStack(spacing: 5) {
-								Circle()
-									.scaledToFit()
-									.frame(height: 5)
-								Circle()
-									.scaledToFit()
-									.frame(height: 5)
-								Circle()
-									.scaledToFit()
-									.frame(height: 5)
-							}
-							.foregroundColor(Color("btn-stroke-1"))
-						}
+						} else if data.meetingRequest == nil {
+                            Menu {
+                                Button(action: {
+                                    onTapEdit()
+                                }, label: {
+                                    HStack {
+                                        Image("ic-menu-edit")
+                                            .renderingMode(.template)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .foregroundColor(.white)
+                                            .frame(height: 15)
+                                        
+                                        Text(NSLocalizedString("edit_schedule", comment: ""))
+                                            .font(.robotoMedium(size: 12))
+                                            .foregroundColor(.black)
+                                    }
+                                })
+                                
+                                if data.startedAt == nil {
+                                    Button(action: {
+                                        onTapDelete()
+                                    }, label: {
+                                        HStack {
+                                            Image("ic-menu-delete")
+                                                .renderingMode(.template)
+                                                .resizable()
+                                                .scaledToFit()
+                                                .foregroundColor(.white)
+                                                .frame(height: 15)
+                                            
+                                            Text(NSLocalizedString("delete_schedule", comment: ""))
+                                                .font(.robotoMedium(size: 12))
+                                                .foregroundColor(.black)
+                                        }
+                                    })
+                                } else {
+                                    Button(action: {
+                                        onTapEnd()
+                                    }, label: {
+                                        HStack {
+                                            Image(systemName: "checkmark.circle")
+                                                .renderingMode(.template)
+                                                .resizable()
+                                                .scaledToFit()
+                                                .foregroundColor(.white)
+                                                .frame(height: 15)
+                                            
+                                            Text(NSLocalizedString("finish_video_call_detail", comment: ""))
+                                                .font(.robotoMedium(size: 12))
+                                                .foregroundColor(.black)
+                                        }
+                                    })
+                                }
+                            } label: {
+                                Image(systemName: "ellipsis")
+                                    .foregroundColor(.DinotisDefault.primary)
+                                    .font(.system(size: 26))
+                                    .padding(6)
+                            }
+                        }
 					}
 				}
 				.padding(.bottom, 10)
 				
 				VStack(alignment: .leading, spacing: 5) {
 					Text(data.title ?? "")
-						.font(Font.custom(FontManager.Montserrat.bold, size: 14))
+                        .font(.robotoBold(size: 14))
 						.foregroundColor(.black)
 					
 					Text(data.description ?? "")
-						.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+						.font(.robotoRegular(size: 12))
 						.foregroundColor(.black)
 						.padding(.bottom, 10)
 				}
@@ -127,9 +160,13 @@ struct TalentDetailScheduleCardView: View {
 						.scaledToFit()
 						.frame(height: 18)
 					
-					if let dateStart = dateISOFormatter.date(from: data.startAt ?? "") {
-						Text(dateFormatter.string(from: dateStart))
-							.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+					if let dateStart = data.startAt {
+                        Text(DateUtils.dateFormatter(dateStart, forFormat: .EEEEddMMMMyyyy))
+							.font(.robotoRegular(size: 12))
+							.foregroundColor(.black)
+					} else {
+						Text(LocaleText.unconfirmedText)
+							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 					}
 				}
@@ -140,10 +177,14 @@ struct TalentDetailScheduleCardView: View {
 						.scaledToFit()
 						.frame(height: 18)
 					
-					if let timeStart = dateISOFormatter.date(from: data.startAt ?? ""),
-						 let timeEnd = dateISOFormatter.date(from: data.endAt ?? "") {
-						Text("\(timeFormatter.string(from: timeStart)) - \(timeFormatter.string(from: timeEnd))")
-							.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+					if let timeStart = data.startAt,
+						 let timeEnd = data.endAt {
+                        Text("\(DateUtils.dateFormatter(timeStart, forFormat: .HHmm)) - \(DateUtils.dateFormatter(timeEnd, forFormat: .HHmm))")
+							.font(.robotoRegular(size: 12))
+							.foregroundColor(.black)
+					} else {
+						Text(LocaleText.unconfirmedText)
+							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 					}
 				}
@@ -155,13 +196,13 @@ struct TalentDetailScheduleCardView: View {
 							.scaledToFit()
 							.frame(height: 18)
 						
-						Text("\(String.init((data.bookings?.filter({ items in items.bookingPayment?.paidAt != nil }) ?? []).count))/\(data.slots.orZero()) \(NSLocalizedString("participant", comment: ""))")
-							.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+						Text("\(String.init((data.participants).orZero()))/\(data.slots.orZero()) \(NSLocalizedString("participant", comment: ""))")
+							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 						
 						if data.slots.orZero() > 1 && !(data.isLiveStreaming ?? false) {
 							Text(NSLocalizedString("group", comment: ""))
-								.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+								.font(.robotoRegular(size: 12))
 								.foregroundColor(.black)
 								.padding(.vertical, 5)
 								.padding(.horizontal)
@@ -174,7 +215,7 @@ struct TalentDetailScheduleCardView: View {
 							
 						} else if data.isLiveStreaming ?? false {
 							Text(LocaleText.liveStreamText)
-								.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+								.font(.robotoRegular(size: 12))
 								.foregroundColor(.black)
 								.padding(.vertical, 5)
 								.padding(.horizontal)
@@ -186,7 +227,7 @@ struct TalentDetailScheduleCardView: View {
 								)
 						} else {
 							Text(NSLocalizedString("private", comment: ""))
-								.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+								.font(.robotoRegular(size: 12))
 								.foregroundColor(.black)
 								.padding(.vertical, 5)
 								.padding(.horizontal)
@@ -206,72 +247,62 @@ struct TalentDetailScheduleCardView: View {
 						.foregroundColor(.gray)
 						.opacity(0.2)
 					
-					if (data.bookings?.filter({ item in
-						item.bookingPayment?.paidAt != nil
-					}) ?? []).isEmpty {
+					if data.participants.orZero() == 0 {
 						HStack {
 							Text(NSLocalizedString("empty_participant", comment: ""))
-								.font(Font.custom(FontManager.Montserrat.regular, size: 12))
+                                .font(.robotoRegular(size: 12))
 								.foregroundColor(.black)
 						}
 					} else {
 						HStack {
 							Text(NSLocalizedString("detail_participant_label", comment: ""))
-								.font(.montserratBold(size: 12))
+								.font(.robotoBold(size: 12))
 								.foregroundColor(.black)
 							
 							Spacer()
 						}
 
-						if let datas = data.bookings?.filter({ item in
-							item.bookingPayment?.paidAt != nil
-						}) {
-							ForEach(datas.prefix(4), id: \.id) { item in
-								VStack {
-									VStack {
-										HStack {
-											if let data = item.user {
-												ProfileImageContainer(profilePhoto: .constant(data.profilePhoto), name: .constant(data.name), width: 40, height: 40)
-
-												Text(data.name)
-													.font(Font.custom(FontManager.Montserrat.semibold, size: 14))
-													.foregroundColor(.black)
-											}
-
-											Spacer()
-
-											// MARK: - Hidden
-											if data.startedAt == nil {
-												Button(action: {
-
-												}, label: {
-													Image("ic-menu-delete")
-														.resizable()
-														.scaledToFit()
-														.frame(height: 20)
-												})
-												.isHidden(true, remove: true)
-											}
-										}
-									}
-
-									if item.id != data.bookings?.last?.id {
-										Capsule()
-											.frame(height: 1)
-											.foregroundColor(.gray)
-											.opacity(0.2)
-									}
-								}
-							}
-
-							if datas.count > 4 {
-								Text(LocaleText.andMoreParticipant(datas.count-4))
-									.font(.montserratBold(size: 12))
-									.foregroundColor(.black)
-							}
-						}
-					}
-				}
+                        ForEach($data.participantDetails.prefix(4), id: \.id.wrappedValue) { item in
+                            VStack {
+                                HStack {
+                                    ProfileImageContainer(profilePhoto: .constant(item.wrappedValue.profilePhoto), name: .constant(item.wrappedValue.name), width: 40, height: 40)
+                                    
+                                    Text(item.wrappedValue.name.orEmpty())
+                                        .font(.robotoMedium(size: 14))
+                                        .foregroundColor(.black)
+                                    
+                                    Spacer()
+                                    
+                                    // MARK: - Hidden
+                                    if data.startedAt == nil {
+                                        Button(action: {
+                                            
+                                        }, label: {
+                                            Image("ic-menu-delete")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(height: 20)
+                                        })
+                                        .isHidden(true, remove: true)
+                                    }
+                                }
+                                
+                                if item.id.wrappedValue != data.participantDetails.last?.id {
+                                    Capsule()
+                                        .frame(height: 1)
+                                        .foregroundColor(.gray)
+                                        .opacity(0.2)
+                                }
+                            }
+                        }
+                        
+                        if $data.participantDetails.count > 4 {
+                            Text(LocaleText.andMoreParticipant($data.participantDetails.count-4))
+                                .font(.robotoBold(size: 12))
+                                .foregroundColor(.black)
+                        }
+                    }
+                }
 				.padding(.vertical, 8)
 				
 			}
