@@ -33,7 +33,7 @@
       "location" : "https://github.com/twilio/conversations-ios",
       "state" : {
         "branch" : "master",
-        "revision" : "81699ec2bbc7de1e4189b99a6e3c446299ceea36"
+        "revision" : "8491c3210ab3c3da0b13b5985243a0b5d02351a8"
       }
     },
     {
@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mobven/CountryPicker.git",
       "state" : {
-        "revision" : "e0d7944fc472dc564d35097aca32cb53420929dd",
-        "version" : "1.0.6"
+        "revision" : "3632e53eb077a29e2b6418a5d74bad13ce439e38",
+        "version" : "1.0.7"
       }
     },
     {
@@ -77,8 +77,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/GoogleDataTransport.git",
       "state" : {
-        "revision" : "f6b558e3f801f2cac336b04f615ce111fa9ddaa0",
-        "version" : "9.2.1"
+        "revision" : "cc7265b8e3906304e6e81f32c1662a94bbae2357",
+        "version" : "9.2.2"
       }
     },
     {
@@ -86,8 +86,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/GoogleUtilities.git",
       "state" : {
-        "revision" : "0543562f85620b5b7c510c6bcbef75b562a5127b",
-        "version" : "7.11.0"
+        "revision" : "871d43135925cde39ef7421d8723ce47edfdcc39",
+        "version" : "7.11.1"
       }
     },
     {
@@ -158,8 +158,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/OneSignal/OneSignal-XCFramework",
       "state" : {
-        "revision" : "539db4b16e3718b3a0ed4ca210421a6def8442b0",
-        "version" : "3.12.4"
+        "revision" : "091f9c572b4a522f93cd1d4f2f524e3818a253f2",
+        "version" : "3.12.5"
       }
     },
     {
@@ -239,8 +239,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-case-paths",
       "state" : {
-        "revision" : "870133b7b2387df136ad301ec67b2e864b51dda1",
-        "version" : "0.14.0"
+        "revision" : "fc45e7b2cfece9dd80b5a45e6469ffe67fe67984",
+        "version" : "0.14.1"
       }
     },
     {
@@ -312,7 +312,7 @@
       "location" : "https://github.com/twilio/twilio-sync-ios",
       "state" : {
         "branch" : "master",
-        "revision" : "b86b6edbda9010e4832f03e74591ad7b4ba4573e"
+        "revision" : "fe6ccf79d68074970b2d4e66c024ddbb179cc5d4"
       }
     },
     {
@@ -322,6 +322,15 @@
       "state" : {
         "revision" : "3303fd89d17770ec5ffcb68151c69b026f55f4aa",
         "version" : "5.6.0"
+      }
+    },
+    {
+      "identity" : "twilsock-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/twilio/twilsock-ios",
+      "state" : {
+        "revision" : "84a3c9e12eec85612a650ab88dd0dfb103b54515",
+        "version" : "1.0.0"
       }
     },
     {

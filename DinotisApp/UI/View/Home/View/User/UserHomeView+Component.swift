@@ -336,7 +336,7 @@ extension UserHomeView {
                                                 Spacer()
                                             }
                                             
-                                            ScrollView {
+                                            ScrollView([.horizontal], showsIndicators: false) {
                                                 ScrollView([.horizontal], showsIndicators: false) {
                                                     HStack(spacing: 15) {
                                                         ForEach(item.talentHomeTalentList ?? [], id: \.id) { item in
