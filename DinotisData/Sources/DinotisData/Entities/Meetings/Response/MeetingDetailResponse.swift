@@ -95,13 +95,17 @@ public struct MeetingCollaborationData: Codable {
     public let id: Int?
     public let meetingId: String?
     public let username: String?
+    public let approvedAt: Date?
+    public let declinedAt: Date?
     public let user: UserResponse?
     
-    public init(id: Int?, meetingId: String?, username: String?, user: UserResponse?) {
+    public init(id: Int?, meetingId: String?, username: String?, user: UserResponse?, approvedAt: Date?, declinedAt: Date?) {
         self.id = id
         self.meetingId = meetingId
         self.username = username
         self.user = user
+        self.approvedAt = approvedAt
+        self.declinedAt = declinedAt
     }
 }
 

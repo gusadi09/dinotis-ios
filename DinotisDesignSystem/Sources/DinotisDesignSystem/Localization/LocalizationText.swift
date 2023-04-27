@@ -1525,4 +1525,59 @@ public enum LocalizableText {
         bundle: .module,
         comment: "usage for invalid url format message"
     )
+    public static let collaborationTitle = NSLocalizedString(
+        "collaboration_text",
+        bundle: .module,
+        comment: "usage for collaboration title text"
+    )
+    public static let collaborationPlaceholder = NSLocalizedString(
+        "collaboration_placeholder",
+        bundle: .module,
+        comment: "usage for placeholder of collaboration field"
+    )
+    public static let invitedCreatorTitle = NSLocalizedString(
+        "invited_creator_title",
+        bundle: .module,
+        comment: "usage for title of invited creator"
+    )
+    public static let waitingForConfirmCollab = NSLocalizedString(
+        "waiting_for_confirmation_collab",
+        bundle: .module,
+        comment: "usage for waiting status of invited creator"
+    )
+    public static let acceptedCollab = NSLocalizedString(
+        "accepted_collab",
+        bundle: .module,
+        comment: "usage for accepted status of invited creator"
+    )
+    public static let declinedCollab = NSLocalizedString(
+        "declined_collab",
+        bundle: .module,
+        comment: "usage for declined status of invited creator"
+    )
+    public static let creatorInvitedCollabTitle = NSLocalizedString(
+        "creator_invited_collab_title",
+        bundle: .module,
+        comment: "usage for creator invited text"
+    )
+    public static let searchCreatorPlaceholder = NSLocalizedString(
+        "search_creator_placeholder",
+        bundle: .module,
+        comment: "usage for search creator placeholder"
+    )
+    public static let selectCreatorForCollabTitle = NSLocalizedString(
+        "select_creator_for_collaboration_title",
+        bundle: .module,
+        comment: "usage for select collab creator title sheet"
+    )
+    public static let retryText = NSLocalizedString(
+        "retry_text",
+        bundle: .module,
+        comment: "usage for retry text"
+    )
+    public static let retrySubtitle = NSLocalizedString(
+        "retry_subtitle",
+        bundle: .module,
+        comment: "usage for retry subtitle text"
+    )
 }

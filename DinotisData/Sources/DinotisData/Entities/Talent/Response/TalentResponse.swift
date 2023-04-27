@@ -94,6 +94,7 @@ public struct TalentWithProfessionData: Codable, Hashable {
 	public let profileDescription: String?
 	public let emailVerifiedAt: Date?
 	public let isVerified: Bool?
+    public let stringProfessions: [String]?
 	public let professions: [ProfessionData]?
 	public let rating: String?
 	public let meetingCount: Int?
@@ -107,6 +108,7 @@ public struct TalentWithProfessionData: Codable, Hashable {
 		profileDescription: String?,
 		emailVerifiedAt: Date?,
 		isVerified: Bool?,
+        stringProfessions: [String]?,
 		professions: [ProfessionData]?,
 		rating: String?,
 		meetingCount: Int?
@@ -122,7 +124,50 @@ public struct TalentWithProfessionData: Codable, Hashable {
 		self.professions = professions
 		self.rating = rating
 		self.meetingCount = meetingCount
+        self.stringProfessions = stringProfessions
 	}
 }
 
 public typealias TrendingResponse = [TrendingTalent]
+
+public struct SearchTalentResponse: Codable {
+    public let data: [TalentWithProfessionData]?
+    public let nextCursor: Int?
+    
+    public init(data: [TalentWithProfessionData]?, nextCursor: Int?) {
+        self.data = data
+        self.nextCursor = nextCursor
+    }
+}
+
+public struct TalentFromSearchResponse: Codable {
+    public let id: String?
+    public let name, username, profileDescription: String?
+    public let profilePhoto: String?
+    public let isVerified: Bool?
+    public let isFollowed: Bool?
+    public let rating: String?
+    public let meetingCount: Int?
+    public let followerCount: Int?
+    public let professions: [ProfessionData]?
+    public let userHighlights: [HighlightData]?
+    public let management: UserManagementData?
+    public let managements: [ManagementWrappedData]?
+    
+    public init(id: String?, name: String?, username: String?, profileDescription: String?, profilePhoto: String?, isVerified: Bool?, isFollowed: Bool?, rating: String?, meetingCount: Int?, followerCount: Int?, professions: [ProfessionData]?, userHighlights: [HighlightData]?, management: UserManagementData?, managements: [ManagementWrappedData]?) {
+        self.id = id
+        self.name = name
+        self.username = username
+        self.profileDescription = profileDescription
+        self.profilePhoto = profilePhoto
+        self.isVerified = isVerified
+        self.isFollowed = isFollowed
+        self.rating = rating
+        self.meetingCount = meetingCount
+        self.followerCount = followerCount
+        self.professions = professions
+        self.userHighlights = userHighlights
+        self.management = management
+        self.managements = managements
+    }
+}

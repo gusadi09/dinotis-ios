@@ -1276,7 +1276,9 @@ extension TalentProfileDetailView {
                 
                 VStack(spacing: 20) {
                     Button {
-                        viewModel.sendRequest(type: .privateType, message: LocaleText.requestPrivateText)
+                        Task {
+                            await viewModel.sendRequest(type: .privateType, message: LocaleText.requestPrivateText)
+                        }
                     } label: {
                         HStack {
                             Spacer()
@@ -1295,7 +1297,9 @@ extension TalentProfileDetailView {
                     )
                     
                     Button {
-                        viewModel.sendRequest(type: .groupType, message: LocaleText.requestGroupText)
+                        Task {
+                            await viewModel.sendRequest(type: .groupType, message: LocaleText.requestGroupText)
+                        }
                     } label: {
                         HStack {
                             Spacer()
@@ -1314,7 +1318,9 @@ extension TalentProfileDetailView {
                     )
                     
                     Button {
-                        viewModel.sendRequest(type: .liveType, message: LocaleText.requestLiveText)
+                        Task {
+                            await viewModel.sendRequest(type: .liveType, message: LocaleText.requestLiveText)
+                        }
                     } label: {
                         HStack {
                             Spacer()

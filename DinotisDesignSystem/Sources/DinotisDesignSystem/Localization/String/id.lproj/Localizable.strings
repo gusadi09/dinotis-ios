@@ -348,3 +348,14 @@
 
 "empty_file_message" = "Wahh.. File yang kamu cari tidak ditemukan :(";
 "invalid_url" = "Mohon masukkan url dengan format yang sesuai";
+"collaboration_text" = "Kolaborasi";
+"collaboration_placeholder" = "Tambah kreator di sesi kamu";
+"invited_creator_title" = "Kreator yang kamu undang";
+"waiting_for_confirmation_collab" = "Menunggu Konfirmasi";
+"accepted_collab" = "Kreator Setuju";
+"declined_collab" = "Kreator Menolak";
+"creator_invited_collab_title" = "Kreator yang diajak kolaborasi";
+"search_creator_placeholder" = "Cari kreator...";
+"select_creator_for_collaboration_title" = "Pilih Kreator Kolaborasi";
+"retry_text" = "Ulangi";
+"retry_subtitle" = "Permintaan belum dapat diproses, silahkan coba lagi";

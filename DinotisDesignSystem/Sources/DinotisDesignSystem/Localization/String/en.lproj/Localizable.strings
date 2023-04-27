@@ -348,3 +348,14 @@
 
 "empty_file_message" = "Oops.. The file you are looking for was not found :(";
 "invalid_url" = "Please input valid url format";
+"collaboration_text" = "Collaboration";
+"collaboration_placeholder" = "Add Creator to your session";
+"invited_creator_title" = "Invited Creator";
+"waiting_for_confirmation_collab" = "Waiting for Comfirmation";
+"accepted_collab" = "Accepted";
+"declined_collab" = "Declined";
+"creator_invited_collab_title" = "Creator invited to collaboration";
+"search_creator_placeholder" = "Search creator...";
+"select_creator_for_collaboration_title" = "Select Cretor for Collaboration";
+"retry_text" = "Retry";
+"retry_subtitle" = "Request can't processed, please try again later";
