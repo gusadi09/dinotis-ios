@@ -1580,4 +1580,19 @@ public enum LocalizableText {
         bundle: .module,
         comment: "usage for retry subtitle text"
     )
+    public static let rejectedText = NSLocalizedString(
+        "rejected_text",
+        bundle: .module,
+        comment: "usage for rejected text for collab status"
+    )
+    public static let waitingText = NSLocalizedString(
+        "waiting_text",
+        bundle: .module,
+        comment: "usage for waiting text for collab status"
+    )
+    public static let withText = NSLocalizedString(
+        "with_text",
+        bundle: .module,
+        comment: "usage for with text"
+    )
 }

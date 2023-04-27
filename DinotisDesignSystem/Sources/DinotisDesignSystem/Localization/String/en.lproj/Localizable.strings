@@ -359,3 +359,6 @@
 "select_creator_for_collaboration_title" = "Select Cretor for Collaboration";
 "retry_text" = "Retry";
 "retry_subtitle" = "Request can't processed, please try again later";
+"rejected_text" = "Rejected";
+"waiting_text" = "Waiting";
+"with_text" = "With";

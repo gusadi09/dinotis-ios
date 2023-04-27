@@ -359,3 +359,6 @@
 "select_creator_for_collaboration_title" = "Pilih Kreator Kolaborasi";
 "retry_text" = "Ulangi";
 "retry_subtitle" = "Permintaan belum dapat diproses, silahkan coba lagi";
+"rejected_text" = "Ditolak";
+"waiting_text" = "Waiting";
+"with_text" = "Bersama";
