@@ -90,9 +90,11 @@ struct SelectedCollabCreatorView: View {
                                     .font(.robotoMedium(size: 12))
                                     .foregroundColor(.black)
                                 
-                                Text((items.user?.stringProfessions?.first).orEmpty())
-                                    .font(.robotoMedium(size: 10))
-                                    .foregroundColor(.gray)
+                                if let profession = items.user?.stringProfessions?.first {
+                                    Text(profession)
+                                        .font(.robotoMedium(size: 10))
+                                        .foregroundColor(.gray)
+                                }
                             }
                             .multilineTextAlignment(.leading)
                             
