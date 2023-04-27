@@ -95,6 +95,7 @@ struct ScheduledFormView: View {
 							LazyVStack(spacing: 10) {
 								ForEach($viewModel.meetingArr, id: \.id) { value in
 									FormScheduleTalentCardView(
+                                        collab: .constant([]),
                                         managements: $viewModel.managements,
                                         meetingForm: value,
 										onTapRemove: {

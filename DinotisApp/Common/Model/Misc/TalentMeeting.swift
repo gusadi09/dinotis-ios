@@ -213,6 +213,7 @@ struct MeetingForm: Codable {
 	var slots: Int
     var managementId: Int?
   var urls: [MeetingURL]
+    var collaborations: [String]?
 }
 
 struct MeetingURL: Codable {

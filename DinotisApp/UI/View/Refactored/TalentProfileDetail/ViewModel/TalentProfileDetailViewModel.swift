@@ -70,7 +70,8 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     @Published var redirectUrl: String?
     @Published var qrCodeUrl: String?
 
-    private let talentRepository: TalentRepository
+    private let getTalentDetailUseCase: GetDetailTalentUseCase
+    private let sendScheduleRequestUseCase: SendRequestedScheduleUseCase
     private let getUserUseCase: GetUserUseCase
     private var cancellables = Set<AnyCancellable>()
     private let meetRepository: MeetingsRepository
@@ -90,11 +91,11 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     @Published var userName: String?
     @Published var userPhoto: String?
 
-    @Published var talentData: TalentFromSearch?
+    @Published var talentData: TalentFromSearchResponse?
     @Published var talentName: String?
     @Published var talentPhoto: String?
 
-    @Published var profileBanner = [Highlights]()
+    @Published var profileBanner = [HighlightData]()
     @Published var profileBannerContent = [ProfileBannerImageTemp]()
 
     @Published var countPart = 0
@@ -191,7 +192,8 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         backToRoot: @escaping (() -> Void),
         backToHome: @escaping (() -> Void),
         username: String,
-        talentRepository: TalentRepository = TalentDefaultRepository(),
+        getTalentDetailUseCase: GetDetailTalentUseCase = GetDetailTalentDefaultUseCase(),
+        sendScheduleRequestUseCase: SendRequestedScheduleUseCase = SendRequestedScheduleDefaultUseCase(),
         getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
         meetRepository: MeetingsRepository = MeetingsDefaultRepository(),
         coinRepository: CoinRepository = CoinDefaultRepository(),
@@ -210,7 +212,8 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         self.username = username
         self.backToRoot = backToRoot
         self.backToHome = backToHome
-        self.talentRepository = talentRepository
+        self.getTalentDetailUseCase = getTalentDetailUseCase
+        self.sendScheduleRequestUseCase = sendScheduleRequestUseCase
         self.getUserUseCase = getUserUseCase
         self.meetRepository = meetRepository
         self.coinRepository = coinRepository
@@ -274,6 +277,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
 	func handleDefaultError(error: Error) {
 		DispatchQueue.main.async { [weak self] in
 			self?.isLoading = false
+            self?.showingRequest = false
       self?.showPaymentMenu = false
       self?.isShowCoinPayment = false
       self?.showAddCoin = false
@@ -713,7 +717,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
 
     @objc func onScreenAppear() {
         Task {
-            getTalentFromSearch(by: username)
+            await getTalentFromSearch(by: username)
             await getUsers()
         }
     }
@@ -741,44 +745,27 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
             self?.isLoading = true
             self?.error = nil
             self?.requestSuccess = false
+            self?.showingRequest.toggle()
         }
     }
 
-	func sendRequest(type: RequestScheduleType, message: String) {
+	func sendRequest(type: RequestScheduleType, message: String) async {
         startSendRequest()
 
-		showingRequest.toggle()
-
-        let body = RequestScheduleBody(requestUserId: (userData?.id).orEmpty(), type: type.rawValue, message: message)
-
-        talentRepository
-            .provideSendRequestSchedule(
-                talentId: (talentData?.id).orEmpty(),
-                body: body
-            )
-            .sink { result in
-                switch result {
-                case .failure(let error):
-                    DispatchQueue.main.async {[weak self] in
-                        if error.statusCode.orZero() == 401 {
-                        } else {
-                            self?.requestError = true
-                            self?.isLoading = false
-
-                            self?.error = error.message.orEmpty()
-                        }
-                    }
-
-                case .finished:
-                    DispatchQueue.main.async { [weak self] in
-                        self?.requestSuccess = true
-                        self?.isLoading = false
-                    }
-                }
-            } receiveValue: { _ in
-                self.showingRequest = false
+        let body = SendScheduleRequest(requestUserId: (userData?.id).orEmpty(), type: type.rawValue, message: message)
+        
+        let result = await sendScheduleRequestUseCase.execute(with: (talentData?.id).orEmpty(), for: body)
+        
+        switch result {
+        case .success(_):
+            DispatchQueue.main.async { [weak self] in
+                self?.requestSuccess = true
+                self?.isLoading = false
+                self?.showingRequest = false
             }
-            .store(in: &cancellables)
+        case .failure(let failure):
+            handleDefaultError(error: failure)
+        }
     }
     
     func onStartFetch() {
@@ -844,6 +831,12 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
 
 		}
 	}
+    
+    func onGetDetailCreator() {
+        Task {
+            await self.getTalentFromSearch(by: self.username, noLoad: true)
+        }
+    }
 
 	func followCreator() async {
 		onStartFetchFollow()
@@ -854,7 +847,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
 		case .success(_):
 			DispatchQueue.main.async { [weak self] in
 				self?.isLoadingFollow = false
-				self?.getTalentFromSearch(by: (self?.username).orEmpty(), noLoad: true)
+                self?.onGetDetailCreator()
 			}
 		case .failure(let failure):
 			handleDefaultErrorFollow(error: failure)
@@ -870,7 +863,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
 		case .success(_):
 			DispatchQueue.main.async { [weak self] in
 				self?.isLoadingFollow = false
-				self?.getTalentFromSearch(by: (self?.username).orEmpty(), noLoad: true)
+				self?.onGetDetailCreator()
 			}
 		case .failure(let failure):
 			handleDefaultErrorFollow(error: failure)
@@ -1054,65 +1047,49 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         }
     }
 
-	func getTalentFromSearch(by username: String, noLoad: Bool = false) {
+	func getTalentFromSearch(by username: String, noLoad: Bool = false) async {
 		onStartedFetch(noLoad: noLoad)
+        
+        let result = await getTalentDetailUseCase.execute(query: username)
+        
+        switch result {
+        case .success(let success):
+            DispatchQueue.main.async { [weak self] in
+                self?.success = true
+                self?.isLoading = false
+                
+                self?.talentData = success
+                self?.talentPhoto = success.profilePhoto
+                self?.talentName = success.name
 
-        talentRepository.provideGetDetailTalent(by: username)
-            .sink { result in
-                switch result {
-                case .failure(let error):
-                    DispatchQueue.main.async {[weak self] in
-                        if error.statusCode.orZero() == 401 {
-                            
-                        } else {
-                            self?.isError = true
+                if !noLoad {
+                    self?.getTalentMeeting(by: success.id.orEmpty(), isMore: false)
 
-							if !noLoad {
-								self?.isLoading = false
-							}
-
-                            self?.error = error.message.orEmpty()
-                        }
-                    }
-
-                case .finished:
-                    DispatchQueue.main.async { [weak self] in
-                        self?.success = true
-                        self?.isLoading = false
+                    Task {
+                        await self?.getRateCardList(by: success.id.orEmpty(), isMore: false)
+                        await self?.getReviewsList(with: success.id.orEmpty(), isMore: false)
                     }
                 }
-            } receiveValue: { value in
-                self.talentData = value
-                self.talentPhoto = value.profilePhoto
-                self.talentName = value.name
 
-				if !noLoad {
-					self.getTalentMeeting(by: value.id.orEmpty(), isMore: false)
+                let stringArrJob = success.professions?.compactMap {
+                    $0.profession?.name ?? ""
+                }
 
-					Task {
-						await self.getRateCardList(by: value.id.orEmpty(), isMore: false)
-						await self.getReviewsList(with: value.id.orEmpty(), isMore: false)
-					}
-				}
+                self?.textJob = (stringArrJob ?? []).joined(separator: ", ")
 
-				let stringArrJob = value.professions?.compactMap {
-					$0.profession?.name ?? ""
-				}
+                self?.profileBanner = success.userHighlights ?? []
 
-				self.textJob = (stringArrJob ?? []).joined(separator: ", ")
-
-                self.profileBanner = value.userHighlights ?? []
-
-                if !(value.userHighlights ?? []).isEmpty {
-					self.profileBannerContent = value.userHighlights?.compactMap({
-						ProfileBannerImageTemp(
-							content: $0
-						)
-					}) ?? []
+                if !(success.userHighlights ?? []).isEmpty {
+                    self?.profileBannerContent = success.userHighlights?.compactMap({
+                        ProfileBannerImageTemp(
+                            content: $0
+                        )
+                    }) ?? []
                 }
             }
-            .store(in: &cancellables)
-
+        case .failure(let failure):
+            handleDefaultError(error: failure)
+        }
     }
 
 	func getTalentMeeting(by userId: String, isMore: Bool) {
@@ -1245,11 +1222,9 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     }
 
     @objc private func onValueChangedAction(sender: UIRefreshControl) {
-        Task.init {
-            self.resetList()
-            await onScreenAppear()
-            self.onValueChanged?(sender)
-        }
+        self.resetList()
+        onScreenAppear()
+        self.onValueChanged?(sender)
     }
 
     func resetList() {

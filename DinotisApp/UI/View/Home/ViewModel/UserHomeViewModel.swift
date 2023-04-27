@@ -33,7 +33,8 @@ final class UserHomeViewModel: NSObject, ObservableObject {
     private var onValueChanged: ((_ refreshControl: UIRefreshControl) -> Void)?
     private let getUserUseCase: GetUserUseCase
     private let counterUseCase: GetCounterUseCase
-    private let talentRepository: TalentRepository
+    private let getSearchedTalentUseCase: GetSearchedTalentUseCase
+    private let getCrowdedTalentUseCase: GetCrowdedTalentUseCase
     
     private let professionListUseCase: ProfessionListUseCase
     private let categoryListUseCase: CategoryListUseCase
@@ -108,13 +109,13 @@ final class UserHomeViewModel: NSObject, ObservableObject {
     
     @Published var categoryData: CategoriesResponse?
     
-    @Published var trendingData = [Talent]()
+    @Published var trendingData = [TalentWithProfessionData]()
     
     @Published var reccomendData = [Talent]()
     
     @Published var isSearchLoading = false
     
-    @Published var searchResult = [Talent]()
+    @Published var searchResult = [TalentWithProfessionData]()
 
     @Published var announceData = [AnnouncementData]()
     @Published var announceIndex = 0
@@ -126,7 +127,8 @@ final class UserHomeViewModel: NSObject, ObservableObject {
         getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
         professionListUseCase: ProfessionListUseCase = ProfessionListDefaultUseCase(),
         categoryListUseCase: CategoryListUseCase = CategoryListDefaultUseCase(),
-        talentRepository: TalentRepository = TalentDefaultRepository(),
+        getSearchedTalentUseCase: GetSearchedTalentUseCase = GetSearchedTalentDefaultUseCase(),
+        getCrowdedTalentUseCase: GetCrowdedTalentUseCase = GetCrowdedTalentDefaultUseCase(),
         getOriginalUseCase: GetOriginalContentUseCase = GetOriginalContentDefaultUseCase(),
         coinRepository: CoinRepository = CoinDefaultRepository(),
         counterUseCase: GetCounterUseCase = GetCounterDefaultUseCase(),
@@ -142,7 +144,8 @@ final class UserHomeViewModel: NSObject, ObservableObject {
         self.getUserUseCase = getUserUseCase
         self.professionListUseCase = professionListUseCase
         self.categoryListUseCase = categoryListUseCase
-        self.talentRepository = talentRepository
+        self.getSearchedTalentUseCase = getSearchedTalentUseCase
+        self.getCrowdedTalentUseCase = getCrowdedTalentUseCase
         self.getOriginalUseCase = getOriginalUseCase
         self.coinRepository = coinRepository
         self.counterUseCase = counterUseCase
@@ -163,7 +166,7 @@ final class UserHomeViewModel: NSObject, ObservableObject {
         }
     }
 
-	func talentArray() -> [Talent] {
+	func talentArray() -> [TalentWithProfessionData] {
 		return self.searchResult.filter({ value in
 			if self.selectedProfession != 0 {
 				return value.professions?.contains(where: { value in
@@ -259,6 +262,12 @@ final class UserHomeViewModel: NSObject, ObservableObject {
         }
     }
     
+    func onGetSearchedTalent() {
+        Task {
+            await self.getAllTalents()
+        }
+    }
+    
     func onScreenAppear(geo: GeometryProxy) {
         
         DispatchQueue.main.async { [weak self] in
@@ -277,7 +286,7 @@ final class UserHomeViewModel: NSObject, ObservableObject {
             self.takeItem = 10
             self.selectedCategoryId = 0
             self.selectedCategory = ""
-            self.getAllTalents()
+            self.onGetSearchedTalent()
         }
     }
     
@@ -371,10 +380,44 @@ final class UserHomeViewModel: NSObject, ObservableObject {
         }
     }
     
-    func getAllTalents() {
+    func handleDefaultErrorTalentLoad(error: Error) {
+        DispatchQueue.main.async { [weak self] in
+            self?.isSearchLoading = false
+            
+            if let error = error as? ErrorResponse {
+                
+                if error.statusCode.orZero() == 401 {
+                    self?.error = error.message.orEmpty()
+                    self?.isRefreshFailed.toggle()
+                    self?.alert.isError = true
+                    self?.alert.message = LocalizableText.alertSessionExpired
+                    self?.alert.primaryButton = .init(
+                        text: LocalizableText.okText,
+                        action: { self?.backToRoot() }
+                    )
+                    self?.isShowAlert = true
+                } else {
+                    self?.error = error.message.orEmpty()
+                    self?.isError = true
+                    self?.alert.isError = true
+                    self?.alert.message = error.message.orEmpty()
+                    self?.isShowAlert = true
+                }
+            } else {
+                self?.isError = true
+                self?.error = error.localizedDescription
+                self?.alert.isError = true
+                self?.alert.message = error.localizedDescription
+                self?.isShowAlert = true
+            }
+            
+        }
+    }
+    
+    func getAllTalents() async {
         onStartedFetchSearch()
         
-        let query = TalentQueryParams(
+        let query = TalentsRequest(
             query: "",
             skip: takeItem-10,
             take: takeItem,
@@ -382,47 +425,26 @@ final class UserHomeViewModel: NSObject, ObservableObject {
             professionCategory: nil
         )
         
-        talentRepository
-            .provideGetSearchedTalent(with: query)
-            .sink { result in
-                switch result {
-                case .failure(let error):
-                    DispatchQueue.main.async {[weak self] in
-                        if error.statusCode.orZero() == 401 {
-                            
-                        } else {
-                            withAnimation {
-                                self?.isError = true
-                                self?.isSearchLoading = false
-                                
-                                self?.error = error.message.orEmpty()
-                            }
-                        }
-                    }
-                    
-                case .finished:
-                    DispatchQueue.main.async { [weak self] in
-                        self?.success = true
-                        self?.isSearchLoading = false
-                    }
-                }
-            } receiveValue: { value in
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    
-                    for items in value.data {
-                        self.searchResult.append(items)
-                    }
-                    
-                    let temp = self.searchResult.unique()
-                    
-                    self.searchResult = temp
-                    
-                    self.nextCursor = value.nextCursor
+        let result = await getSearchedTalentUseCase.execute(query: query)
+        
+        switch result {
+        case .success(let success):
+            DispatchQueue.main.async { [weak self] in
+                self?.success = true
+                self?.isSearchLoading = false
+                for items in success.data ?? [] {
+                    self?.searchResult.append(items)
                 }
                 
+                let temp = self?.searchResult.unique()
+                
+                self?.searchResult = temp ?? []
+                
+                self?.nextCursor = success.nextCursor
             }
-            .store(in: &cancellables)
+        case .failure(let failure):
+            handleDefaultErrorTalentLoad(error: failure)
+        }
     }
     
     func getCounter() async {
@@ -713,40 +735,23 @@ final class UserHomeViewModel: NSObject, ObservableObject {
         }
     }
     
-    func getTrendingTalent() {
+    func getTrendingTalent() async {
         onStartedFetch(type: .talentList)
         
-        let query = TalentQueryParams(query: "", skip: 0, take: 10)
+        let query = TalentsRequest(query: "", skip: 0, take: 10)
         
-        talentRepository
-            .provideGetCrowdedTalent(with: query)
-            .sink { result in
-                switch result {
-                case .failure(let error):
-                    DispatchQueue.main.async {[weak self] in
-                        if error.statusCode.orZero() == 401 {
-                            self?.isRefreshFailed.toggle()
-                        } else {
-                            withAnimation {
-                                self?.isError = true
-                                self?.isLoadingTalentList = false
-                                
-                                self?.error = error.message.orEmpty()
-                            }
-                        }
-                    }
-                    
-                case .finished:
-                    DispatchQueue.main.async { [weak self] in
-                        self?.success = true
-                        self?.isLoadingTalentList = false
-                    }
-                }
-            } receiveValue: { value in
-                self.trendingData = value.data
+        let result = await getCrowdedTalentUseCase.execute(query: query)
+        
+        switch result {
+        case .success(let success):
+            DispatchQueue.main.async { [weak self] in
+                self?.success = true
+                self?.isLoadingTalentList = false
+                self?.trendingData = success.data ?? []
             }
-            .store(in: &cancellables)
-        
+        case .failure(let failure):
+            handleDefaultError(error: failure, type: .talentList)
+        }
     }
 
     func getAnnouncement() async {

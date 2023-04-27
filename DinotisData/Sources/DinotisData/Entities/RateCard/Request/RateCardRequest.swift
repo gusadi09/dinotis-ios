@@ -70,3 +70,15 @@ public struct EditRequestedSessionRequest: Codable {
 		self.endAt = endAt
 	}
 }
+
+public struct SendScheduleRequest: Codable {
+    public let requestUserId: String
+    public let type: String
+    public let message: String
+    
+    public init(requestUserId: String, type: String, message: String) {
+        self.requestUserId = requestUserId
+        self.type = type
+        self.message = message
+    }
+}

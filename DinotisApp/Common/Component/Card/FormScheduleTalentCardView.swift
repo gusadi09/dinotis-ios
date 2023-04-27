@@ -10,6 +10,7 @@ import DinotisDesignSystem
 import DinotisData
 
 struct FormScheduleTalentCardView: View {
+    @Binding var collab: [MeetingCollaborationData]
     @Binding var managements: [ManagementWrappedData]?
     @Binding var meetingForm: MeetingForm
     
@@ -24,6 +25,11 @@ struct FormScheduleTalentCardView: View {
     @State var peopleGroup = ""
     @State var estPrice = 0
     @State var pricePerPeople = ""
+    
+    @State var isShowSelectedTalent = false
+    @State var talent = [MeetingCollaborationData]()
+    
+    @State var presentTalentPicker = false
     
     @State var isValidPersonForGroup = false
   
@@ -53,7 +59,8 @@ struct FormScheduleTalentCardView: View {
                     userHighlights: nil,
                     isVerified: nil,
                     isVisible: nil,
-                    isActive: nil
+                    isActive: nil,
+                    stringProfessions: nil
                 ),
                 userId: nil
             )
@@ -68,7 +75,8 @@ struct FormScheduleTalentCardView: View {
     
     @State var selected = ""
     
-    init(managements: Binding<[ManagementWrappedData]?>, meetingForm: Binding<MeetingForm>, onTapRemove: @escaping (() -> Void), isShowRemove: Bool = false, isEdit: Bool) {
+    init(collab: Binding<[MeetingCollaborationData]>, managements: Binding<[ManagementWrappedData]?>, meetingForm: Binding<MeetingForm>, onTapRemove: @escaping (() -> Void), isShowRemove: Bool = false, isEdit: Bool) {
+        self._collab = collab
         self._managements = managements
         self._meetingForm = meetingForm
         self.onTapRemove = onTapRemove
@@ -153,6 +161,7 @@ struct FormScheduleTalentCardView: View {
                             self.showsTimePicker = false
                             self.showsTimeUntilPicker = false
                             self.sessionPresent = false
+                            self.presentTalentPicker = false
                             UIApplication.shared.endEditing()
                         }
                         .overlay(
@@ -202,6 +211,7 @@ struct FormScheduleTalentCardView: View {
                             .padding(.horizontal)
                             .padding(.vertical, 15)
                             .onTapGesture {
+                                self.presentTalentPicker = false
                                 self.showsTimePicker.toggle()
                                 self.showsTimeUntilPicker = false
                                 self.sessionPresent = false
@@ -228,6 +238,7 @@ struct FormScheduleTalentCardView: View {
                             .padding(.horizontal)
                             .padding(.vertical, 15)
                             .onTapGesture {
+                                self.presentTalentPicker = false
                                 self.showsTimeUntilPicker.toggle()
                                 self.showsTimePicker = false
                                 self.sessionPresent = false
@@ -510,6 +521,256 @@ struct FormScheduleTalentCardView: View {
                             }
                         }
                     }
+                    
+                    if !meetingForm.isPrivate {
+                        VStack(spacing: 10) {
+                            HStack {
+                                Image("ic-session")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 20)
+                                
+                                Text(LocalizableText.collaborationTitle)
+                                    .font(.robotoMedium(size: 12))
+                                    .foregroundColor(.black)
+                                
+                                Spacer()
+                            }
+                            
+                            HStack {
+                                Text(LocalizableText.collaborationPlaceholder)
+                                    .font(.robotoRegular(size: 12))
+                                    .foregroundColor(.gray)
+                                
+                                Spacer()
+                            }
+                            .background(Color.white)
+                            .clipShape(RoundedRectangle(cornerRadius: 6))
+                            .padding(.horizontal)
+                            .padding(.vertical, 15)
+                            .onTapGesture {
+                                self.presentTalentPicker.toggle()
+                                self.showsDatePicker = false
+                                self.showsTimePicker = false
+                                self.showsTimeUntilPicker = false
+                                self.sessionPresent = false
+                                UIApplication.shared.endEditing()
+                            }
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
+                            )
+                            
+                            if isEdit {
+                                if !collab.isEmpty {
+                                    VStack(spacing: 15) {
+                                        HStack {
+                                            Text(LocalizableText.invitedCreatorTitle)
+                                                .font(.robotoMedium(size: 10))
+                                                .foregroundColor(.black)
+                                            
+                                            Spacer()
+                                            
+                                            if collab.count > 3 {
+                                                Button {
+                                                    isShowSelectedTalent.toggle()
+                                                } label: {
+                                                    Text(LocalizableText.searchSeeAllLabel)
+                                                        .font(.robotoMedium(size: 10))
+                                                        .foregroundColor(.DinotisDefault.primary)
+                                                        .underline()
+                                                }
+                                            }
+                                        }
+                                        
+                                        VStack(spacing: 10) {
+                                            ForEach(collab.prefix(3), id: \.id) { talent in
+                                                HStack {
+                                                    ImageLoader(url: (talent.user?.profilePhoto).orEmpty(), width: 30, height: 30)
+                                                        .frame(width: 30, height: 30)
+                                                        .clipShape(Circle())
+                                                    
+                                                    VStack(alignment: .leading, spacing: 8) {
+                                                        Text((talent.user?.name).orEmpty())
+                                                            .font(.robotoMedium(size: 10))
+                                                            .foregroundColor(.black)
+                                                        
+                                                        Text((talent.user?.stringProfessions?.first).orEmpty())
+                                                            .font(.robotoMedium(size: 10))
+                                                            .foregroundColor(.gray)
+                                                    }
+                                                    .multilineTextAlignment(.leading)
+                                                    
+                                                    Spacer()
+                                                    
+                                                    if talent.declinedAt != nil && talent.approvedAt == nil {
+                                                        Text(LocalizableText.declinedCollab)
+                                                            .font(.robotoRegular(size: 12))
+                                                            .lineLimit(1)
+                                                            .foregroundColor(.white)
+                                                            .padding(.horizontal, 10)
+                                                            .padding(.vertical, 6)
+                                                            .background(
+                                                                Capsule()
+                                                                    .foregroundColor(.DinotisDefault.red)
+                                                            )
+                                                    } else if talent.declinedAt == nil && talent.approvedAt != nil {
+                                                        Text(LocalizableText.acceptedCollab)
+                                                            .font(.robotoRegular(size: 12))
+                                                            .lineLimit(1)
+                                                            .foregroundColor(.white)
+                                                            .padding(.horizontal, 10)
+                                                            .padding(.vertical, 6)
+                                                            .background(
+                                                                Capsule()
+                                                                    .foregroundColor(.DinotisDefault.green)
+                                                            )
+                                                    } else {
+                                                        Text(LocalizableText.waitingForConfirmCollab)
+                                                            .font(.robotoRegular(size: 12))
+                                                            .lineLimit(1)
+                                                            .foregroundColor(.white)
+                                                            .padding(.horizontal, 10)
+                                                            .padding(.vertical, 6)
+                                                            .background(
+                                                                Capsule()
+                                                                    .foregroundColor(.yellow)
+                                                            )
+                                                    }
+                                                    
+                                                    Button {
+                                                        let index = self.collab.firstIndex {
+                                                            $0.user?.id == talent.user?.id
+                                                        }.orZero()
+                                                        let usernameIndex = (self.meetingForm.collaborations ?? []).firstIndex(where: {
+                                                            $0 == (talent.user?.username).orEmpty()
+                                                        }).orZero()
+                                                        
+                                                        self.collab.remove(at: index)
+                                                        self.meetingForm.collaborations?.remove(at: usernameIndex)
+                                                        
+                                                    } label: {
+                                                        Image(systemName: "xmark")
+                                                            .resizable()
+                                                            .scaledToFit()
+                                                            .frame(height: 10)
+                                                            .foregroundColor(.gray)
+                                                            .font(.system(size: 10, weight: .bold))
+                                                    }
+                                                    
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .padding(.horizontal, 10)
+                                    .padding(.top, 5)
+                                }
+                            } else {
+                                if !talent.isEmpty {
+                                    VStack(spacing: 15) {
+                                        HStack {
+                                            Text(LocalizableText.invitedCreatorTitle)
+                                                .font(.robotoMedium(size: 10))
+                                                .foregroundColor(.black)
+                                            
+                                            Spacer()
+                                            
+                                            if talent.count > 3 {
+                                                Button {
+                                                    isShowSelectedTalent.toggle()
+                                                } label: {
+                                                    Text(LocalizableText.searchSeeAllLabel)
+                                                        .font(.robotoMedium(size: 10))
+                                                        .foregroundColor(.DinotisDefault.primary)
+                                                        .underline()
+                                                }
+                                            }
+                                        }
+                                        
+                                        VStack(spacing: 10) {
+                                            ForEach(talent.prefix(3), id: \.id) { talent in
+                                                HStack {
+                                                    ImageLoader(url: (talent.user?.profilePhoto).orEmpty(), width: 30, height: 30)
+                                                        .frame(width: 30, height: 30)
+                                                        .clipShape(Circle())
+                                                    
+                                                    VStack(alignment: .leading, spacing: 8) {
+                                                        Text((talent.user?.name).orEmpty())
+                                                            .font(.robotoMedium(size: 10))
+                                                            .foregroundColor(.black)
+                                                        
+                                                        Text((talent.user?.stringProfessions?.first).orEmpty())
+                                                            .font(.robotoMedium(size: 10))
+                                                            .foregroundColor(.gray)
+                                                    }
+                                                    .multilineTextAlignment(.leading)
+                                                    
+                                                    Spacer()
+                                                    
+                                                    if talent.declinedAt != nil && talent.approvedAt == nil {
+                                                        Text(LocalizableText.declinedCollab)
+                                                            .font(.robotoRegular(size: 12))
+                                                            .lineLimit(1)
+                                                            .foregroundColor(.white)
+                                                            .padding(.horizontal, 10)
+                                                            .padding(.vertical, 6)
+                                                            .background(
+                                                                Capsule()
+                                                                    .foregroundColor(.DinotisDefault.red)
+                                                            )
+                                                    } else if talent.declinedAt == nil && talent.approvedAt != nil {
+                                                        Text(LocalizableText.acceptedCollab)
+                                                            .font(.robotoRegular(size: 12))
+                                                            .lineLimit(1)
+                                                            .foregroundColor(.white)
+                                                            .padding(.horizontal, 10)
+                                                            .padding(.vertical, 6)
+                                                            .background(
+                                                                Capsule()
+                                                                    .foregroundColor(.DinotisDefault.green)
+                                                            )
+                                                    } else {
+                                                        Text(LocalizableText.waitingForConfirmCollab)
+                                                            .font(.robotoRegular(size: 12))
+                                                            .lineLimit(1)
+                                                            .foregroundColor(.white)
+                                                            .padding(.horizontal, 10)
+                                                            .padding(.vertical, 6)
+                                                            .background(
+                                                                Capsule()
+                                                                    .foregroundColor(.yellow)
+                                                            )
+                                                    }
+                                                    
+                                                    Button {
+                                                        let index = self.talent.firstIndex {
+                                                            $0.user?.id == talent.user?.id
+                                                        }.orZero()
+                                                        let usernameIndex = (self.meetingForm.collaborations ?? []).firstIndex(where: {
+                                                            $0 == (talent.user?.username).orEmpty()
+                                                        }).orZero()
+                                                        
+                                                        self.talent.remove(at: index)
+                                                        self.meetingForm.collaborations?.remove(at: usernameIndex)
+                                                        
+                                                    } label: {
+                                                        Image(systemName: "xmark")
+                                                            .resizable()
+                                                            .scaledToFit()
+                                                            .frame(height: 10)
+                                                            .foregroundColor(.gray)
+                                                            .font(.system(size: 10, weight: .bold))
+                                                    }
+                                                    
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .padding(.horizontal, 10)
+                                    .padding(.top, 5)
+                                }
+                            }
+                        }
+                    }
                   
                   if isShowAdditionalMenu {
                     VStack(spacing: 10) {
@@ -622,6 +883,23 @@ struct FormScheduleTalentCardView: View {
                 .padding(.trailing, 10)
                 .isHidden(!isShowRemove, remove: !isShowRemove)
             }
+            .sheet(isPresented: $isShowSelectedTalent, content: {
+                if #available(iOS 16.0, *) {
+                    SelectedCollabCreatorView(arrUsername: $meetingForm.collaborations, arrTalent: isEdit ? $collab : $talent) {
+                        isShowSelectedTalent = false
+                    }
+                    .presentationDetents([.medium, .large])
+                } else {
+                    SelectedCollabCreatorView(arrUsername: $meetingForm.collaborations, arrTalent: isEdit ? $collab : $talent) {
+                        isShowSelectedTalent = false
+                    }
+                }
+            })
+            .sheet(isPresented: $presentTalentPicker, content: {
+                CreatorPickerView(arrUsername: $meetingForm.collaborations, arrTalent: isEdit ? $collab : $talent) {
+                    presentTalentPicker = false
+                }
+            })
             .sheet(isPresented: $showsDatePicker) {
                 ZStack {
                     VStack(alignment: .center, spacing: 0) {
@@ -745,6 +1023,7 @@ struct FormScheduleTalentCardView: View {
 struct FormScheduleTalentCardView_Previews: PreviewProvider {
     static var previews: some View {
         FormScheduleTalentCardView(
+            collab: .constant([]),
             managements: .constant([]),
             meetingForm: .constant(
                 MeetingForm(

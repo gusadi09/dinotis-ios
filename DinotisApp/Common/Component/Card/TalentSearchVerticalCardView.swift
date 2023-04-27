@@ -7,13 +7,14 @@
 
 import SwiftUI
 import DinotisDesignSystem
+import DinotisData
 
 struct TalentSearchVerticalCardView: View {
-	@State var user: Talent
+	@State var user: TalentWithProfessionData
 	
 	var body: some View {
 		HStack(spacing: 15) {
-			ProfileImageContainer(profilePhoto: $user.profilePhoto, name: $user.name, width: 56, height: 56)
+            ProfileImageContainer(profilePhoto: .constant(user.profilePhoto), name: .constant(user.name), width: 56, height: 56)
 			
 			VStack(alignment: .leading, spacing: 10) {
 				HStack {
