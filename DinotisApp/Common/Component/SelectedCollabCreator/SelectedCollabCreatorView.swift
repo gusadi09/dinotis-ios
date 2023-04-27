@@ -12,12 +12,14 @@ import DinotisDesignSystem
 struct SelectedCollabCreatorView: View {
     
     @State var searchText = ""
+    let isEdit: Bool
     @Binding var arrUsername: [String]?
     @Binding var arrTalent: [MeetingCollaborationData]
     
     var back: () -> Void
     
-    init(arrUsername: Binding<[String]?>, arrTalent: Binding<[MeetingCollaborationData]>, back: @escaping () -> Void) {
+    init(isEdit: Bool = true, arrUsername: Binding<[String]?>, arrTalent: Binding<[MeetingCollaborationData]>, back: @escaping () -> Void) {
+        self.isEdit = isEdit
         self._arrUsername = arrUsername
         self._arrTalent = arrTalent
         self.back = back
@@ -44,23 +46,27 @@ struct SelectedCollabCreatorView: View {
             .padding(.horizontal)
             .padding(.top)
 
-            HStack(spacing: 15) {
-                Image.Dinotis.magnifyingIcon
-
-                TextField(LocalizableText.searchCreatorPlaceholder, text: $searchText)
-                    .font(.robotoRegular(size: 12))
-                    .autocapitalization(.words)
-                    .disableAutocorrection(true)
-                    .accentColor(.black)
+            Group {
+                if isEdit {
+                    HStack(spacing: 15) {
+                        Image.Dinotis.magnifyingIcon
+                        
+                        TextField(LocalizableText.searchCreatorPlaceholder, text: $searchText)
+                            .font(.robotoRegular(size: 12))
+                            .autocapitalization(.words)
+                            .disableAutocorrection(true)
+                            .accentColor(.black)
+                    }
+                    .padding()
+                    .background(Color.backgroundProfile)
+                    .cornerRadius(8)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color.gray.opacity(0.3), lineWidth: 1.0)
+                    )
+                    .padding(.horizontal)
+                }
             }
-            .padding()
-            .background(Color.backgroundProfile)
-            .cornerRadius(8)
-            .overlay(
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(Color.gray.opacity(0.3), lineWidth: 1.0)
-            )
-            .padding(.horizontal)
             .padding(.top, 10)
             
             ScrollView(.vertical, showsIndicators: false, content: {
@@ -127,26 +133,27 @@ struct SelectedCollabCreatorView: View {
                                     )
                             }
                             
-                            Button {
-                                let index = self.arrTalent.firstIndex {
-                                    $0.user?.id == items.user?.id
-                                }.orZero()
-                                let usernameIndex = (self.arrUsername ?? []).firstIndex(where: {
-                                    $0 == (items.user?.username).orEmpty()
-                                }).orZero()
-                                
-                                self.arrTalent.remove(at: index)
-                                self.arrUsername?.remove(at: usernameIndex)
-                                
-                            } label: {
-                                Image(systemName: "xmark")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: 10)
-                                    .foregroundColor(.gray)
-                                    .font(.system(size: 10, weight: .bold))
+                            if isEdit {
+                                Button {
+                                    let index = self.arrTalent.firstIndex {
+                                        $0.user?.id == items.user?.id
+                                    }.orZero()
+                                    let usernameIndex = (self.arrUsername ?? []).firstIndex(where: {
+                                        $0 == (items.user?.username).orEmpty()
+                                    }).orZero()
+                                    
+                                    self.arrTalent.remove(at: index)
+                                    self.arrUsername?.remove(at: usernameIndex)
+                                    
+                                } label: {
+                                    Image(systemName: "xmark")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 10)
+                                        .foregroundColor(.gray)
+                                        .font(.system(size: 10, weight: .bold))
+                                }
                             }
-                            
                         }
                     }
                 }

@@ -13,6 +13,7 @@ struct TalentDetailScheduleCardView: View {
 	@Binding var data: DetailMeeting
 	
 	@State var isShowMenu = false
+    @State var isShowCollabList = false
 	
 	var onTapEdit: (() -> Void)
 	
@@ -151,7 +152,59 @@ struct TalentDetailScheduleCardView: View {
 					Text(data.description ?? "")
 						.font(.robotoRegular(size: 12))
 						.foregroundColor(.black)
-						.padding(.bottom, 10)
+                    
+                    Group {
+                        if !(data.meetingCollaborations ?? []).isEmpty {
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("\(LocalizableText.withText):")
+                                    .font(.robotoMedium(size: 12))
+                                    .foregroundColor(.black)
+                                
+                                ForEach((data.meetingCollaborations ?? []).prefix(3), id: \.id) { item in
+                                    HStack(spacing: 10) {
+                                        ImageLoader(url: (item.user?.profilePhoto).orEmpty(), width: 25, height: 25)
+                                            .frame(width: 25, height: 25)
+                                            .clipShape(Circle())
+                                        
+                                        HStack(spacing: 5) {
+                                            Text((item.user?.name).orEmpty())
+                                                .lineLimit(1)
+                                                .font(.robotoBold(size: 12))
+                                            
+                                            if item.declinedAt != nil && item.approvedAt == nil {
+                                                Text("(\(LocalizableText.rejectedText))")
+                                                    .font(.robotoBold(size: 12))
+                                                    .lineLimit(1)
+                                                    .foregroundColor(.red)
+                                            } else if item.declinedAt == nil && item.approvedAt != nil {
+                                                Text("(\(LocalizableText.acceptedCollab))")
+                                                    .font(.robotoBold(size: 12))
+                                                    .lineLimit(1)
+                                                    .foregroundColor(.DinotisDefault.green)
+                                            } else {
+                                                Text("(\(LocalizableText.waitingText))")
+                                                    .font(.robotoBold(size: 12))
+                                                    .lineLimit(1)
+                                                    .foregroundColor(.DinotisDefault.orange)
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                Button {
+                                    isShowCollabList.toggle()
+                                } label: {
+                                    Text(LocalizableText.searchSeeAllLabel)
+                                        .font(.robotoBold(size: 12))
+                                        .foregroundColor(.DinotisDefault.primary)
+                                        .underline()
+                                }
+                                
+                            }
+                        }
+                    }
+                    .padding(.top, 5)
+                    .padding(.bottom, 10)
 				}
 				
 				HStack(spacing: 10) {
@@ -313,6 +366,22 @@ struct TalentDetailScheduleCardView: View {
 			.padding()
 
 		}
+        .sheet(isPresented: $isShowCollabList, content: {
+            if #available(iOS 16.0, *) {
+                SelectedCollabCreatorView(isEdit: false, arrUsername: .constant((data.meetingCollaborations ?? []).compactMap({
+                    $0.username
+                })), arrTalent: .constant(data.meetingCollaborations ?? [])) {
+                    isShowCollabList = false
+                }
+                .presentationDetents([.medium, .large])
+            } else {
+                SelectedCollabCreatorView(isEdit: false, arrUsername: .constant((data.meetingCollaborations ?? []).compactMap({
+                    $0.username
+                })), arrTalent: .constant(data.meetingCollaborations ?? [])) {
+                    isShowCollabList = false
+                }
+            }
+        })
 		.onTapGesture {
 			isShowMenu = false
 		}
