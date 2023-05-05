@@ -1595,4 +1595,58 @@ public enum LocalizableText {
         bundle: .module,
         comment: "usage for with text"
     )
+    
+    public static let seeInvitation = NSLocalizedString(
+        "see_invitation",
+        bundle: .module,
+        comment: "see invitation label for notification card collab button"
+    )
+    
+    public static let decline = NSLocalizedString(
+        "decline",
+        bundle: .module,
+        comment: "general decline text"
+    )
+    
+    public static let acceptInvitation = NSLocalizedString(
+        "accept_invitation",
+        bundle: .module,
+        comment: "accept invitation label for notification card collab button"
+    )
+    
+    public static let acceptedInvitationTitle = NSLocalizedString(
+        "accepted_invitation_title",
+        bundle: .module,
+        comment: "accepted title for alert when succeed to accept collaboration"
+    )
+    
+    public static func acceptedInvitationMessage(name: String, title: String) -> String {
+        String(
+            format: NSLocalizedString(
+                "accepted_invitation_message",
+                bundle: .module,
+                comment: "accepted message for alert when succeed to accept collaboration"
+            ),
+            name,
+            title
+        )
+    }
+    
+    public static let declinedInvitationTitle = NSLocalizedString(
+        "declined_invitation_title",
+        bundle: .module,
+        comment: "declined title for alert when succeed to decline collaboration"
+    )
+    
+    public static func declinedInvitationMessage(name: String, title: String) -> String {
+        String(
+            format: NSLocalizedString(
+                "declined_invitation_message",
+                bundle: .module,
+                comment: "declined message for alert when succeed to decline collaboration"
+            ),
+            name,
+            title
+        )
+    }
 }

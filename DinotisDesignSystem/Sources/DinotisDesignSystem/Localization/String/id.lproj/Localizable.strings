@@ -362,3 +362,13 @@
 "rejected_text" = "Ditolak";
 "waiting_text" = "Waiting";
 "with_text" = "Bersama";
+
+"see_invitation" = "Lihat Ajakan";
+"decline" = "Tolak";
+"accept_invitation" = "Terima Ajakan";
+
+"accepted_invitation_title" = "Yeay! Kamu Menerima Ajakan Kolaborasi";
+"accepted_invitation_message" = "Kamu menerima ajakan kolaborasi dari %@ dengan sesi '%@'";
+
+"declined_invitation_title" = "Kamu Menolak Ajakan Kolaborasi";
+"declined_invitation_message" = "Kamu telah menolak ajakan kolaborasi dari %@ dengan sesi '%@'";

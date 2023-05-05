@@ -208,7 +208,7 @@ final class TalentHomeViewModel: ObservableObject {
 			guard !isRefreshFailed else { return }
             await self.getCounter()
 			await self.getCurrentBalance()
-			self.getTalentMeeting()
+            self.getTalentMeeting(isMore: false)
 			await self.getMeetingRequest()
 		}
     }
@@ -231,7 +231,7 @@ final class TalentHomeViewModel: ObservableObject {
 
     func refreshList() async {
         withAnimation(.spring()) {
-            getTalentMeeting()
+            getTalentMeeting(isMore: false)
             
             Task {
                 await getUsers()
@@ -263,7 +263,7 @@ final class TalentHomeViewModel: ObservableObject {
         }
     }
 
-    func getTalentMeeting() {
+    func getTalentMeeting(isMore: Bool) {
         onStartedFetch()
 
         meetRepository.provideGetTalentMeeting(params: meetingParam)
@@ -292,7 +292,11 @@ final class TalentHomeViewModel: ObservableObject {
 					self.filterSelection = (value.filters?.options?.first?.label).orEmpty()
 				}
                 self.filterOption = value.filters?.options ?? []
-				self.meetingData += value.data?.meetings ?? []
+                if isMore {
+                    self.meetingData += value.data?.meetings ?? []
+                } else {
+                    self.meetingData = value.data?.meetings ?? []
+                }
 				self.meetingCounter = value.counter.orEmpty()
 
 				if value.nextCursor == nil {
@@ -342,7 +346,7 @@ final class TalentHomeViewModel: ObservableObject {
                 self.meetingData = []
                 self.meetingParam.skip = 0
                 self.meetingParam.take = 15
-                self.getTalentMeeting()
+                self.getTalentMeeting(isMore: false)
             }
             .store(in: &cancellables)
 
@@ -491,7 +495,7 @@ final class TalentHomeViewModel: ObservableObject {
 			meetingData = []
 			meetingParam.skip = 0
 			meetingParam.take = 15
-			getTalentMeeting()
+            getTalentMeeting(isMore: false)
 		}
 	}
 
@@ -579,7 +583,7 @@ final class TalentHomeViewModel: ObservableObject {
 				self?.meetingParam.skip = 0
 				self?.meetingParam.take = 15
 
-				self?.getTalentMeeting()
+                self?.getTalentMeeting(isMore: false)
 			}
 
 			Task {

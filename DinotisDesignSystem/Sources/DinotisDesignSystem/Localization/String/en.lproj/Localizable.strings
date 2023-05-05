@@ -362,3 +362,13 @@
 "rejected_text" = "Rejected";
 "waiting_text" = "Waiting";
 "with_text" = "With";
+
+"see_invitation" = "See Invitation";
+"decline" = "Decline";
+"accept_invitation" = "Accept Invitation";
+
+"accepted_invitation_title" = "Yay! You have accepted a collaboration invitation.";
+"accepted_invitation_message" = "You have accepted a collaboration invitation from **%@** for the session **'%@'**.";
+
+"declined_invitation_title" = "You have declined the collaboration invitation.";
+"declined_invitation_message" = "You have declined the collaboration invitation from **%@** for the session **'%@'**.";

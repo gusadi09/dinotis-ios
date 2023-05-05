@@ -148,15 +148,16 @@ struct TalentScheduleCardView: View {
                                 }
                             }
                             
-                            Button {
-                                isShowCollabList.toggle()
-                            } label: {
-                                Text(LocalizableText.searchSeeAllLabel)
-                                    .font(.robotoBold(size: 12))
-                                    .foregroundColor(.DinotisDefault.primary)
-                                    .underline()
+                            if (data.meetingCollaborations ?? []).count > 3 {
+                                Button {
+                                    isShowCollabList.toggle()
+                                } label: {
+                                    Text(LocalizableText.searchSeeAllLabel)
+                                        .font(.robotoBold(size: 12))
+                                        .foregroundColor(.DinotisDefault.primary)
+                                        .underline()
+                                }
                             }
-                            
                         }
                     }
                 }
