@@ -11,6 +11,8 @@ import DinotisData
 final class CreatorPickerViewModel: ObservableObject {
     private let getTalentUseCase: GetSearchedTalentUseCase
     
+    private var timer: Timer?
+    
     @Published var isLoading = false
     @Published var isError = false
     @Published var isLoadingMore = false
@@ -35,6 +37,24 @@ final class CreatorPickerViewModel: ObservableObject {
         }
     }
     
+    func searchTalent() {
+        if let timer = timer {
+            timer.invalidate()
+        }
+        
+        take = 10
+        
+        onStartedLoad(isMore: false)
+
+        timer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(searchedTalent), userInfo: nil, repeats: false)
+    }
+    
+    @objc func searchedTalent() {
+        Task {
+            await getTalent(isMore: false)
+        }
+    }
+    
     func getTalent(isMore: Bool) async {
         
         onStartedLoad(isMore: isMore)
@@ -53,7 +73,12 @@ final class CreatorPickerViewModel: ObservableObject {
                 }
                 
                 self?.nextCursor = success.nextCursor
-                self?.talent += success.data ?? []
+                if isMore {
+                    self?.talent += success.data ?? []
+                } else {
+                    self?.talent = success.data ?? []
+                }
+                
                 self?.talent = self?.talent.unique() ?? []
             }
         case .failure(_):

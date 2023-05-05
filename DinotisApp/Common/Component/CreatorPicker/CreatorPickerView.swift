@@ -56,6 +56,9 @@ struct CreatorPickerView: View {
                     .autocapitalization(.words)
                     .disableAutocorrection(true)
                     .accentColor(.black)
+                    .onChange(of: viewModel.search) { _ in
+                        viewModel.searchTalent()
+                    }
             }
             .padding()
             .background(Color.backgroundProfile)
