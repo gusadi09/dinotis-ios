@@ -54,7 +54,7 @@ struct TalentProfileDetailView: View {
                     unwrapping: $viewModel.route,
                     case: /HomeRouting.scheduleList,
                     destination: {viewModel in
-                        ScheduleListView(viewModel: viewModel.wrappedValue, mainTabSelection: .constant(.search))
+                        ScheduleListView(viewModel: viewModel.wrappedValue, mainTabSelection: $tabValue)
                     },
                     onNavigate: {_ in},
                     label: {
@@ -79,7 +79,8 @@ struct TalentProfileDetailView: View {
                     case: /HomeRouting.bookingInvoice,
                     destination: { viewModel in
                         UserInvoiceBookingView(
-                            viewModel: viewModel.wrappedValue
+                            viewModel: viewModel.wrappedValue,
+                            mainTabValue: $tabValue
                         )
                     },
                     onNavigate: {_ in},
@@ -383,7 +384,7 @@ struct TalentProfileDetailView: View {
                         unwrapping: $viewModel.route,
                         case: /HomeRouting.paymentMethod,
                         destination: {viewModel in
-                            PaymentMethodView(viewModel: viewModel.wrappedValue)
+                            PaymentMethodView(viewModel: viewModel.wrappedValue, mainTabValue: $tabValue)
                         },
                         onNavigate: {_ in},
                         label: {
@@ -396,7 +397,8 @@ struct TalentProfileDetailView: View {
                         case: /HomeRouting.userScheduleDetail,
                         destination: { viewModel in
                             UserScheduleDetail(
-                                viewModel: viewModel.wrappedValue
+                                viewModel: viewModel.wrappedValue,
+                                mainTabValue: $tabValue
                             )
                         },
                         onNavigate: {_ in},
@@ -410,7 +412,8 @@ struct TalentProfileDetailView: View {
                         case: /HomeRouting.rateCardServiceBookingForm,
                         destination: { viewModel in
                             RateCardServiceBookingView(
-                                viewModel: viewModel.wrappedValue
+                                viewModel: viewModel.wrappedValue,
+                                mainTabValue: $tabValue
                             )
                         },
                         onNavigate: {_ in},
@@ -423,7 +426,7 @@ struct TalentProfileDetailView: View {
                         unwrapping: $viewModel.route,
                         case: /HomeRouting.detailPayment,
                         destination: {viewModel in
-                            DetailPaymentView(viewModel: viewModel.wrappedValue)
+                            DetailPaymentView(viewModel: viewModel.wrappedValue, mainTabValue: $tabValue)
                         },
                         onNavigate: {_ in},
                         label: {
@@ -558,6 +561,36 @@ struct TalentProfileDetailView: View {
                     
                 }
             )
+            .sheet(isPresented: $viewModel.isShowCollabList, content: {
+                if #available(iOS 16.0, *) {
+                  SelectedCollabCreatorView(
+                    isEdit: false,
+                    isAudience: true,
+                    arrUsername: .constant((viewModel.selectedMeeting?.meetingCollaborations ?? []).compactMap({
+                      $0.username
+                  })),
+                    arrTalent: .constant(viewModel.selectedMeeting?.meetingCollaborations ?? [])) {
+                      viewModel.isShowCollabList = false
+                    } visitProfile: { item in
+                      viewModel.isPresent = false
+                      viewModel.routeToMyTalent(talent: item)
+                    }
+                    .presentationDetents([.medium, .large])
+                } else {
+                  SelectedCollabCreatorView(
+                    isEdit: false,
+                    isAudience: true,
+                    arrUsername: .constant((viewModel.selectedMeeting?.meetingCollaborations ?? []).compactMap({
+                      $0.username
+                  })),
+                    arrTalent: .constant(viewModel.selectedMeeting?.meetingCollaborations ?? [])) {
+                      viewModel.isShowCollabList = false
+                    } visitProfile: { item in
+                      viewModel.isPresent = false
+                      viewModel.routeToMyTalent(talent: item)
+                    }
+                }
+            })
         }
         .dinotisAlert(
             isPresent: $viewModel.isError,

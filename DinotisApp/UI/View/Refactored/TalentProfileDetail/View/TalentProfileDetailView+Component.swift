@@ -1135,6 +1135,50 @@ extension TalentProfileDetailView {
                                     )
                                 }
                             }
+                          
+                          VStack {
+                            if !(viewModel.selectedMeeting?.meetingCollaborations ?? []).isEmpty {
+                              VStack(alignment: .leading, spacing: 10) {
+                                Text("\(LocalizableText.withText):")
+                                  .font(.robotoMedium(size: 12))
+                                  .foregroundColor(.black)
+                                
+                                ForEach((viewModel.selectedMeeting?.meetingCollaborations ?? []).prefix(3), id: \.id) { item in
+                                  HStack(spacing: 10) {
+                                    ImageLoader(url: (item.user?.profilePhoto).orEmpty(), width: 40, height: 40)
+                                      .frame(width: 40, height: 40)
+                                      .clipShape(Circle())
+                                    
+                                    Text((item.user?.name).orEmpty())
+                                      .lineLimit(1)
+                                      .font(.robotoBold(size: 14))
+                                      .foregroundColor(.DinotisDefault.black1)
+                                    
+                                    Spacer()
+                                  }
+                                  .onTapGesture {
+                                    viewModel.isPresent = false
+                                    viewModel.routeToMyTalent(talent: item.username.orEmpty())
+                                  }
+                                }
+                                
+                                if (viewModel.selectedMeeting?.meetingCollaborations ?? []).count > 3 {
+                                  Button {
+                                    viewModel.isPresent = false
+                                    DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
+                                      viewModel.isShowCollabList.toggle()
+                                    }
+                                  } label: {
+                                    Text(LocalizableText.searchSeeAllLabel)
+                                      .font(.robotoBold(size: 12))
+                                      .foregroundColor(.DinotisDefault.primary)
+                                      .underline()
+                                  }
+                                }
+                              }
+                            }
+                          }
+                          .padding(.vertical, 10)
                         }
                         
                         VStack(spacing: 10) {

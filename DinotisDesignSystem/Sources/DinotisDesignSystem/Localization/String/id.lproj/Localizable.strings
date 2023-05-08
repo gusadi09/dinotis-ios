@@ -372,3 +372,4 @@
 
 "declined_invitation_title" = "Kamu Menolak Ajakan Kolaborasi";
 "declined_invitation_message" = "Kamu telah menolak ajakan kolaborasi dari %@ dengan sesi '%@'";
+"collaborator_speaker_title" = "Nanti kamu akan ngobrol sama";

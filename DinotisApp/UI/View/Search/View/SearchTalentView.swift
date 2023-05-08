@@ -38,7 +38,7 @@ struct SearchTalentView: View {
                     unwrapping: $viewModel.route,
                     case: /HomeRouting.paymentMethod,
                     destination: {viewModel in
-                        PaymentMethodView(viewModel: viewModel.wrappedValue)
+                        PaymentMethodView(viewModel: viewModel.wrappedValue, mainTabValue: $tabValue)
                     },
                     onNavigate: {_ in},
                     label: {
@@ -51,7 +51,7 @@ struct SearchTalentView: View {
                     case: /HomeRouting.bookingInvoice,
                     destination: { viewModel in
                         UserInvoiceBookingView(
-                            viewModel: viewModel.wrappedValue
+                            viewModel: viewModel.wrappedValue, mainTabValue: $tabValue
                         )
                     },
                     onNavigate: {_ in},
@@ -220,6 +220,36 @@ struct SearchTalentView: View {
                 }
             }
         )
+        .sheet(isPresented: $viewModel.isShowCollabList, content: {
+            if #available(iOS 16.0, *) {
+              SelectedCollabCreatorView(
+                isEdit: false,
+                isAudience: true,
+                arrUsername: .constant((viewModel.sessionCard.meetingCollaborations ?? []).compactMap({
+                  $0.username
+              })),
+                arrTalent: .constant(viewModel.sessionCard.meetingCollaborations ?? [])) {
+                  viewModel.isShowCollabList = false
+                } visitProfile: { item in
+                  viewModel.isShowSessionDetail = false
+                  viewModel.routeToTalentProfile(username: item)
+                }
+                .presentationDetents([.medium, .large])
+            } else {
+              SelectedCollabCreatorView(
+                isEdit: false,
+                isAudience: true,
+                arrUsername: .constant((viewModel.sessionCard.meetingCollaborations ?? []).compactMap({
+                  $0.username
+              })),
+                arrTalent: .constant(viewModel.sessionCard.meetingCollaborations ?? [])) {
+                  viewModel.isShowCollabList = false
+                } visitProfile: { item in
+                  viewModel.isShowSessionDetail = false
+                  viewModel.routeToTalentProfile(username: item)
+                }
+            }
+        })
 	}
 }
 
@@ -769,6 +799,50 @@ private extension SearchTalentView {
                                 }
                             }
                         }
+                      
+                      VStack {
+                        if !(viewModel.sessionCard.meetingCollaborations ?? []).isEmpty {
+                          VStack(alignment: .leading, spacing: 10) {
+                            Text("\(LocalizableText.withText):")
+                              .font(.robotoMedium(size: 12))
+                              .foregroundColor(.black)
+                            
+                            ForEach((viewModel.sessionCard.meetingCollaborations ?? []).prefix(3), id: \.id) { item in
+                              HStack(spacing: 10) {
+                                ImageLoader(url: (item.user?.profilePhoto).orEmpty(), width: 40, height: 40)
+                                  .frame(width: 40, height: 40)
+                                  .clipShape(Circle())
+                                
+                                Text((item.user?.name).orEmpty())
+                                  .lineLimit(1)
+                                  .font(.robotoBold(size: 14))
+                                  .foregroundColor(.DinotisDefault.black1)
+                                
+                                Spacer()
+                              }
+                              .onTapGesture {
+                                viewModel.isShowSessionDetail = false
+                                viewModel.routeToTalentProfile(username: item.username)
+                              }
+                            }
+                            
+                            if (viewModel.sessionCard.meetingCollaborations ?? []).count > 3 {
+                              Button {
+                                viewModel.isShowSessionDetail = false
+                                DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
+                                  viewModel.isShowCollabList.toggle()
+                                }
+                              } label: {
+                                Text(LocalizableText.searchSeeAllLabel)
+                                  .font(.robotoBold(size: 12))
+                                  .foregroundColor(.DinotisDefault.primary)
+                                  .underline()
+                              }
+                            }
+                          }
+                        }
+                      }
+                      .padding(.vertical, 10)
                         
                         VStack(spacing: 10) {
                             HStack(spacing: 10) {

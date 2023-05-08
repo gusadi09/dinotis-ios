@@ -372,3 +372,4 @@
 
 "declined_invitation_title" = "You have declined the collaboration invitation.";
 "declined_invitation_message" = "You have declined the collaboration invitation from **%@** for the session **'%@'**.";
+"collaborator_speaker_title" = "Later you will talk with";

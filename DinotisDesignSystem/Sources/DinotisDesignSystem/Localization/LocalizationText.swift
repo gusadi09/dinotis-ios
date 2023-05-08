@@ -1649,4 +1649,10 @@ public enum LocalizableText {
             title
         )
     }
+  
+    public static let collaboratorSpeakerTitle = NSLocalizedString(
+        "collaborator_speaker_title",
+        bundle: .module,
+        comment: "collaborator speaker title for schedule detail"
+    )
 }
