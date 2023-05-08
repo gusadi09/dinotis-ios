@@ -13,16 +13,20 @@ struct SelectedCollabCreatorView: View {
     
     @State var searchText = ""
     let isEdit: Bool
+  let isAudience: Bool
     @Binding var arrUsername: [String]?
     @Binding var arrTalent: [MeetingCollaborationData]
     
     var back: () -> Void
+  let visitProfile: (String) -> Void
     
-    init(isEdit: Bool = true, arrUsername: Binding<[String]?>, arrTalent: Binding<[MeetingCollaborationData]>, back: @escaping () -> Void) {
+  init(isEdit: Bool = true, isAudience: Bool = false, arrUsername: Binding<[String]?>, arrTalent: Binding<[MeetingCollaborationData]>, back: @escaping () -> Void, visitProfile: @escaping (String) -> Void = {_ in }) {
         self.isEdit = isEdit
+        self.isAudience = isAudience
         self._arrUsername = arrUsername
         self._arrTalent = arrTalent
         self.back = back
+    self.visitProfile = visitProfile
     }
     
     var body: some View {
@@ -81,81 +85,90 @@ struct SelectedCollabCreatorView: View {
                         searchText.isEmpty
                     }), id: \.id) { items in
                         HStack {
+                          HStack {
                             ImageLoader(url: (items.user?.profilePhoto).orEmpty(), width: 30, height: 30)
-                                .frame(width: 30, height: 30)
-                                .clipShape(Circle())
+                              .frame(width: 30, height: 30)
+                              .clipShape(Circle())
                             
                             VStack(alignment: .leading, spacing: 8) {
-                                Text((items.user?.name).orEmpty())
-                                    .font(.robotoMedium(size: 12))
-                                    .foregroundColor(.black)
-                                
-                                if let profession = items.user?.stringProfessions?.first {
-                                    Text(profession)
-                                        .font(.robotoMedium(size: 10))
-                                        .foregroundColor(.gray)
-                                }
+                              Text((items.user?.name).orEmpty())
+                                .font(.robotoMedium(size: 12))
+                                .foregroundColor(.black)
+                              
+                              if let profession = items.user?.stringProfessions?.first {
+                                Text(profession)
+                                  .font(.robotoMedium(size: 10))
+                                  .foregroundColor(.gray)
+                              }
                             }
                             .multilineTextAlignment(.leading)
-                            
+                          }
+                          .onTapGesture {
+                            self.back()
+                            self.visitProfile(items.username.orEmpty())
+                          }
+                          
                             Spacer()
+                          
+                          if !isAudience {
                             
                             if items.declinedAt != nil && items.approvedAt == nil {
-                                Text(LocalizableText.declinedCollab)
-                                    .font(.robotoRegular(size: 12))
-                                    .lineLimit(1)
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal, 10)
-                                    .padding(.vertical, 6)
-                                    .background(
-                                        Capsule()
-                                            .foregroundColor(.DinotisDefault.red)
-                                    )
+                              Text(LocalizableText.declinedCollab)
+                                .font(.robotoRegular(size: 12))
+                                .lineLimit(1)
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 6)
+                                .background(
+                                  Capsule()
+                                    .foregroundColor(.DinotisDefault.red)
+                                )
                             } else if items.declinedAt == nil && items.approvedAt != nil {
-                                Text(LocalizableText.acceptedCollab)
-                                    .font(.robotoRegular(size: 12))
-                                    .lineLimit(1)
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal, 10)
-                                    .padding(.vertical, 6)
-                                    .background(
-                                        Capsule()
-                                            .foregroundColor(.DinotisDefault.green)
-                                    )
+                              Text(LocalizableText.acceptedCollab)
+                                .font(.robotoRegular(size: 12))
+                                .lineLimit(1)
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 6)
+                                .background(
+                                  Capsule()
+                                    .foregroundColor(.DinotisDefault.green)
+                                )
                             } else {
-                                Text(LocalizableText.waitingForConfirmCollab)
-                                    .font(.robotoRegular(size: 12))
-                                    .lineLimit(1)
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal, 10)
-                                    .padding(.vertical, 6)
-                                    .background(
-                                        Capsule()
-                                            .foregroundColor(.yellow)
-                                    )
+                              Text(LocalizableText.waitingForConfirmCollab)
+                                .font(.robotoRegular(size: 12))
+                                .lineLimit(1)
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 6)
+                                .background(
+                                  Capsule()
+                                    .foregroundColor(.yellow)
+                                )
                             }
                             
                             if isEdit {
-                                Button {
-                                    let index = self.arrTalent.firstIndex {
-                                        $0.user?.id == items.user?.id
-                                    }.orZero()
-                                    let usernameIndex = (self.arrUsername ?? []).firstIndex(where: {
-                                        $0 == (items.user?.username).orEmpty()
-                                    }).orZero()
-                                    
-                                    self.arrTalent.remove(at: index)
-                                    self.arrUsername?.remove(at: usernameIndex)
-                                    
-                                } label: {
-                                    Image(systemName: "xmark")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(height: 10)
-                                        .foregroundColor(.gray)
-                                        .font(.system(size: 10, weight: .bold))
-                                }
+                              Button {
+                                let index = self.arrTalent.firstIndex {
+                                  $0.user?.id == items.user?.id
+                                }.orZero()
+                                let usernameIndex = (self.arrUsername ?? []).firstIndex(where: {
+                                  $0 == (items.user?.username).orEmpty()
+                                }).orZero()
+                                
+                                self.arrTalent.remove(at: index)
+                                self.arrUsername?.remove(at: usernameIndex)
+                                
+                              } label: {
+                                Image(systemName: "xmark")
+                                  .resizable()
+                                  .scaledToFit()
+                                  .frame(height: 10)
+                                  .foregroundColor(.gray)
+                                  .font(.system(size: 10, weight: .bold))
+                              }
                             }
+                          }
                         }
                     }
                 }

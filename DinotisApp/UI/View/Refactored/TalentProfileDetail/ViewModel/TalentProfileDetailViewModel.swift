@@ -60,6 +60,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
   @Published var isShowAlert = false
   
   @Published var isShowManagements = false
+  @Published var isShowCollabList = false
     
     @Published var methodName = ""
     @Published var methodIcon = ""

@@ -76,6 +76,7 @@ final class SearchTalentViewModel: NSObject, ObservableObject, SKProductsRequest
     @Published var recommendedData = [ReccomendData]()
     
     @Published var isShowSessionDetail = false
+  @Published var isShowCollabList = false
     @Published var isDescComplete = false
     
     @Published var sessionCard = MeetingDetailResponse(user: nil, background: [""], meetingCollaborations: nil, meetingUrls: nil, meetingUploads: nil)
