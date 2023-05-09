@@ -23,7 +23,7 @@ struct TabViewContainer: View {
                 case: /HomeRouting.bookingInvoice,
                 destination: { viewModel in
                     UserInvoiceBookingView(
-                        viewModel: viewModel.wrappedValue
+                        viewModel: viewModel.wrappedValue, mainTabValue: $viewModel.tab
                     )
                 },
                 onNavigate: {_ in},
@@ -37,7 +37,7 @@ struct TabViewContainer: View {
                 case: /HomeRouting.detailPayment,
                 destination: {viewModel in
                     DetailPaymentView(
-                        viewModel: viewModel.wrappedValue
+                        viewModel: viewModel.wrappedValue, mainTabValue: $viewModel.tab
                     )
                 },
                 onNavigate: {_ in},
@@ -51,7 +51,7 @@ struct TabViewContainer: View {
                 case: /HomeRouting.userScheduleDetail,
                 destination: { viewModel in
                     UserScheduleDetail(
-                        viewModel: viewModel.wrappedValue
+                        viewModel: viewModel.wrappedValue, mainTabValue: $viewModel.tab
                     )
                 },
                 onNavigate: {_ in},

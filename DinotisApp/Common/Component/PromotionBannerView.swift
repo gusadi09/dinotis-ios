@@ -308,7 +308,7 @@ struct ProfileBannerImage: View {
 }
 
 struct ProfileBannerImageTemp: View {
-    var content: Highlights?
+    var content: HighlightData?
     
     private let config = Configuration.shared
     

@@ -53,7 +53,7 @@ struct BundlingDetailView: View {
 				case: /HomeRouting.userScheduleDetail,
 				destination: { viewModel in
 					UserScheduleDetail(
-						viewModel: viewModel.wrappedValue
+                        viewModel: viewModel.wrappedValue, mainTabValue: $tabValue
 					)
 				},
 				onNavigate: {_ in},

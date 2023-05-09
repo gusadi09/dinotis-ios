@@ -1525,4 +1525,134 @@ public enum LocalizableText {
         bundle: .module,
         comment: "usage for invalid url format message"
     )
+    public static let collaborationTitle = NSLocalizedString(
+        "collaboration_text",
+        bundle: .module,
+        comment: "usage for collaboration title text"
+    )
+    public static let collaborationPlaceholder = NSLocalizedString(
+        "collaboration_placeholder",
+        bundle: .module,
+        comment: "usage for placeholder of collaboration field"
+    )
+    public static let invitedCreatorTitle = NSLocalizedString(
+        "invited_creator_title",
+        bundle: .module,
+        comment: "usage for title of invited creator"
+    )
+    public static let waitingForConfirmCollab = NSLocalizedString(
+        "waiting_for_confirmation_collab",
+        bundle: .module,
+        comment: "usage for waiting status of invited creator"
+    )
+    public static let acceptedCollab = NSLocalizedString(
+        "accepted_collab",
+        bundle: .module,
+        comment: "usage for accepted status of invited creator"
+    )
+    public static let declinedCollab = NSLocalizedString(
+        "declined_collab",
+        bundle: .module,
+        comment: "usage for declined status of invited creator"
+    )
+    public static let creatorInvitedCollabTitle = NSLocalizedString(
+        "creator_invited_collab_title",
+        bundle: .module,
+        comment: "usage for creator invited text"
+    )
+    public static let searchCreatorPlaceholder = NSLocalizedString(
+        "search_creator_placeholder",
+        bundle: .module,
+        comment: "usage for search creator placeholder"
+    )
+    public static let selectCreatorForCollabTitle = NSLocalizedString(
+        "select_creator_for_collaboration_title",
+        bundle: .module,
+        comment: "usage for select collab creator title sheet"
+    )
+    public static let retryText = NSLocalizedString(
+        "retry_text",
+        bundle: .module,
+        comment: "usage for retry text"
+    )
+    public static let retrySubtitle = NSLocalizedString(
+        "retry_subtitle",
+        bundle: .module,
+        comment: "usage for retry subtitle text"
+    )
+    public static let rejectedText = NSLocalizedString(
+        "rejected_text",
+        bundle: .module,
+        comment: "usage for rejected text for collab status"
+    )
+    public static let waitingText = NSLocalizedString(
+        "waiting_text",
+        bundle: .module,
+        comment: "usage for waiting text for collab status"
+    )
+    public static let withText = NSLocalizedString(
+        "with_text",
+        bundle: .module,
+        comment: "usage for with text"
+    )
+    
+    public static let seeInvitation = NSLocalizedString(
+        "see_invitation",
+        bundle: .module,
+        comment: "see invitation label for notification card collab button"
+    )
+    
+    public static let decline = NSLocalizedString(
+        "decline",
+        bundle: .module,
+        comment: "general decline text"
+    )
+    
+    public static let acceptInvitation = NSLocalizedString(
+        "accept_invitation",
+        bundle: .module,
+        comment: "accept invitation label for notification card collab button"
+    )
+    
+    public static let acceptedInvitationTitle = NSLocalizedString(
+        "accepted_invitation_title",
+        bundle: .module,
+        comment: "accepted title for alert when succeed to accept collaboration"
+    )
+    
+    public static func acceptedInvitationMessage(name: String, title: String) -> String {
+        String(
+            format: NSLocalizedString(
+                "accepted_invitation_message",
+                bundle: .module,
+                comment: "accepted message for alert when succeed to accept collaboration"
+            ),
+            name,
+            title
+        )
+    }
+    
+    public static let declinedInvitationTitle = NSLocalizedString(
+        "declined_invitation_title",
+        bundle: .module,
+        comment: "declined title for alert when succeed to decline collaboration"
+    )
+    
+    public static func declinedInvitationMessage(name: String, title: String) -> String {
+        String(
+            format: NSLocalizedString(
+                "declined_invitation_message",
+                bundle: .module,
+                comment: "declined message for alert when succeed to decline collaboration"
+            ),
+            name,
+            title
+        )
+    }
+  
+    public static let collaboratorSpeakerTitle = NSLocalizedString(
+        "collaborator_speaker_title",
+        bundle: .module,
+        comment: "collaborator speaker title for schedule detail"
+    )
 }

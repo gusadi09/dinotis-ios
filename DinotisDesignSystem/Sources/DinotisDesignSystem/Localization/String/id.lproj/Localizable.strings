@@ -348,3 +348,28 @@
 
 "empty_file_message" = "Wahh.. File yang kamu cari tidak ditemukan :(";
 "invalid_url" = "Mohon masukkan url dengan format yang sesuai";
+"collaboration_text" = "Kolaborasi";
+"collaboration_placeholder" = "Tambah kreator di sesi kamu";
+"invited_creator_title" = "Kreator yang kamu undang";
+"waiting_for_confirmation_collab" = "Menunggu Konfirmasi";
+"accepted_collab" = "Kreator Setuju";
+"declined_collab" = "Kreator Menolak";
+"creator_invited_collab_title" = "Kreator yang diajak kolaborasi";
+"search_creator_placeholder" = "Cari kreator...";
+"select_creator_for_collaboration_title" = "Pilih Kreator Kolaborasi";
+"retry_text" = "Ulangi";
+"retry_subtitle" = "Permintaan belum dapat diproses, silahkan coba lagi";
+"rejected_text" = "Ditolak";
+"waiting_text" = "Waiting";
+"with_text" = "Bersama";
+
+"see_invitation" = "Lihat Ajakan";
+"decline" = "Tolak";
+"accept_invitation" = "Terima Ajakan";
+
+"accepted_invitation_title" = "Yeay! Kamu Menerima Ajakan Kolaborasi";
+"accepted_invitation_message" = "Kamu menerima ajakan kolaborasi dari %@ dengan sesi '%@'";
+
+"declined_invitation_title" = "Kamu Menolak Ajakan Kolaborasi";
+"declined_invitation_message" = "Kamu telah menolak ajakan kolaborasi dari %@ dengan sesi '%@'";
+"collaborator_speaker_title" = "Nanti kamu akan ngobrol sama";

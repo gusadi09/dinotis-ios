@@ -20,4 +20,6 @@ protocol MeetingsRepository {
     func provideGetDetailMeeting(meetingId: String) -> AnyPublisher<DetailMeeting, UnauthResponse>
 	func provideAddMeeting(with body: MeetingForm) -> AnyPublisher<EditTalentResponse, UnauthResponse>
 	func providePatchStartTalentMeeting(by meetingId: String) -> AnyPublisher<EditTalentResponse, UnauthResponse>
+    func provideGetCollabMeeting(by meetingId: String) -> AnyPublisher<DetailMeeting, UnauthResponse>
+    func provideApproveInvitation(with isApprove: Bool, for meetingId: String) -> AnyPublisher<SuccessResponse, UnauthResponse>
 }

@@ -113,3 +113,21 @@ public struct CustomerChatTokenResponse: Codable {
 		self.token = token
 	}
 }
+
+public struct RequestScheduleResponse: Codable {
+    public let id: Int
+    public let userId: String?
+    public let requestUserId: String?
+    public let type: String?
+    public let createdAt: Date?
+    public let updatedAt: Date?
+    
+    public init(id: Int, userId: String?, requestUserId: String?, type: String?, createdAt: Date?, updatedAt: Date?) {
+        self.id = id
+        self.userId = userId
+        self.requestUserId = requestUserId
+        self.type = type
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+    }
+}

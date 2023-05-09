@@ -609,7 +609,7 @@ extension UserHomeView {
 												if item.id == homeVM.talentArray().last?.id {
                                                     if homeVM.nextCursor != nil {
                                                         homeVM.takeItem += 10
-                                                        homeVM.getAllTalents()
+                                                        homeVM.onGetSearchedTalent()
                                                     }
 												}
 											}
@@ -640,7 +640,7 @@ extension UserHomeView {
 												if item.id == homeVM.talentArray().last?.id {
                                                     if homeVM.nextCursor != nil {
                                                         homeVM.takeItem += 10
-                                                        homeVM.getAllTalents()
+                                                        homeVM.onGetSearchedTalent()
                                                     }
 												}
 											}
