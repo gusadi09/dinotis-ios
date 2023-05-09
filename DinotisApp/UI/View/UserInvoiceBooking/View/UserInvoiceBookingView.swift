@@ -15,6 +15,8 @@ struct UserInvoiceBookingView: View {
 	@Environment(\.presentationMode) var presentationMode
 	
 	@ObservedObject var viewModel: InvoicesBookingViewModel
+    
+    @Binding var mainTabValue: TabRoute
 	
 	var body: some View {
 		ZStack(alignment: .top) {
@@ -23,7 +25,7 @@ struct UserInvoiceBookingView: View {
                 case: /HomeRouting.userScheduleDetail,
                 destination: { viewModel in
                     UserScheduleDetail(
-                        viewModel: viewModel.wrappedValue
+                        viewModel: viewModel.wrappedValue, mainTabValue: $mainTabValue
                     )
                 },
                 onNavigate: {_ in},
@@ -186,6 +188,6 @@ struct UserInvoiceBookingView: View {
 
 struct UserInvoiceBookingView_Previews: PreviewProvider {
 	static var previews: some View {
-        UserInvoiceBookingView(viewModel: InvoicesBookingViewModel(bookingId: "", backToRoot: {}, backToHome: {}, backToChoosePayment: {}))
+        UserInvoiceBookingView(viewModel: InvoicesBookingViewModel(bookingId: "", backToRoot: {}, backToHome: {}, backToChoosePayment: {}), mainTabValue: .constant(.agenda))
 	}
 }

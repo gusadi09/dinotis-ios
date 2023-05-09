@@ -40,11 +40,25 @@ struct UserScheduleDetail: View {
 	
 	@ObservedObject var viewModel: ScheduleDetailViewModel
 	@ObservedObject var stateObservable = StateObservable.shared
+    
+    @Binding var mainTabValue: TabRoute
 	
 	var body: some View {
 		GeometryReader { geo in
 			ZStack {
 				if let meetId = viewModel.dataBooking?.id {
+          
+                    NavigationLink(
+                        unwrapping: $viewModel.route,
+                        case: /HomeRouting.talentProfileDetail,
+                        destination: {viewModel in
+                            TalentProfileDetailView(viewModel: viewModel.wrappedValue, tabValue: $mainTabValue)
+                        },
+                        onNavigate: {_ in},
+                        label: {
+                            EmptyView()
+                        }
+                    )
 					
 					NavigationLink(
 						unwrapping: $viewModel.route,
@@ -396,6 +410,34 @@ struct UserScheduleDetail: View {
           }
         }
       }
+      .sheet(isPresented: $viewModel.isShowCollabList, content: {
+          if #available(iOS 16.0, *) {
+            SelectedCollabCreatorView(
+              isEdit: false,
+              isAudience: true,
+              arrUsername: .constant((viewModel.dataBooking?.meeting?.meetingCollaborations ?? []).compactMap({
+                $0.username
+            })),
+              arrTalent: .constant(viewModel.dataBooking?.meeting?.meetingCollaborations ?? [])) {
+                viewModel.isShowCollabList = false
+              } visitProfile: { item in
+                viewModel.routeToTalentProfile(username: item)
+              }
+              .presentationDetents([.medium, .large])
+          } else {
+            SelectedCollabCreatorView(
+              isEdit: false,
+              isAudience: true,
+              arrUsername: .constant((viewModel.dataBooking?.meeting?.meetingCollaborations ?? []).compactMap({
+                $0.username
+            })),
+              arrTalent: .constant(viewModel.dataBooking?.meeting?.meetingCollaborations ?? [])) {
+                viewModel.isShowCollabList = false
+              } visitProfile: { item in
+                viewModel.routeToTalentProfile(username: item)
+              }
+          }
+      })
 		}
 	}
 	
@@ -1170,6 +1212,14 @@ private extension UserScheduleDetail {
 								}
 							}
 						}
+            
+                        Capsule()
+                            .frame(height: 1)
+                            .foregroundColor(.gray)
+                            .opacity(0.2)
+                            .padding(.top)
+                        
+                        CollaboratorView(viewModel: viewModel)
 						
 						ParticipantView(viewModel: viewModel)
 							.padding(.vertical, 8)
@@ -1326,16 +1376,58 @@ private extension UserScheduleDetail {
 			}
 		}
 	}
+  
+  struct CollaboratorView: View {
+    @ObservedObject var viewModel: ScheduleDetailViewModel
+    
+    var body: some View {
+      VStack {
+        if !(viewModel.dataBooking?.meeting?.meetingCollaborations ?? []).isEmpty {
+          VStack(alignment: .leading, spacing: 10) {
+            Text(LocalizableText.collaboratorSpeakerTitle)
+              .font(.robotoRegular(size: 12))
+              .foregroundColor(.black)
+            
+            ForEach((viewModel.dataBooking?.meeting?.meetingCollaborations ?? []).prefix(3), id: \.id) { item in
+              HStack(spacing: 10) {
+                ImageLoader(url: (item.user?.profilePhoto).orEmpty(), width: 40, height: 40)
+                  .frame(width: 40, height: 40)
+                  .clipShape(Circle())
+                
+                Text((item.user?.name).orEmpty())
+                  .lineLimit(1)
+                  .font(.robotoBold(size: 14))
+                  .foregroundColor(.DinotisDefault.black1)
+                
+                Spacer()
+              }
+              .onTapGesture {
+                viewModel.routeToTalentProfile(username: item.username)
+              }
+            }
+            
+            if (viewModel.dataBooking?.meeting?.meetingCollaborations ?? []).count > 3 {
+              Button {
+                viewModel.isShowCollabList.toggle()
+              } label: {
+                Text(LocalizableText.searchSeeAllLabel)
+                  .font(.robotoBold(size: 12))
+                  .foregroundColor(.DinotisDefault.primary)
+                  .underline()
+              }
+            }
+          }
+        }
+      }
+      .padding(.vertical, 10)
+    }
+  }
 	
 	struct ParticipantView: View {
 		@ObservedObject var viewModel: ScheduleDetailViewModel
 		
 		var body: some View {
-			VStack(alignment: .leading, spacing: 15) {
-				Capsule()
-					.frame(height: 1)
-					.foregroundColor(.gray)
-					.opacity(0.2)
+			VStack(alignment: .leading, spacing: 10) {
 				
                 Text(((viewModel.dataBooking?.meeting?.slots).orZero() > 1) ? LocalizableText.groupSessionParticipantTitle : LocalizableText.privateSessionParticipantTitle)
 					.font(.robotoRegular(size: 12))

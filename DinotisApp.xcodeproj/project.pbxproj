@@ -113,11 +113,6 @@
 		EC6A96C527C9DFA800282253 /* ScheduleDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A96C427C9DFA800282253 /* ScheduleDetailViewModel.swift */; };
 		EC6A96C827C9E14400282253 /* TalentWalletViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A96C727C9E14400282253 /* TalentWalletViewModel.swift */; };
 		EC6A96CB27CB98A900282253 /* Categories.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A96CA27CB98A900282253 /* Categories.swift */; };
-		EC6A96D027CC98AD00282253 /* TalentTargetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A96CF27CC98AD00282253 /* TalentTargetType.swift */; };
-		EC6A96D227CC98B700282253 /* TalentRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A96D127CC98B700282253 /* TalentRemoteDataSource.swift */; };
-		EC6A96D427CC98CA00282253 /* TalentDefaultRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A96D327CC98CA00282253 /* TalentDefaultRemoteDataSource.swift */; };
-		EC6A96D627CC98D500282253 /* TalentRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A96D527CC98D500282253 /* TalentRepository.swift */; };
-		EC6A96D827CC98E100282253 /* TalentDefaultRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A96D727CC98E100282253 /* TalentDefaultRepository.swift */; };
 		EC6A96DA27CD39C700282253 /* TalentQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A96D927CD39C700282253 /* TalentQuery.swift */; };
 		EC6A96DF27CDDAE300282253 /* ScheduleListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A96DE27CDDAE300282253 /* ScheduleListView.swift */; };
 		EC6A96E127CDDAF900282253 /* ScheduleListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A96E027CDDAF900282253 /* ScheduleListViewModel.swift */; };
@@ -281,6 +276,9 @@
 		ECDAE39C26B7FD9300419194 /* Montserrat-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ECDAE38A26B7FD9300419194 /* Montserrat-ThinItalic.ttf */; };
 		ECDAE3A126B7FF3D00419194 /* FontManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECDAE3A026B7FF3D00419194 /* FontManager.swift */; };
 		ECDD760926C8078900C50956 /* TalentHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECDD760826C8078900C50956 /* TalentHomeView.swift */; };
+		ECED4DD329F8FFAA00E79663 /* CreatorPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECED4DD229F8FFAA00E79663 /* CreatorPickerViewModel.swift */; };
+		ECED4DD529F8FFC900E79663 /* CreatorPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECED4DD429F8FFC900E79663 /* CreatorPickerView.swift */; };
+		ECED4DD829F9297C00E79663 /* SelectedCollabCreatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECED4DD729F9297C00E79663 /* SelectedCollabCreatorView.swift */; };
 		ECF582BF27244951006C0BE7 /* ScrollViewModification.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF582BE27244951006C0BE7 /* ScrollViewModification.swift */; };
 		ECF7096728C1E7AD0093E020 /* CountryPicker in Frameworks */ = {isa = PBXBuildFile; productRef = ECF7096628C1E7AD0093E020 /* CountryPicker */; };
 		ECF7096928C1E7D90093E020 /* CountryPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF7096828C1E7D90093E020 /* CountryPickerView.swift */; };
@@ -484,11 +482,6 @@
 		EC6A96C427C9DFA800282253 /* ScheduleDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleDetailViewModel.swift; sourceTree = "<group>"; };
 		EC6A96C727C9E14400282253 /* TalentWalletViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalentWalletViewModel.swift; sourceTree = "<group>"; };
 		EC6A96CA27CB98A900282253 /* Categories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Categories.swift; sourceTree = "<group>"; };
-		EC6A96CF27CC98AD00282253 /* TalentTargetType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalentTargetType.swift; sourceTree = "<group>"; };
-		EC6A96D127CC98B700282253 /* TalentRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalentRemoteDataSource.swift; sourceTree = "<group>"; };
-		EC6A96D327CC98CA00282253 /* TalentDefaultRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalentDefaultRemoteDataSource.swift; sourceTree = "<group>"; };
-		EC6A96D527CC98D500282253 /* TalentRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalentRepository.swift; sourceTree = "<group>"; };
-		EC6A96D727CC98E100282253 /* TalentDefaultRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalentDefaultRepository.swift; sourceTree = "<group>"; };
 		EC6A96D927CD39C700282253 /* TalentQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalentQuery.swift; sourceTree = "<group>"; };
 		EC6A96DE27CDDAE300282253 /* ScheduleListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleListView.swift; sourceTree = "<group>"; };
 		EC6A96E027CDDAF900282253 /* ScheduleListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleListViewModel.swift; sourceTree = "<group>"; };
@@ -638,6 +631,9 @@
 		ECDAE38A26B7FD9300419194 /* Montserrat-ThinItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-ThinItalic.ttf"; sourceTree = "<group>"; };
 		ECDAE3A026B7FF3D00419194 /* FontManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontManager.swift; sourceTree = "<group>"; };
 		ECDD760826C8078900C50956 /* TalentHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalentHomeView.swift; sourceTree = "<group>"; };
+		ECED4DD229F8FFAA00E79663 /* CreatorPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatorPickerViewModel.swift; sourceTree = "<group>"; };
+		ECED4DD429F8FFC900E79663 /* CreatorPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatorPickerView.swift; sourceTree = "<group>"; };
+		ECED4DD729F9297C00E79663 /* SelectedCollabCreatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCollabCreatorView.swift; sourceTree = "<group>"; };
 		ECF582BE27244951006C0BE7 /* ScrollViewModification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewModification.swift; sourceTree = "<group>"; };
 		ECF7096828C1E7D90093E020 /* CountryPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryPickerView.swift; sourceTree = "<group>"; };
 		F61C58392982710000CCCDBD /* close-to-end.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "close-to-end.json"; sourceTree = "<group>"; };
@@ -771,6 +767,8 @@
 		EC01F1EC26C028C300CA878F /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				ECED4DD629F9296800E79663 /* SelectedCollabCreator */,
+				ECED4DD129F8FF9300E79663 /* CreatorPicker */,
 				F63A0974289BD477008C7815 /* Twilio */,
 				ECA51E6627D0D9C00096E22D /* UIGrid */,
 				ECA51E6327D0ACE90096E22D /* Chips */,
@@ -1294,7 +1292,6 @@
 				F686669F28A4D7AA0067345C /* Question */,
 				ECD51FCF28A20C7A000B1F6C /* TwilioData */,
 				EC47636B2833E1AA009EE2FB /* Meetings */,
-				EC6A96CC27CC988A00282253 /* Talent */,
 				EC62578827B9F9D10079AA10 /* Reusables */,
 			);
 			path = Data;
@@ -1486,34 +1483,6 @@
 				EC9C7F8526D7D46000026F0E /* TalentWalletView.swift */,
 			);
 			path = View;
-			sourceTree = "<group>";
-		};
-		EC6A96CC27CC988A00282253 /* Talent */ = {
-			isa = PBXGroup;
-			children = (
-				EC6A96CD27CC989400282253 /* RemoteDataSource */,
-				EC6A96D527CC98D500282253 /* TalentRepository.swift */,
-				EC6A96D727CC98E100282253 /* TalentDefaultRepository.swift */,
-			);
-			path = Talent;
-			sourceTree = "<group>";
-		};
-		EC6A96CD27CC989400282253 /* RemoteDataSource */ = {
-			isa = PBXGroup;
-			children = (
-				EC6A96CE27CC989D00282253 /* TargetType */,
-				EC6A96D127CC98B700282253 /* TalentRemoteDataSource.swift */,
-				EC6A96D327CC98CA00282253 /* TalentDefaultRemoteDataSource.swift */,
-			);
-			path = RemoteDataSource;
-			sourceTree = "<group>";
-		};
-		EC6A96CE27CC989D00282253 /* TargetType */ = {
-			isa = PBXGroup;
-			children = (
-				EC6A96CF27CC98AD00282253 /* TalentTargetType.swift */,
-			);
-			path = TargetType;
 			sourceTree = "<group>";
 		};
 		EC6A96DB27CDD44500282253 /* ScheduleList */ = {
@@ -2366,6 +2335,23 @@
 			path = Talent;
 			sourceTree = "<group>";
 		};
+		ECED4DD129F8FF9300E79663 /* CreatorPicker */ = {
+			isa = PBXGroup;
+			children = (
+				ECED4DD229F8FFAA00E79663 /* CreatorPickerViewModel.swift */,
+				ECED4DD429F8FFC900E79663 /* CreatorPickerView.swift */,
+			);
+			path = CreatorPicker;
+			sourceTree = "<group>";
+		};
+		ECED4DD629F9296800E79663 /* SelectedCollabCreator */ = {
+			isa = PBXGroup;
+			children = (
+				ECED4DD729F9297C00E79663 /* SelectedCollabCreatorView.swift */,
+			);
+			path = SelectedCollabCreator;
+			sourceTree = "<group>";
+		};
 		ECF2274C27F0B451001777DC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -3082,6 +3068,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ECED4DD329F8FFAA00E79663 /* CreatorPickerViewModel.swift in Sources */,
 				EC62578427B7E16F0079AA10 /* Color+Default.swift in Sources */,
 				EC625604272ADF6D00FA209B /* EditTalentMeetingView.swift in Sources */,
 				EC99AD6D26C147620060F221 /* TalentProfileView.swift in Sources */,
@@ -3095,7 +3082,6 @@
 				F67334DE2908EE41006C1ADF /* CreateTalentRateCardForm.swift in Sources */,
 				EC6A7567291121660030BC41 /* DetailBundling.swift in Sources */,
 				EC04ED3726C8CB6800E0D473 /* ScheduleCardView.swift in Sources */,
-				EC6A96D027CC98AD00282253 /* TalentTargetType.swift in Sources */,
 				F665C44428C9CEA800D669A8 /* PrivateLocalParticipantManager.swift in Sources */,
 				EC2C67FB26C582BE008F094D /* MultilineTextField.swift in Sources */,
 				F67334D62908EE30006C1ADF /* TalentCardListViewModel.swift in Sources */,
@@ -3107,6 +3093,7 @@
 				EC6A96E127CDDAF900282253 /* ScheduleListViewModel.swift in Sources */,
 				EC9C4E3D281694EA00837469 /* AnnouncementView.swift in Sources */,
 				EC4763712833E2F3009EE2FB /* MeetingsRemoteDataSource.swift in Sources */,
+				ECED4DD829F9297C00E79663 /* SelectedCollabCreatorView.swift in Sources */,
 				F686669E28A4D6620067345C /* Question.swift in Sources */,
 				EC91B3DE26CE296200C5358C /* FormScheduleTalentCardView.swift in Sources */,
 				EC25CF2E280D7725000E3D9A /* ChangesPasswordViewModel.swift in Sources */,
@@ -3147,7 +3134,6 @@
 				F63A0997289C1226008C7815 /* StreamManager.swift in Sources */,
 				ECB964A426B93FEB00B0390B /* ForgotPasswordView.swift in Sources */,
 				EC6A759129196CDF0030BC41 /* TalentTransactionDetailViewModel.swift in Sources */,
-				EC6A96D427CC98CA00282253 /* TalentDefaultRemoteDataSource.swift in Sources */,
 				EC6A96CB27CB98A900282253 /* Categories.swift in Sources */,
 				F665C44628C9D37400D669A8 /* PrivateRoomMessage.swift in Sources */,
 				ECF7096928C1E7D90093E020 /* CountryPickerView.swift in Sources */,
@@ -3157,7 +3143,6 @@
 				EC91B3FC26CE55E600C5358C /* ScheduledFormView.swift in Sources */,
 				F61E53DF28CB49B6006594B4 /* PrivateVideoSpeakerViewModel.swift in Sources */,
 				EC9D9EBB26CF7BA6003A441C /* TalentDetailScheduleCardView.swift in Sources */,
-				EC6A96D227CC98B700282253 /* TalentRemoteDataSource.swift in Sources */,
 				EC2A511728C7099800C717B9 /* PresentationVideoView.swift in Sources */,
 				EC72227C2954401100C05A1B /* NotificationViewModel.swift in Sources */,
 				EC789C6527C40BF7005872E2 /* OtpVerificationViewModel.swift in Sources */,
@@ -3202,7 +3187,6 @@
 				EC9C4E2E2813FD0600837469 /* PreviewTalentViewModel.swift in Sources */,
 				ECD51FAD28A0C25A000B1F6C /* RoomManager.swift in Sources */,
 				EC62578A27B9F9E00079AA10 /* DinotisTargetType.swift in Sources */,
-				EC6A96D627CC98D500282253 /* TalentRepository.swift in Sources */,
 				EC0279F227C5E40B00B8C392 /* RoundedCorner.swift in Sources */,
 				EC6A96C527C9DFA800282253 /* ScheduleDetailViewModel.swift in Sources */,
 				EC7B1E9C27BCCAFC00471219 /* Routing.swift in Sources */,
@@ -3334,6 +3318,7 @@
 				EC4B891729248D270074732A /* CustomerChatManager.swift in Sources */,
 				ECBE2B652729265D002A45D8 /* WithdrawBank.swift in Sources */,
 				F6710123291354B8008E56A4 /* CreateBundling.swift in Sources */,
+				ECED4DD529F8FFC900E79663 /* CreatorPickerView.swift in Sources */,
 				F67335062908F190006C1ADF /* UserBundlingScheduleCardView.swift in Sources */,
 				EC2C296127C7187F00F1A69C /* ChangePhoneViewModel.swift in Sources */,
 				F665C44B28C9DDFB00D669A8 /* PrivateStreamViewModel.swift in Sources */,
@@ -3348,7 +3333,6 @@
 				EC6D0E5F298306BF0016C45D /* TabViewContainerViewModel.swift in Sources */,
 				EC0279F527C61D7900B8C392 /* ProfileViewModel.swift in Sources */,
 				F63A0982289BDBB5008C7815 /* SpeakerVideoView.swift in Sources */,
-				EC6A96D827CC98E100282253 /* TalentDefaultRepository.swift in Sources */,
 				ECD51FAC28A0C25A000B1F6C /* LocalParticipantManager.swift in Sources */,
 				0A0664CF280F0669009EC7C0 /* TalentProfileDetailView+Component.swift in Sources */,
 				F67334E42908EE5D006C1ADF /* ScheduleNegotiationChatViewModel.swift in Sources */,
@@ -3459,7 +3443,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.4.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -3509,8 +3493,8 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = DinotisNotificationServiceExtension/DinotisNotificationServiceExtension.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -3535,12 +3519,12 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.4.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp.DinotisNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.dinotis.DinotisApp.DinotisNotificationServiceExtension";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -3642,7 +3626,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp;
 				PRODUCT_NAME = DinotisDev;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3738,7 +3722,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp;
 				PRODUCT_NAME = Dinotis;
 				PROVISIONING_PROFILE_SPECIFIER = "";

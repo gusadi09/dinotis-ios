@@ -13,22 +13,27 @@ public struct NotificationCardModel {
 	public let detail: String?
 	public let thumbnail: String?
 	public let readAt: Date?
+    public let status: String?
 
-	public init(title: String?, date: Date?, detail: String?, thumbnail: String?, readAt: Date?) {
+	public init(title: String?, date: Date?, detail: String?, thumbnail: String?, readAt: Date?, status: String?) {
 		self.title = title
 		self.date = date
 		self.detail = detail
 		self.thumbnail = thumbnail
 		self.readAt = readAt
+        self.status = status
 	}
 }
 
 public struct NotificationCard: View {
 
 	private let data: NotificationCardModel
+    
+    private let action: () -> Void
 
-	public init(data: NotificationCardModel) {
+	public init(data: NotificationCardModel, action: @escaping () -> Void) {
 		self.data = data
+        self.action = action
 	}
 
     public var body: some View {
@@ -59,6 +64,23 @@ public struct NotificationCard: View {
 				Text(data.detail.orEmpty())
 					.font(.robotoRegular(size: 12))
 					.foregroundColor(.black)
+                
+                if data.status.orEmpty() == "collaboration_requested" {
+                    Button {
+                        action()
+                    } label: {
+                        Text(LocalizableText.seeInvitation)
+                            .font(.robotoBold(size: 12))
+                            .foregroundColor(.white)
+                            .padding(.vertical, 10)
+                            .padding(.horizontal, 15)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .foregroundColor(.DinotisDefault.primary)
+                            )
+                    }
+                    .buttonStyle(.plain)
+                }
 			}
 			.multilineTextAlignment(.leading)
 
@@ -82,8 +104,12 @@ struct NotificationCard_Previews: PreviewProvider {
     static var previews: some View {
 		ScrollView {
 			LazyVStack(spacing: 0) {
-				NotificationCard(data: NotificationCardModel(title: "Test", date: Date(), detail: "Test", thumbnail: nil, readAt: nil))
-				NotificationCard(data: NotificationCardModel(title: "Test", date: Date(), detail: "Test", thumbnail: nil, readAt: nil))
+                NotificationCard(data: NotificationCardModel(title: "Test", date: Date(), detail: "Test", thumbnail: nil, readAt: nil, status: nil)) {
+                    
+                }
+                NotificationCard(data: NotificationCardModel(title: "Test", date: Date(), detail: "Test", thumbnail: nil, readAt: nil, status: "collaboration_requested")) {
+                    
+                }
 			}
 		}
     }

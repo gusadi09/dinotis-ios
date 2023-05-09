@@ -26,6 +26,8 @@ struct DetailPaymentView: View {
 	}
 	
 	@Environment(\.presentationMode) var presentationMode
+    
+    @Binding var mainTabValue: TabRoute
 	
 	var body: some View {
 		ZStack {
@@ -50,7 +52,7 @@ struct DetailPaymentView: View {
 				case: /HomeRouting.bookingInvoice,
 				destination: { viewModel in
 					UserInvoiceBookingView(
-						viewModel: viewModel.wrappedValue
+                        viewModel: viewModel.wrappedValue, mainTabValue: $mainTabValue
 					)
 				},
 				onNavigate: {_ in},
@@ -653,7 +655,8 @@ struct InvoiceView_Previews: PreviewProvider {
                 subtotal: "",
                 extraFee: "",
                 serviceFee: ""
-			)
+            ),
+            mainTabValue: .constant(.agenda)
 		)
 	}
 }

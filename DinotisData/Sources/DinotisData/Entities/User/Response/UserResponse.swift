@@ -427,18 +427,20 @@ public struct ManagementTalentData: Codable {
 	public let profilePhoto: String?
 	public let profileDescription: String?
 	public let professions: [ProfessionData]?
+    public let stringProfessions: [String]?
 	public let userHighlights: [HighlightData]?
 	public let isVerified: Bool?
 	public let isVisible: Bool?
 	public let isActive: Bool?
 
-	public init(id: String?, name: String?, username: String?, profilePhoto: String?, profileDescription: String?, professions: [ProfessionData]?, userHighlights: [HighlightData]?, isVerified: Bool?, isVisible: Bool?, isActive: Bool?) {
+	public init(id: String?, name: String?, username: String?, profilePhoto: String?, profileDescription: String?, professions: [ProfessionData]?, userHighlights: [HighlightData]?, isVerified: Bool?, isVisible: Bool?, isActive: Bool?, stringProfessions: [String]?) {
 		self.id = id
 		self.name = name
 		self.username = username
 		self.profilePhoto = profilePhoto
 		self.profileDescription = profileDescription
 		self.professions = professions
+        self.stringProfessions = stringProfessions
 		self.userHighlights = userHighlights
 		self.isVerified = isVerified
 		self.isVisible = isVisible
