@@ -404,7 +404,7 @@ struct TalentHomeView: View {
 																if (homeVM.meetingData.unique().last?.id).orEmpty() == items.id {
 																	homeVM.meetingParam.skip = homeVM.meetingParam.take
 																	homeVM.meetingParam.take += 15
-																	homeVM.getTalentMeeting()
+                                                                    homeVM.getTalentMeeting(isMore: true)
 																}
 															}
 														}

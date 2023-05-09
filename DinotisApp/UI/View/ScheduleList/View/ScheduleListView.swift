@@ -25,7 +25,8 @@ struct ScheduleListView: View {
                     case: /HomeRouting.bookingInvoice,
                     destination: { viewModel in
                         UserInvoiceBookingView(
-                            viewModel: viewModel.wrappedValue
+                            viewModel: viewModel.wrappedValue,
+                            mainTabValue: $mainTabSelection
                         )
                     },
                     onNavigate: {_ in},
@@ -38,7 +39,7 @@ struct ScheduleListView: View {
                     unwrapping: $viewModel.route,
                     case: /HomeRouting.detailPayment,
                     destination: {viewModel in
-                        DetailPaymentView(viewModel: viewModel.wrappedValue)
+                        DetailPaymentView(viewModel: viewModel.wrappedValue, mainTabValue: $mainTabSelection)
                     },
                     onNavigate: {_ in},
                     label: {
@@ -51,7 +52,8 @@ struct ScheduleListView: View {
                     case: /HomeRouting.paymentMethod,
                     destination: {viewModel in
                         PaymentMethodView(
-                            viewModel: viewModel.wrappedValue
+                            viewModel: viewModel.wrappedValue,
+                            mainTabValue: $mainTabSelection
                         )
                     },
                     onNavigate: {_ in},
@@ -76,7 +78,7 @@ struct ScheduleListView: View {
                     unwrapping: $viewModel.route,
                     case: /HomeRouting.userScheduleDetail,
                     destination: {viewModel in
-                        UserScheduleDetail(viewModel: viewModel.wrappedValue)
+                        UserScheduleDetail(viewModel: viewModel.wrappedValue, mainTabValue: $mainTabSelection)
                     },
                     onNavigate: {_ in},
                     label: {

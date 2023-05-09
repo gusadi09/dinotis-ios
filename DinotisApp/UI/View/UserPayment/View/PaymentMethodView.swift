@@ -18,6 +18,8 @@ struct PaymentMethodView: View {
 	@ObservedObject var viewModel: PaymentMethodsViewModel
 	
 	@Environment(\.presentationMode) var presentationMode
+    
+    @Binding var mainTabValue: TabRoute
 	
 	var body: some View {
 		ZStack {
@@ -75,7 +77,7 @@ struct PaymentMethodView: View {
 					case: /HomeRouting.detailPayment,
 					destination: {viewModel in
 						DetailPaymentView(
-							viewModel: viewModel.wrappedValue
+                            viewModel: viewModel.wrappedValue, mainTabValue: $mainTabValue
 						)
 					},
 					onNavigate: {_ in},
@@ -88,7 +90,7 @@ struct PaymentMethodView: View {
 					unwrapping: $viewModel.route,
 					case: /HomeRouting.bookingInvoice
 				) { viewModel in
-					UserInvoiceBookingView(viewModel: viewModel.wrappedValue)
+                    UserInvoiceBookingView(viewModel: viewModel.wrappedValue, mainTabValue: $mainTabValue)
 				} onNavigate: { _ in } label: {
 					EmptyView()
 				}
@@ -139,6 +141,6 @@ struct PaymentMethodView: View {
 
 struct PaymentMethodView_Previews: PreviewProvider {
 	static var previews: some View {
-        PaymentMethodView(viewModel: PaymentMethodsViewModel(price: "", meetingId: "", rateCardMessage: "", isRateCard: false, backToRoot: {}, backToHome: {}))
+        PaymentMethodView(viewModel: PaymentMethodsViewModel(price: "", meetingId: "", rateCardMessage: "", isRateCard: false, backToRoot: {}, backToHome: {}), mainTabValue: .constant(.agenda))
 	}
 }

@@ -78,7 +78,7 @@ public struct DinotisAlert: ViewModifier {
 							.foregroundColor(isError ? .DinotisDefault.red : .DinotisDefault.primary)
 							.multilineTextAlignment(.center)
 
-						Text(message)
+                        Text(.init(message))
 							.font(.robotoRegular(size: 12))
 							.foregroundColor(.DinotisDefault.black3)
 							.multilineTextAlignment(.center)

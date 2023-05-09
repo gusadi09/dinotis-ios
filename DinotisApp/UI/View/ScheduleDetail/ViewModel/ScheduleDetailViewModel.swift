@@ -69,6 +69,7 @@ final class ScheduleDetailViewModel: ObservableObject {
     @Published var isRefreshFailed = false
 
     @Published var isShowingRules = false
+    @Published var isShowCollabList = false
     @Published var isNotApproved = false
     @Published var isShowAttachments = false
     @Published var isShowWebView = false
@@ -444,6 +445,14 @@ final class ScheduleDetailViewModel: ObservableObject {
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .twilioLiveStream(viewModel: viewModel)
+        }
+    }
+  
+    func routeToTalentProfile(username: String?) {
+        let viewModel = TalentProfileDetailViewModel(backToRoot: self.backToRoot, backToHome: {self.route = nil}, username: username.orEmpty())
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .talentProfileDetail(viewModel: viewModel)
         }
     }
 
