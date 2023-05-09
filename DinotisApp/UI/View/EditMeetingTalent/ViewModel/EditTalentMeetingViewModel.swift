@@ -34,6 +34,7 @@ final class EditTalentMeetingViewModel: ObservableObject {
 	@Published var meetingID: String
 
 	@Published var isShowSuccess = false
+    @Published var talent = [MeetingCollaborationData]()
 
   @Published var meetingForm = MeetingForm(id: "", title: "", description: "", price: 0, startAt: "", endAt: "", isPrivate: false, slots: 0, managementId: nil, urls: [])
 
@@ -151,6 +152,14 @@ final class EditTalentMeetingViewModel: ObservableObject {
                 self.meetingForm.urls = response.meetingUrls?.compactMap({ value in
                     MeetingURL(title: value.title.orEmpty(), url: value.url.orEmpty())
                 }) ?? []
+                
+                self.meetingForm.collaborations = response.meetingCollaborations?.compactMap({
+                    $0.username
+                })
+                
+                self.talent = response.meetingCollaborations ?? []
+                
+                print("Collab: ", self.talent)
             }
             .store(in: &cancellables)
     }

@@ -87,7 +87,7 @@ struct EditTalentMeetingView: View {
 						}
 					} content: {
 						VStack {
-                            FormScheduleTalentCardView(managements: $viewModel.managements, meetingForm: $viewModel.meetingForm, onTapRemove: {}, isShowRemove: false, isEdit: true)
+                            FormScheduleTalentCardView(collab: $viewModel.talent, managements: $viewModel.managements, meetingForm: $viewModel.meetingForm, onTapRemove: {}, isShowRemove: false, isEdit: true)
 						}
 						.padding(.vertical, 15)
 					}

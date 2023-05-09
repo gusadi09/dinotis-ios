@@ -22,11 +22,12 @@ public struct NotificationData: Codable, Hashable {
     public let iosUrl: String?
     public let url: String?
     public let userId: String?
-    public  let createdAt: Date?
-    public  let readAt: Date?
-    public  let language: String?
+    public let createdAt: Date?
+    public let readAt: Date?
+    public let language: String?
+    public let meetingId: String?
     
-    public init(id: String?, thumbnail: String?, type: String?, status: String?, message: String?, description: String?, iosUrl: String?, url: String?, userId: String?, createdAt: Date?, readAt: Date?, language: String?) {
+    public init(id: String?, thumbnail: String?, type: String?, status: String?, message: String?, description: String?, iosUrl: String?, url: String?, userId: String?, createdAt: Date?, readAt: Date?, language: String?, meetingId: String?) {
         self.id = id
         self.thumbnail = thumbnail
         self.type = type
@@ -39,6 +40,7 @@ public struct NotificationData: Codable, Hashable {
         self.createdAt = createdAt
         self.readAt = readAt
         self.language = language
+        self.meetingId = meetingId
     }
 }
 

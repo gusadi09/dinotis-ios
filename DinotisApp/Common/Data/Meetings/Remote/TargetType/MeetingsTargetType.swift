@@ -28,6 +28,8 @@ enum MeetingsTargetType {
     case editMeeting(String, MeetingForm)
     case deleteMeeting(String)
     case checkMeetingEnd(String)
+    case collaborationMeetingDetail(String)
+    case approveInvitation(Bool, String)
 }
 
 extension MeetingsTargetType: DinotisTargetType, AccessTokenAuthorizable {
@@ -119,7 +121,13 @@ extension MeetingsTargetType: DinotisTargetType, AccessTokenAuthorizable {
             return [:]
 		case .startMeeting(_):
 			return [:]
-		}
+        case .collaborationMeetingDetail(_):
+            return [:]
+        case .approveInvitation(let bool, _):
+            return [
+                "isApproved": bool
+            ]
+        }
     }
 
     var authorizationType: AuthorizationType? {
@@ -150,7 +158,11 @@ extension MeetingsTargetType: DinotisTargetType, AccessTokenAuthorizable {
 			return JSONEncoding.default
 		case .startMeeting(_):
 			return URLEncoding.default
-		}
+        case .collaborationMeetingDetail(_):
+            return URLEncoding.default
+        case .approveInvitation(_, _):
+            return JSONEncoding.default
+        }
     }
 
     var task: Task {
@@ -181,7 +193,11 @@ extension MeetingsTargetType: DinotisTargetType, AccessTokenAuthorizable {
 			return "/meetings"
 		case .startMeeting(let meetingId):
 			return "/meetings/\(meetingId)/start"
-		}
+        case .collaborationMeetingDetail(let meetingId):
+            return "/meetings/\(meetingId)/collaborations"
+        case .approveInvitation(_, let string):
+            return "/meetings/\(string)/collaboration/approve"
+        }
     }
 
     var method: Moya.Method {
@@ -208,6 +224,10 @@ extension MeetingsTargetType: DinotisTargetType, AccessTokenAuthorizable {
 			return .post
 		case .startMeeting(_):
 			return .patch
-		}
+        case .collaborationMeetingDetail(_):
+            return .get
+        case .approveInvitation(_, _):
+            return .post
+        }
     }
 }

@@ -18,6 +18,7 @@ public struct DinotisPrimaryButton: View {
 
 	private let action: () -> Void
 	private let textColor: Color
+    private let height: CGFloat?
 	private let bgColor: Color
 	private let text: String
 	private let type: ButtonType
@@ -25,12 +26,14 @@ public struct DinotisPrimaryButton: View {
 	public init(
 		text: String,
 		type: ButtonType,
+        height: CGFloat? = nil,
 		textColor: Color,
 		bgColor: Color,
 		_ action: @escaping () -> Void
 	) {
 		self.text = text
 		self.bgColor = bgColor
+        self.height = height
 		self.textColor = textColor
 		self.action = action
 		self.type = type
@@ -39,62 +42,128 @@ public struct DinotisPrimaryButton: View {
 	public var body: some View {
 		switch type {
 		case .wrappedContent:
-			Button(action: action) {
-				Text(text)
-					.font(.robotoBold(size: 14))
-					.foregroundColor(textColor)
-					.padding()
-					.background(
-						RoundedRectangle(cornerRadius: 10)
-							.foregroundColor(bgColor)
-					)
-			}
-			.buttonStyle(.plain)
+            if let height = height {
+                Button(action: action) {
+                    Text(text)
+                        .font(.robotoBold(size: 14))
+                        .foregroundColor(textColor)
+                        .padding(.horizontal)
+                        .frame(height: height)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundColor(bgColor)
+                        )
+                }
+                .buttonStyle(.plain)
+            } else {
+                Button(action: action) {
+                    Text(text)
+                        .font(.robotoBold(size: 14))
+                        .foregroundColor(textColor)
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundColor(bgColor)
+                        )
+                }
+                .buttonStyle(.plain)
+            }
 
 		case .adaptiveScreen:
-			Button(action: action) {
-				HStack {
-					Spacer()
-
-					Text(text)
-						.font(.robotoBold(size: 14))
-						.foregroundColor(textColor)
-
-					Spacer()
-				}
-				.padding()
-				.background(
-					RoundedRectangle(cornerRadius: 10)
-						.foregroundColor(bgColor)
-				)
-			}
-			.buttonStyle(.plain)
+            if let height = height {
+                Button(action: action) {
+                    HStack {
+                        Spacer()
+                        
+                        Text(text)
+                            .font(.robotoBold(size: 14))
+                            .foregroundColor(textColor)
+                        
+                        Spacer()
+                    }
+                    .padding(.horizontal)
+                    .frame(height: height)
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .foregroundColor(bgColor)
+                    )
+                }
+                .buttonStyle(.plain)
+            } else {
+                Button(action: action) {
+                    HStack {
+                        Spacer()
+                        
+                        Text(text)
+                            .font(.robotoBold(size: 14))
+                            .foregroundColor(textColor)
+                        
+                        Spacer()
+                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .foregroundColor(bgColor)
+                    )
+                }
+                .buttonStyle(.plain)
+            }
 
 		case .mini:
-			Button(action: action) {
-				Text(text)
-					.font(.robotoBold(size: 12))
-					.foregroundColor(textColor)
-					.padding(10)
-					.background(
-						RoundedRectangle(cornerRadius: 10)
-							.foregroundColor(bgColor)
-					)
-			}
-			.buttonStyle(.plain)
+            if let height = height {
+                Button(action: action) {
+                    Text(text)
+                        .font(.robotoBold(size: 12))
+                        .foregroundColor(textColor)
+                        .padding(.horizontal, 10)
+                        .frame(height: height)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundColor(bgColor)
+                        )
+                }
+                .buttonStyle(.plain)
+            } else {
+                Button(action: action) {
+                    Text(text)
+                        .font(.robotoBold(size: 12))
+                        .foregroundColor(textColor)
+                        .padding(10)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundColor(bgColor)
+                        )
+                }
+                .buttonStyle(.plain)
+            }
+            
 		case .fixed(let width):
-			Button(action: action) {
-				Text(text)
-					.font(.robotoBold(size: 14))
-					.foregroundColor(textColor)
-					.padding()
-					.frame(width: width)
-					.background(
-						RoundedRectangle(cornerRadius: 10)
-							.foregroundColor(bgColor)
-					)
-			}
-			.buttonStyle(.plain)
+            if let height = height {
+                Button(action: action) {
+                    Text(text)
+                        .font(.robotoBold(size: 14))
+                        .foregroundColor(textColor)
+                        .frame(width: width, height: height)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundColor(bgColor)
+                        )
+                }
+                .buttonStyle(.plain)
+            } else {
+                Button(action: action) {
+                    Text(text)
+                        .font(.robotoBold(size: 14))
+                        .foregroundColor(textColor)
+                        .padding(.vertical)
+                        .frame(width: width)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundColor(bgColor)
+                        )
+                }
+                .buttonStyle(.plain)
+            }
 		}
 
 	}

@@ -13,6 +13,7 @@ struct TalentDetailScheduleCardView: View {
 	@Binding var data: DetailMeeting
 	
 	@State var isShowMenu = false
+    @State var isShowCollabList = false
 	
 	var onTapEdit: (() -> Void)
 	
@@ -147,13 +148,13 @@ struct TalentDetailScheduleCardView: View {
 					Text(data.title ?? "")
                         .font(.robotoBold(size: 14))
 						.foregroundColor(.black)
-					
-					Text(data.description ?? "")
-						.font(.robotoRegular(size: 12))
-						.foregroundColor(.black)
-						.padding(.bottom, 10)
-				}
-				
+                    
+                    Text(data.description ?? "")
+                        .font(.robotoRegular(size: 12))
+                        .foregroundColor(.black)
+                        .padding(.bottom, 10)
+                }
+                
 				HStack(spacing: 10) {
 					Image("ic-calendar")
 						.resizable()
@@ -189,57 +190,121 @@ struct TalentDetailScheduleCardView: View {
 					}
 				}
 				
-				VStack(alignment: .leading, spacing: 20) {
-					HStack(spacing: 10) {
-						Image("ic-people-circle")
-							.resizable()
-							.scaledToFit()
-							.frame(height: 18)
-						
-						Text("\(String.init((data.participants).orZero()))/\(data.slots.orZero()) \(NSLocalizedString("participant", comment: ""))")
-							.font(.robotoRegular(size: 12))
-							.foregroundColor(.black)
-						
-						if data.slots.orZero() > 1 && !(data.isLiveStreaming ?? false) {
-							Text(NSLocalizedString("group", comment: ""))
-								.font(.robotoRegular(size: 12))
-								.foregroundColor(.black)
-								.padding(.vertical, 5)
-								.padding(.horizontal)
-								.background(Color("btn-color-1"))
-								.clipShape(Capsule())
-								.overlay(
-									Capsule()
-										.stroke(Color("btn-stroke-1"), lineWidth: 1.0)
-								)
-							
-						} else if data.isLiveStreaming ?? false {
-							Text(LocaleText.liveStreamText)
-								.font(.robotoRegular(size: 12))
-								.foregroundColor(.black)
-								.padding(.vertical, 5)
-								.padding(.horizontal)
-								.background(Color("btn-color-1"))
-								.clipShape(Capsule())
-								.overlay(
-									Capsule()
-										.stroke(Color("btn-stroke-1"), lineWidth: 1.0)
-								)
-						} else {
-							Text(NSLocalizedString("private", comment: ""))
-								.font(.robotoRegular(size: 12))
-								.foregroundColor(.black)
-								.padding(.vertical, 5)
-								.padding(.horizontal)
-								.background(Color("btn-color-1"))
-								.clipShape(Capsule())
-								.overlay(
-									Capsule()
-										.stroke(Color("btn-stroke-1"), lineWidth: 1.0)
-								)
-						}
-					}
-				}
+                VStack(alignment: .leading, spacing: 20) {
+                    HStack(spacing: 10) {
+                        Image("ic-people-circle")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 18)
+                        
+                        Text("\(String.init((data.participants).orZero()))/\(data.slots.orZero()) \(NSLocalizedString("participant", comment: ""))")
+                            .font(.robotoRegular(size: 12))
+                            .foregroundColor(.black)
+                        
+                        if data.slots.orZero() > 1 && !(data.isLiveStreaming ?? false) {
+                            Text(NSLocalizedString("group", comment: ""))
+                                .font(.robotoRegular(size: 12))
+                                .foregroundColor(.black)
+                                .padding(.vertical, 5)
+                                .padding(.horizontal)
+                                .background(Color("btn-color-1"))
+                                .clipShape(Capsule())
+                                .overlay(
+                                    Capsule()
+                                        .stroke(Color("btn-stroke-1"), lineWidth: 1.0)
+                                )
+                            
+                        } else if data.isLiveStreaming ?? false {
+                            Text(LocaleText.liveStreamText)
+                                .font(.robotoRegular(size: 12))
+                                .foregroundColor(.black)
+                                .padding(.vertical, 5)
+                                .padding(.horizontal)
+                                .background(Color("btn-color-1"))
+                                .clipShape(Capsule())
+                                .overlay(
+                                    Capsule()
+                                        .stroke(Color("btn-stroke-1"), lineWidth: 1.0)
+                                )
+                        } else {
+                            Text(NSLocalizedString("private", comment: ""))
+                                .font(.robotoRegular(size: 12))
+                                .foregroundColor(.black)
+                                .padding(.vertical, 5)
+                                .padding(.horizontal)
+                                .background(Color("btn-color-1"))
+                                .clipShape(Capsule())
+                                .overlay(
+                                    Capsule()
+                                        .stroke(Color("btn-stroke-1"), lineWidth: 1.0)
+                                )
+                        }
+                    }
+                }
+                
+                if !(data.meetingCollaborations ?? []).isEmpty {
+                    VStack(alignment: .center, spacing: 15) {
+                        Capsule()
+                            .frame(height: 1)
+                            .foregroundColor(.gray)
+                            .opacity(0.2)
+                        
+                        HStack {
+                            Text(NSLocalizedString("detail_participant_label", comment: ""))
+                                .font(.robotoBold(size: 12))
+                                .foregroundColor(.black)
+                            
+                            Spacer()
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 10) {
+                            ForEach((data.meetingCollaborations ?? []).prefix(3), id: \.id) { item in
+                                HStack(spacing: 10) {
+                                    ImageLoader(url: (item.user?.profilePhoto).orEmpty(), width: 40, height: 40)
+                                        .frame(width: 40, height: 40)
+                                        .clipShape(Circle())
+                                    
+                                    HStack(spacing: 5) {
+                                        Text((item.user?.name).orEmpty())
+                                            .lineLimit(1)
+                                            .font(.robotoBold(size: 14))
+                                        
+                                        if item.declinedAt != nil && item.approvedAt == nil {
+                                            Text("(\(LocalizableText.rejectedText))")
+                                                .font(.robotoBold(size: 14))
+                                                .lineLimit(1)
+                                                .foregroundColor(.red)
+                                        } else if item.declinedAt == nil && item.approvedAt != nil {
+                                            Text("(\(LocalizableText.acceptedCollab))")
+                                                .font(.robotoBold(size: 14))
+                                                .lineLimit(1)
+                                                .foregroundColor(.DinotisDefault.green)
+                                        } else {
+                                            Text("(\(LocalizableText.waitingText))")
+                                                .font(.robotoBold(size: 14))
+                                                .lineLimit(1)
+                                                .foregroundColor(.DinotisDefault.orange)
+                                        }
+                                    }
+                                    
+                                    Spacer()
+                                }
+                            }
+                            
+                            if (data.meetingCollaborations ?? []).count > 3 {
+                                Button {
+                                    isShowCollabList.toggle()
+                                } label: {
+                                    Text(LocalizableText.searchSeeAllLabel)
+                                        .font(.robotoBold(size: 12))
+                                        .foregroundColor(.DinotisDefault.primary)
+                                        .underline()
+                                }
+                            }
+                        }
+                    }
+                    .padding(.top, 8)
+                }
 				
 				VStack(alignment: .center, spacing: 15) {
 					Capsule()
@@ -255,7 +320,7 @@ struct TalentDetailScheduleCardView: View {
 						}
 					} else {
 						HStack {
-							Text(NSLocalizedString("detail_participant_label", comment: ""))
+                            Text(LocalizableText.participant)
 								.font(.robotoBold(size: 12))
 								.foregroundColor(.black)
 							
@@ -286,13 +351,6 @@ struct TalentDetailScheduleCardView: View {
                                         .isHidden(true, remove: true)
                                     }
                                 }
-                                
-                                if item.id.wrappedValue != data.participantDetails.last?.id {
-                                    Capsule()
-                                        .frame(height: 1)
-                                        .foregroundColor(.gray)
-                                        .opacity(0.2)
-                                }
                             }
                         }
                         
@@ -313,6 +371,22 @@ struct TalentDetailScheduleCardView: View {
 			.padding()
 
 		}
+        .sheet(isPresented: $isShowCollabList, content: {
+            if #available(iOS 16.0, *) {
+                SelectedCollabCreatorView(isEdit: false, arrUsername: .constant((data.meetingCollaborations ?? []).compactMap({
+                    $0.username
+                })), arrTalent: .constant(data.meetingCollaborations ?? [])) {
+                    isShowCollabList = false
+                }
+                .presentationDetents([.medium, .large])
+            } else {
+                SelectedCollabCreatorView(isEdit: false, arrUsername: .constant((data.meetingCollaborations ?? []).compactMap({
+                    $0.username
+                })), arrTalent: .constant(data.meetingCollaborations ?? [])) {
+                    isShowCollabList = false
+                }
+            }
+        })
 		.onTapGesture {
 			isShowMenu = false
 		}

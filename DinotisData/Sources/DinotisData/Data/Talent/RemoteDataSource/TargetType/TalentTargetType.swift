@@ -8,12 +8,12 @@
 import Foundation
 import Moya
 
-enum TalentTargetType {
-	case getCrowdedTalent(TalentQueryParams)
-	case getRecommendationTalent(TalentQueryParams)
-	case getSearchedTalent(TalentQueryParams)
+public enum TalentTargetType {
+	case getCrowdedTalent(TalentsRequest)
+	case getRecommendationTalent(TalentsRequest)
+	case getSearchedTalent(TalentsRequest)
 	case getTalentDetail(String)
-	case sendRequestSchedule(String, RequestScheduleBody)
+	case sendRequestSchedule(String, SendScheduleRequest)
 }
 
 extension TalentTargetType: DinotisTargetType, AccessTokenAuthorizable {
@@ -41,7 +41,7 @@ extension TalentTargetType: DinotisTargetType, AccessTokenAuthorizable {
 				}
     }
     
-    var authorizationType: AuthorizationType? {
+    public var authorizationType: AuthorizationType? {
         return .bearer
     }
     
@@ -60,11 +60,11 @@ extension TalentTargetType: DinotisTargetType, AccessTokenAuthorizable {
 				}
     }
     
-    var task: Task {
+    public var task: Task {
         return .requestParameters(parameters: parameters, encoding: parameterEncoding)
     }
     
-    var path: String {
+    public var path: String {
         switch self {
         case .getCrowdedTalent:
             return "/talents/trending"
@@ -79,7 +79,7 @@ extension TalentTargetType: DinotisTargetType, AccessTokenAuthorizable {
 		}
 	}
 	
-    var sampleData: Data {
+    public var sampleData: Data {
         switch self {
         case .getCrowdedTalent(_):
             return Data()
@@ -103,7 +103,7 @@ extension TalentTargetType: DinotisTargetType, AccessTokenAuthorizable {
 				}
     }
     
-    var method: Moya.Method {
+    public var method: Moya.Method {
 			switch self {
 			case .getCrowdedTalent:
 				return .get

@@ -16,6 +16,8 @@ struct RateCardServiceBookingView: View {
 
 	@ObservedObject var viewModel: RateCardServiceBookingFormViewModel
     @Environment(\.presentationMode) var presentationMode
+    
+    @Binding var mainTabValue: TabRoute
 
     var body: some View {
 		ZStack {
@@ -27,7 +29,7 @@ struct RateCardServiceBookingView: View {
                 case: /HomeRouting.bookingInvoice,
                 destination: { viewModel in
                     UserInvoiceBookingView(
-                        viewModel: viewModel.wrappedValue
+                        viewModel: viewModel.wrappedValue, mainTabValue: $mainTabValue
                     )
                 },
                 onNavigate: {_ in},
@@ -40,7 +42,7 @@ struct RateCardServiceBookingView: View {
                 unwrapping: $viewModel.route,
                 case: /HomeRouting.paymentMethod,
                 destination: {viewModel in
-                    PaymentMethodView(viewModel: viewModel.wrappedValue)
+                    PaymentMethodView(viewModel: viewModel.wrappedValue, mainTabValue: $mainTabValue)
                 },
                 onNavigate: {_ in},
                 label: {
@@ -1005,6 +1007,6 @@ extension RateCardServiceBookingView {
 
 struct RateCardServiceBookingView_Previews: PreviewProvider {
     static var previews: some View {
-        RateCardServiceBookingView(viewModel: RateCardServiceBookingFormViewModel(backToRoot: {}, backToHome: {}))
+        RateCardServiceBookingView(viewModel: RateCardServiceBookingFormViewModel(backToRoot: {}, backToHome: {}), mainTabValue: .constant(.agenda))
     }
 }
