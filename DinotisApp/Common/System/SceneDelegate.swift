@@ -15,27 +15,56 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	var window: UIWindow?
 	
 	@ObservedObject var state = StateObservable.shared
+    
+    @State var isOutdated = false
+    
+    private let versionCheckingUseCase: CheckingVersionUseCase = CheckingVersionDefaultUseCase()
+    
+    func onCheckingVersion(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        Task {
+            await checkingVersion(scene, willConnectTo: session, options: connectionOptions)
+        }
+    }
+    
+    func checkingVersion(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) async {
+        
+        let result = await versionCheckingUseCase.execute()
+        
+        switch result {
+        case .success(let success):
+            DispatchQueue.main.async { [weak self] in
+                guard let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String else { return }
+                
+                if let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext {
+                    // Create the SwiftUI view and set the context as the value for the managedObjectContext environment keyPath.
+                    // Add `@Environment(\.managedObjectContext)` in the views that will need the context.
+                    
+                    let contentView = ContentView().environment(\.managedObjectContext, context)
+                    
+                    // Use a UIHostingController as window root view controller.
+                    if let windowScene = scene as? UIWindowScene {
+                        let window = UIWindow(windowScene: windowScene)
+                        if success.version.orEmpty().compare(appVersion, options: .numeric) == .orderedDescending {
+                            window.rootViewController = UIHostingController(rootView: OutdatedVersionView())
+                        } else {
+                            window.rootViewController = UIHostingController(rootView: contentView)
+                        }
+                        self?.window = window
+                        if #available(iOS 13.0, *) {
+                            self?.window!.overrideUserInterfaceStyle = .light
+                        }
+                        window.makeKeyAndVisible()
+                    }
+                }
+            }
+        case .failure:
+            break
+        }
+    }
 	
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 		
-		// Get the managed object context from the shared persistent container.
-		if let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext {
-			// Create the SwiftUI view and set the context as the value for the managedObjectContext environment keyPath.
-			// Add `@Environment(\.managedObjectContext)` in the views that will need the context.
-			
-			let contentView = ContentView().environment(\.managedObjectContext, context)
-			
-			// Use a UIHostingController as window root view controller.
-			if let windowScene = scene as? UIWindowScene {
-				let window = UIWindow(windowScene: windowScene)
-				window.rootViewController = UIHostingController(rootView: contentView)
-				self.window = window
-				if #available(iOS 13.0, *) {
-					self.window!.overrideUserInterfaceStyle = .light
-				}
-				window.makeKeyAndVisible()
-			}
-		}
+        onCheckingVersion(scene, willConnectTo: session, options: connectionOptions)
 	}
 	
 	func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {

@@ -37,4 +37,6 @@ public extension Image {
     static let profileLogoutImage = Image("img-logout-profile", bundle: Bundle.module)
     
     static let videoCallBackgroundPattern = Image("video-call-pattern", bundle: .module)
+    
+    static let versionUpdateImage = Image("img-update-version", bundle: .module)
 }

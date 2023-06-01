@@ -373,3 +373,7 @@
 "declined_invitation_title" = "Kamu Menolak Ajakan Kolaborasi";
 "declined_invitation_message" = "Kamu telah menolak ajakan kolaborasi dari %@ dengan sesi '%@'";
 "collaborator_speaker_title" = "Nanti kamu akan ngobrol sama";
+
+"outdated_version_update_text" = "Perbarui Sekarang";
+"outdated_version_subtitle_content" = "Pastikan bahwa Anda telah menginstal versi terbaru aplikasi kami untuk meningkatkan pengalaman anda saat menggunakan layanan kami.";
+"outdated_version_title_content" = "Yuk! Update Aplikasi Dinotis Kamu";

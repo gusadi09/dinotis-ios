@@ -80,7 +80,7 @@ final class UserTypeViewModel: ObservableObject {
 		} else if !isTokenEmpty &&
 					((stateObservable.isVerified == "VerifiedNoName") &&
 					 stateObservable.userType != 0) {
-            let viewModel = await BiodataViewModel(backToRoot: { self.route = nil })
+            let viewModel = BiodataViewModel(backToRoot: { self.route = nil })
 
 			DispatchQueue.main.async { [weak self] in
 				self?.route = .biodataUser(viewModel: viewModel)
