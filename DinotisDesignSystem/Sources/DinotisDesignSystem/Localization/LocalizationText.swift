@@ -1655,4 +1655,22 @@ public enum LocalizableText {
         bundle: .module,
         comment: "collaborator speaker title for schedule detail"
     )
+    
+    public static let outdatedVersionUpdateNow = NSLocalizedString(
+        "outdated_version_update_text",
+        bundle: .module,
+        comment: "update now label for outdated version view"
+    )
+    
+    public static let outdatedVersionSubtitleContent = NSLocalizedString(
+        "outdated_version_subtitle_content",
+        bundle: .module,
+        comment: "subtitle content of outdated version view"
+    )
+    
+    public static let outdatedVersionTitleContent = NSLocalizedString(
+        "outdated_version_title_content",
+        bundle: .module,
+        comment: "title content of outdated version view"
+    )
 }

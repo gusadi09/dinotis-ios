@@ -231,6 +231,7 @@
 		ECCEFEA8277E9DD100E9B0AD /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = ECCEFEA7277E9DD100E9B0AD /* Moya */; };
 		ECCEFEAA277E9DD100E9B0AD /* ReactiveMoya in Frameworks */ = {isa = PBXBuildFile; productRef = ECCEFEA9277E9DD100E9B0AD /* ReactiveMoya */; };
 		ECCEFEAC277E9DD100E9B0AD /* RxMoya in Frameworks */ = {isa = PBXBuildFile; productRef = ECCEFEAB277E9DD100E9B0AD /* RxMoya */; };
+		ECD453B62A272A3000338D05 /* OutdatedVersionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD453B52A272A3000338D05 /* OutdatedVersionView.swift */; };
 		ECD4FC8729C4B93B00FBBC01 /* dinotis-white-lottie-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = ECD4FC8629C4B93A00FBBC01 /* dinotis-white-lottie-loading.json */; };
 		ECD51FAA28A0C25A000B1F6C /* RemoteParticipantManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD51FA528A0C25A000B1F6C /* RemoteParticipantManager.swift */; };
 		ECD51FAB28A0C25A000B1F6C /* TrackName.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD51FA628A0C25A000B1F6C /* TrackName.swift */; };
@@ -587,6 +588,7 @@
 		ECC110C026E9BBE1007FF617 /* TalentTransactionFeeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalentTransactionFeeView.swift; sourceTree = "<group>"; };
 		ECC110C326E9D264007FF617 /* UserInvoiceBookingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInvoiceBookingView.swift; sourceTree = "<group>"; };
 		ECC9C38727C7DBA500495749 /* UserHomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHomeViewModel.swift; sourceTree = "<group>"; };
+		ECD453B52A272A3000338D05 /* OutdatedVersionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutdatedVersionView.swift; sourceTree = "<group>"; };
 		ECD4FC8629C4B93A00FBBC01 /* dinotis-white-lottie-loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "dinotis-white-lottie-loading.json"; sourceTree = "<group>"; };
 		ECD51FA528A0C25A000B1F6C /* RemoteParticipantManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteParticipantManager.swift; sourceTree = "<group>"; };
 		ECD51FA628A0C25A000B1F6C /* TrackName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackName.swift; sourceTree = "<group>"; };
@@ -2052,6 +2054,7 @@
 		ECBA142E26B79149004D452C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				ECD453B32A272A1100338D05 /* OutdatedVersion */,
 				EC6D0E5A298306BF0016C45D /* TabView */,
 				EC2AFDD726BAAE35005260FD /* NotificationView */,
 				EC722262295014B800C05A1B /* FollowedCreator */,
@@ -2225,6 +2228,22 @@
 				EC28759B27D1CB4C0093E9C9 /* ViewModel */,
 			);
 			path = UserInvoiceBooking;
+			sourceTree = "<group>";
+		};
+		ECD453B32A272A1100338D05 /* OutdatedVersion */ = {
+			isa = PBXGroup;
+			children = (
+				ECD453B42A272A2200338D05 /* View */,
+			);
+			path = OutdatedVersion;
+			sourceTree = "<group>";
+		};
+		ECD453B42A272A2200338D05 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				ECD453B52A272A3000338D05 /* OutdatedVersionView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		ECD51FA428A0C25A000B1F6C /* Room */ = {
@@ -3287,6 +3306,7 @@
 				F67334C82908EE02006C1ADF /* BundlingViewModel.swift in Sources */,
 				EC6767A128C765D100C72B58 /* SelectChannelView.swift in Sources */,
 				EC1C145026D8B4EF00EC66E0 /* TopBarView.swift in Sources */,
+				ECD453B62A272A3000338D05 /* OutdatedVersionView.swift in Sources */,
 				EC6A7594291976070030BC41 /* TalentWithdrawalViewModel.swift in Sources */,
 				F665C44028C9C93500D669A8 /* PrivateRoomManager.swift in Sources */,
 				F63A09A3289CBE6A008C7815 /* ChatMessage.swift in Sources */,
