@@ -8,7 +8,9 @@
 import Foundation
 
 enum PrimaryRouting {
+    case onboarding
 	case userType
+    case outdatedVersion
 	case userLogin(viewModel: LoginViewModel)
 	case talentLogin(viewModel: LoginViewModel)
 	case verificationOtp(viewModel: OtpVerificationViewModel)

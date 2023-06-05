@@ -13,6 +13,7 @@ public let messageAppId = "4b00a6c2950b4fa2bdd207812108f303"
 public enum EnvironmentApi: String {
 	case production = "production"
 	case development = "development"
+    case staging = "staging"
 	
 	public var baseURL: String {
 		switch self {
@@ -20,6 +21,8 @@ public enum EnvironmentApi: String {
 			return "https://api.dinotis.com/api/v1"
 		case .development:
 			return "https://dev.api.dinotis.com/api/v1"
+        case .staging:
+            return "https://stag.api.dinotis.com/api/v1"
 		}
 	}
 
@@ -29,6 +32,8 @@ public enum EnvironmentApi: String {
 			return "824ac969-01da-4c2a-b146-a91e6d2ea962"
 		case .development:
 			return "c15c965b-3fbc-4f71-85af-ec02b2b51169"
+        case .staging:
+            return "c15c965b-3fbc-4f71-85af-ec02b2b51169"
 		}
 	}
 	
@@ -38,6 +43,8 @@ public enum EnvironmentApi: String {
 			return "https://app.dinotis.com/"
 		case .development:
 			return "https://dev.app.dinotis.com/"
+        case .staging:
+            return "https://stag.app.dinotis.com/"
 		}
 	}
 	
@@ -47,6 +54,8 @@ public enum EnvironmentApi: String {
 			return "app.dinotis.com/"
 		case .development:
 			return "dev.app.dinotis.com/"
+        case .staging:
+            return "stag.app.dinotis.com/"
 		}
 	}
 
@@ -56,6 +65,8 @@ public enum EnvironmentApi: String {
 			return "https://dinotis-sync.asia-southeast1.firebasedatabase.app"
 		case .development:
 			return "https://dinotis-sync-dev.asia-southeast1.firebasedatabase.app"
+        case .staging:
+            return "https://dinotis-sync-dev.asia-southeast1.firebasedatabase.app"
 		}
 	}
 }
