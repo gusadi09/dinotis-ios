@@ -126,6 +126,10 @@ struct TabViewContainer: View {
                 viewModel.routeToInvoice(id: state.bookId)
             }
             
+            NotificationCenter.default.addObserver(forName: .audienceSuccesPayment, object: nil, queue: .main) { _ in
+                viewModel.routeToInvoiceBooking(id: state.bookId)
+            }
+            
             NotificationCenter.default.addObserver(forName: .audienceProfile, object: nil, queue: .main) { _ in
                 viewModel.route = nil
                 viewModel.tab = .profile
