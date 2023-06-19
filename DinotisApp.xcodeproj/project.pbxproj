@@ -18,6 +18,7 @@
 		EC04ED3C26C8D83E00E0D473 /* UserHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC04ED3B26C8D83E00E0D473 /* UserHomeView.swift */; };
 		EC04ED4426C8FF3B00E0D473 /* UserScheduleCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC04ED4326C8FF3B00E0D473 /* UserScheduleCardView.swift */; };
 		EC04ED4926C923B900E0D473 /* SuggestCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC04ED4826C923B900E0D473 /* SuggestCardView.swift */; };
+		EC08A9AC2A3D8F1D001D3A28 /* DyteiOSCore in Frameworks */ = {isa = PBXBuildFile; productRef = EC08A9AB2A3D8F1D001D3A28 /* DyteiOSCore */; };
 		EC0FE33127152953006CABA8 /* TalentMeeting.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0FE33027152953006CABA8 /* TalentMeeting.swift */; };
 		EC11CB76270F09CF003A622A /* UserBookings.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC11CB75270F09CF003A622A /* UserBookings.swift */; };
 		EC1256722849299400A82DB7 /* QGrid in Frameworks */ = {isa = PBXBuildFile; productRef = EC1256712849299400A82DB7 /* QGrid */; };
@@ -733,6 +734,7 @@
 				ECCE52FA2784BBB100B67CC8 /* CurrencyText in Frameworks */,
 				EC47EE75297538A100D7D86D /* DinotisData in Frameworks */,
 				EC4E500227FC0B34009D66FF /* Lottie in Frameworks */,
+				EC08A9AC2A3D8F1D001D3A28 /* DyteiOSCore in Frameworks */,
 				EC67E2A82936FBC2002BEC4A /* DinotisDesignSystem in Frameworks */,
 				ECCEFEA6277E9DD100E9B0AD /* CombineMoya in Frameworks */,
 				ECCEFEA8277E9DD100E9B0AD /* Moya in Frameworks */,
@@ -2070,7 +2072,7 @@
 				F67334BC2908ED62006C1ADF /* BundlingForm */,
 				F67334B52908EC26006C1ADF /* TalentCreateBundling */,
 				F61E53E028CB4FE2006594B4 /* TwilioPrivateVideoCall */,
-				F63A095F289BB742008C7815 /* TwilioGroupVideoCall */,
+				F63A095F289BB742008C7815 /* GroupVideoCall */,
 				ECDD760526C8077000C50956 /* Home */,
 				ECBCA28D2860753900EB1656 /* CoinHistory */,
 				EC9C4E2A2813FCEB00837469 /* PreviewTalent */,
@@ -2413,13 +2415,13 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
-		F63A095F289BB742008C7815 /* TwilioGroupVideoCall */ = {
+		F63A095F289BB742008C7815 /* GroupVideoCall */ = {
 			isa = PBXGroup;
 			children = (
 				EC2A510F28C7099800C717B9 /* View */,
 				F63A0961289BB763008C7815 /* ViewModel */,
 			);
-			path = TwilioGroupVideoCall;
+			path = GroupVideoCall;
 			sourceTree = "<group>";
 		};
 		F63A0961289BB763008C7815 /* ViewModel */ = {
@@ -2964,6 +2966,7 @@
 				EC722260294EFFA700C05A1B /* WaterfallGrid */,
 				EC47EE74297538A100D7D86D /* DinotisData */,
 				ECC1EE7C29EA61C400C9B402 /* Shimmer */,
+				EC08A9AB2A3D8F1D001D3A28 /* DyteiOSCore */,
 			);
 			productName = DinotisApp;
 			productReference = ECBA13E226B78F77004D452C /* DinotisDev.app */;
@@ -3018,6 +3021,7 @@
 				ECB0A26828FED3210050EC71 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				EC72225F294EFFA600C05A1B /* XCRemoteSwiftPackageReference "WaterfallGrid" */,
 				ECC1EE7B29EA61C400C9B402 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
+				EC08A9AA2A3D8F1D001D3A28 /* XCRemoteSwiftPackageReference "DyteMobileCoreiOS" */,
 			);
 			productRefGroup = ECBA13E326B78F77004D452C /* Products */;
 			projectDirPath = "";
@@ -3974,6 +3978,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		EC08A9AA2A3D8F1D001D3A28 /* XCRemoteSwiftPackageReference "DyteMobileCoreiOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dyte-in/DyteMobileCoreiOS.git";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 0.4.4;
+			};
+		};
 		EC1256702849299300A82DB7 /* XCRemoteSwiftPackageReference "QGrid" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Q-Mobile/QGrid.git";
@@ -4145,6 +4157,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		EC08A9AB2A3D8F1D001D3A28 /* DyteiOSCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EC08A9AA2A3D8F1D001D3A28 /* XCRemoteSwiftPackageReference "DyteMobileCoreiOS" */;
+			productName = DyteiOSCore;
+		};
 		EC1256712849299400A82DB7 /* QGrid */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = EC1256702849299300A82DB7 /* XCRemoteSwiftPackageReference "QGrid" */;
