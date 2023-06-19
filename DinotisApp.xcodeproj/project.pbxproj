@@ -19,6 +19,8 @@
 		EC04ED4426C8FF3B00E0D473 /* UserScheduleCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC04ED4326C8FF3B00E0D473 /* UserScheduleCardView.swift */; };
 		EC04ED4926C923B900E0D473 /* SuggestCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC04ED4826C923B900E0D473 /* SuggestCardView.swift */; };
 		EC08A9AC2A3D8F1D001D3A28 /* DyteiOSCore in Frameworks */ = {isa = PBXBuildFile; productRef = EC08A9AB2A3D8F1D001D3A28 /* DyteiOSCore */; };
+		EC08A9B02A402070001D3A28 /* DyteGroupVideoCallViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC08A9AF2A402070001D3A28 /* DyteGroupVideoCallViewModel.swift */; };
+		EC08A9B32A402BAD001D3A28 /* DyteGroupVideoCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC08A9B22A402BAD001D3A28 /* DyteGroupVideoCall.swift */; };
 		EC0FE33127152953006CABA8 /* TalentMeeting.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0FE33027152953006CABA8 /* TalentMeeting.swift */; };
 		EC11CB76270F09CF003A622A /* UserBookings.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC11CB75270F09CF003A622A /* UserBookings.swift */; };
 		EC1256722849299400A82DB7 /* QGrid in Frameworks */ = {isa = PBXBuildFile; productRef = EC1256712849299400A82DB7 /* QGrid */; };
@@ -394,6 +396,8 @@
 		EC04ED3B26C8D83E00E0D473 /* UserHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHomeView.swift; sourceTree = "<group>"; };
 		EC04ED4326C8FF3B00E0D473 /* UserScheduleCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserScheduleCardView.swift; sourceTree = "<group>"; };
 		EC04ED4826C923B900E0D473 /* SuggestCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestCardView.swift; sourceTree = "<group>"; };
+		EC08A9AF2A402070001D3A28 /* DyteGroupVideoCallViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DyteGroupVideoCallViewModel.swift; sourceTree = "<group>"; };
+		EC08A9B22A402BAD001D3A28 /* DyteGroupVideoCall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DyteGroupVideoCall.swift; sourceTree = "<group>"; };
 		EC0FE33027152953006CABA8 /* TalentMeeting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalentMeeting.swift; sourceTree = "<group>"; };
 		EC11CB75270F09CF003A622A /* UserBookings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserBookings.swift; sourceTree = "<group>"; };
 		EC1C144B26D893EB00EC66E0 /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
@@ -868,6 +872,31 @@
 				ECBCA2A4286192DD00EB1656 /* CoinHistoryCard.swift */,
 			);
 			path = Card;
+			sourceTree = "<group>";
+		};
+		EC08A9AD2A402054001D3A28 /* DyteGroupVideoCall */ = {
+			isa = PBXGroup;
+			children = (
+				EC08A9B12A402B98001D3A28 /* View */,
+				EC08A9AE2A402060001D3A28 /* ViewModel */,
+			);
+			path = DyteGroupVideoCall;
+			sourceTree = "<group>";
+		};
+		EC08A9AE2A402060001D3A28 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EC08A9AF2A402070001D3A28 /* DyteGroupVideoCallViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		EC08A9B12A402B98001D3A28 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				EC08A9B22A402BAD001D3A28 /* DyteGroupVideoCall.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		EC1C145326DD10C700EC66E0 /* AddNewBankAccount */ = {
@@ -2056,6 +2085,7 @@
 		ECBA142E26B79149004D452C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				EC08A9AD2A402054001D3A28 /* DyteGroupVideoCall */,
 				ECD453B32A272A1100338D05 /* OutdatedVersion */,
 				EC6D0E5A298306BF0016C45D /* TabView */,
 				EC2AFDD726BAAE35005260FD /* NotificationView */,
@@ -2072,7 +2102,7 @@
 				F67334BC2908ED62006C1ADF /* BundlingForm */,
 				F67334B52908EC26006C1ADF /* TalentCreateBundling */,
 				F61E53E028CB4FE2006594B4 /* TwilioPrivateVideoCall */,
-				F63A095F289BB742008C7815 /* GroupVideoCall */,
+				F63A095F289BB742008C7815 /* TwilioGroupVideoCall */,
 				ECDD760526C8077000C50956 /* Home */,
 				ECBCA28D2860753900EB1656 /* CoinHistory */,
 				EC9C4E2A2813FCEB00837469 /* PreviewTalent */,
@@ -2415,13 +2445,13 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
-		F63A095F289BB742008C7815 /* GroupVideoCall */ = {
+		F63A095F289BB742008C7815 /* TwilioGroupVideoCall */ = {
 			isa = PBXGroup;
 			children = (
 				EC2A510F28C7099800C717B9 /* View */,
 				F63A0961289BB763008C7815 /* ViewModel */,
 			);
-			path = GroupVideoCall;
+			path = TwilioGroupVideoCall;
 			sourceTree = "<group>";
 		};
 		F63A0961289BB763008C7815 /* ViewModel */ = {
@@ -3110,12 +3140,14 @@
 				F67334D62908EE30006C1ADF /* TalentCardListViewModel.swift in Sources */,
 				EC9C4E34281426AD00837469 /* RequestSchedule.swift in Sources */,
 				EC6A756229111B4C0030BC41 /* BundlingDefaultRepository.swift in Sources */,
+				EC08A9B32A402BAD001D3A28 /* DyteGroupVideoCall.swift in Sources */,
 				F63A09A5289CEC6F008C7815 /* SwiftUIPlayerView.swift in Sources */,
 				ECD51FCC28A125F0000B1F6C /* SyncUserDocument.swift in Sources */,
 				EC62576E27B7A38B0079AA10 /* String+isValidEmail.swift in Sources */,
 				EC6A96E127CDDAF900282253 /* ScheduleListViewModel.swift in Sources */,
 				EC9C4E3D281694EA00837469 /* AnnouncementView.swift in Sources */,
 				EC4763712833E2F3009EE2FB /* MeetingsRemoteDataSource.swift in Sources */,
+				EC08A9B02A402070001D3A28 /* DyteGroupVideoCallViewModel.swift in Sources */,
 				ECED4DD829F9297C00E79663 /* SelectedCollabCreatorView.swift in Sources */,
 				F686669E28A4D6620067345C /* Question.swift in Sources */,
 				EC91B3DE26CE296200C5358C /* FormScheduleTalentCardView.swift in Sources */,

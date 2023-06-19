@@ -11,7 +11,6 @@ import TwilioLivePlayer
 import Combine
 import SwiftUI
 import DinotisData
-import DyteiOSCore
 
 final class TwilioLiveStreamViewModel: ObservableObject {
 	
@@ -24,14 +23,6 @@ final class TwilioLiveStreamViewModel: ObservableObject {
 	
 	var backToRoot: (() -> Void)
 	var backToHome: (() -> Void)
-    
-    let meetingDyte = DyteiOSClientBuilder().build()
-    let meetingInfo = DyteMeetingInfoV2(
-        authToken: "",
-        enableAudio: true,
-        enableVideo: true,
-        baseUrl: "https://api.cluster.dyte.in/v2"
-    )
     
 	@Published var route: HomeRouting? = nil
 	@Published var isShowingToolbar = true
@@ -110,16 +101,6 @@ final class TwilioLiveStreamViewModel: ObservableObject {
 		self.twilioRepo = twilioRepo
 		self.meetRepository = meetRepository
 		self.meeting = meeting
-        
-        meetingDyte.doInit(dyteMeetingInfo_: meetingInfo)
-        meetingDyte.addMeetingRoomEventsListener(meetingRoomEventsListener: self)
-        meetingDyte.addParticipantEventsListener(participantEventsListener: self)
-        meetingDyte.addSelfEventsListener(selfEventsListener: self)
-        meetingDyte.addParticipantEventsListener(participantEventsListener: self)
-        meetingDyte.addChatEventsListener(chatEventsListener: self)
-        meetingDyte.addPollEventsListener(pollEventsListener: self)
-        meetingDyte.addRecordingEventsListener(recordingEventsListener: self)
-        meetingDyte.addWaitlistEventsListener(waitlistEventsListener: self)
 		
 		self.futureDate = meeting.endAt.orCurrentDate()
 	}
@@ -128,14 +109,6 @@ final class TwilioLiveStreamViewModel: ObservableObject {
         return questionData.filter({ item in
             QnASegment == 0 ? !(item.isAnswered ?? false) : (item.isAnswered ?? false)
         })
-    }
-    
-    func onJoinRoom() {
-        meetingDyte.joinRoom()
-    }
-    
-    func onLeaveRoom() {
-        meetingDyte.leaveRoom()
     }
 	
 	func routeToAfterCall() {
@@ -464,218 +437,4 @@ final class TwilioLiveStreamViewModel: ObservableObject {
 			.store(in: &cancellables)
 		
 	}
-}
-
-extension TwilioLiveStreamViewModel: DyteSelfEventsListener {
-    func onAudioDevicesUpdated() {
-        
-    }
-    
-    func onAudioUpdate(audioEnabled: Bool) {
-        
-    }
-    
-    func onMeetingRoomJoinedWithoutCameraPermission() {
-        
-    }
-    
-    func onMeetingRoomJoinedWithoutMicPermission() {
-        
-    }
-    
-    func onProximityChanged(isNear: Bool) {
-        
-    }
-    
-    func onRemovedFromMeeting() {
-        
-    }
-    
-    func onStoppedPresenting() {
-        
-    }
-    
-    func onUpdate(participant_ participant: DyteSelfParticipant) {
-        
-    }
-    
-    func onVideoUpdate(videoEnabled: Bool) {
-        
-    }
-    
-    func onWaitListStatusUpdate(waitListStatus: WaitListStatus) {
-        
-    }
-    
-    func onWebinarPresentRequestReceived() {
-        
-    }
-}
-
-extension TwilioLiveStreamViewModel: DyteParticipantEventsListener {
-    func onActiveParticipantsChanged(active: [DyteJoinedMeetingParticipant]) {
-        
-    }
-    
-    func onActiveSpeakerChanged(participant: DyteMeetingParticipant) {
-        
-    }
-    
-    func onAudioUpdate(audioEnabled: Bool, participant: DyteMeetingParticipant) {
-        
-    }
-    
-    func onNoActiveSpeaker() {
-        
-    }
-    
-    func onParticipantJoin(participant: DyteMeetingParticipant) {
-        
-    }
-    
-    func onParticipantLeave(participant: DyteMeetingParticipant) {
-        
-    }
-    
-    func onParticipantPinned(participant: DyteMeetingParticipant) {
-        
-    }
-    
-    func onParticipantUnpinned(participant: DyteMeetingParticipant) {
-        
-    }
-    
-    func onScreenShareEnded(participant: DyteMeetingParticipant) {
-        
-    }
-    
-    func onScreenShareStarted(participant: DyteMeetingParticipant) {
-        
-    }
-    
-    func onScreenSharesUpdated() {
-        
-    }
-    
-    func onUpdate(participants: DyteRoomParticipants) {
-        
-    }
-    
-    func onVideoUpdate(videoEnabled: Bool, participant: DyteMeetingParticipant) {
-        
-    }
-}
-
-extension TwilioLiveStreamViewModel: DyteMeetingRoomEventsListener {
-    func onDisconnectedFromMeetingRoom(reason: String) {
-        
-    }
-    
-    func onMeetingInitCompleted() {
-        
-    }
-    
-    func onMeetingInitFailed(exception: KotlinException) {
-        
-    }
-    
-    func onMeetingInitStarted() {
-        
-    }
-    
-    func onMeetingRoomConnectionError(errorMessage: String) {
-        
-    }
-    
-    func onMeetingRoomDisconnected() {
-        
-    }
-    
-    func onMeetingRoomJoinCompleted() {
-        
-    }
-    
-    func onMeetingRoomJoinFailed(exception: KotlinException) {
-        
-    }
-    
-    func onMeetingRoomJoinStarted() {
-        
-    }
-    
-    func onMeetingRoomLeaveCompleted() {
-        
-    }
-    
-    func onMeetingRoomLeaveStarted() {
-        
-    }
-    
-    func onMeetingRoomReconnectionFailed() {
-        
-    }
-    
-    func onReconnectedToMeetingRoom() {
-        
-    }
-    
-    func onReconnectingToMeetingRoom() {
-        
-    }
-}
-
-extension TwilioLiveStreamViewModel: DyteChatEventsListener {
-    func onChatUpdates(messages: [DyteChatMessage]) {
-        
-    }
-    
-    func onNewChatMessage(message: DyteChatMessage) {
-        
-    }
-}
-
-extension TwilioLiveStreamViewModel: DytePollEventsListener {
-    func onNewPoll(poll: DytePollMessage) {
-        
-    }
-    
-    func onPollUpdates(pollMessages: [DytePollMessage]) {
-        
-    }
-}
-
-extension TwilioLiveStreamViewModel: DyteRecordingEventsListener {
-    func onMeetingRecordingEnded() {
-        
-    }
-    
-    func onMeetingRecordingStarted() {
-        
-    }
-    
-    func onMeetingRecordingStateUpdated(state: DyteRecordingState) {
-        
-    }
-    
-    func onMeetingRecordingStopError(e: KotlinException) {
-        
-    }
-}
-
-extension TwilioLiveStreamViewModel: DyteWaitlistEventsListener {
-    func onWaitListParticipantAccepted(participant: DyteMeetingParticipant) {
-        
-    }
-    
-    func onWaitListParticipantClosed(participant: DyteMeetingParticipant) {
-        
-    }
-    
-    func onWaitListParticipantJoined(participant: DyteMeetingParticipant) {
-        
-    }
-    
-    func onWaitListParticipantRejected(participant: DyteMeetingParticipant) {
-        
-    }
 }
