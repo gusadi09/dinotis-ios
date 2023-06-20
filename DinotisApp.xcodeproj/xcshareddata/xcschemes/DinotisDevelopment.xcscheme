@@ -39,16 +39,6 @@
          </BuildableReference>
       </CodeCoverageTargets>
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EC6255F6272A9CED00FA209B"
-               BuildableName = "DinotisAppTest.xctest"
-               BlueprintName = "DinotisAppTest"
-               ReferencedContainer = "container:DinotisApp.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

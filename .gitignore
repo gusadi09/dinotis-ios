@@ -53,3 +53,6 @@ Packages
 .build/
 xcuserdata
 DerivedData/
+
+# Cocoapods
+Pods/

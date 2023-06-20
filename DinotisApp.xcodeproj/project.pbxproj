@@ -3637,6 +3637,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
+				GCC_OPTIMIZATION_LEVEL = s;
 				INFOPLIST_FILE = DinotisApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "";
 				"INFOPLIST_KEY_CFBundleDisplayName[sdk=iphoneos*]" = DinotisStag;
@@ -3651,6 +3652,7 @@
 				PRODUCT_NAME = DinotisStag;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTS_MACCATALYST = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_WORKSPACE = YES;
@@ -3821,6 +3823,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
+				GCC_OPTIMIZATION_LEVEL = s;
 				INFOPLIST_FILE = DinotisApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "";
 				"INFOPLIST_KEY_CFBundleDisplayName[sdk=iphoneos*]" = DinotisDev;
@@ -3835,6 +3838,7 @@
 				PRODUCT_NAME = DinotisDev;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTS_MACCATALYST = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_WORKSPACE = YES;
