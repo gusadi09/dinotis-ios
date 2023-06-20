@@ -55,6 +55,15 @@
       }
     },
     {
+      "identity" : "dytemobilecoreios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dyte-in/DyteMobileCoreiOS.git",
+      "state" : {
+        "revision" : "6bfa2ffcd92557b92c7ff7b35d99b0ea4948486d",
+        "version" : "0.4.5"
+      }
+    },
+    {
       "identity" : "firebase-ios-sdk",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/firebase-ios-sdk.git",
@@ -340,6 +349,15 @@
       "state" : {
         "revision" : "944aa82832ed5a9eaaf50862cdd53e3c10ab55eb",
         "version" : "1.0.1"
+      }
+    },
+    {
+      "identity" : "webrtc",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jitsi/webrtc.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "83690c8ecfd2d745eb0a41c77de6c4e740c18b80"
       }
     },
     {

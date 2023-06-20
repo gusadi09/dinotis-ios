@@ -53,6 +53,13 @@
 		EC30D10926BE879200570F48 /* LoginViewUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC30D10826BE879200570F48 /* LoginViewUser.swift */; };
 		EC38FEEF287BD8A00007CFC6 /* OneSignal in Frameworks */ = {isa = PBXBuildFile; productRef = EC38FEEE287BD8A00007CFC6 /* OneSignal */; };
 		EC38FEF1287BD8A00007CFC6 /* OneSignalExtension in Frameworks */ = {isa = PBXBuildFile; productRef = EC38FEF0287BD8A00007CFC6 /* OneSignalExtension */; };
+		EC3B97582A417F83006D7B1B /* DyteiOSCore in Frameworks */ = {isa = PBXBuildFile; productRef = EC3B97572A417F83006D7B1B /* DyteiOSCore */; };
+		EC3B97672A419372006D7B1B /* WebRTC in Frameworks */ = {isa = PBXBuildFile; productRef = EC3B97662A419372006D7B1B /* WebRTC */; };
+		EC3B97722A41A134006D7B1B /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC5DF309285CD36500885D67 /* StoreKit.framework */; };
+		EC3B97752A41A13F006D7B1B /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC3B97732A41A13E006D7B1B /* Starscream.framework */; };
+		EC3B97762A41A13F006D7B1B /* Starscream.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = EC3B97732A41A13E006D7B1B /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		EC3B97772A41A13F006D7B1B /* DyteiOSSocketIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC3B97742A41A13E006D7B1B /* DyteiOSSocketIO.framework */; };
+		EC3B97782A41A13F006D7B1B /* DyteiOSSocketIO.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = EC3B97742A41A13E006D7B1B /* DyteiOSSocketIO.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		EC47636A2833E03C009EE2FB /* HTMLViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4763692833E03C009EE2FB /* HTMLViewer.swift */; };
 		EC47636F2833E1D4009EE2FB /* MeetingsTargetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC47636E2833E1D4009EE2FB /* MeetingsTargetType.swift */; };
 		EC4763712833E2F3009EE2FB /* MeetingsRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4763702833E2F3009EE2FB /* MeetingsRemoteDataSource.swift */; };
@@ -77,7 +84,6 @@
 		EC57FC4F26CAC823006EAAA5 /* TalentSearchVerticalCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC57FC4E26CAC823006EAAA5 /* TalentSearchVerticalCardView.swift */; };
 		EC5B59BE28CB64AC009D6B2B /* PrivateSpeakerVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5B59BD28CB64AC009D6B2B /* PrivateSpeakerVideoView.swift */; };
 		EC5D281D27FEE56600A740E1 /* LiveStreamCondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5D281C27FEE56600A740E1 /* LiveStreamCondition.swift */; };
-		EC5DF30A285CD36500885D67 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC5DF309285CD36500885D67 /* StoreKit.framework */; };
 		EC625604272ADF6D00FA209B /* EditTalentMeetingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC625603272ADF6D00FA209B /* EditTalentMeetingView.swift */; };
 		EC62576027B79F010079AA10 /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = EC62575F27B79F010079AA10 /* SwiftUINavigation */; };
 		EC62576327B7A23C0079AA10 /* Moya+defaultProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC62576227B7A23C0079AA10 /* Moya+defaultProvider.swift */; };
@@ -358,6 +364,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		EC3B97792A41A13F006D7B1B /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				EC3B97762A41A13F006D7B1B /* Starscream.framework in Embed Frameworks */,
+				EC3B97782A41A13F006D7B1B /* DyteiOSSocketIO.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EC48E2CE287BE236000FD848 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 12;
@@ -367,16 +385,6 @@
 				EC48E2CD287BE236000FD848 /* DinotisNotificationServiceExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		EC4E4FF327FBE06F009D66FF /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -426,6 +434,8 @@
 		EC2C67FA26C582BE008F094D /* MultilineTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultilineTextField.swift; sourceTree = "<group>"; };
 		EC30D10826BE879200570F48 /* LoginViewUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewUser.swift; sourceTree = "<group>"; };
 		EC38FEDC28787B270007CFC6 /* DinotisApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DinotisApp.entitlements; sourceTree = "<group>"; };
+		EC3B97732A41A13E006D7B1B /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Starscream.framework; sourceTree = "<group>"; };
+		EC3B97742A41A13E006D7B1B /* DyteiOSSocketIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DyteiOSSocketIO.framework; sourceTree = "<group>"; };
 		EC4763692833E03C009EE2FB /* HTMLViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLViewer.swift; sourceTree = "<group>"; };
 		EC47636E2833E1D4009EE2FB /* MeetingsTargetType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingsTargetType.swift; sourceTree = "<group>"; };
 		EC4763702833E2F3009EE2FB /* MeetingsRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingsRemoteDataSource.swift; sourceTree = "<group>"; };
@@ -714,17 +724,20 @@
 			files = (
 				ECB0A26C28FED3210050EC71 /* FirebaseDatabaseSwift in Frameworks */,
 				EC1256722849299400A82DB7 /* QGrid in Frameworks */,
+				EC3B97772A41A13F006D7B1B /* DyteiOSSocketIO.framework in Frameworks */,
 				ECCE52F82784BBB100B67CC8 /* CurrencyFormatter in Frameworks */,
 				EC722261294EFFA700C05A1B /* WaterfallGrid in Frameworks */,
 				ECA7F7DD270DA83900CFB3AD /* SDWebImageSVGCoder in Frameworks */,
 				ECCE52FC2784BBB100B67CC8 /* CurrencyTextSwiftUI in Frameworks */,
 				F63A0971289BBE63008C7815 /* TwilioConversationsClient in Frameworks */,
+				EC3B97752A41A13F006D7B1B /* Starscream.framework in Frameworks */,
 				ECD6C20A2701F37300A09AD8 /* SDWebImageSwiftUI in Frameworks */,
 				EC789C6B27C4C33C005872E2 /* Introspect in Frameworks */,
 				EC8BB8C527D223460078216B /* IQKeyboardManagerSwift in Frameworks */,
 				ECCEFEAA277E9DD100E9B0AD /* ReactiveMoya in Frameworks */,
 				ECCEFEAC277E9DD100E9B0AD /* RxMoya in Frameworks */,
 				ECBA9F3826D653A5008CCCDB /* SlideOverCard in Frameworks */,
+				EC3B97672A419372006D7B1B /* WebRTC in Frameworks */,
 				EC62576027B79F010079AA10 /* SwiftUINavigation in Frameworks */,
 				EC38FEF1287BD8A00007CFC6 /* OneSignalExtension in Frameworks */,
 				EC91B40526CEA64C00C5358C /* SwiftUITrackableScrollView in Frameworks */,
@@ -732,7 +745,9 @@
 				ECA0A384271050100000739E /* SwiftKeychainWrapper in Frameworks */,
 				ECCE52FA2784BBB100B67CC8 /* CurrencyText in Frameworks */,
 				EC47EE75297538A100D7D86D /* DinotisData in Frameworks */,
+				EC3B97722A41A134006D7B1B /* StoreKit.framework in Frameworks */,
 				EC4E500227FC0B34009D66FF /* Lottie in Frameworks */,
+				EC3B97582A417F83006D7B1B /* DyteiOSCore in Frameworks */,
 				EC67E2A82936FBC2002BEC4A /* DinotisDesignSystem in Frameworks */,
 				ECCEFEA6277E9DD100E9B0AD /* CombineMoya in Frameworks */,
 				ECCEFEA8277E9DD100E9B0AD /* Moya in Frameworks */,
@@ -741,7 +756,6 @@
 				ECF7096728C1E7AD0093E020 /* CountryPicker in Frameworks */,
 				EC38FEEF287BD8A00007CFC6 /* OneSignal in Frameworks */,
 				ECB0A26A28FED3210050EC71 /* FirebaseDatabase in Frameworks */,
-				EC5DF30A285CD36500885D67 /* StoreKit.framework in Frameworks */,
 				F63A096E289BBDCC008C7815 /* TwilioLivePlayer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2374,6 +2388,8 @@
 		ECF2274C27F0B451001777DC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EC3B97742A41A13E006D7B1B /* DyteiOSSocketIO.framework */,
+				EC3B97732A41A13E006D7B1B /* Starscream.framework */,
 				EC5DF309285CD36500885D67 /* StoreKit.framework */,
 			);
 			name = Frameworks;
@@ -2924,8 +2940,8 @@
 				ECBA13DE26B78F77004D452C /* Sources */,
 				ECBA13DF26B78F77004D452C /* Frameworks */,
 				ECBA13E026B78F77004D452C /* Resources */,
-				EC4E4FF327FBE06F009D66FF /* Embed Frameworks */,
 				EC48E2CE287BE236000FD848 /* Embed Foundation Extensions */,
+				EC3B97792A41A13F006D7B1B /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2964,6 +2980,8 @@
 				EC722260294EFFA700C05A1B /* WaterfallGrid */,
 				EC47EE74297538A100D7D86D /* DinotisData */,
 				ECC1EE7C29EA61C400C9B402 /* Shimmer */,
+				EC3B97572A417F83006D7B1B /* DyteiOSCore */,
+				EC3B97662A419372006D7B1B /* WebRTC */,
 			);
 			productName = DinotisApp;
 			productReference = ECBA13E226B78F77004D452C /* DinotisDev.app */;
@@ -3018,6 +3036,8 @@
 				ECB0A26828FED3210050EC71 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				EC72225F294EFFA600C05A1B /* XCRemoteSwiftPackageReference "WaterfallGrid" */,
 				ECC1EE7B29EA61C400C9B402 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
+				EC3B97562A417F83006D7B1B /* XCRemoteSwiftPackageReference "DyteMobileCoreiOS" */,
+				EC3B97652A419371006D7B1B /* XCRemoteSwiftPackageReference "webrtc" */,
 			);
 			productRefGroup = ECBA13E326B78F77004D452C /* Products */;
 			projectDirPath = "";
@@ -3994,6 +4014,22 @@
 				minimumVersion = 3.0.0;
 			};
 		};
+		EC3B97562A417F83006D7B1B /* XCRemoteSwiftPackageReference "DyteMobileCoreiOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dyte-in/DyteMobileCoreiOS.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.4.5;
+			};
+		};
+		EC3B97652A419371006D7B1B /* XCRemoteSwiftPackageReference "webrtc" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jitsi/webrtc.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		EC4E500027FC0B34009D66FF /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/airbnb/lottie-ios";
@@ -4163,6 +4199,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EC38FEED287BD8A00007CFC6 /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */;
 			productName = OneSignalExtension;
+		};
+		EC3B97572A417F83006D7B1B /* DyteiOSCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EC3B97562A417F83006D7B1B /* XCRemoteSwiftPackageReference "DyteMobileCoreiOS" */;
+			productName = DyteiOSCore;
+		};
+		EC3B97662A419372006D7B1B /* WebRTC */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EC3B97652A419371006D7B1B /* XCRemoteSwiftPackageReference "webrtc" */;
+			productName = WebRTC;
 		};
 		EC47EE74297538A100D7D86D /* DinotisData */ = {
 			isa = XCSwiftPackageProductDependency;
