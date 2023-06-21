@@ -60,6 +60,8 @@
 		EC3B97762A41A13F006D7B1B /* Starscream.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = EC3B97732A41A13E006D7B1B /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		EC3B97772A41A13F006D7B1B /* DyteiOSSocketIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC3B97742A41A13E006D7B1B /* DyteiOSSocketIO.framework */; };
 		EC3B97782A41A13F006D7B1B /* DyteiOSSocketIO.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = EC3B97742A41A13E006D7B1B /* DyteiOSSocketIO.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		EC3B977D2A41B4F1006D7B1B /* GroupVideoCallViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3B977C2A41B4F1006D7B1B /* GroupVideoCallViewModel.swift */; };
+		EC3B97802A41B4FF006D7B1B /* GroupVideoCallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3B977F2A41B4FF006D7B1B /* GroupVideoCallView.swift */; };
 		EC47636A2833E03C009EE2FB /* HTMLViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4763692833E03C009EE2FB /* HTMLViewer.swift */; };
 		EC47636F2833E1D4009EE2FB /* MeetingsTargetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC47636E2833E1D4009EE2FB /* MeetingsTargetType.swift */; };
 		EC4763712833E2F3009EE2FB /* MeetingsRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4763702833E2F3009EE2FB /* MeetingsRemoteDataSource.swift */; };
@@ -436,6 +438,8 @@
 		EC38FEDC28787B270007CFC6 /* DinotisApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DinotisApp.entitlements; sourceTree = "<group>"; };
 		EC3B97732A41A13E006D7B1B /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Starscream.framework; sourceTree = "<group>"; };
 		EC3B97742A41A13E006D7B1B /* DyteiOSSocketIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DyteiOSSocketIO.framework; sourceTree = "<group>"; };
+		EC3B977C2A41B4F1006D7B1B /* GroupVideoCallViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupVideoCallViewModel.swift; sourceTree = "<group>"; };
+		EC3B977F2A41B4FF006D7B1B /* GroupVideoCallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupVideoCallView.swift; sourceTree = "<group>"; };
 		EC4763692833E03C009EE2FB /* HTMLViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLViewer.swift; sourceTree = "<group>"; };
 		EC47636E2833E1D4009EE2FB /* MeetingsTargetType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingsTargetType.swift; sourceTree = "<group>"; };
 		EC4763702833E2F3009EE2FB /* MeetingsRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingsRemoteDataSource.swift; sourceTree = "<group>"; };
@@ -1142,6 +1146,31 @@
 				ECBA13E726B78F77004D452C /* SceneDelegate.swift */,
 			);
 			path = System;
+			sourceTree = "<group>";
+		};
+		EC3B977A2A41B4D6006D7B1B /* GroupVideoCall */ = {
+			isa = PBXGroup;
+			children = (
+				EC3B977E2A41B4F4006D7B1B /* View */,
+				EC3B977B2A41B4E2006D7B1B /* ViewModel */,
+			);
+			path = GroupVideoCall;
+			sourceTree = "<group>";
+		};
+		EC3B977B2A41B4E2006D7B1B /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EC3B977C2A41B4F1006D7B1B /* GroupVideoCallViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		EC3B977E2A41B4F4006D7B1B /* View */ = {
+			isa = PBXGroup;
+			children = (
+				EC3B977F2A41B4FF006D7B1B /* GroupVideoCallView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		EC405FFA27BD324D00B8B4D1 /* NotUse */ = {
@@ -2068,6 +2097,7 @@
 		ECBA142E26B79149004D452C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				EC3B977A2A41B4D6006D7B1B /* GroupVideoCall */,
 				ECD453B32A272A1100338D05 /* OutdatedVersion */,
 				EC6D0E5A298306BF0016C45D /* TabView */,
 				EC2AFDD726BAAE35005260FD /* NotificationView */,
@@ -3132,6 +3162,7 @@
 				EC6A96E127CDDAF900282253 /* ScheduleListViewModel.swift in Sources */,
 				EC9C4E3D281694EA00837469 /* AnnouncementView.swift in Sources */,
 				EC4763712833E2F3009EE2FB /* MeetingsRemoteDataSource.swift in Sources */,
+				EC3B977D2A41B4F1006D7B1B /* GroupVideoCallViewModel.swift in Sources */,
 				ECED4DD829F9297C00E79663 /* SelectedCollabCreatorView.swift in Sources */,
 				F686669E28A4D6620067345C /* Question.swift in Sources */,
 				EC91B3DE26CE296200C5358C /* FormScheduleTalentCardView.swift in Sources */,
@@ -3166,6 +3197,7 @@
 				ECD51FCB28A125F0000B1F6C /* SyncObjectConnecting.swift in Sources */,
 				ECD51FAA28A0C25A000B1F6C /* RemoteParticipantManager.swift in Sources */,
 				EC7B1EA827BCE52400471219 /* TalentHomeViewModel.swift in Sources */,
+				EC3B97802A41B4FF006D7B1B /* GroupVideoCallView.swift in Sources */,
 				EC6A0A08270D6BB300316D1C /* PaymentMethod.swift in Sources */,
 				ECB0A27728FF02250050EC71 /* RoomDocumentRealtimeResponse.swift in Sources */,
 				EC99AD7526C1476B0060F221 /* UserProfileView.swift in Sources */,
