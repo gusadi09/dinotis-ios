@@ -447,6 +447,14 @@ final class ScheduleDetailViewModel: ObservableObject {
             self?.route = .twilioLiveStream(viewModel: viewModel)
         }
     }
+    
+    func routeToResearch() {
+        let viewModel = GroupVideoCallViewModel(backToRoot: self.backToRoot, backToHome: self.backToHome)
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .research(viewModel: viewModel)
+        }
+    }
   
     func routeToTalentProfile(username: String?) {
         let viewModel = TalentProfileDetailViewModel(backToRoot: self.backToRoot, backToHome: {self.route = nil}, username: username.orEmpty())

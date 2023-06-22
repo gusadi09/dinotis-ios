@@ -53,7 +53,6 @@
 		EC30D10926BE879200570F48 /* LoginViewUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC30D10826BE879200570F48 /* LoginViewUser.swift */; };
 		EC38FEEF287BD8A00007CFC6 /* OneSignal in Frameworks */ = {isa = PBXBuildFile; productRef = EC38FEEE287BD8A00007CFC6 /* OneSignal */; };
 		EC38FEF1287BD8A00007CFC6 /* OneSignalExtension in Frameworks */ = {isa = PBXBuildFile; productRef = EC38FEF0287BD8A00007CFC6 /* OneSignalExtension */; };
-		EC3B97582A417F83006D7B1B /* DyteiOSCore in Frameworks */ = {isa = PBXBuildFile; productRef = EC3B97572A417F83006D7B1B /* DyteiOSCore */; };
 		EC3B97672A419372006D7B1B /* WebRTC in Frameworks */ = {isa = PBXBuildFile; productRef = EC3B97662A419372006D7B1B /* WebRTC */; };
 		EC3B97722A41A134006D7B1B /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC5DF309285CD36500885D67 /* StoreKit.framework */; };
 		EC3B97752A41A13F006D7B1B /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC3B97732A41A13E006D7B1B /* Starscream.framework */; };
@@ -138,6 +137,8 @@
 		EC7222682950150100C05A1B /* FollowedCreatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7222672950150100C05A1B /* FollowedCreatorView.swift */; };
 		EC7222722950B7B000C05A1B /* Friendship.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7222712950B7B000C05A1B /* Friendship.swift */; };
 		EC72227C2954401100C05A1B /* NotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC72227B2954401100C05A1B /* NotificationViewModel.swift */; };
+		EC72920C2A4374E400C9AAD5 /* DyteiOSCore in Frameworks */ = {isa = PBXBuildFile; productRef = EC72920B2A4374E400C9AAD5 /* DyteiOSCore */; };
+		EC7292112A4375D800C9AAD5 /* TwilioConversationsClient in Frameworks */ = {isa = PBXBuildFile; productRef = EC7292102A4375D800C9AAD5 /* TwilioConversationsClient */; };
 		EC789C6527C40BF7005872E2 /* OtpVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC789C6427C40BF7005872E2 /* OtpVerificationViewModel.swift */; };
 		EC789C6827C4C2A7005872E2 /* OTPField.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC789C6727C4C2A7005872E2 /* OTPField.swift */; };
 		EC789C6B27C4C33C005872E2 /* Introspect in Frameworks */ = {isa = PBXBuildFile; productRef = EC789C6A27C4C33C005872E2 /* Introspect */; };
@@ -298,7 +299,6 @@
 		F63A0968289BBCEB008C7815 /* TwilioVideo in Frameworks */ = {isa = PBXBuildFile; productRef = F63A0967289BBCEB008C7815 /* TwilioVideo */; };
 		F63A096B289BBD79008C7815 /* TwilioSyncClient in Frameworks */ = {isa = PBXBuildFile; productRef = F63A096A289BBD79008C7815 /* TwilioSyncClient */; };
 		F63A096E289BBDCC008C7815 /* TwilioLivePlayer in Frameworks */ = {isa = PBXBuildFile; productRef = F63A096D289BBDCC008C7815 /* TwilioLivePlayer */; };
-		F63A0971289BBE63008C7815 /* TwilioConversationsClient in Frameworks */ = {isa = PBXBuildFile; productRef = F63A0970289BBE63008C7815 /* TwilioConversationsClient */; };
 		F63A0973289BC42D008C7815 /* StreamConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63A0972289BC42D008C7815 /* StreamConfig.swift */; };
 		F63A0979289BD4C1008C7815 /* PresentationLayoutViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63A0978289BD4C1008C7815 /* PresentationLayoutViewModel.swift */; };
 		F63A097B289BD53A008C7815 /* PresentationLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63A097A289BD53A008C7815 /* PresentationLayoutView.swift */; };
@@ -733,7 +733,7 @@
 				EC722261294EFFA700C05A1B /* WaterfallGrid in Frameworks */,
 				ECA7F7DD270DA83900CFB3AD /* SDWebImageSVGCoder in Frameworks */,
 				ECCE52FC2784BBB100B67CC8 /* CurrencyTextSwiftUI in Frameworks */,
-				F63A0971289BBE63008C7815 /* TwilioConversationsClient in Frameworks */,
+				EC72920C2A4374E400C9AAD5 /* DyteiOSCore in Frameworks */,
 				EC3B97752A41A13F006D7B1B /* Starscream.framework in Frameworks */,
 				ECD6C20A2701F37300A09AD8 /* SDWebImageSwiftUI in Frameworks */,
 				EC789C6B27C4C33C005872E2 /* Introspect in Frameworks */,
@@ -742,6 +742,7 @@
 				ECCEFEAC277E9DD100E9B0AD /* RxMoya in Frameworks */,
 				ECBA9F3826D653A5008CCCDB /* SlideOverCard in Frameworks */,
 				EC3B97672A419372006D7B1B /* WebRTC in Frameworks */,
+				EC7292112A4375D800C9AAD5 /* TwilioConversationsClient in Frameworks */,
 				EC62576027B79F010079AA10 /* SwiftUINavigation in Frameworks */,
 				EC38FEF1287BD8A00007CFC6 /* OneSignalExtension in Frameworks */,
 				EC91B40526CEA64C00C5358C /* SwiftUITrackableScrollView in Frameworks */,
@@ -751,7 +752,6 @@
 				EC47EE75297538A100D7D86D /* DinotisData in Frameworks */,
 				EC3B97722A41A134006D7B1B /* StoreKit.framework in Frameworks */,
 				EC4E500227FC0B34009D66FF /* Lottie in Frameworks */,
-				EC3B97582A417F83006D7B1B /* DyteiOSCore in Frameworks */,
 				EC67E2A82936FBC2002BEC4A /* DinotisDesignSystem in Frameworks */,
 				ECCEFEA6277E9DD100E9B0AD /* CombineMoya in Frameworks */,
 				ECCEFEA8277E9DD100E9B0AD /* Moya in Frameworks */,
@@ -3002,7 +3002,6 @@
 				F63A0967289BBCEB008C7815 /* TwilioVideo */,
 				F63A096A289BBD79008C7815 /* TwilioSyncClient */,
 				F63A096D289BBDCC008C7815 /* TwilioLivePlayer */,
-				F63A0970289BBE63008C7815 /* TwilioConversationsClient */,
 				ECF7096628C1E7AD0093E020 /* CountryPicker */,
 				ECB0A26928FED3210050EC71 /* FirebaseDatabase */,
 				ECB0A26B28FED3210050EC71 /* FirebaseDatabaseSwift */,
@@ -3010,8 +3009,9 @@
 				EC722260294EFFA700C05A1B /* WaterfallGrid */,
 				EC47EE74297538A100D7D86D /* DinotisData */,
 				ECC1EE7C29EA61C400C9B402 /* Shimmer */,
-				EC3B97572A417F83006D7B1B /* DyteiOSCore */,
 				EC3B97662A419372006D7B1B /* WebRTC */,
+				EC72920B2A4374E400C9AAD5 /* DyteiOSCore */,
+				EC7292102A4375D800C9AAD5 /* TwilioConversationsClient */,
 			);
 			productName = DinotisApp;
 			productReference = ECBA13E226B78F77004D452C /* DinotisDev.app */;
@@ -3061,13 +3061,13 @@
 				F63A0966289BBCEB008C7815 /* XCRemoteSwiftPackageReference "twilio-video-ios" */,
 				F63A0969289BBD79008C7815 /* XCRemoteSwiftPackageReference "twilio-sync-ios" */,
 				F63A096C289BBDCC008C7815 /* XCRemoteSwiftPackageReference "twilio-live-player-ios" */,
-				F63A096F289BBE63008C7815 /* XCRemoteSwiftPackageReference "conversations-ios" */,
 				ECF7096528C1E7AD0093E020 /* XCRemoteSwiftPackageReference "CountryPicker" */,
 				ECB0A26828FED3210050EC71 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				EC72225F294EFFA600C05A1B /* XCRemoteSwiftPackageReference "WaterfallGrid" */,
 				ECC1EE7B29EA61C400C9B402 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
-				EC3B97562A417F83006D7B1B /* XCRemoteSwiftPackageReference "DyteMobileCoreiOS" */,
 				EC3B97652A419371006D7B1B /* XCRemoteSwiftPackageReference "webrtc" */,
+				EC7292092A430BA700C9AAD5 /* XCRemoteSwiftPackageReference "DyteMobileCoreiOS" */,
+				EC72920F2A4375D800C9AAD5 /* XCRemoteSwiftPackageReference "conversations-ios" */,
 			);
 			productRefGroup = ECBA13E326B78F77004D452C /* Products */;
 			projectDirPath = "";
@@ -4046,14 +4046,6 @@
 				minimumVersion = 3.0.0;
 			};
 		};
-		EC3B97562A417F83006D7B1B /* XCRemoteSwiftPackageReference "DyteMobileCoreiOS" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/dyte-in/DyteMobileCoreiOS.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.4.5;
-			};
-		};
 		EC3B97652A419371006D7B1B /* XCRemoteSwiftPackageReference "webrtc" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/jitsi/webrtc.git";
@@ -4084,6 +4076,22 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.0.0;
+			};
+		};
+		EC7292092A430BA700C9AAD5 /* XCRemoteSwiftPackageReference "DyteMobileCoreiOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dyte-in/DyteMobileCoreiOS.git";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 0.4.7;
+			};
+		};
+		EC72920F2A4375D800C9AAD5 /* XCRemoteSwiftPackageReference "conversations-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/twilio/conversations-ios.git";
+			requirement = {
+				branch = master;
+				kind = branch;
 			};
 		};
 		EC789C6927C4C33C005872E2 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */ = {
@@ -4206,14 +4214,6 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		F63A096F289BBE63008C7815 /* XCRemoteSwiftPackageReference "conversations-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/twilio/conversations-ios";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -4231,11 +4231,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EC38FEED287BD8A00007CFC6 /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */;
 			productName = OneSignalExtension;
-		};
-		EC3B97572A417F83006D7B1B /* DyteiOSCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = EC3B97562A417F83006D7B1B /* XCRemoteSwiftPackageReference "DyteMobileCoreiOS" */;
-			productName = DyteiOSCore;
 		};
 		EC3B97662A419372006D7B1B /* WebRTC */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -4269,6 +4264,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EC72225F294EFFA600C05A1B /* XCRemoteSwiftPackageReference "WaterfallGrid" */;
 			productName = WaterfallGrid;
+		};
+		EC72920B2A4374E400C9AAD5 /* DyteiOSCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EC7292092A430BA700C9AAD5 /* XCRemoteSwiftPackageReference "DyteMobileCoreiOS" */;
+			productName = DyteiOSCore;
+		};
+		EC7292102A4375D800C9AAD5 /* TwilioConversationsClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EC72920F2A4375D800C9AAD5 /* XCRemoteSwiftPackageReference "conversations-ios" */;
+			productName = TwilioConversationsClient;
 		};
 		EC789C6A27C4C33C005872E2 /* Introspect */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -4374,11 +4379,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F63A096C289BBDCC008C7815 /* XCRemoteSwiftPackageReference "twilio-live-player-ios" */;
 			productName = TwilioLivePlayer;
-		};
-		F63A0970289BBE63008C7815 /* TwilioConversationsClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F63A096F289BBE63008C7815 /* XCRemoteSwiftPackageReference "conversations-ios" */;
-			productName = TwilioConversationsClient;
 		};
 /* End XCSwiftPackageProductDependency section */
 

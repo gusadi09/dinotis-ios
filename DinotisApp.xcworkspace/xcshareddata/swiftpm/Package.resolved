@@ -30,10 +30,10 @@
     {
       "identity" : "conversations-ios",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/twilio/conversations-ios",
+      "location" : "https://github.com/twilio/conversations-ios.git",
       "state" : {
         "branch" : "master",
-        "revision" : "598f2d743c817abd0df42d6a5ca51d3122f19d41"
+        "revision" : "15b4bdd792739a809137f5a41854ead03bea1345"
       }
     },
     {
@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/dyte-in/DyteMobileCoreiOS.git",
       "state" : {
-        "revision" : "6bfa2ffcd92557b92c7ff7b35d99b0ea4948486d",
-        "version" : "0.4.5"
+        "revision" : "4900df13c974566d28a93cee8f0f760c424e6eb2",
+        "version" : "0.4.7"
       }
     },
     {

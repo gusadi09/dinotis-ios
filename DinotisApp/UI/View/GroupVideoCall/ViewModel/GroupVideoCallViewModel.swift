@@ -15,11 +15,13 @@ final class GroupVideoCallViewModel: ObservableObject {
     let meeting = DyteiOSClientBuilder().build()
     
     let meetingInfo = DyteMeetingInfoV2(
-        authToken: "authToken",
+        authToken: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdJZCI6IjQ2ODdlYjllLWMyNjItNDhmOS1iZWI0LTQ3ODhiNjJlYjY4YSIsIm1lZXRpbmdJZCI6ImJiYjczNDg4LTA2NTctNDIzZC1hM2QxLWY2NjQ1Mjk3OTA1YyIsInBhcnRpY2lwYW50SWQiOiJhYWFjNzMzZS0wNDQxLTQyNzMtYTRhNy01NWQ5NGUyMTA3NmMiLCJwcmVzZXRJZCI6Ijk5YmZlNTZkLWVhYjMtNGMyNy05ZTQwLTEyMGY3ZTg0OWI3NyIsImlhdCI6MTY4NzMzMjYyNywiZXhwIjoxNjk1OTcyNjI3fQ.Wukf5VcOrjSAGBraH66WSrypR59AHfVeK7OfAfUVA7TMcy6TSj98UVWMB_fwpYXDxL9cAtZHyzadFlkUQ1WbPHiXJ-ZpE0UyE44QNk7AxlnczBv_QyKmLwG2LReXxNSNsDnnq3LPQFYWWh_26z0Cac2UVzwc4HjSD29YxO4-0tsd1cORsgSFaeysshhrf3ZmyNSv3mw5BFFePd5pwuzdX6wk5l5-HQAgEcvNyyzCIHMXzynGcbhv-2WziFNRu7FyIPQZFDiZVTZOzoo_r9f3PDogRCHf7HZ3UZAZP_gHr0LjwJk7zzTwMis-6pGuxz99rBfqskQg2_kdl5EVhIIt-Q",
         enableAudio: true,
         enableVideo: true,
         baseUrl: "https://api.cluster.dyte.in/v2"
     )
+    
+    @Published var joined = ""
     
     init(
         backToRoot: @escaping () -> Void,
@@ -27,7 +29,17 @@ final class GroupVideoCallViewModel: ObservableObject {
     ) {
         self.backToHome = backToHome
         self.backToRoot = backToRoot
-        
+    }
+    
+    func joinMeeting() {
+        meeting.joinRoom()
+    }
+    
+    func leaveMeeting() {
+        meeting.leaveRoom()
+    }
+    
+    func onAppear() {
         meeting.addMeetingRoomEventsListener(meetingRoomEventsListener: self)
         meeting.addParticipantEventsListener(participantEventsListener: self)
         meeting.addSelfEventsListener(selfEventsListener: self)
@@ -36,9 +48,8 @@ final class GroupVideoCallViewModel: ObservableObject {
         meeting.addPollEventsListener(pollEventsListener: self)
         meeting.addRecordingEventsListener(recordingEventsListener: self)
         meeting.addWaitlistEventsListener(waitlistEventsListener: self)
+        meeting.doInit(dyteMeetingInfo_: meetingInfo)
     }
-    
-    
 }
 
 extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
@@ -47,15 +58,15 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     }
     
     func onMeetingInitCompleted() {
-        
+        self.joined = "init completed"
     }
     
     func onMeetingInitFailed(exception: KotlinException) {
-        
+        self.joined = "init failed : \(exception.message ?? "")"
     }
     
     func onMeetingInitStarted() {
-        
+        self.joined = "init started"
     }
     
     func onMeetingRoomConnectionError(errorMessage: String) {
@@ -67,23 +78,24 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     }
     
     func onMeetingRoomJoinCompleted() {
-        
+        self.joined = "Joined"
     }
     
     func onMeetingRoomJoinFailed(exception: KotlinException) {
-        
+        self.joined = exception.description()
     }
     
     func onMeetingRoomJoinStarted() {
-        
+        self.joined = "Loading"
     }
     
     func onMeetingRoomLeaveCompleted() {
-        
+        self.joined = "Leaved"
+        backToHome()
     }
     
     func onMeetingRoomLeaveStarted() {
-        
+        self.joined = "Loading"
     }
     
     func onMeetingRoomReconnectionFailed() {
@@ -91,11 +103,11 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     }
     
     func onReconnectedToMeetingRoom() {
-        
+        self.joined = "Reconnected"
     }
     
     func onReconnectingToMeetingRoom() {
-        
+        self.joined = "Reconnecting"
     }
     
 }
@@ -156,6 +168,10 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
 }
 
 extension GroupVideoCallViewModel: DyteSelfEventsListener {
+    func onRoomMessage(message: String) {
+        
+    }
+    
     func onAudioDevicesUpdated() {
         
     }
