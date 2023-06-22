@@ -7,6 +7,12 @@
 
 import Foundation
 import DyteiOSCore
+import UIKit
+
+enum CameraPosition {
+    case front
+    case rear
+}
 
 final class GroupVideoCallViewModel: ObservableObject {
     var backToRoot: () -> Void
@@ -22,6 +28,10 @@ final class GroupVideoCallViewModel: ObservableObject {
     )
     
     @Published var joined = ""
+    @Published var isCameraOn = true
+    @Published var isAudioOn = true
+    @Published var position: CameraPosition = .front
+    @Published var isJoined = false
     
     init(
         backToRoot: @escaping () -> Void,
@@ -37,6 +47,49 @@ final class GroupVideoCallViewModel: ObservableObject {
     
     func leaveMeeting() {
         meeting.leaveRoom()
+    }
+    
+    func toggleCamera() {
+        do {
+            if isCameraOn {
+                try meeting.localUser.disableVideo()
+            } else {
+                meeting.localUser.enableVideo()
+            }
+        } catch {
+            print("error enable/disable camera")
+        }
+    }
+    
+    func toggleMicrophone() {
+        do {
+            if isAudioOn {
+                try meeting.localUser.disableAudio()
+            } else {
+                meeting.localUser.enableAudio()
+            }
+        } catch {
+            print("error enable/disable camera")
+        }
+    }
+    
+    func switchCamera() {
+        DispatchQueue.main.async { [weak self] in
+            if let devices = self?.meeting.localUser.getVideoDevices() {
+                for device in devices {
+                    if device.type != self?.meeting.localUser.getSelectedVideoDevice().type {
+                        self?.meeting.localUser.setVideoDevice(dyteVideoDevice: device)
+                        if self?.position == .front {
+                            self?.position = .rear
+                        } else {
+                            self?.position = .front
+                        }
+                        
+                        break
+                    }
+                }
+            }
+        }
     }
     
     func onAppear() {
@@ -79,6 +132,7 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     
     func onMeetingRoomJoinCompleted() {
         self.joined = "Joined"
+        self.isJoined = true
     }
     
     func onMeetingRoomJoinFailed(exception: KotlinException) {
@@ -91,6 +145,7 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     
     func onMeetingRoomLeaveCompleted() {
         self.joined = "Leaved"
+        self.isJoined = false
         backToHome()
     }
     
@@ -177,7 +232,7 @@ extension GroupVideoCallViewModel: DyteSelfEventsListener {
     }
     
     func onAudioUpdate(audioEnabled: Bool) {
-        
+        isAudioOn = audioEnabled
     }
     
     func onMeetingRoomJoinedWithoutCameraPermission() {
@@ -205,7 +260,7 @@ extension GroupVideoCallViewModel: DyteSelfEventsListener {
     }
     
     func onVideoUpdate(videoEnabled: Bool) {
-        
+        isCameraOn = videoEnabled
     }
     
     func onWaitListStatusUpdate(waitListStatus: WaitListStatus) {
