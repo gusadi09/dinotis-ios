@@ -37,7 +37,7 @@ public extension Image {
     static let bottomNavigationVideoPurpleIcon = Image("ic-schedule-video-purple-bottom-navigation", bundle: Bundle.module)
     static let bottomNavigationVideoWhiteIcon = Image("ic-schedule-video-white-bottom-navigation", bundle: Bundle.module)
     static let bottomNavigationSearchPurpleIcon = Image("ic-search-purple-bottom-navigation", bundle: Bundle.module)
-    static let bottomNavigationSearchWhiteIcon = Image("ic-search-purple-bottom-navigation", bundle: Bundle.module)
+    static let bottomNavigationSearchWhiteIcon = Image("ic-search-white-bottom-navigation", bundle: Bundle.module)
     
     
     static let messageSendIcon = Image("ic-send-message", bundle: Bundle.module)
@@ -115,4 +115,8 @@ public extension Image {
     static let videoCallSwitchCameraInactiveIcon = Image("ic_switch_inactive", bundle: .module)
     static let videoCallVideoCameraActiveIcon = Image("ic_video_active", bundle: .module)
     static let videoCallVideoCameraInactiveIcon = Image("ic_video_inactive", bundle: .module)
+    static let videoCallMicOffStrokeIcon = Image("ic_mic_off_stroke", bundle: .module)
+    static let videoCallMicOnStrokeIcon = Image("ic_mic_on_stroke", bundle: .module)
+    static let videoCallVideoOffStrokeIcon = Image("ic_video_off_stroke", bundle: .module)
+    static let videoCallVideoOnStrokeIcon = Image("ic_video_on_stroke", bundle: .module)
 }

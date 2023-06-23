@@ -16,6 +16,10 @@
 "label_skip" = "Lewati";
 "label_continue" = "Selanjutnya";
 "label_previous" = "Sebelumnya";
+"label_chat" = "Pesan";
+"label_polls" = "Polls";
+
+"title_waiting_room" = "Waiting Room";
 
 "title_audience" = "Audiens";
 "description_audience_login" = "Mulai ngobrol dengan kreator";
@@ -222,6 +226,12 @@
 "cancel_payment_title_question" = "Yakin mau membatalkan pembayaran?";
 "cancel_payment_description" = "Dengan membatalkan, data pesanan ini akan hilang.";
 "cancel_payment_confirmation" = "Ya, Saya ingin membatalkan";
+
+"about_call_title" = "Tentang Panggilan";
+"accept_all_label" = "Accept All";
+"accept_to_join_label" = "Accept to Join";
+"speaker_title" = "Pembicara";
+"viewer_title" = "Viewers";
 
 "logout_title_question" = "Kamu mau keluar?";
 "logout_description" = "Jangan lama-lama ya... Dinotis bakal rindu kamu.";

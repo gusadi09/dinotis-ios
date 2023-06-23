@@ -16,6 +16,10 @@
 "label_skip" = "Skip";
 "label_continue" = "Next";
 "label_previous" = "Previous";
+"label_chat" = "Chat";
+"label_polls" = "Polls";
+
+"title_waiting_room" = "Waiting Room";
 
 "title_audience" = "Audience";
 "description_audience_login" = "Start chatting with creators";
@@ -222,6 +226,12 @@
 "cancel_payment_title_question" = "Are you sure want to cancel this payment?";
 "cancel_payment_description" = "By canceling, this order data will be lost.";
 "cancel_payment_confirmation" = "Sure, I want to cancel";
+
+"about_call_title" = "About Call";
+"accept_all_label" = "Accept All";
+"accept_to_join_label" = "Accept to Join";
+"speaker_title" = "Speakers";
+"viewer_title" = "Viewers";
 
 "logout_title_question" = "You want to logout?";
 "logout_description" = "Don't take too long... Dinotis will miss you.";

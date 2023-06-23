@@ -3,6 +3,16 @@
 //
 
 import Combine
+import SwiftUI
+
+struct DummyParticipantModel: Equatable, Identifiable {
+    var id = UUID()
+    var name: String
+    var isMicOn: Bool
+    var isVideoOn: Bool
+    var isJoining: Bool
+    var isSpeaker: Bool
+}
 
 class ParticipantsViewModel: ObservableObject {
 	
@@ -16,6 +26,38 @@ class ParticipantsViewModel: ObservableObject {
 	@Published var showError = false
 	@Published var showSpeakerInviteSent = false
 	@Published var invitedSpeakerData: InvitedResponse?
+    @Published var searchText = ""
+    @Published var tabSelection = 0
+    
+    @Published var dummyParicipant: [DummyParticipantModel] = [
+        .init(name: "Ahmad Rifai", isMicOn: false, isVideoOn: false, isJoining: false, isSpeaker: true),
+        .init(name: "Bambanb", isMicOn: true, isVideoOn: false, isJoining: false, isSpeaker: true),
+        .init(name: "Citra Kirana", isMicOn: false, isVideoOn: false, isJoining: true, isSpeaker: false),
+        .init(name: "Dimas Agung", isMicOn: false, isVideoOn: false, isJoining: false, isSpeaker: false),
+        .init(name: "Endika Koala", isMicOn: false, isVideoOn: false, isJoining: true, isSpeaker: false),
+        .init(name: "Faris van Java", isMicOn: false, isVideoOn: false, isJoining: false, isSpeaker: false)
+    ]
+    
+    var searchedParticipant: [DummyParticipantModel] {
+        if searchText.isEmpty {
+            return dummyParicipant
+        } else {
+            return dummyParicipant.filter({ $0.name.contains(searchText) })
+        }
+    }
+    
+    var joiningParticipant: [DummyParticipantModel] {
+        searchedParticipant.filter({ $0.isJoining })
+    }
+    
+    var speakerParticipant: [DummyParticipantModel] {
+        searchedParticipant.filter({ $0.isSpeaker && $0.isJoining == false })
+    }
+    
+    var viewerSpeaker: [DummyParticipantModel] {
+        searchedParticipant.filter({ $0.isSpeaker == false && $0.isJoining == false })
+    }
+    
 	private(set) var error: Error? {
 		didSet {
 			showError = error != nil
