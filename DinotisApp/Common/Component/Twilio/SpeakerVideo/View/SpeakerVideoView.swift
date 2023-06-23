@@ -18,10 +18,11 @@ struct SpeakerVideoView: View {
 	@Binding var firebaseSpeaker: [SpeakerRealtimeResponse]
 	let showHostControls: Bool
 	let isOnSpotlight: Bool
+    let isShowName: Bool
 	
 	var body: some View {
 		ZStack(alignment: .center) {
-			Color.secondaryViolet
+            Color.DinotisDefault.black1
 
 			GeometryReader { geo in
 				HStack {
@@ -30,10 +31,10 @@ struct SpeakerVideoView: View {
 					VStack {
 						Spacer()
 
-						Image.Dinotis.userCircleFillIcon
-							.resizable()
+						Circle()
+                            .foregroundColor(.blue)
 							.scaledToFit()
-							.frame(height: isOnSpotlight ? 60 : geo.size.height/4)
+							.frame(height: 140)
 							.padding()
 						
 						Spacer()
@@ -51,183 +52,39 @@ struct SpeakerVideoView: View {
 			}
 			
 			VStack {
-				HStack {
-					if (speaker.pinValue == 2) {
-						Image(systemName: "pin.fill")
-							.foregroundColor(.white)
-							.padding(9)
-							.background(Color.DinotisDefault.primary.opacity(0.4))
-							.clipShape(Circle())
-							.padding(8)
-					}
-					
-					Spacer()
-					
-					if speaker.isMuted {
-						Image(systemName: "mic.slash")
-							.foregroundColor(.white)
-							.padding(9)
-							.background(Color.DinotisDefault.primary.opacity(0.4))
-							.clipShape(Circle())
-							.padding(8)
-					}
-				}
 				Spacer()
 				HStack(alignment: .bottom) {
-					HStack(spacing: 3) {
-						Text(speaker.isYou ? LocaleText.you : (firebaseSpeaker.unique().first(where: { $0.identity == speaker.identity })?.identity).orEmpty())
-							.lineLimit(1)
-
-						Text("\((firebaseSpeaker.unique().first(where: { $0.identity == speaker.identity })?.coHost ?? false) ? "(Co-Host)" : "")")
-						Text("\((firebaseSpeaker.unique().first(where: { $0.identity == speaker.identity })?.host ?? false) ? "(Host)" : "")")
-					}
-						.foregroundColor(.white)
-						.padding(.horizontal, 6)
-						.padding(.vertical, 2)
-						.background(
-							RoundedRectangle(cornerRadius: 8)
-								.foregroundColor(.DinotisDefault.primary.opacity(0.7))
-						)
-						.cornerRadius(2)
-						.font(.robotoMedium(size: 14))
-					Spacer()
-					
-					if showHostControls && !speaker.isYou {
-						Menu(
-							content: {
-								if !speaker.isMuted {
-									Button(
-										action: { hostControlsManager.muteSpeaker(identity: speaker.identity) },
-                                        label: { Label(LocaleText.mute, systemImage: "mic.slash") }
-									)
-								}
-								
-								Button(
-									action: {
-										let message = RoomMessage(messageType: .spotlight, toParticipantIdentity: speaker.identity)
-										streamManager.roomManager?.localParticipant.sendMessage(message)
-										
-										let body = SyncSpotlightSpeaker(roomSid: (streamManager.roomManager?.roomSID).orEmpty(), userIdentity: speaker.identity)
-										
-										hostControlsManager.spotlightSpeaker(on: streamManager.meetingId, by: body) {
-											streamManager.isLoading = true
-										} finalState: {
-											streamManager.isLoading = false
-										}
-									},
-                                    label: { Label(streamViewModel.spotlightUser == speaker.identity ? LocaleText.removeSpotlight : LocaleText.spotlightSpeaker, systemImage: "person.crop.rectangle") }
-								)
-								
-								Button(
-									action: { hostControlsManager.removeSpeaker(on: speaker.meetingId, by: speaker.identity) },
-                                    label: { Label(LocaleText.moveToViewers, systemImage: "minus.circle") }
-								)
-								
-								Button {
-									hostControlsManager.removeSpeakerFromRoom(on: speaker.meetingId, by: speaker.identity)
-								} label: {
-                                    Label(LocaleText.remove, systemImage: "person.crop.circle.badge.xmark")
-								}
-								
-							},
-							label: {
-								Image(systemName: "ellipsis")
-									.foregroundColor(Color.white)
-									.font(.system(size: 22, weight: .heavy))
-									.frame(minWidth: 25, minHeight: 25)
-									.padding(5)
-									.background(
-										Circle()
-											.foregroundColor(.black.opacity(0.2))
-									)
-							}
-						)
-					} else if showHostControls && speaker.isYou {
-                        Menu(
-                            content: {
-                                Button(
-                                    action: {
-                                        let message = RoomMessage(messageType: .spotlight, toParticipantIdentity: speaker.identity)
-                                        streamManager.roomManager?.localParticipant.sendMessage(message)
-                                        
-                                        let body = SyncSpotlightSpeaker(roomSid: (streamManager.roomManager?.roomSID).orEmpty(), userIdentity: speaker.identity)
-                                        
-                                        hostControlsManager.spotlightSpeaker(on: streamManager.meetingId, by: body) {
-                                            streamManager.isLoading = true
-                                        } finalState: {
-                                            streamManager.isLoading = false
-                                        }
-                                    },
-                                    label: { Label(streamViewModel.spotlightUser == speaker.identity ? LocaleText.removeSpotlight : LocaleText.spotlightMe, systemImage: "person.crop.rectangle") }
-                                )
-
-                            },
-                            label: {
-                                Image(systemName: "ellipsis")
-                                    .foregroundColor(Color.white)
-                                    .font(.system(size: 22, weight: .heavy))
-                                    .frame(minWidth: 25, minHeight: 25)
-                                    .padding(5)
-                                    .background(
-                                        Circle()
-                                            .foregroundColor(.black.opacity(0.2))
-                                    )
-                            }
-                        )
+                    HStack(spacing: 4) {
+                        (speaker.isMuted ? Image.videoCallMicOffStrokeIcon : Image.videoCallMicOnStrokeIcon)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 24, height: 24)
+                        
+                        Text(speaker.isYou ? LocaleText.you : (firebaseSpeaker.unique().first(where: { $0.identity == speaker.identity })?.identity).orEmpty())
+                            .lineLimit(1)
+                        
+                        Text("\((firebaseSpeaker.unique().first(where: { $0.identity == speaker.identity })?.coHost ?? false) ? "(Co-Host)" : "")")
+                        Text("\((firebaseSpeaker.unique().first(where: { $0.identity == speaker.identity })?.host ?? false) ? "(Host)" : "")")
                     }
-//                    else {
-//						Menu(
-//							content: {
-//								if StateObservable.shared.spotlightedIdentity != speaker.identity {
-//									Button(
-//										action: { speaker.pinValue = (speaker.pinValue == 0 && speaker.pinValue != 1) ? 2 : 0 },
-//										label: { Label((speaker.pinValue == 0 && speaker.pinValue != 1) ? "Pin Speaker" : "Unpin Speaker", systemImage: (speaker.pinValue == 0 && speaker.pinValue != 1) ? "pin.fill" : "pin.slash.fill") }
-//									)
-//								}
-//
-//								if StateObservable.shared.twilioRole == "host" {
-//									Button(
-//										action: {
-//											let message = RoomMessage(messageType: .spotlight, toParticipantIdentity: speaker.identity)
-//											streamManager.roomManager.localParticipant.sendMessage(message)
-//
-//											let body = SyncSpotlightSpeaker(roomSid: streamManager.roomManager.roomSID.orEmpty(), userIdentity: speaker.identity)
-//
-//											hostControlsManager.spotlightSpeaker(on: streamManager.meetingId, by: body) {
-//												streamManager.isLoading = true
-//											} finalState: {
-//												streamManager.isLoading = false
-//											}
-//										},
-//										label: { Label(StateObservable.shared.spotlightedIdentity == speaker.identity ? "Remove Spotlight" : "Spotlight Speaker", systemImage: "person.crop.rectangle") }
-//									)
-//								}
-//
-//
-//							},
-//							label: {
-//								Image(systemName: "ellipsis")
-//									.foregroundColor(Color.white)
-//									.font(.system(size: 22, weight: .heavy))
-//									.frame(minWidth: 25, minHeight: 25)
-//									.padding(5)
-//									.background(
-//										Circle()
-//											.foregroundColor(.DinotisDefault.primary.opacity(0.4))
-//									)
-//							}
-//						)
-//					}
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(
+                        RoundedRectangle(cornerRadius: 32)
+                            .foregroundColor(.DinotisDefault.black2.opacity(0.4))
+                    )
+                    .cornerRadius(2)
+                    .font(.robotoMedium(size: 14))
+                    Spacer()
 				}
 				.padding(8)
+                .isHidden(!isShowName)
 			}
-			
-			
 		}
 		.overlay(
 			VStack {
 				if speaker.isDominantSpeaker {
-					RoundedRectangle(cornerRadius: 10)
+					RoundedRectangle(cornerRadius: 18)
 						.stroke(Color.green, lineWidth: 4)
 						.onChange(of: speaker.isDominantSpeaker) { newValue in
 							speaker.pinValue = 1

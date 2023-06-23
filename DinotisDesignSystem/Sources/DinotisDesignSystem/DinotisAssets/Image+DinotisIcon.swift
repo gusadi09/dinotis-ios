@@ -119,4 +119,7 @@ public extension Image {
     static let videoCallMicOnStrokeIcon = Image("ic_mic_on_stroke", bundle: .module)
     static let videoCallVideoOffStrokeIcon = Image("ic_video_off_stroke", bundle: .module)
     static let videoCallVideoOnStrokeIcon = Image("ic_video_on_stroke", bundle: .module)
+    static let videoCallClockWhiteIcon = Image("ic_clock_white", bundle: .module)
+    static let videoCallLiveWhiteIcon = Image("ic_live_white", bundle: .module)
+    static let videoCallFlipCameraWhiteIcon = Image("ic_flip_camera_white", bundle: .module)
 }

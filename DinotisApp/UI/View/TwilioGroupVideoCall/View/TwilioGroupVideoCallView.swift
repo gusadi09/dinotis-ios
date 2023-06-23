@@ -126,41 +126,55 @@ struct TwilioGroupVideoCallView: View {
                         Group {
                             if viewModel.isShowingToolbar {
                                 HStack {
-                                    Button {
-                                        withAnimation {
-                                            viewModel.isShowingAbout.toggle()
-                                        }
-                                    } label: {
-                                        HStack {
-                                            Image(systemName: "info.circle")
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(height: 20)
-                                            
-                                            Text(LocaleText.groupCallDetailInfo)
-                                                .font(.robotoRegular(size: 12))
-                                                .foregroundColor(.white)
-                                        }
-                                        .foregroundColor(.white)
+                                    HStack(spacing: 4) {
+                                        Image.videoCallClockWhiteIcon
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(height: 24)
+                                        
+                                        Text(viewModel.stringTime)
+                                            .font(.robotoBold(size: 12))
                                     }
+                                    .foregroundColor(viewModel.isNearbyEnd ? .white : .primaryRed)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 4)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .stroke(viewModel.isNearbyEnd ? Color.white : Color.primaryRed, lineWidth: 1)
+                                    )
                                     
                                     Spacer()
                                     
-                                    HStack(spacing: 8) {
-                                        Image(systemName: "clock")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(height: 12)
+                                    switch viewModel.state.twilioRole {
+                                    case "host", "speaker":
+                                        Button {
+                                            withAnimation(.spring()) {
+                                                viewModel.isSwitched.toggle()
+                                            }
+                                        } label: {
+                                            Image.videoCallFlipCameraWhiteIcon
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(height: 32)
+                                        }
+
                                         
-                                        Text(viewModel.stringTime)
-                                            .font(.robotoBold(size: 10))
+                                    default:
+                                        HStack(spacing: 8) {
+                                            Image.videoCallLiveWhiteIcon
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(height: 24)
+                                            
+                                            Text(LocalizableText.liveText)
+                                                .font(.robotoBold(size: 12))
+                                        }
+                                        .padding(.leading, 6)
+                                        .padding(.trailing, 12)
+                                        .padding(.vertical, 2)
+                                        .background(Color.DinotisDefault.red)
+                                        .cornerRadius(68)
                                     }
-                                    .foregroundColor(viewModel.isNearbyEnd ? .white : .primaryRed)
-                                    .padding(8)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 7)
-                                            .stroke(viewModel.isNearbyEnd ? Color.white : Color.primaryRed, lineWidth: 1)
-                                    )
                                 }
                                 .padding(.horizontal)
                                 .padding(.top, 10)
@@ -239,7 +253,8 @@ struct TwilioGroupVideoCallView: View {
                                     SpeakerGridView(
                                         speaker: speaker,
                                         spacing: spacing,
-                                        role: viewModel.state.twilioRole
+                                        role: viewModel.state.twilioRole,
+                                        isShowName: viewModel.isShowingToolbar
                                     )
                                     .onTapGesture {
                                         withAnimation {
