@@ -49,6 +49,14 @@ final class GroupVideoCallViewModel: ObservableObject {
         meeting.leaveRoom()
     }
     
+    func disableIdleTimer() {
+        UIApplication.shared.isIdleTimerDisabled = true
+    }
+    
+    func enableIdleTimer() {
+        UIApplication.shared.isIdleTimerDisabled = false
+    }
+    
     func toggleCamera() {
         do {
             if isCameraOn {
@@ -92,7 +100,12 @@ final class GroupVideoCallViewModel: ObservableObject {
         }
     }
     
+    func onDisappear() {
+        enableIdleTimer()
+    }
+    
     func onAppear() {
+        disableIdleTimer()
         meeting.addMeetingRoomEventsListener(meetingRoomEventsListener: self)
         meeting.addParticipantEventsListener(participantEventsListener: self)
         meeting.addSelfEventsListener(selfEventsListener: self)

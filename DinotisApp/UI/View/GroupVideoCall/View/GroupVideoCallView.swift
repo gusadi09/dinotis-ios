@@ -6,6 +6,7 @@
 //
 
 import DinotisDesignSystem
+import DyteiOSCore
 import SwiftUI
 
 struct GroupVideoCallView: View {
@@ -18,46 +19,8 @@ struct GroupVideoCallView: View {
             Spacer()
             
             if viewModel.isJoined {
-                ZStack(alignment: .bottomLeading) {
-                    if viewModel.isCameraOn {
-                        if let video = viewModel.meeting.localUser.getVideoView() {
-                            UIVideoView(videoView: video, width: 176, height: 246)
-                                .frame(width: 176, height: 246)
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                                .rotationEffect(.degrees(0))
-                                .rotation3DEffect(.degrees(viewModel.position == .rear ? 180 : 0), axis: (0, 1, 0))
-                        }
-                        
-                    } else {
-                        RoundedRectangle(cornerRadius: 10)
-                            .foregroundColor(.DinotisDefault.black1)
-                            .frame(width: 176, height: 246)
-                            .overlay(
-                                ImageLoader(url: viewModel.meeting.localUser.picture.orEmpty(), width: 136, height: 136)
-                                    .frame(width: 136, height: 136)
-                                    .clipShape(Circle())
-                            )
-                    }
-                    
-                    HStack {
-                        if !viewModel.meeting.localUser.fetchAudioEnabled() {
-                            Image.videoCallMicrophoneActiveIcon
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 10)
-                        }
-                        
-                        Text("\(viewModel.meeting.localUser.name) \(viewModel.meeting.localUser.canDoParticipantHostControls() ? "(host)" : "")")
-                            .font(.robotoMedium(size: 10))
-                            .foregroundColor(.white)
-                    }
-                    .padding(5)
-                    .background(
-                        Capsule()
-                            .foregroundColor(.gray.opacity(0.5))
-                    )
-                    .padding(10)
-                }
+                
+                VideoContainerView(viewModel: viewModel)
                 
                 DinotisPrimaryButton(text: "Mute Mic", type: .adaptiveScreen, height: 45, textColor: .white, bgColor: .DinotisDefault.primary) {
                     viewModel.toggleMicrophone()
@@ -95,6 +58,59 @@ struct GroupVideoCallView: View {
         }
         .onAppear {
             viewModel.onAppear()
+        }
+        .onDisappear {
+            viewModel.onDisappear()
+        }
+    }
+}
+
+fileprivate extension GroupVideoCallView {
+    struct VideoContainerView: View {
+        
+        @ObservedObject var viewModel: GroupVideoCallViewModel
+        
+        var body: some View {
+            ZStack(alignment: .bottomLeading) {
+                if viewModel.isCameraOn {
+                    if let video = viewModel.meeting.localUser.getVideoView() {
+                        UIVideoView(videoView: video, width: 176, height: 246)
+                            .frame(width: 176, height: 246)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .rotationEffect(.degrees(0))
+                            .rotation3DEffect(.degrees(viewModel.position == .rear ? 180 : 0), axis: (0, 1, 0))
+                    }
+                    
+                } else {
+                    RoundedRectangle(cornerRadius: 10)
+                        .foregroundColor(.DinotisDefault.black1)
+                        .frame(width: 176, height: 246)
+                        .overlay(
+                            ImageLoader(url: viewModel.meeting.localUser.picture.orEmpty(), width: 136, height: 136)
+                                .frame(width: 136, height: 136)
+                                .clipShape(Circle())
+                        )
+                }
+                
+                HStack {
+                    if !viewModel.meeting.localUser.fetchAudioEnabled() {
+                        Image.videoCallMicrophoneActiveIcon
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 10)
+                    }
+                    
+                    Text("\(viewModel.meeting.localUser.name) \(viewModel.meeting.localUser.canDoParticipantHostControls() ? "(host)" : "")")
+                        .font(.robotoMedium(size: 10))
+                        .foregroundColor(.white)
+                }
+                .padding(5)
+                .background(
+                    Capsule()
+                        .foregroundColor(.gray.opacity(0.5))
+                )
+                .padding(10)
+            }
         }
     }
 }
