@@ -465,90 +465,283 @@ extension TwilioGroupVideoCallView {
 			.buttonStyle(.plain)
 		}
 	}
+    
+    struct AboutCallBottomSheet: View {
+        @ObservedObject var viewModel: ParticipantsViewModel
+        @Environment(\.presentationMode) var presentationMode
+        @ObservedObject var twilioLiveVM: TwilioLiveStreamViewModel
+        @EnvironmentObject var streamManager: StreamManager
+        @Namespace var namespace
+        
+        var body: some View {
+            VStack {
+                HStack {
+                    Text(LocalizableText.aboutCallTitle)
+                        .font(.robotoBold(size: 16))
+                    
+                    Spacer()
+                    
+                    Button {
+                        presentationMode.wrappedValue.dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                    }
+                }
+                .foregroundColor(.white)
+                .padding()
+                
+                HStack {
+                    Spacer()
+                    Button {
+                        withAnimation {
+                            viewModel.tabSelection = 0
+                        }
+                    } label: {
+                        VStack(spacing: 16) {
+                            Text(LocalizableText.labelChat)
+                                .font(.robotoBold(size: 16))
+                                .foregroundColor(viewModel.tabSelection == 0 ? .blue : .white)
+                            
+                            Rectangle()
+                                .frame(height: 2)
+                                .foregroundColor(.blue)
+                                .isHidden(viewModel.tabSelection != 0)
+                                .matchedGeometryEffect(id: "bottom", in: namespace)
+                        }
+                        .animation(.spring(), value: viewModel.tabSelection)
+                    }
+
+                    Spacer()
+                    Button {
+                        withAnimation {
+                            viewModel.tabSelection = 1
+                        }
+                    } label: {
+                        VStack(spacing: 16) {
+                            Text(LocalizableText.participant)
+                                .font(.robotoBold(size: 16))
+                                .foregroundColor(viewModel.tabSelection == 1 ? .blue : .white)
+                            
+                            Rectangle()
+                                .frame(height: 2)
+                                .foregroundColor(.blue)
+                                .isHidden(viewModel.tabSelection != 1)
+                                .matchedGeometryEffect(id: "bottom", in: namespace)
+                        }
+                        .animation(.spring(), value: viewModel.tabSelection)
+                    }
+                    
+                    Spacer()
+                    Button {
+                        withAnimation {
+                            viewModel.tabSelection = 2
+                        }
+                    } label: {
+                        VStack(spacing: 16) {
+                            Text(LocalizableText.labelPolls)
+                                .font(.robotoBold(size: 16))
+                                .foregroundColor(viewModel.tabSelection == 2 ? .blue : .white)
+                            
+                            Rectangle()
+                                .frame(height: 2)
+                                .foregroundColor(.blue)
+                                .isHidden(viewModel.tabSelection != 2)
+                                .matchedGeometryEffect(id: "bottom", in: namespace)
+                        }
+                        .animation(.spring(), value: viewModel.tabSelection)
+                    }
+                    
+                    Spacer()
+                }
+                
+                Group {
+                    switch viewModel.tabSelection {
+                    case 0:
+                        ScrollView {
+                            Text("Chat Tab")
+                        }
+                    case 1:
+                        ParticipantTabView(twilioLiveVM: twilioLiveVM)
+                    case 2:
+                        ScrollView {
+                            Text("Polls")
+                        }
+                    default:
+                        EmptyView()
+                    }
+                }
+                .animation(.easeInOut, value: viewModel.tabSelection)
+            }
+        }
+    }
 	
-	struct ParticipantView: View {
+	struct ParticipantTabView: View {
 		
 		@EnvironmentObject var viewModel: ParticipantsViewModel
 		@ObservedObject var twilioLiveVM: TwilioLiveStreamViewModel
 		@EnvironmentObject var streamManager: StreamManager
-		@EnvironmentObject var participantsViewModel: ParticipantsViewModel
-		@Environment(\.presentationMode) var presentationMode
 		
-		var body: some View {
-			NavigationView {
-				List {
-					Section(header: Text("Speakers (\(viewModel.speakers.count))")
-                        .font(.robotoBold(size: 16)).foregroundColor(.secondaryViolet)) {
-						ForEach(viewModel.speakers.unique(), id: \.identity) { speaker in
-							HStack {
-								Text("\(speaker.identity.orEmpty()) \((speaker.coHost ?? false) ? "(Co-Host)" : "")\((speaker.host ?? false) ? "(Host)" : "")")
-									.font(.robotoRegular(size: 14))
-								Spacer()
-							}
-						}
-					}
+        var body: some View {
+            VStack {
+                HStack(spacing: 12) {
+                    Image.bottomNavigationSearchWhiteIcon
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 24, height: 24)
                     
-                    if twilioLiveVM.state.twilioRole == "speaker" || twilioLiveVM.state.twilioRole == "host" {
-                        Section(header: Text("Viewers (\(viewModel.updateViewerCount()))")
-                            .font(.robotoBold(size: 14)).foregroundColor(.secondaryViolet)) {
-                            
-                            ForEach(viewModel.viewersWithoutRaisedHand.unique(), id: \.identity) { viewer in
-                                HStack {
-                                    if viewModel.viewersWithRaisedHand.unique().contains(where: { item in
-                                        item.identity == viewer.identity
-                                    }) {
-                                        HStack {
-                                            Text("\(viewer.identity.orEmpty()) 👋")
-                                                .font(.robotoRegular(size: 14))
-                                                .alert(isPresented: $viewModel.showSpeakerInviteSent) {
-                                                    Alert(
-                                                        title: Text(LocaleText.invitationSent),
-                                                        message: Text("\(LocaleText.speakerInviteMessage1) \(viewer.identity.orEmpty()) \(LocaleText.speakerInviteMessage2)"),
-                                                        dismissButton: .default(Text(LocaleText.gotIt))
-                                                    )
-                                                }
-                                            
-                                            Spacer()
-                                            
-                                            if streamManager.stateObservable.twilioRole == "host" {
-                                                Button(LocaleText.inviteToSpeak) {
-                                                    viewModel.sendSpeakerInvite(meetingId: twilioLiveVM.meeting.id.orEmpty(), userIdentity: viewer.identity.orEmpty())
-                                                }
-                                                .font(.robotoMedium(size: 14))
-                                                .alert(isPresented: $viewModel.showError) {
-                                                    
-                                                    Alert(
-                                                        title: Text(LocaleText.attention),
-                                                        message: Text(viewModel.error?.localizedDescription ?? ""),
-                                                        dismissButton: .default(Text(LocaleText.okText))
-                                                    )
-                                                }
-                                            }
-                                        }
-                                        .buttonStyle(PlainButtonStyle())
-                                    } else {
-                                        Text(viewer.identity.orEmpty())
-                                            .font(.robotoRegular(size: 14))
-                                        Spacer()
+                    TextField("Search...", text: $viewModel.searchText)
+                        .font(.robotoRegular(size: 16))
+                        .foregroundColor(.white)
+                }
+                .padding()
+                .background(Color.DinotisDefault.black2)
+                
+                List {
+                    if twilioLiveVM.state.twilioRole == "host" {
+                        if !viewModel.joiningParticipant.isEmpty {
+                            Section(
+                                header: HStack {
+                                    Text("\(LocalizableText.titleWaitingRoom) (\(viewModel.joiningParticipant.count))")
+                                        .font(.robotoBold(size: 16))
+                                        .foregroundColor(.white)
+                                    
+                                    Spacer()
+                                    
+                                    Button {
+                                        
+                                    } label: {
+                                        Text(LocalizableText.acceptAllLabel)
+                                            .font(.robotoBold(size: 12))
+                                            .foregroundColor(.white)
+                                            .padding(.horizontal, 10)
+                                            .padding(.vertical, 8)
+                                            .frame(width: 103, alignment: .center)
+                                            .background(Color.blue)
+                                            .cornerRadius(8)
                                     }
+                                    .buttonStyle(.plain)
+                                }
+                            ) {
+                                ForEach(viewModel.joiningParticipant, id: \.id) { participant in
+                                    HStack(spacing: 16) {
+                                        Circle()
+                                            .foregroundColor(.blue)
+                                            .frame(width: 42, height: 42)
+                                        
+                                        Text(participant.name)
+                                            .font(.robotoBold(size: 16))
+                                            .foregroundColor(.white)
+                                        
+                                        Spacer()
+                                        
+                                        Button {
+                                            
+                                        } label: {
+                                            Text(LocalizableText.acceptToJoinLabel)
+                                                .font(.robotoBold(size: 12))
+                                                .foregroundColor(.blue)
+                                                .padding(.horizontal, 10)
+                                                .padding(.vertical, 8)
+                                                .frame(width: 103, alignment: .center)
+                                                .cornerRadius(8)
+                                                .overlay(
+                                                    RoundedRectangle(cornerRadius: 8)
+                                                        .inset(by: 0.5)
+                                                        .stroke(Color.blue, lineWidth: 1)
+                                                )
+                                        }
+                                        .buttonStyle(.plain)
+                                    }
+                                    .listRowSeparator(.hidden)
                                 }
                             }
+                            .listRowSeparator(.hidden)
                         }
                     }
-				}
-				.listStyle(.plain)
-				.animation(.default)
-				.navigationTitle("\(LocaleText.generalParticipant) (\(viewModel.speakers.unique().count))")
-				.navigationBarTitleDisplayMode(.inline)
-				.toolbar {
-					ToolbarItem(placement: .confirmationAction) {
-						Button(LocaleText.okText) {
-							presentationMode.wrappedValue.dismiss()
-							participantsViewModel.haveNewRaisedHand = false
-						}
-					}
-				}
-			}
+                    
+                    if !viewModel.speakerParticipant.isEmpty {
+                        Section(
+                            header: HStack {
+                                Text("\(LocalizableText.speakerTitle) (\(viewModel.speakerParticipant.count))")
+                                    .font(.robotoBold(size: 16))
+                                    .foregroundColor(.white)
+                                
+                                Spacer()
+                            }
+                        ) {
+                            ForEach(viewModel.speakerParticipant, id: \.id) { participant in
+                                HStack(spacing: 16) {
+                                    Circle()
+                                        .foregroundColor(.blue)
+                                        .frame(width: 42, height: 42)
+                                    
+                                    Text(participant.name)
+                                        .font(.robotoBold(size: 16))
+                                        .foregroundColor(.white)
+                                    
+                                    Spacer()
+                                    
+                                    HStack(spacing: 8) {
+                                        (participant.isMicOn ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 24)
+                                        
+                                        (participant.isVideoOn ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 24)
+                                    }
+                                }
+                                .listRowSeparator(.hidden)
+                            }
+                        }
+                        .listRowSeparator(.hidden)
+                        
+                        if !viewModel.viewerSpeaker.isEmpty {
+                            Section(
+                                header: HStack {
+                                    Text("\(LocalizableText.viewerTitle) (\(viewModel.viewerSpeaker.count))")
+                                        .font(.robotoBold(size: 16))
+                                        .foregroundColor(.white)
+                                    
+                                    Spacer()
+                                }
+                            ) {
+                                ForEach(viewModel.viewerSpeaker, id: \.id) { participant in
+                                    HStack(spacing: 16) {
+                                        Circle()
+                                            .foregroundColor(.blue)
+                                            .frame(width: 42, height: 42)
+                                        
+                                        Text(participant.name)
+                                            .font(.robotoBold(size: 16))
+                                            .foregroundColor(.white)
+                                        
+                                        Spacer()
+                                        
+                                        HStack(spacing: 8) {
+                                            (participant.isMicOn ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 24)
+                                            
+                                            (participant.isVideoOn ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 24)
+                                        }
+                                    }
+                                    .listRowSeparator(.hidden)
+                                }
+                            }
+                            .listRowSeparator(.hidden)
+                        }
+                    }
+                }
+                .listStyle(PlainListStyle())
+                .animation(.spring(), value: viewModel.searchedParticipant)
+            }
 		}
 	}
 	

@@ -1673,4 +1673,45 @@ public enum LocalizableText {
         bundle: .module,
         comment: "title content of outdated version view"
     )
+    public static let labelChat = NSLocalizedString(
+        "label_chat",
+        bundle: .module,
+        comment: "Chat label"
+    )
+    public static let aboutCallTitle = NSLocalizedString(
+        "about_call_title",
+        bundle: .module,
+        comment: "title in about call bottom sheet"
+    )
+    public static let labelPolls = NSLocalizedString(
+        "label_polls",
+        bundle: .module,
+        comment: "label button in polls section"
+    )
+    public static let titleWaitingRoom = NSLocalizedString(
+        "title_waiting_room",
+        bundle: .module,
+        comment: "title in waiting room"
+    )
+    public static let acceptAllLabel = NSLocalizedString(
+        "accept_all_label",
+        bundle: .module,
+        comment: "accept all label in meeting room"
+    )
+    public static let acceptToJoinLabel = NSLocalizedString(
+        "accept_to_join_label",
+        bundle: .module,
+        comment: "accept to join label in meeting room"
+    )
+    public static let speakerTitle = NSLocalizedString(
+        "speaker_title",
+        bundle: .module,
+        comment: "speaker title"
+    )
+    public static let viewerTitle = NSLocalizedString(
+        "viewer_title",
+        bundle: .module,
+        comment: "viewer title"
+    )
+    
 }

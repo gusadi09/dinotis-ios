@@ -600,7 +600,7 @@ struct TwilioGroupVideoCallView: View {
 
             })
             .sheet(isPresented: $viewModel.isShowingParticipants) {
-                ParticipantView(twilioLiveVM: viewModel)
+                AboutCallBottomSheet(viewModel: participantsViewModel, twilioLiveVM: viewModel)
             }
             .sheet(isPresented: $viewModel.isShowingChat) {
                 ChatView(viewModel: viewModel)
