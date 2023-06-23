@@ -156,6 +156,7 @@
 "ok_text" = "Okay";
 "return_text" = "Kembali";
 "attention_text" = "Perhatian";
+"live_text" = "Live";
 
 "tab_session" = "Sesi";
 "tab_creator" = "Kreator";
