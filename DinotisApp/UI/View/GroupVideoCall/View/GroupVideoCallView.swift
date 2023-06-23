@@ -14,48 +14,61 @@ struct GroupVideoCallView: View {
     @ObservedObject var viewModel: GroupVideoCallViewModel
     
     var body: some View {
-        VStack {
-            
-            Spacer()
-            
-            if viewModel.isJoined {
+        TabView {
+            VStack {
                 
-                VideoContainerView(viewModel: viewModel)
-                
-                DinotisPrimaryButton(text: "Mute Mic", type: .adaptiveScreen, height: 45, textColor: .white, bgColor: .DinotisDefault.primary) {
-                    viewModel.toggleMicrophone()
+                if viewModel.isJoined {
+                    
+                    LocalUserVideoContainerView(viewModel: viewModel)
+                    
+                    DinotisPrimaryButton(text: "Mute Mic", type: .adaptiveScreen, height: 45, textColor: .white, bgColor: .DinotisDefault.primary) {
+                        viewModel.toggleMicrophone()
+                    }
+                    .padding()
+                    
+                    DinotisPrimaryButton(text: "Switch Camera", type: .adaptiveScreen, height: 45, textColor: .white, bgColor: .DinotisDefault.primary) {
+                        viewModel.switchCamera()
+                    }
+                    .padding()
+                    
+                    
+                    DinotisPrimaryButton(text: viewModel.isCameraOn ? "Disable" : "enable", type: .adaptiveScreen, height: 45, textColor: .white, bgColor: .DinotisDefault.primary) {
+                        viewModel.toggleCamera()
+                    }
+                    .padding()
                 }
-                .padding()
                 
-                DinotisPrimaryButton(text: "Switch Camera", type: .adaptiveScreen, height: 45, textColor: .white, bgColor: .DinotisDefault.primary) {
-                    viewModel.switchCamera()
+                Text(viewModel.joined)
+                
+                Button {
+                    viewModel.joinMeeting()
+                } label: {
+                    Text("Join Room")
                 }
-                .padding()
                 
-                
-                DinotisPrimaryButton(text: viewModel.isCameraOn ? "Disable" : "enable", type: .adaptiveScreen, height: 45, textColor: .white, bgColor: .DinotisDefault.primary) {
-                    viewModel.toggleCamera()
+                Button {
+                    viewModel.leaveMeeting()
+                } label: {
+                    Text("Leave Room")
                 }
-                .padding()
-            }
-            
-            Text(viewModel.joined)
-            
-            Button {
-                viewModel.joinMeeting()
-            } label: {
-                Text("Join Room")
-            }
-            
-            Button {
-                viewModel.leaveMeeting()
-            } label: {
-                Text("Leave Room")
-            }
 
+            }
             
-            Spacer()
+            VStack {
+                List {
+                    if viewModel.isJoined {
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 176))]) {
+                            ForEach(viewModel.participants, id: \.id) { item in
+                                RemoteUserJoinedVideoContainerView(participant: item)
+                            }
+                        }
+                    }
+                }
+                .listStyle(.plain)
+                .listRowSeparator(.hidden)
+            }
         }
+        .tabViewStyle(.page)
         .onAppear {
             viewModel.onAppear()
         }
@@ -66,7 +79,7 @@ struct GroupVideoCallView: View {
 }
 
 fileprivate extension GroupVideoCallView {
-    struct VideoContainerView: View {
+    struct LocalUserVideoContainerView: View {
         
         @ObservedObject var viewModel: GroupVideoCallViewModel
         
@@ -101,6 +114,52 @@ fileprivate extension GroupVideoCallView {
                     }
                     
                     Text("\(viewModel.meeting.localUser.name) \(viewModel.meeting.localUser.canDoParticipantHostControls() ? "(host)" : "")")
+                        .font(.robotoMedium(size: 10))
+                        .foregroundColor(.white)
+                }
+                .padding(5)
+                .background(
+                    Capsule()
+                        .foregroundColor(.gray.opacity(0.5))
+                )
+                .padding(10)
+            }
+        }
+    }
+    
+    struct RemoteUserJoinedVideoContainerView: View {
+        
+        var participant: DyteJoinedMeetingParticipant
+        
+        var body: some View {
+            ZStack(alignment: .bottomLeading) {
+                if participant.fetchVideoEnabled() {
+                    if let video = participant.getVideoView() {
+                        UIVideoView(videoView: video, width: 176, height: 246)
+                            .frame(width: 176, height: 246)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                    }
+                    
+                } else {
+                    RoundedRectangle(cornerRadius: 10)
+                        .foregroundColor(.DinotisDefault.black1)
+                        .frame(width: 176, height: 246)
+                        .overlay(
+                            ImageLoader(url: participant.picture.orEmpty(), width: 136, height: 136)
+                                .frame(width: 136, height: 136)
+                                .clipShape(Circle())
+                        )
+                }
+                
+                HStack {
+                    if participant.fetchAudioEnabled() {
+                        Image.videoCallMicrophoneActiveIcon
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 10)
+                    }
+                    
+                    Text("\(participant.name) \(participant.isHost ? "(host)" : "")")
                         .font(.robotoMedium(size: 10))
                         .foregroundColor(.white)
                 }
