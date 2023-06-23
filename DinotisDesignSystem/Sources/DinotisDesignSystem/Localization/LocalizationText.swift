@@ -1714,4 +1714,9 @@ public enum LocalizableText {
         comment: "viewer title"
     )
     
+    public static let liveText = NSLocalizedString(
+        "live_text",
+        bundle: .module,
+        comment: "general live text"
+    )
 }
