@@ -34,5 +34,6 @@ public extension Color {
 		public static let darkGreen = Color("DarkGreen", bundle: Bundle.module)
 		public static let linearOrangeLeft = Color("LinearOrangeLeft", bundle: Bundle.module)
 		public static let linearOrangeRight = Color("LinearOrangeRight", bundle: Bundle.module)
+        public static let grayDinotis = Color("Gray", bundle: Bundle.module)
 	}
 }
