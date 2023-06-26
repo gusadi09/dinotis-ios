@@ -27,4 +27,8 @@ extension Color {
     static let attentionPink = Color("attention-pink")
     static let infoColor = Color("info-color")
 	static let softYellowDinotis = Color("yellow-dinotis")
+    static let grayChat = Color("Gray")
+    static let dinotisBgChat = Color("dinotis-bg-chat")
+    static let dinotisBgForm = Color("dinotis-bg-form")
+    static let dinotisBgCheck = Color("bg-check")
 }

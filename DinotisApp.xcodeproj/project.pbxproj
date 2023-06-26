@@ -10,6 +10,7 @@
 		0A0664CF280F0669009EC7C0 /* TalentProfileDetailView+Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0664CE280F0669009EC7C0 /* TalentProfileDetailView+Component.swift */; };
 		0A0664D1280F4939009EC7C0 /* EmptySchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0664D0280F4939009EC7C0 /* EmptySchedule.swift */; };
 		0AE145A22812801E00108948 /* TalentEditProfile+Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE145A12812801E00108948 /* TalentEditProfile+Component.swift */; };
+		378302692A48A1A100FAB778 /* PollingVideoCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378302682A48A1A100FAB778 /* PollingVideoCall.swift */; };
 		EC01F1E326BFD7C600CA878F /* UserBiodataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC01F1E226BFD7C600CA878F /* UserBiodataView.swift */; };
 		EC0279F227C5E40B00B8C392 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0279F127C5E40A00B8C392 /* RoundedCorner.swift */; };
 		EC0279F527C61D7900B8C392 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0279F427C61D7900B8C392 /* ProfileViewModel.swift */; };
@@ -385,6 +386,7 @@
 		0A0664CE280F0669009EC7C0 /* TalentProfileDetailView+Component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TalentProfileDetailView+Component.swift"; sourceTree = "<group>"; };
 		0A0664D0280F4939009EC7C0 /* EmptySchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptySchedule.swift; sourceTree = "<group>"; };
 		0AE145A12812801E00108948 /* TalentEditProfile+Component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TalentEditProfile+Component.swift"; sourceTree = "<group>"; };
+		378302682A48A1A100FAB778 /* PollingVideoCall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollingVideoCall.swift; sourceTree = "<group>"; };
 		EC01F1E226BFD7C600CA878F /* UserBiodataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserBiodataView.swift; sourceTree = "<group>"; };
 		EC0279F127C5E40A00B8C392 /* RoundedCorner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
 		EC0279F427C61D7900B8C392 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
@@ -999,6 +1001,7 @@
 			children = (
 				EC2A511228C7099800C717B9 /* PresentationVideoView.swift */,
 				EC2A511328C7099800C717B9 /* PresentationStatusView.swift */,
+				378302682A48A1A100FAB778 /* PollingVideoCall.swift */,
 			);
 			path = PresentationLayout;
 			sourceTree = "<group>";
@@ -3254,6 +3257,7 @@
 				EC6A755A29111B110030BC41 /* BundlingTargetType.swift in Sources */,
 				EC9C4E362814284C00837469 /* RequestScheduleType.swift in Sources */,
 				F67335052908F190006C1ADF /* RateHorizontalCardView.swift in Sources */,
+				378302692A48A1A100FAB778 /* PollingVideoCall.swift in Sources */,
 				EC9C7F8626D7D46000026F0E /* TalentWalletView.swift in Sources */,
 				EC7222722950B7B000C05A1B /* Friendship.swift in Sources */,
 				F61E53E528CB50F4006594B4 /* PrivateSpeakerVideoViewModel.swift in Sources */,
