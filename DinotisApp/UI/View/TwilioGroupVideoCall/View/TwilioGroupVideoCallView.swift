@@ -326,7 +326,13 @@ struct TwilioGroupVideoCallView: View {
                                 )
                                 .padding()
                                 .padding(.bottom, isPortraitOrientation ? 18 : 0)
-                                .background(Color.white)
+                                .background {
+                                    RoundedRectangle(cornerRadius: 15)
+                                        .fill(Color.dinotisGray)
+                                        .frame(height: 84)
+                                        .padding(.horizontal)
+                                        .padding(.bottom)
+                                }
                                 .edgesIgnoringSafeArea(.horizontal)
                             }
                         }

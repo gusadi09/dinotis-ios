@@ -122,4 +122,6 @@ public extension Image {
     static let videoCallClockWhiteIcon = Image("ic_clock_white", bundle: .module)
     static let videoCallLiveWhiteIcon = Image("ic_live_white", bundle: .module)
     static let videoCallFlipCameraWhiteIcon = Image("ic_flip_camera_white", bundle: .module)
+    static let videoCallChatIcon = Image("ic-bubble-chat", bundle: .module)
+    static let videoCallMoreMenuNewIcon = Image("ic-menu-icon", bundle: .module)
 }
