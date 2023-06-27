@@ -124,4 +124,7 @@ public extension Image {
     static let videoCallFlipCameraWhiteIcon = Image("ic_flip_camera_white", bundle: .module)
     static let videoCallChatIcon = Image("ic-bubble-chat", bundle: .module)
     static let videoCallMoreMenuNewIcon = Image("ic-menu-icon", bundle: .module)
+    static let videoCallRaiseHandActive = Image("ic-raise-on-icon", bundle: .module)
+    static let videoCallRaiseHandInactive = Image("ic-raise-off-icon", bundle: .module)
+    static let videoCallQuestionIcon = Image("ic-question-icon", bundle: .module)
 }

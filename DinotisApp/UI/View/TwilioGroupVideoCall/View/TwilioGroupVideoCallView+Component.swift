@@ -398,41 +398,60 @@ extension TwilioGroupVideoCallView {
                             streamVM.isHandRaised.toggle()
                         }
                     } label: {
-                        (streamVM.isHandRaised ? Image.videoCallRaiseHandActiveIcon : Image.videoCallRaiseHandInactiveIcon)
+                        (streamVM.isHandRaised ? Image.videoCallRaiseHandActive : Image.videoCallRaiseHandInactive)
                             .resizable()
                             .scaledToFit()
                             .frame(height: 45)
                     }
                     
+                    Button {
+                        viewModel.isShowingChat.toggle()
+                    } label: {
+                        Image.videoCallChatIcon
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 45)
+                            .foregroundColor(.white)
+                    }
+                    
+                    Button {
+                       
+                    } label: {
+                        Image.videoCallQuestionIcon
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 45)
+                            .foregroundColor(.white)
+                    }
                     
                 default:
                     EmptyView()
                 }
-                
-                //				Button {
-                //					withAnimation(.spring()) {
-                //						viewModel.isShowingParticipants.toggle()
-                //						participantsViewModel.haveNewRaisedHand = false
-                //					}
-                //				} label: {
-                //					ZStack(alignment: .topTrailing) {
-                //						ZStack {
-                //                            Image.videoCallParticipantInactiveIcon
-                //								.resizable()
-                //								.scaledToFit()
-                //								.frame(height: 45)
-                //						}
-                //
-                //						if participantsViewModel.haveNewRaisedHand && StateObservable.shared.twilioRole == "host" {
-                //							Circle()
-                //								.foregroundColor(.red)
-                //								.frame(width: 12, height: 12)
-                //						}
-                //					}
-                //				}
-                //				.onChange(of: viewModel.isSwitched) { newValue in
-                //					streamManager.roomManager?.localParticipant.position = newValue ? .front : .back
-                //				}
+//
+//                				Button {
+//                					withAnimation(.spring()) {
+//                						viewModel.isShowingParticipants.toggle()
+//                						participantsViewModel.haveNewRaisedHand = false
+//                					}
+//                				} label: {
+//                					ZStack(alignment: .topTrailing) {
+//                						ZStack {
+//                                            Image.videoCallParticipantInactiveIcon
+//                								.resizable()
+//                								.scaledToFit()
+//                								.frame(height: 45)
+//                						}
+//
+//                						if participantsViewModel.haveNewRaisedHand && StateObservable.shared.twilioRole == "host" {
+//                							Circle()
+//                								.foregroundColor(.red)
+//                								.frame(width: 12, height: 12)
+//                						}
+//                					}
+//                				}
+//                				.onChange(of: viewModel.isSwitched) { newValue in
+//                					streamManager.roomManager?.localParticipant.position = newValue ? .front : .back
+//                				}
                 
                 Button {
                     withAnimation(.spring()) {
@@ -1064,34 +1083,23 @@ extension TwilioGroupVideoCallView {
                                     .foregroundColor(.white)
                                     .font(.robotoBold(size: 16))
                                 
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .fill(Color.grayChat)
-                                        .frame(height: 400)
                                     VStack(alignment: .leading) {
                                         Text(fieldPoll)
+                                            .foregroundColor(.white)
                                         ForEach(forms.indices, id: \.self) { index in
                                             PollFinish(form: $forms[index])
                                         }
                                     }.padding()
-                                    
-                                    
-                                }
-                                
-                                
+                                    .background(RoundedRectangle(cornerRadius: 10).foregroundColor(Color.grayChat))
+                                                                .frame(width: calculateContentWidth(geometry: geo))
                                 
                             }.padding()
-                            
-                            
+                            Spacer()
                             
                         } else {
                             Spacer()
                             if isPollCard {
-                                ZStack {
-                                    
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .fill(Color.grayChat)
-                                        .frame(height: 600)
+//
                                     ScrollView {
                                         VStack {
                                             Text("Poll Question")
@@ -1123,7 +1131,6 @@ extension TwilioGroupVideoCallView {
                                             HStack {
                                                 Button {
                                                     isAdd.toggle()
-                                                    //                                                addPoll += 1
                                                     addForm()
                                                     
                                                 } label: {
@@ -1168,16 +1175,10 @@ extension TwilioGroupVideoCallView {
                                             //
                                             
                                         }
+                                        .background(RoundedRectangle(cornerRadius: 10).foregroundColor(Color.grayChat))
+                                                                    .frame(width: calculateContentWidth(geometry: geo))
                                     }
-                                    
-                                    
-                                    
-                                    
-                                }
                                 .padding()
-                                
-                                
-                                
                             }
                             
                             
@@ -1201,11 +1202,7 @@ extension TwilioGroupVideoCallView {
                             }
                             
                         }
-                        
-                        
-                        
-                        
-                        
+
                     }
                     
                     .frame(height: geo.size.height/1)
@@ -1222,6 +1219,9 @@ extension TwilioGroupVideoCallView {
             forms.remove(atOffsets: indices)
         }
         
+        private func calculateContentWidth(geometry: GeometryProxy) -> CGFloat {
+               return geometry.size.width - 40
+           }
         
     }
     
