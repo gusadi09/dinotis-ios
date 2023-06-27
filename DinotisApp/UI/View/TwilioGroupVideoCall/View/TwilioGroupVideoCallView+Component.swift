@@ -415,7 +415,7 @@ extension TwilioGroupVideoCallView {
                     }
                     
                     Button {
-                       
+                        
                     } label: {
                         Image.videoCallQuestionIcon
                             .resizable()
@@ -424,35 +424,34 @@ extension TwilioGroupVideoCallView {
                             .foregroundColor(.white)
                     }
                     
-                    
                 default:
                     EmptyView()
                 }
-//
-//                				Button {
-//                					withAnimation(.spring()) {
-//                						viewModel.isShowingParticipants.toggle()
-//                						participantsViewModel.haveNewRaisedHand = false
-//                					}
-//                				} label: {
-//                					ZStack(alignment: .topTrailing) {
-//                						ZStack {
-//                                            Image.videoCallParticipantInactiveIcon
-//                								.resizable()
-//                								.scaledToFit()
-//                								.frame(height: 45)
-//                						}
-//
-//                						if participantsViewModel.haveNewRaisedHand && StateObservable.shared.twilioRole == "host" {
-//                							Circle()
-//                								.foregroundColor(.red)
-//                								.frame(width: 12, height: 12)
-//                						}
-//                					}
-//                				}
-//                				.onChange(of: viewModel.isSwitched) { newValue in
-//                					streamManager.roomManager?.localParticipant.position = newValue ? .front : .back
-//                				}
+                //
+                //                                Button {
+                //                                    withAnimation(.spring()) {
+                //                                        viewModel.isShowingParticipants.toggle()
+                //                                        participantsViewModel.haveNewRaisedHand = false
+                //                                    }
+                //                                } label: {
+                //                                    ZStack(alignment: .topTrailing) {
+                //                                        ZStack {
+                //                                            Image.videoCallParticipantInactiveIcon
+                //                                                .resizable()
+                //                                                .scaledToFit()
+                //                                                .frame(height: 45)
+                //                                        }
+                //
+                //                                        if participantsViewModel.haveNewRaisedHand && StateObservable.shared.twilioRole == "host" {
+                //                                            Circle()
+                //                                                .foregroundColor(.red)
+                //                                                .frame(width: 12, height: 12)
+                //                                        }
+                //                                    }
+                //                                }
+                //                                .onChange(of: viewModel.isSwitched) { newValue in
+                //                                    streamManager.roomManager?.localParticipant.position = newValue ? .front : .back
+                //                                }
                 
                 Button {
                     withAnimation(.spring()) {
@@ -600,6 +599,7 @@ extension TwilioGroupVideoCallView {
             }
         }
     }
+    
     
     struct ParticipantTabView: View {
         
@@ -1084,19 +1084,15 @@ extension TwilioGroupVideoCallView {
                                     .foregroundColor(.white)
                                     .font(.robotoBold(size: 16))
                                 
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .fill(Color.grayChat)
-                                        .frame(height: 400)
-                                    VStack(alignment: .leading) {
-                                        Text(fieldPoll)
-                                            .foregroundColor(.white)
-                                        ForEach(forms.indices, id: \.self) { index in
-                                            PollFinish(form: $forms[index])
-                                        }
-                                    }.padding()
+                                VStack(alignment: .leading) {
+                                    Text(fieldPoll)
+                                        .foregroundColor(.white)
+                                    ForEach(forms.indices, id: \.self) { index in
+                                        PollFinish(form: $forms[index])
+                                    }
+                                }.padding()
                                     .background(RoundedRectangle(cornerRadius: 10).foregroundColor(Color.grayChat))
-                                                                .frame(width: calculateContentWidth(geometry: geo))
+                                    .frame(width: calculateContentWidth(geometry: geo))
                                 
                             }.padding()
                             Spacer()
@@ -1104,95 +1100,86 @@ extension TwilioGroupVideoCallView {
                         } else {
                             Spacer()
                             if isPollCard {
-//
-                                    ScrollView {
-                                        VStack {
-                                            Text("Poll Question")
-                                                .foregroundColor(.white)
-                                                .padding(.top,10)
-                                            
-                                            if #available(iOS 16.0, *) {
-                                                TextField("", text: $fieldPoll, axis: .vertical)
-                                                    .placeholder(when: fieldPoll.isEmpty, placeholder: {
-                                                        Text("What is your poll for?").foregroundColor(.white)
-                                                    })
-                                                    .autocorrectionDisabled(true)
-                                                    .lineLimit(3, reservesSpace: true)
-                                                    .padding(5)
-                                                    .overlay {
-                                                        RoundedRectangle(cornerRadius: 8)
-                                                            .stroke(UIApplication.shared.windows.first?.overrideUserInterfaceStyle == .dark ? Color.white : Color(.systemGray3), lineWidth: 1)
-                                                            .background(Color.dinotisBgForm)
-                                                    }
-                                                    .padding()
-                                            } else {
-                                                // Fallback on earlier versions
-                                            }
-                                            
-                                            ForEach(forms.indices, id: \.self) { index in
-                                                FormRowView(form: $forms[index])
-                                            }
-                                            
-                                            HStack {
-                                                Button {
-                                                    isAdd.toggle()
-                                                    //                                                addPoll += 1
-                                                    addForm()
-                                                    
-                                                } label: {
-                                                    Image(systemName: "plus")
-                                                        .resizable()
-                                                        .frame(width: 10, height: 10)
-                                                        .foregroundColor(.blue)
-                                                    Text("Add an option")
-                                                        .foregroundColor(.blue)
-                                                    
+                                //
+                                ScrollView {
+                                    VStack {
+                                        Text("Poll Question")
+                                            .foregroundColor(.white)
+                                            .padding(.top,10)
+                                        
+                                        if #available(iOS 16.0, *) {
+                                            TextField("", text: $fieldPoll, axis: .vertical)
+                                                .placeholder(when: fieldPoll.isEmpty, placeholder: {
+                                                    Text("What is your poll for?").foregroundColor(.white)
+                                                })
+                                                .autocorrectionDisabled(true)
+                                                .lineLimit(3, reservesSpace: true)
+                                                .padding(5)
+                                                .overlay {
+                                                    RoundedRectangle(cornerRadius: 8)
+                                                        .stroke(UIApplication.shared.windows.first?.overrideUserInterfaceStyle == .dark ? Color.white : Color(.systemGray3), lineWidth: 1)
+                                                        .background(Color.dinotisBgForm)
                                                 }
-                                                
-                                            }
-                                            
-                                            
-                                            VStack {
-                                                Toggle(isOn: $isCheckedOne) {
-                                                    Text("Anonymous")
-                                                }
-                                                .toggleStyle(CheckboxStyle())
-                                                Toggle(isOn: $isCheckedTwo) {
-                                                    Text("Hide result before voting")
-                                                }
-                                                .toggleStyle(CheckboxStyle())
-                                                
-                                                
-                                                
-                                            }.padding(.trailing, 210)
-                                            
-                                            
+                                                .padding()
+                                        } else {
+                                            // Fallback on earlier versions
+                                        }
+                                        
+                                        ForEach(forms.indices, id: \.self) { index in
+                                            FormRowView(form: $forms[index])
+                                        }
+                                        
+                                        HStack {
                                             Button {
-                                                isPollCreated.toggle()
+                                                isAdd.toggle()
+                                                addForm()
+                                                
                                             } label: {
-                                                Text("Create Poll")
-                                                    .foregroundColor(Color.white)
-                                                    .padding()
-                                                    .frame(maxWidth: .infinity)
-                                                    .background(Color.blue).cornerRadius(10)
-                                                    .border(Color.blue).cornerRadius(10)
+                                                Image(systemName: "plus")
+                                                    .resizable()
+                                                    .frame(width: 10, height: 10)
+                                                    .foregroundColor(.blue)
+                                                Text("Add an option")
+                                                    .foregroundColor(.blue)
+                                                
                                             }
-                                            .padding()
-                                            //
                                             
                                         }
-                                        .background(RoundedRectangle(cornerRadius: 10).foregroundColor(Color.grayChat))
-                                                                    .frame(width: calculateContentWidth(geometry: geo))
+                                        
+                                        
+                                        VStack {
+                                            Toggle(isOn: $isCheckedOne) {
+                                                Text("Anonymous")
+                                            }
+                                            .toggleStyle(CheckboxStyle())
+                                            Toggle(isOn: $isCheckedTwo) {
+                                                Text("Hide result before voting")
+                                            }
+                                            .toggleStyle(CheckboxStyle())
+                                            
+                                            
+                                            
+                                        }.padding(.trailing, 210)
+                                        
+                                        
+                                        Button {
+                                            isPollCreated.toggle()
+                                        } label: {
+                                            Text("Create Poll")
+                                                .foregroundColor(Color.white)
+                                                .padding()
+                                                .frame(maxWidth: .infinity)
+                                                .background(Color.blue).cornerRadius(10)
+                                                .border(Color.blue).cornerRadius(10)
+                                        }
+                                        .padding()
+                                        //
+                                        
                                     }
-                                    
-                                    
-                                    
-                                    
+                                    .background(RoundedRectangle(cornerRadius: 10).foregroundColor(Color.grayChat))
+                                    .frame(width: calculateContentWidth(geometry: geo))
                                 }
                                 .padding()
-                                
-                                
-                                
                             }
                             
                             
@@ -1216,7 +1203,7 @@ extension TwilioGroupVideoCallView {
                             }
                             
                         }
-
+                        
                     }
                     
                     .frame(height: geo.size.height/1)
@@ -1234,91 +1221,87 @@ extension TwilioGroupVideoCallView {
         }
         
         private func calculateContentWidth(geometry: GeometryProxy) -> CGFloat {
-               return geometry.size.width - 40
-           }
+            return geometry.size.width - 40
+        }
         
     }
+}
+
+struct DetailMeetingView: View {
+    var meeting: UserMeetingData?
+    @ObservedObject var viewModel: TwilioLiveStreamViewModel
     
-    
-    
-    
-    
-    struct DetailMeetingView: View {
-        var meeting: UserMeetingData?
-        @ObservedObject var viewModel: TwilioLiveStreamViewModel
-        
-        var body: some View {
-            VStack(alignment: .leading) {
-                Text((meeting?.title).orEmpty())
-                    .font(.robotoBold(size: 14))
-                    .foregroundColor(.black)
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text((meeting?.title).orEmpty())
+                .font(.robotoBold(size: 14))
+                .foregroundColor(.black)
+            
+            Text((meeting?.meetingDescription).orEmpty())
+                .font(.robotoRegular(size: 12))
+                .foregroundColor(.black)
+                .padding(.bottom, 10)
+            
+            HStack(spacing: 10) {
+                Image.Dinotis.calendarIcon
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 18)
                 
-                Text((meeting?.meetingDescription).orEmpty())
-                    .font(.robotoRegular(size: 12))
-                    .foregroundColor(.black)
-                    .padding(.bottom, 10)
-                
-                HStack(spacing: 10) {
-                    Image.Dinotis.calendarIcon
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 18)
-                    
-                    if let dateStart = meeting?.startAt {
-                        Text(DateUtils.dateFormatter(dateStart, forFormat: .EEEEddMMMMyyyy))
-                            .font(.robotoRegular(size: 12))
-                            .foregroundColor(.black)
-                    }
-                }
-                
-                HStack(spacing: 10) {
-                    Image.Dinotis.clockIcon
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 18)
-                    
-                    if let timeStart = meeting?.startAt,
-                       let timeEnd = meeting?.endAt {
-                        Text("\(DateUtils.dateFormatter(timeStart, forFormat: .HHmm)) - \(DateUtils.dateFormatter(timeEnd, forFormat: .HHmm))")
-                            .font(.robotoRegular(size: 12))
-                            .foregroundColor(.black)
-                    }
-                    
-                    Spacer()
-                }
-                
-                VStack(alignment: .leading, spacing: 20) {
-                    HStack(spacing: 10) {
-                        Image.Dinotis.peopleCircleIcon
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 18)
-                        
-                        Text(viewModel.totalParticipant(meeting: meeting))
-                            .font(.robotoRegular(size: 12))
-                            .foregroundColor(.black)
-                        
-                        Text(viewModel.contentLabel(meeting: meeting))
-                            .font(.robotoRegular(size: 12))
-                            .foregroundColor(.black)
-                            .padding(.vertical, 5)
-                            .padding(.horizontal)
-                            .background(Color.secondaryViolet)
-                            .clipShape(Capsule())
-                            .overlay(
-                                Capsule()
-                                    .stroke(Color.DinotisDefault.primary, lineWidth: 1.0)
-                            )
-                    }
+                if let dateStart = meeting?.startAt {
+                    Text(DateUtils.dateFormatter(dateStart, forFormat: .EEEEddMMMMyyyy))
+                        .font(.robotoRegular(size: 12))
+                        .foregroundColor(.black)
                 }
             }
-            .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .foregroundColor(.white)
-            )
-            .padding(EdgeInsets(top: 25, leading: 30, bottom: 25, trailing: 30))
+            
+            HStack(spacing: 10) {
+                Image.Dinotis.clockIcon
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 18)
+                
+                if let timeStart = meeting?.startAt,
+                   let timeEnd = meeting?.endAt {
+                    Text("\(DateUtils.dateFormatter(timeStart, forFormat: .HHmm)) - \(DateUtils.dateFormatter(timeEnd, forFormat: .HHmm))")
+                        .font(.robotoRegular(size: 12))
+                        .foregroundColor(.black)
+                }
+                
+                Spacer()
+            }
+            
+            VStack(alignment: .leading, spacing: 20) {
+                HStack(spacing: 10) {
+                    Image.Dinotis.peopleCircleIcon
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 18)
+                    
+                    Text(viewModel.totalParticipant(meeting: meeting))
+                        .font(.robotoRegular(size: 12))
+                        .foregroundColor(.black)
+                    
+                    Text(viewModel.contentLabel(meeting: meeting))
+                        .font(.robotoRegular(size: 12))
+                        .foregroundColor(.black)
+                        .padding(.vertical, 5)
+                        .padding(.horizontal)
+                        .background(Color.secondaryViolet)
+                        .clipShape(Capsule())
+                        .overlay(
+                            Capsule()
+                                .stroke(Color.DinotisDefault.primary, lineWidth: 1.0)
+                        )
+                }
+            }
         }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .foregroundColor(.white)
+        )
+        .padding(EdgeInsets(top: 25, leading: 30, bottom: 25, trailing: 30))
     }
 }
 
