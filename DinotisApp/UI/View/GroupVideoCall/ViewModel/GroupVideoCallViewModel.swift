@@ -33,8 +33,10 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var position: CameraPosition = .front
     @Published var isJoined = false
     
+    @Published var index = 0
+    
     @Published var participants = [DyteJoinedMeetingParticipant]()
-    @Published var localUser = [DyteSelfParticipant]()
+    @Published var localUser: DyteSelfParticipant? = nil
     
     init(
         backToRoot: @escaping () -> Void,
@@ -148,6 +150,7 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     
     func onMeetingRoomJoinCompleted() {
         self.participants = meeting.participants.joined
+        self.localUser = meeting.localUser
         self.joined = "Joined"
         self.isJoined = true
     }
@@ -203,11 +206,13 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
     }
     
     func onParticipantJoin(participant: DyteMeetingParticipant) {
-        
+        self.participants.removeAll()
+        self.participants = meeting.participants.joined
     }
     
     func onParticipantLeave(participant: DyteMeetingParticipant) {
-        
+        self.participants.removeAll()
+        self.participants = meeting.participants.joined
     }
     
     func onParticipantPinned(participant: DyteMeetingParticipant) {

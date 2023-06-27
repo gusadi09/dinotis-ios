@@ -14,7 +14,7 @@ struct GroupVideoCallView: View {
     @ObservedObject var viewModel: GroupVideoCallViewModel
     
     var body: some View {
-        TabView {
+        TabView(selection: $viewModel.index) {
             VStack {
                 
                 if viewModel.isJoined {
@@ -53,27 +53,38 @@ struct GroupVideoCallView: View {
                 }
 
             }
+            .tag(0)
             
             VStack {
-                List {
+                ScrollView {
                     if viewModel.isJoined {
                         LazyVGrid(columns: [GridItem(.adaptive(minimum: 176))]) {
-                            ForEach(viewModel.participants, id: \.id) { item in
+                            ForEach($viewModel.participants, id: \.id) { item in
                                 RemoteUserJoinedVideoContainerView(participant: item)
                             }
                         }
                     }
                 }
-                .listStyle(.plain)
-                .listRowSeparator(.hidden)
             }
+            .tag(1)
         }
         .tabViewStyle(.page)
+        .onChange(of: viewModel.index, perform: { newValue in
+            if viewModel.isJoined {
+                if newValue == 0 {
+                    viewModel.localUser = viewModel.meeting.localUser
+                } else {
+                    viewModel.localUser = nil
+                }
+            }
+        })
         .onAppear {
             viewModel.onAppear()
+            AppDelegate.orientationLock = .all
         }
         .onDisappear {
             viewModel.onDisappear()
+            AppDelegate.orientationLock = .portrait
         }
     }
 }
@@ -85,51 +96,59 @@ fileprivate extension GroupVideoCallView {
         
         var body: some View {
             ZStack(alignment: .bottomLeading) {
-                if viewModel.isCameraOn {
-                    if let video = viewModel.meeting.localUser.getVideoView() {
-                        UIVideoView(videoView: video, width: 176, height: 246)
+                if viewModel.localUser != nil {
+                    if viewModel.isCameraOn {
+                        if let video = viewModel.localUser?.getVideoView() {
+                            UIVideoView(videoView: video, width: 176, height: 246)
+                                .frame(width: 176, height: 246)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                .rotationEffect(.degrees(0))
+                                .rotation3DEffect(.degrees(viewModel.position == .rear ? 180 : 0), axis: (0, 1, 0))
+                        }
+                        
+                    } else {
+                        RoundedRectangle(cornerRadius: 10)
+                            .foregroundColor(.DinotisDefault.black1)
                             .frame(width: 176, height: 246)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                            .rotationEffect(.degrees(0))
-                            .rotation3DEffect(.degrees(viewModel.position == .rear ? 180 : 0), axis: (0, 1, 0))
+                            .overlay(
+                                ImageLoader(url: (viewModel.localUser?.picture).orEmpty(), width: 136, height: 136)
+                                    .frame(width: 136, height: 136)
+                                    .clipShape(Circle())
+                            )
                     }
-                    
                 } else {
                     RoundedRectangle(cornerRadius: 10)
                         .foregroundColor(.DinotisDefault.black1)
                         .frame(width: 176, height: 246)
-                        .overlay(
-                            ImageLoader(url: viewModel.meeting.localUser.picture.orEmpty(), width: 136, height: 136)
-                                .frame(width: 136, height: 136)
-                                .clipShape(Circle())
-                        )
                 }
                 
-                HStack {
-                    if !viewModel.meeting.localUser.fetchAudioEnabled() {
-                        Image.videoCallMicrophoneActiveIcon
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 10)
+                if viewModel.localUser != nil {
+                    HStack {
+                        if !(viewModel.localUser?.fetchAudioEnabled() ?? false) {
+                            Image.videoCallMicrophoneActiveIcon
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 10)
+                        }
+                        
+                        Text("\(viewModel.localUser?.name ?? "") \(viewModel.localUser?.canDoParticipantHostControls() ?? false ? "(host)" : "")")
+                            .font(.robotoMedium(size: 10))
+                            .foregroundColor(.white)
                     }
-                    
-                    Text("\(viewModel.meeting.localUser.name) \(viewModel.meeting.localUser.canDoParticipantHostControls() ? "(host)" : "")")
-                        .font(.robotoMedium(size: 10))
-                        .foregroundColor(.white)
+                    .padding(5)
+                    .background(
+                        Capsule()
+                            .foregroundColor(.gray.opacity(0.5))
+                    )
+                    .padding(10)
                 }
-                .padding(5)
-                .background(
-                    Capsule()
-                        .foregroundColor(.gray.opacity(0.5))
-                )
-                .padding(10)
             }
         }
     }
     
     struct RemoteUserJoinedVideoContainerView: View {
         
-        var participant: DyteJoinedMeetingParticipant
+        @Binding var participant: DyteJoinedMeetingParticipant
         
         var body: some View {
             ZStack(alignment: .bottomLeading) {
@@ -152,7 +171,7 @@ fileprivate extension GroupVideoCallView {
                 }
                 
                 HStack {
-                    if participant.fetchAudioEnabled() {
+                    if !participant.fetchAudioEnabled() {
                         Image.videoCallMicrophoneActiveIcon
                             .resizable()
                             .scaledToFit()
