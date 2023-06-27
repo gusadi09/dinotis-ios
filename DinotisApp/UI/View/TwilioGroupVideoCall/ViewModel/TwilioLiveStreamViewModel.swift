@@ -78,6 +78,7 @@ final class TwilioLiveStreamViewModel: ObservableObject {
 	@Published var isShowed = false
 	
 	@Published var isSwitched = true
+    
 	
 	private var timer: Timer?
 	
