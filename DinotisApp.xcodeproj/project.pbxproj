@@ -4086,8 +4086,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/dyte-in/DyteMobileCoreiOS.git";
 			requirement = {
-				kind = upToNextMinorVersion;
-				minimumVersion = 0.4.7;
+				kind = exactVersion;
+				version = 0.4.7;
 			};
 		};
 		EC72920F2A4375D800C9AAD5 /* XCRemoteSwiftPackageReference "conversations-ios" */ = {

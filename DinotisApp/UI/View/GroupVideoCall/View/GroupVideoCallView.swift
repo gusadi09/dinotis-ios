@@ -60,7 +60,7 @@ struct GroupVideoCallView: View {
                     if viewModel.isJoined {
                         LazyVGrid(columns: [GridItem(.adaptive(minimum: 176))]) {
                             ForEach($viewModel.participants, id: \.id) { item in
-                                RemoteUserJoinedVideoContainerView(participant: item)
+                                RemoteUserJoinedVideoContainerView(viewModel: viewModel, participant: item)
                             }
                         }
                     }
@@ -75,6 +75,7 @@ struct GroupVideoCallView: View {
                     viewModel.localUser = viewModel.meeting.localUser
                 } else {
                     viewModel.localUser = nil
+                    viewModel.participants = viewModel.meeting.participants.joined
                 }
             }
         })
@@ -123,15 +124,15 @@ fileprivate extension GroupVideoCallView {
                 }
                 
                 if viewModel.localUser != nil {
-                    HStack {
+                    HStack(spacing: 0) {
                         if !(viewModel.localUser?.fetchAudioEnabled() ?? false) {
-                            Image.videoCallMicrophoneActiveIcon
+                            Image.videoCallMicOffStrokeIcon
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 10)
+                                .frame(width: 15)
                         }
                         
-                        Text("\(viewModel.localUser?.name ?? "") \(viewModel.localUser?.canDoParticipantHostControls() ?? false ? "(host)" : "")")
+                        Text(" \(viewModel.localUser?.name ?? "") \(viewModel.localUser?.canDoParticipantHostControls() ?? false ? "(host)" : "")")
                             .font(.robotoMedium(size: 10))
                             .foregroundColor(.white)
                     }
@@ -148,37 +149,44 @@ fileprivate extension GroupVideoCallView {
     
     struct RemoteUserJoinedVideoContainerView: View {
         
+        @ObservedObject var viewModel: GroupVideoCallViewModel
         @Binding var participant: DyteJoinedMeetingParticipant
         
         var body: some View {
             ZStack(alignment: .bottomLeading) {
-                if participant.fetchVideoEnabled() {
-                    if let video = participant.getVideoView() {
-                        UIVideoView(videoView: video, width: 176, height: 246)
-                            .frame(width: 176, height: 246)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                    }
-                    
-                } else {
+                if viewModel.index == 0 && (viewModel.localUser?.id).orEmpty() == participant.id {
                     RoundedRectangle(cornerRadius: 10)
                         .foregroundColor(.DinotisDefault.black1)
                         .frame(width: 176, height: 246)
-                        .overlay(
-                            ImageLoader(url: participant.picture.orEmpty(), width: 136, height: 136)
-                                .frame(width: 136, height: 136)
-                                .clipShape(Circle())
-                        )
+                } else {
+                    if participant.fetchVideoEnabled() {
+                        if let video = participant.getVideoView() {
+                            UIVideoView(videoView: video, width: 176, height: 246)
+                                .frame(width: 176, height: 246)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                        }
+                        
+                    } else {
+                        RoundedRectangle(cornerRadius: 10)
+                            .foregroundColor(.DinotisDefault.black1)
+                            .frame(width: 176, height: 246)
+                            .overlay(
+                                ImageLoader(url: participant.picture.orEmpty(), width: 136, height: 136)
+                                    .frame(width: 136, height: 136)
+                                    .clipShape(Circle())
+                            )
+                    }
                 }
                 
-                HStack {
+                HStack(spacing: 0) {
                     if !participant.fetchAudioEnabled() {
-                        Image.videoCallMicrophoneActiveIcon
+                        Image.videoCallMicOffStrokeIcon
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 10)
+                            .frame(width: 12)
                     }
                     
-                    Text("\(participant.name) \(participant.isHost ? "(host)" : "")")
+                    Text(" \(participant.name) \(participant.isHost ? "(host)" : "")")
                         .font(.robotoMedium(size: 10))
                         .foregroundColor(.white)
                 }
