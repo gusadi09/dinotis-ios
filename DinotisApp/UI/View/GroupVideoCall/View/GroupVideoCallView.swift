@@ -14,7 +14,6 @@ struct GroupVideoCallView: View {
     @ObservedObject var viewModel: GroupVideoCallViewModel
     
     var body: some View {
-//        SampleDyteView(viewModel: viewModel)
         
         GeometryReader { geo in
             VStack {
@@ -36,29 +35,29 @@ struct GroupVideoCallView: View {
                     
                     VStack {
                         ScrollView {
-//                            if viewModel.isJoined {
-//                                LazyVGrid(columns: [GridItem(.adaptive(minimum: 176))]) {
-//                                    ForEach($viewModel.participants, id: \.id) { item in
-//                                        RemoteUserJoinedVideoContainerView(viewModel: viewModel, participant: item)
-//                                    }
-//                                }
-//                            }
-                            
-                            LazyVGrid(columns: [GridItem(.adaptive(minimum: (geo.size.width/2)-30))]) {
-                                ForEach(0...5, id: \.self) { item in
-//                                        RemoteUserJoinedVideoContainerView(viewModel: viewModel, participant: item)
-                                    ZStack {
-                                        RoundedRectangle(cornerRadius: 14)
-                                            .foregroundColor(.DinotisDefault.black2)
-                                        
-                                        Circle()
-                                            .foregroundColor(.blue)
-                                            .frame(width: 60, height: 60)
+                            if viewModel.isJoined {
+                                LazyVGrid(columns: [GridItem(.adaptive(minimum: 176))]) {
+                                    ForEach($viewModel.participants, id: \.id) { item in
+                                        RemoteUserJoinedVideoContainerView(viewModel: viewModel, participant: item)
                                     }
-                                    .frame(height: ((geo.size.width/2)-30)*246/176)
                                 }
                             }
-                            .padding(.horizontal)
+                            
+//                            LazyVGrid(columns: [GridItem(.adaptive(minimum: (geo.size.width/2)-30))]) {
+//                                ForEach(0...5, id: \.self) { item in
+////                                        RemoteUserJoinedVideoContainerView(viewModel: viewModel, participant: item)
+//                                    ZStack {
+//                                        RoundedRectangle(cornerRadius: 14)
+//                                            .foregroundColor(.DinotisDefault.black2)
+//
+//                                        Circle()
+//                                            .foregroundColor(.blue)
+//                                            .frame(width: 60, height: 60)
+//                                    }
+//                                    .frame(height: ((geo.size.width/2)-30)*246/176)
+//                                }
+//                            }
+//                            .padding(.horizontal)
                         }
                     }
                     .tag(1)
@@ -70,7 +69,7 @@ struct GroupVideoCallView: View {
                             viewModel.localUser = viewModel.meeting.localUser
                         } else {
                             viewModel.localUser = nil
-                            viewModel.participants = viewModel.meeting.participants.joined
+                            viewModel.participants = viewModel.meeting.participants.active
                         }
                     }
                 })
@@ -161,13 +160,17 @@ struct GroupVideoCallView: View {
             viewModel.onAppear()
             AppDelegate.orientationLock = .all
             
-            AppDelegate.orientationLock = .all
             UIApplication.shared.isIdleTimerDisabled = true
             UIApplication.shared.windows.first?.overrideUserInterfaceStyle = .dark
         }
         .onDisappear {
             viewModel.onDisappear()
             AppDelegate.orientationLock = .portrait
+        }
+        .onChange(of: viewModel.isInit) { newValue in
+            if newValue {
+                viewModel.joinMeeting()
+            }
         }
     }
 }
@@ -182,7 +185,7 @@ fileprivate extension GroupVideoCallView {
                 
                 Button {
                     withAnimation(.spring()) {
-                        viewModel.isAudioOn.toggle()
+                        viewModel.toggleMicrophone()
                     }
                 } label: {
                     (viewModel.isAudioOn ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
@@ -197,7 +200,7 @@ fileprivate extension GroupVideoCallView {
                     
                     Button {
                         withAnimation(.spring()) {
-                            viewModel.isCameraOn.toggle()
+                            viewModel.toggleCamera()
                         }
                     } label: {
                         (viewModel.isCameraOn ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
@@ -293,10 +296,10 @@ fileprivate extension GroupVideoCallView {
                     } else {
                         RoundedRectangle(cornerRadius: 14)
                             .foregroundColor(.DinotisDefault.black1)
-                            .frame(width: .infinity, height: .infinity)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .overlay(
                                 ImageLoader(url: (viewModel.localUser?.picture).orEmpty(), width: .infinity, height: .infinity)
-                                    .frame(width: .infinity, height: .infinity)
+                                    .frame(width: 136, height: 136)
                                     .clipShape(Circle())
                             )
                     }
@@ -322,7 +325,7 @@ fileprivate extension GroupVideoCallView {
                     .padding(5)
                     .background(
                         Capsule()
-                            .foregroundColor(.black.opacity(0.5))
+                            .foregroundColor(.gray.opacity(0.5))
                     )
                     .padding(10)
                 }
@@ -379,86 +382,6 @@ fileprivate extension GroupVideoCallView {
                         .foregroundColor(.gray.opacity(0.5))
                 )
                 .padding(10)
-            }
-        }
-    }
-    
-    struct SampleDyteView: View {
-        @ObservedObject var viewModel: GroupVideoCallViewModel
-        
-        var body: some View {
-            TabView(selection: $viewModel.index) {
-                VStack {
-                    
-                    if viewModel.isJoined {
-                        
-                        LocalUserVideoContainerView(viewModel: viewModel)
-                        
-                        DinotisPrimaryButton(text: "Mute Mic", type: .adaptiveScreen, height: 45, textColor: .white, bgColor: .DinotisDefault.primary) {
-                            viewModel.toggleMicrophone()
-                        }
-                        .padding()
-                        
-                        DinotisPrimaryButton(text: "Switch Camera", type: .adaptiveScreen, height: 45, textColor: .white, bgColor: .DinotisDefault.primary) {
-                            viewModel.switchCamera()
-                        }
-                        .padding()
-                        
-                        
-                        DinotisPrimaryButton(text: viewModel.isCameraOn ? "Disable" : "enable", type: .adaptiveScreen, height: 45, textColor: .white, bgColor: .DinotisDefault.primary) {
-                            viewModel.toggleCamera()
-                        }
-                        .padding()
-                    }
-                    
-                    Text(viewModel.joined)
-                    
-                    Button {
-                        viewModel.joinMeeting()
-                    } label: {
-                        Text("Join Room")
-                    }
-                    
-                    Button {
-                        viewModel.leaveMeeting()
-                    } label: {
-                        Text("Leave Room")
-                    }
-
-                }
-                .tag(0)
-                
-                VStack {
-                    ScrollView {
-                        if viewModel.isJoined {
-                            LazyVGrid(columns: [GridItem(.adaptive(minimum: 176))]) {
-                                ForEach($viewModel.participants, id: \.id) { item in
-                                    RemoteUserJoinedVideoContainerView(viewModel: viewModel, participant: item)
-                                }
-                            }
-                        }
-                    }
-                }
-                .tag(1)
-            }
-            .tabViewStyle(.page)
-            .onChange(of: viewModel.index, perform: { newValue in
-                if viewModel.isJoined {
-                    if newValue == 0 {
-                        viewModel.localUser = viewModel.meeting.localUser
-                    } else {
-                        viewModel.localUser = nil
-                        viewModel.participants = viewModel.meeting.participants.joined
-                    }
-                }
-            })
-            .onAppear {
-                viewModel.onAppear()
-                AppDelegate.orientationLock = .all
-            }
-            .onDisappear {
-                viewModel.onDisappear()
-                AppDelegate.orientationLock = .portrait
             }
         }
     }

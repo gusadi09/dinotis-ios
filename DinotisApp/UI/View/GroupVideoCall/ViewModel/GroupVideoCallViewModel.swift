@@ -27,7 +27,7 @@ final class GroupVideoCallViewModel: ObservableObject {
         baseUrl: "https://api.cluster.dyte.in/v2"
     )
     
-    @Published var joined = ""
+    @Published var isInit = false
     @Published var isCameraOn = true
     @Published var isAudioOn = true
     @Published var position: CameraPosition = .front
@@ -137,15 +137,15 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     }
     
     func onMeetingInitCompleted() {
-        self.joined = "init completed"
+        self.isInit = true
     }
     
     func onMeetingInitFailed(exception: KotlinException) {
-        self.joined = "init failed : \(exception.message ?? "")"
+        self.isInit = false
     }
     
     func onMeetingInitStarted() {
-        self.joined = "init started"
+        
     }
     
     func onMeetingRoomConnectionError(errorMessage: String) {
@@ -157,28 +157,27 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     }
     
     func onMeetingRoomJoinCompleted() {
-        self.participants = meeting.participants.joined
+        self.participants = meeting.participants.active
         self.localUser = meeting.localUser
-        self.joined = "Joined"
         self.isJoined = true
     }
     
     func onMeetingRoomJoinFailed(exception: KotlinException) {
-        self.joined = exception.description()
+        
     }
     
     func onMeetingRoomJoinStarted() {
-        self.joined = "Loading"
+    
     }
     
     func onMeetingRoomLeaveCompleted() {
-        self.joined = "Leaved"
+        self.isInit = false
         self.isJoined = false
         backToHome()
     }
     
     func onMeetingRoomLeaveStarted() {
-        self.joined = "Loading"
+        
     }
     
     func onMeetingRoomReconnectionFailed() {
@@ -186,11 +185,11 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     }
     
     func onReconnectedToMeetingRoom() {
-        self.joined = "Reconnected"
+        
     }
     
     func onReconnectingToMeetingRoom() {
-        self.joined = "Reconnecting"
+        
     }
     
 }
@@ -206,7 +205,7 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
     
     func onAudioUpdate(audioEnabled: Bool, participant: DyteMeetingParticipant) {
         self.participants.removeAll()
-        self.participants = meeting.participants.joined
+        self.participants = meeting.participants.active
     }
     
     func onNoActiveSpeaker() {
@@ -215,12 +214,12 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
     
     func onParticipantJoin(participant: DyteMeetingParticipant) {
         self.participants.removeAll()
-        self.participants = meeting.participants.joined
+        self.participants = meeting.participants.active
     }
     
     func onParticipantLeave(participant: DyteMeetingParticipant) {
         self.participants.removeAll()
-        self.participants = meeting.participants.joined
+        self.participants = meeting.participants.active
     }
     
     func onParticipantPinned(participant: DyteMeetingParticipant) {
@@ -249,7 +248,7 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
     
     func onVideoUpdate(videoEnabled: Bool, participant: DyteMeetingParticipant) {
         self.participants.removeAll()
-        self.participants = meeting.participants.joined
+        self.participants = meeting.participants.active
     }
     
 }
