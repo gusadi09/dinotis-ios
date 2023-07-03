@@ -33,6 +33,14 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var position: CameraPosition = .front
     @Published var isJoined = false
     
+    @Published var stringTime = "00:00:00"
+    @Published var isNearbyEnd = false
+    
+    @Published var isShowingToolbar = true
+    @Published var isShowAboutCallBottomSheet = false
+    @Published var showingMoreMenu = false
+    @Published var isShowingChat = false
+    
     @Published var index = 0
     
     @Published var participants = [DyteJoinedMeetingParticipant]()

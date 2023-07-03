@@ -2,12 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:DinotisData">
-   </FileRef>
-   <FileRef
       location = "group:DinotisDesignSystem">
    </FileRef>
    <FileRef
-      location = "group:DinotisApp.xcodeproj">
+      location = "group:DinotisData">
+   </FileRef>
+   <FileRef
+      location = "container:DinotisApp.xcodeproj">
    </FileRef>
 </Workspace>
