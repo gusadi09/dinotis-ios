@@ -19,7 +19,7 @@ struct GroupVideoCallView: View {
             VStack {
                 Spacer()
                     .frame(height: 50)
-                    .isHidden(!viewModel.isShowingToolbar, remove: !viewModel.isShowingToolbar)
+                    .isHidden(!viewModel.isShowingToolbar || UIDevice.current.orientation.isLandscape, remove: !viewModel.isShowingToolbar || UIDevice.current.orientation.isLandscape)
                 
                 TabView(selection: $viewModel.index) {
                     VStack {
@@ -29,7 +29,7 @@ struct GroupVideoCallView: View {
                         
                         Spacer()
                             .frame(height: 116)
-                            .isHidden(!viewModel.isShowingToolbar, remove: !viewModel.isShowingToolbar)
+                            .isHidden(!viewModel.isShowingToolbar || UIDevice.current.orientation.isLandscape, remove: !viewModel.isShowingToolbar || UIDevice.current.orientation.isLandscape)
                     }
                     .tag(0)
                     
@@ -180,9 +180,7 @@ fileprivate extension GroupVideoCallView {
         @ObservedObject var viewModel: GroupVideoCallViewModel
         
         var body: some View {
-            HStack {
-                Spacer()
-                
+            HStack(spacing: 12) {
                 Button {
                     withAnimation(.spring()) {
                         viewModel.toggleMicrophone()
@@ -195,81 +193,65 @@ fileprivate extension GroupVideoCallView {
                 }
                 .disabled(false) // Add logic when audio is locked
                 
-                Group {
-                    Spacer()
-                    
-                    Button {
-                        withAnimation(.spring()) {
-                            viewModel.toggleCamera()
-                        }
-                    } label: {
-                        (viewModel.isCameraOn ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 32)
+                Button {
+                    withAnimation(.spring()) {
+                        viewModel.toggleCamera()
                     }
+                } label: {
+                    (viewModel.isCameraOn ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 32)
                 }
                 
-                Group {
-                    Spacer()
-                    
-                    Button {
-                        viewModel.isShowingChat.toggle()
-                    } label: {
-                        Image.videoCallChatIcon
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 45)
-                            .foregroundColor(.white)
-                    }
+                Button {
+                    viewModel.isShowingChat.toggle()
+                } label: {
+                    Image.videoCallChatIcon
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 45)
+                        .foregroundColor(.white)
                 }
                 
-                Group {
-                    Spacer()
-                    
-                    Button {
-                        withAnimation(.spring()) {
-                            viewModel.showingMoreMenu.toggle()
-                        }
-                    } label: {
-                        ZStack(alignment: .topTrailing) {
-                            ZStack {
-                                Image.videoCallMoreMenuNewIcon
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: 45)
-                            }
-                        }
+                Button {
+                    withAnimation(.spring()) {
+                        viewModel.showingMoreMenu.toggle()
                     }
-                }
-                
-                Group {
-                    Spacer()
-                    
-                    Button {
-                        withAnimation(.spring()) {
-                            viewModel.leaveMeeting()
-                        }
-                    } label: {
+                } label: {
+                    ZStack(alignment: .topTrailing) {
                         ZStack {
-                            Circle()
-                                .foregroundColor(.red)
-                            
-                            Image(systemName: "phone.down.fill")
+                            Image.videoCallMoreMenuNewIcon
                                 .resizable()
                                 .scaledToFit()
-                                .foregroundColor(.white)
-                                .frame(width: 24)
-                                .padding()
+                                .frame(height: 45)
                         }
-                        .frame(width: 60, height: 60)
                     }
-                    .disabled(!viewModel.isJoined)
                 }
                 
-                Spacer()
+                Button {
+                    withAnimation(.spring()) {
+                        viewModel.leaveMeeting()
+                    }
+                } label: {
+                    ZStack {
+                        Circle()
+                            .foregroundColor(.red)
+                        
+                        Image(systemName: "phone.down.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundColor(.white)
+                            .frame(width: 24)
+                            .padding()
+                    }
+                    .frame(width: 60, height: 60)
+                }
+                .disabled(!viewModel.isJoined)
+                
             }
             .padding()
+            .padding(.horizontal)
             .background(Color.DinotisDefault.black1)
             .cornerRadius(24)
             .padding(.horizontal, 20)
