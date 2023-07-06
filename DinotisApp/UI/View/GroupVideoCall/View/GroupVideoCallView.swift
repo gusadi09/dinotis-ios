@@ -196,6 +196,9 @@ struct GroupVideoCallView: View {
                 viewModel.joinMeeting()
             }
         }
+        .sheet(isPresented: $viewModel.isShowAboutCallBottomSheet) {
+            AboutCallBottomSheet(viewModel: viewModel)
+        }
     }
 }
 
@@ -260,7 +263,11 @@ fileprivate extension GroupVideoCallView {
                         }
                         
                         Button {
-                            
+                            viewModel.showingMoreMenu = false
+                            viewModel.tabSelection = 2
+                            DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                                self.viewModel.isShowAboutCallBottomSheet = true
+                            }
                         } label: {
                             HStack(alignment: .center, spacing: 11) {
                                 Image.videoCallPollingIcon
@@ -286,7 +293,11 @@ fileprivate extension GroupVideoCallView {
                         }
                         
                         Button {
-                            
+                            viewModel.showingMoreMenu = false
+                            viewModel.tabSelection = 1
+                            DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                                self.viewModel.isShowAboutCallBottomSheet = true
+                            }
                         } label: {
                             HStack(alignment: .center, spacing: 11) {
                                 Image.videoCallNewParticipantIcon
@@ -401,7 +412,8 @@ fileprivate extension GroupVideoCallView {
                 }
                 
                 Button {
-                    viewModel.isShowingChat.toggle()
+                    viewModel.tabSelection = 0
+                    viewModel.isShowAboutCallBottomSheet.toggle()
                 } label: {
                     Image.videoCallChatIcon
                         .resizable()
@@ -562,6 +574,709 @@ fileprivate extension GroupVideoCallView {
                 .padding(10)
             }
         }
+    }
+    
+    struct AboutCallBottomSheet: View {
+        @ObservedObject var viewModel: GroupVideoCallViewModel
+        @Environment(\.presentationMode) var presentationMode
+        @Namespace var namespace
+        
+        var body: some View {
+            VStack(alignment: .leading) {
+                HStack {
+                    Text(LocalizableText.aboutCallTitle)
+                        .font(.robotoBold(size: 16))
+                    
+                    Spacer()
+                    
+                    Button {
+                        presentationMode.wrappedValue.dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                    }
+                }
+                .foregroundColor(.white)
+                .padding()
+                
+                HStack(spacing: 16) {
+                    ForEach(viewModel.bottomSheetTabItems, id: \.id) { item in
+                        Button {
+                            withAnimation {
+                                viewModel.tabSelection = item.id
+                            }
+                        } label: {
+                            VStack(spacing: 16) {
+                                Text(item.title)
+                                    .font(.robotoBold(size: 16))
+                                    .foregroundColor(viewModel.tabSelection == item.id ? .blue : .white)
+                                
+                                if viewModel.tabSelection == item.id {
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .frame(width: 24, height: 2)
+                                        .foregroundColor(.blue)
+                                        .matchedGeometryEffect(id: "bottom", in: namespace)
+                                } else {
+                                    Rectangle()
+                                        .frame(width: 24, height: 2)
+                                        .foregroundColor(.clear)
+                                }
+                            }
+                            .animation(.spring(), value: viewModel.tabSelection)
+                        }
+                    }
+                    
+                    Spacer()
+                }
+                .padding(.horizontal)
+                
+                Group {
+                    switch viewModel.tabSelection {
+                    case 0:
+                        ChatView(viewModel: viewModel)
+                    case 1:
+                        ParticipantTabView(viewModel: viewModel)
+                    case 2:
+                        PollingView()
+                    default:
+                        EmptyView()
+                    }
+                }
+                .animation(.easeInOut, value: viewModel.tabSelection)
+            }
+        }
+    }
+    
+    
+    struct ParticipantTabView: View {
+        
+        @ObservedObject var viewModel: GroupVideoCallViewModel
+        
+        var body: some View {
+            VStack {
+                HStack(spacing: 12) {
+                    Image.bottomNavigationSearchWhiteIcon
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 24, height: 24)
+                    
+                    TextField("Search...", text: $viewModel.searchText)
+                        .font(.robotoRegular(size: 16))
+                        .foregroundColor(.white)
+                }
+                .padding()
+                .background(Color.DinotisDefault.black2)
+                
+                List {
+                    if viewModel.isHost {
+                        if !viewModel.joiningParticipant.isEmpty {
+                            Section(
+                                header: HStack {
+                                    Text("\(LocalizableText.titleWaitingRoom) (\(viewModel.joiningParticipant.count))")
+                                        .font(.robotoBold(size: 16))
+                                        .foregroundColor(.white)
+                                    
+                                    Spacer()
+                                    
+                                    Button {
+                                        
+                                    } label: {
+                                        Text(LocalizableText.acceptAllLabel)
+                                            .font(.robotoBold(size: 12))
+                                            .foregroundColor(.white)
+                                            .padding(.horizontal, 10)
+                                            .padding(.vertical, 8)
+                                            .frame(width: 103, alignment: .center)
+                                            .background(Color.blue)
+                                            .cornerRadius(8)
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                            ) {
+                                ForEach(viewModel.joiningParticipant, id: \.id) { participant in
+                                    HStack(spacing: 16) {
+                                        Circle()
+                                            .foregroundColor(.blue)
+                                            .frame(width: 42, height: 42)
+                                        
+                                        Text(participant.name)
+                                            .font(.robotoBold(size: 16))
+                                            .foregroundColor(.white)
+                                        
+                                        Spacer()
+                                        
+                                        Button {
+                                            
+                                        } label: {
+                                            Text(LocalizableText.acceptToJoinLabel)
+                                                .font(.robotoBold(size: 12))
+                                                .foregroundColor(.blue)
+                                                .padding(.horizontal, 10)
+                                                .padding(.vertical, 8)
+                                                .frame(width: 103, alignment: .center)
+                                                .cornerRadius(8)
+                                                .overlay(
+                                                    RoundedRectangle(cornerRadius: 8)
+                                                        .inset(by: 0.5)
+                                                        .stroke(Color.blue, lineWidth: 1)
+                                                )
+                                        }
+                                        .buttonStyle(.plain)
+                                    }
+                                    .listRowSeparator(.hidden)
+                                }
+                            }
+                            .listRowSeparator(.hidden)
+                        }
+                    }
+                    
+                    if !viewModel.speakerParticipant.isEmpty {
+                        Section(
+                            header: HStack {
+                                Text("\(LocalizableText.speakerTitle) (\(viewModel.speakerParticipant.count))")
+                                    .font(.robotoBold(size: 16))
+                                    .foregroundColor(.white)
+                                
+                                Spacer()
+                            }
+                        ) {
+                            ForEach(viewModel.speakerParticipant, id: \.id) { participant in
+                                HStack(spacing: 16) {
+                                    Circle()
+                                        .foregroundColor(.blue)
+                                        .frame(width: 42, height: 42)
+                                    
+                                    Text(participant.name)
+                                        .font(.robotoBold(size: 16))
+                                        .foregroundColor(.white)
+                                    
+                                    Spacer()
+                                    
+                                    HStack(spacing: 8) {
+                                        (participant.isMicOn ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 24)
+                                        
+                                        (participant.isVideoOn ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 24)
+                                    }
+                                }
+                                .listRowSeparator(.hidden)
+                            }
+                        }
+                        .listRowSeparator(.hidden)
+                        
+                        if !viewModel.viewerSpeaker.isEmpty {
+                            Section(
+                                header: HStack {
+                                    Text("\(LocalizableText.viewerTitle) (\(viewModel.viewerSpeaker.count))")
+                                        .font(.robotoBold(size: 16))
+                                        .foregroundColor(.white)
+                                    
+                                    Spacer()
+                                }
+                            ) {
+                                ForEach(viewModel.viewerSpeaker, id: \.id) { participant in
+                                    HStack(spacing: 16) {
+                                        Circle()
+                                            .foregroundColor(.blue)
+                                            .frame(width: 42, height: 42)
+                                        
+                                        Text(participant.name)
+                                            .font(.robotoBold(size: 16))
+                                            .foregroundColor(.white)
+                                        
+                                        Spacer()
+                                        
+                                        HStack(spacing: 8) {
+                                            (participant.isMicOn ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 24)
+                                            
+                                            (participant.isVideoOn ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 24)
+                                        }
+                                    }
+                                    .listRowSeparator(.hidden)
+                                }
+                            }
+                            .listRowSeparator(.hidden)
+                        }
+                    }
+                }
+                .listStyle(PlainListStyle())
+                .animation(.spring(), value: viewModel.searchedParticipant)
+            }
+        }
+    }
+    
+    struct QuestionList: View {
+        
+        @ObservedObject var viewModel: TwilioLiveStreamViewModel
+        @EnvironmentObject var participantVM: ParticipantsViewModel
+        @EnvironmentObject var speakerSettingsManager: SpeakerSettingsManager
+        @EnvironmentObject var streamVM: StreamViewModel
+        @Environment(\.presentationMode) var presentationMode
+        
+        var body: some View {
+            NavigationView {
+                VStack {
+                    
+                    Picker(selection: $viewModel.QnASegment) {
+                        Text("Unanswered").tag(0)
+                        
+                        Text("Answered").tag(1)
+                    } label: {
+                        Text("")
+                    }
+                    .labelsHidden()
+                    .pickerStyle(.segmented)
+                    .padding(.horizontal)
+                    
+                    DinotisList { view in
+                        view.separatorStyle = .none
+                    } content: {
+                        VStack {
+                            ForEach(viewModel.qnaFiltered(), id:\.id) { item in
+                                Button {
+                                    viewModel.putQuestion(questionId: item.id.orZero(), item: item, streamVM: streamVM)
+                                } label: {
+                                    VStack(alignment: .leading) {
+                                        HStack {
+                                            if item.isAnswered ?? false {
+                                                Image(systemName: "checkmark.square")
+                                                    .foregroundColor(.DinotisDefault.primary)
+                                            } else {
+                                                Image(systemName: "square")
+                                                    .foregroundColor(.DinotisDefault.primary)
+                                            }
+                                            
+                                            Text((item.user?.name).orEmpty())
+                                                .font(.robotoBold(size: 14))
+                                                .foregroundColor(.dinotisGray)
+                                            
+                                            Spacer()
+                                            
+                                            Text(DateUtils.dateFormatter(item.createdAt.orCurrentDate(), forFormat: .HHmm))
+                                                .font(.robotoRegular(size: 12))
+                                                .foregroundColor(.dinotisGray)
+                                        }
+                                        
+                                        Divider()
+                                        
+                                        Text(item.question.orEmpty())
+                                            .font(.robotoRegular(size: 14))
+                                            .foregroundColor(.dinotisGray)
+                                            .multilineTextAlignment(.leading)
+                                    }
+                                    .padding()
+                                    .background(Color.secondaryViolet)
+                                    .cornerRadius(12)
+                                }
+                                .disabled(viewModel.QnASegment == 1)
+                                .buttonStyle(.plain)
+                            }
+                        }
+                    }
+                    
+                }
+                .padding(.vertical)
+                .onAppear {
+                    viewModel.getQuestion(meetingId: viewModel.meeting.id.orEmpty())
+                    
+                    streamVM.hasNewQuestion = false
+                }
+                .onDisappear(perform: {
+                    streamVM.hasNewQuestion = false
+                })
+                .navigationTitle("Q&A")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button(LocaleText.back) {
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    struct ChatView: View {
+        @Environment(\.presentationMode) var presentationMode
+        @State private var isFirstLoadComplete = false
+        @ObservedObject var viewModel: GroupVideoCallViewModel
+        @State var shouldShowImagePicker = false
+        @State var image: UIImage?
+        
+        var body: some View {
+            VStack {
+//                MARK: Uncomment when the feature is ready
+//                HStack {
+//                    Image(systemName: "person.3")
+//                        .resizable()
+//                        .scaledToFit()
+//                        .frame(width: 24)
+//                        .foregroundColor(.white)
+//
+//                    Text("To Everyone")
+//                        .foregroundColor(.white)
+//                        .font(.system(size: 16))
+//
+//                    Spacer()
+//                    Button {
+//
+//                    } label: {
+//                        Image(systemName: "chevron.down")
+//                            .resizable()
+//                            .frame(width: 12, height: 7)
+//                            .foregroundColor(.white)
+//                    }
+//
+//                }
+//                .padding()
+//
+//                Divider()
+                
+                ScrollViewReader { scrollView in
+                    VStack(spacing: 0) {
+                        ScrollView {
+                            LazyVStack {
+                                ForEach(viewModel.dummyChatList, id: \.id) { message in
+                                    VStack(alignment: .leading, spacing: 9) {
+                                        ChatHeaderView(
+                                            author: message.name,
+                                            isAuthorYou: message.isYou,
+                                            date: message.date
+                                        )
+                                        ChatBubbleView(
+                                            messageBody: message.message,
+                                            isAuthorYou: message.isYou
+                                        )
+                                        .contextMenu {
+                                            Button {
+                                                withAnimation(.spring(response: 0.4, dampingFraction: 0.4)) {
+                                                    viewModel.pinnedChat = message
+                                                }
+                                            } label: {
+                                                Label("Pin this chat", systemImage: "pin.fill")
+                                            }
+                                        }
+                                    }
+                                    .padding(.horizontal)
+                                    .padding(.vertical, 7)
+                                    .id(message.id)
+                                }
+                                
+                            }
+                            
+                        }
+                        .onChange(of: viewModel.dummyChatList.count) { _ in
+                            withAnimation {
+                                if let id = viewModel.dummyChatList.last?.id {
+                                    scrollView.scrollTo(id, anchor: .bottom)
+                                }
+                            }
+                        }
+                        
+                        HStack(alignment: .bottom) {
+                            
+                            HStack(alignment: .bottom) {
+                                MultilineTextField("Message here...", text: $viewModel.messageText)
+                                Button(action: {
+                                    
+                                }, label: {
+                                    Image(systemName: "link")
+                                        .foregroundColor(.white)
+                                })
+                                .padding(.vertical, 5)
+                                
+                                Button(action: {
+                                    shouldShowImagePicker.toggle()
+                                }, label: {
+                                    Image(systemName: "photo.on.rectangle.angled")
+                                        .foregroundColor(.white)
+                                })
+                                .padding(.vertical, 5)
+                                
+                            }
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 8)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color(red: 0.32, green: 0.34, blue: 0.36), lineWidth: 1)
+                            )
+                            
+                            Button {
+                                viewModel.sendMessage()
+                                viewModel.messageText = ""
+                            } label: {
+                                Image(systemName: "paperplane.fill")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .foregroundColor(.white)
+                                    .rotationEffect(.degrees(45))
+                                    .frame(height: 18)
+                            }
+                            .padding(.vertical, 15)
+                            .padding(.leading, 16)
+                            .padding(.trailing, 22)
+                            .background((viewModel.messageText.isEmpty || !viewModel.messageText.isStringContainWhitespaceAndText()) ? Color.dinotisGray : Color.blue)
+                            .cornerRadius(11)
+                            .disabled(viewModel.messageText.isEmpty || !viewModel.messageText.isStringContainWhitespaceAndText())
+                            
+                        }
+                        .padding()
+                    }
+                    
+                }
+                .overlay(alignment: .top) {
+                    if let message = viewModel.pinnedChat {
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack {
+                                Text((message.name))
+                                    .font(.robotoMedium(size: 12))
+                                    .foregroundColor(Color(red: 0.61, green: 0.62, blue: 0.62))
+                                
+                                Spacer()
+                                
+                                Button {
+                                    withAnimation {
+                                        viewModel.pinnedChat = nil
+                                    }
+                                } label: {
+                                    Image(systemName: "pin.fill")
+                                        .foregroundColor(Color(red: 0.61, green: 0.62, blue: 0.62))
+                                }
+                            }
+                            
+                            ChatBubbleView(messageBody: message.message, isAuthorYou: message.isYou)
+                        }
+                        .padding()
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 6)
+                                .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [6, 6]))
+                                .foregroundColor(.white)
+                        )
+                        .background(
+                            RoundedRectangle(cornerRadius: 6)
+                                .foregroundColor(Color(red: 0.15, green: 0.16, blue: 0.17))
+                        )
+                        .padding()
+                        .transition(.move(edge: .top))
+                    }
+                }
+            }
+        }
+    }
+    
+    struct ChatHeaderView: View {
+        let author: String
+        let isAuthorYou: Bool
+        let date: Date
+        
+        let dateFormatter: DateFormatter = {
+            let formatter = DateFormatter()
+            formatter.timeStyle = .short
+            return formatter
+        }()
+        
+        var body: some View {
+            HStack {
+                Text("\(author)\(isAuthorYou ? " (\(LocaleText.you))" : "")")
+                    .lineLimit(1)
+                Spacer()
+                Text(dateFormatter.string(from: date))
+            }
+            .foregroundColor(Color(red: 0.63, green: 0.64, blue: 0.66))
+            .font(.robotoBold(size: 12))
+        }
+    }
+    
+    struct ChatBubbleView: View {
+        let messageBody: String
+        let isAuthorYou: Bool
+        
+        var body: some View {
+            Text(messageBody)
+                .font(.robotoRegular(size: 14))
+                .foregroundColor(.white)
+                .padding(10)
+                .background(isAuthorYou ? Color.blue : Color(red: 0.26, green: 0.27, blue: 0.28))
+                .cornerRadius(8)
+                .multilineTextAlignment(.leading)
+        }
+    }
+    
+    
+    struct PollingView: View {
+        @State var isPollCard: Bool = false
+        @State var fieldPoll: String = ""
+        @State var isAdd: Bool = false
+        @State var isPollCreated = false
+        @State var addPoll = 0
+        @State private var forms: [FormData] = []
+        @State private var isCheckedOne: Bool = false
+        @State private var isCheckedTwo: Bool = false
+        
+        var body: some View {
+            GeometryReader {geo in
+                ZStack {
+                    Color.dinotisGray.ignoresSafeArea()
+                    VStack(alignment: .leading) {
+                        
+                        if isPollCreated {
+                            
+                            VStack(alignment: .leading) {
+                                Text("Poll Question by Host")
+                                    .foregroundColor(.white)
+                                    .font(.robotoBold(size: 16))
+                                
+                                VStack(alignment: .leading) {
+                                    Text(fieldPoll)
+                                        .foregroundColor(.white)
+                                    ForEach(forms.indices, id: \.self) { index in
+                                        PollFinish(form: $forms[index])
+                                    }
+                                }.padding()
+                                    .background(RoundedRectangle(cornerRadius: 10).foregroundColor(Color.grayChat))
+                                    .frame(width: calculateContentWidth(geometry: geo))
+                                
+                            }.padding()
+                            Spacer()
+                            
+                        } else {
+                            Spacer()
+                            if isPollCard {
+                                //
+                                ScrollView {
+                                    VStack {
+                                        Text("Poll Question")
+                                            .foregroundColor(.white)
+                                            .padding(.top,10)
+                                        
+                                        if #available(iOS 16.0, *) {
+                                            TextField("", text: $fieldPoll, axis: .vertical)
+                                                .placeholder(when: fieldPoll.isEmpty, placeholder: {
+                                                    Text("What is your poll for?").foregroundColor(.white)
+                                                })
+                                                .autocorrectionDisabled(true)
+                                                .lineLimit(3, reservesSpace: true)
+                                                .padding(5)
+                                                .overlay {
+                                                    RoundedRectangle(cornerRadius: 8)
+                                                        .stroke(UIApplication.shared.windows.first?.overrideUserInterfaceStyle == .dark ? Color.white : Color(.systemGray3), lineWidth: 1)
+                                                        .background(Color.dinotisBgForm)
+                                                }
+                                                .padding()
+                                        } else {
+                                            // Fallback on earlier versions
+                                        }
+                                        
+                                        ForEach(forms.indices, id: \.self) { index in
+                                            FormRowView(form: $forms[index])
+                                        }
+                                        
+                                        HStack {
+                                            Button {
+                                                isAdd.toggle()
+                                                addForm()
+                                                
+                                            } label: {
+                                                Image(systemName: "plus")
+                                                    .resizable()
+                                                    .frame(width: 10, height: 10)
+                                                    .foregroundColor(.blue)
+                                                Text("Add an option")
+                                                    .foregroundColor(.blue)
+                                                
+                                            }
+                                            
+                                        }
+                                        
+                                        
+                                        VStack {
+                                            Toggle(isOn: $isCheckedOne) {
+                                                Text("Anonymous")
+                                            }
+                                            .toggleStyle(CheckboxStyle())
+                                            Toggle(isOn: $isCheckedTwo) {
+                                                Text("Hide result before voting")
+                                            }
+                                            .toggleStyle(CheckboxStyle())
+                                            
+                                            
+                                            
+                                        }.padding(.trailing, 210)
+                                        
+                                        
+                                        Button {
+                                            isPollCreated.toggle()
+                                        } label: {
+                                            Text("Create Poll")
+                                                .foregroundColor(Color.white)
+                                                .padding()
+                                                .frame(maxWidth: .infinity)
+                                                .background(Color.blue).cornerRadius(10)
+                                                .border(Color.blue).cornerRadius(10)
+                                        }
+                                        .padding()
+                                        //
+                                        
+                                    }
+                                    .background(RoundedRectangle(cornerRadius: 10).foregroundColor(Color.grayChat))
+                                    .frame(width: calculateContentWidth(geometry: geo))
+                                }
+                                .padding()
+                            }
+                            
+                            
+                            VStack {
+                                Text("Engage Your Participant With Poll!")
+                                    .font(.system(size: 15))
+                                    .foregroundColor(.white)
+                                
+                                Button {
+                                    isPollCard.toggle()
+                                    
+                                } label: {
+                                    Text(isPollCard ? "Cancel Poll" : "Create New Poll")
+                                        .foregroundColor(isPollCard ? Color.blue : Color.white)
+                                        .padding()
+                                        .frame(maxWidth: .infinity)
+                                        .background(!isPollCard ? Color.blue : Color.clear).cornerRadius(10)
+                                        .border(Color.blue).cornerRadius(10)
+                                }.padding()
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                    .frame(height: geo.size.height/1)
+                    
+                }
+            }
+        }
+        
+        private func addForm() {
+            forms.append(FormData())
+        }
+        
+        private func deleteForm(at indices: IndexSet) {
+            forms.remove(atOffsets: indices)
+        }
+        
+        private func calculateContentWidth(geometry: GeometryProxy) -> CGFloat {
+            return geometry.size.width - 40
+        }
+        
     }
 }
 
