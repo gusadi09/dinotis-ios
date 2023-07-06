@@ -31,6 +31,15 @@ struct GroupVideoCallView: View {
                             .frame(height: 116)
                             .isHidden(!viewModel.isShowingToolbar || UIDevice.current.orientation.isLandscape, remove: !viewModel.isShowingToolbar || UIDevice.current.orientation.isLandscape)
                     }
+                    .sheet(isPresented: $viewModel.showingMoreMenu, content: {
+                        if #available(iOS 16.0, *) {
+                            MoreMenuSheet(viewModel: viewModel)
+                                .presentationDetents([.medium, .large])
+                                .presentationDragIndicator(.hidden)
+                        } else {
+                            MoreMenuSheet(viewModel: viewModel)
+                        }
+                    })
                     .tag(0)
                     
                     VStack {
@@ -43,21 +52,6 @@ struct GroupVideoCallView: View {
                                 }
                             }
                             
-//                            LazyVGrid(columns: [GridItem(.adaptive(minimum: (geo.size.width/2)-30))]) {
-//                                ForEach(0...5, id: \.self) { item in
-////                                        RemoteUserJoinedVideoContainerView(viewModel: viewModel, participant: item)
-//                                    ZStack {
-//                                        RoundedRectangle(cornerRadius: 14)
-//                                            .foregroundColor(.DinotisDefault.black2)
-//
-//                                        Circle()
-//                                            .foregroundColor(.blue)
-//                                            .frame(width: 60, height: 60)
-//                                    }
-//                                    .frame(height: ((geo.size.width/2)-30)*246/176)
-//                                }
-//                            }
-//                            .padding(.horizontal)
                         }
                     }
                     .tag(1)
@@ -91,8 +85,10 @@ struct GroupVideoCallView: View {
                 HStack {
                     HStack(spacing: 4) {
                         Image.videoCallClockWhiteIcon
+                            .renderingMode(.template)
                             .resizable()
                             .scaledToFit()
+                            .foregroundColor(viewModel.isNearbyEnd ? .white : .primaryRed)
                             .frame(height: 24)
                         
                         Text(viewModel.stringTime)
@@ -108,32 +104,57 @@ struct GroupVideoCallView: View {
                     
                     Spacer()
                     
-                    Button {
-                        withAnimation(.spring()) {
-                            viewModel.switchCamera()
+                    if viewModel.isJoined {
+                        if viewModel.meeting.localUser.permissions.media.canPublishVideo {
+                            Button {
+                                withAnimation(.spring()) {
+                                    viewModel.switchCamera()
+                                }
+                            } label: {
+                                Image.videoCallFlipCameraWhiteIcon
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 32)
+                            }
+                        } else {
+                            HStack(spacing: 8) {
+                                Image.videoCallLiveWhiteIcon
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 24)
+                                
+                                Text(LocalizableText.liveText)
+                                    .font(.robotoBold(size: 12))
+                                    .foregroundColor(.white)
+                            }
+                            .padding(.leading, 6)
+                            .padding(.trailing, 12)
+                            .padding(.vertical, 2)
+                            .background(
+                                Capsule()
+                                    .foregroundColor(.DinotisDefault.red)
+                            )
                         }
-                    } label: {
-                        Image.videoCallFlipCameraWhiteIcon
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 32)
+                        
+                    } else {
+                        HStack(spacing: 8) {
+                            Image.videoCallLiveWhiteIcon
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 24)
+                            
+                            Text(LocalizableText.liveText)
+                                .font(.robotoBold(size: 12))
+                                .foregroundColor(.white)
+                        }
+                        .padding(.leading, 6)
+                        .padding(.trailing, 12)
+                        .padding(.vertical, 2)
+                        .background(
+                            Capsule()
+                                .foregroundColor(.DinotisDefault.red)
+                        )
                     }
-                    
-                    ///                        View for viewer
-                    ///                        HStack(spacing: 8) {
-                    ///                           Image.videoCallLiveWhiteIcon
-                    ///                                .resizable()
-                    ///                                .scaledToFit()
-                    ///                                .frame(height: 24)
-                    ///
-                    ///                            Text(LocalizableText.liveText)
-                    ///                                .font(.robotoBold(size: 12))
-                    ///                        }
-                    ///                        .padding(.leading, 6)
-                    ///                        .padding(.trailing, 12)
-                    ///                        .padding(.vertical, 2)
-                    ///                        .background(Color.DinotisDefault.red)
-                    ///                        .cornerRadius(68)
                 }
                 .padding(.horizontal)
                 .padding(.top, 10)
@@ -162,10 +183,13 @@ struct GroupVideoCallView: View {
             
             UIApplication.shared.isIdleTimerDisabled = true
             UIApplication.shared.windows.first?.overrideUserInterfaceStyle = .dark
+            
+            FontInjector.registerFonts()
         }
         .onDisappear {
             viewModel.onDisappear()
             AppDelegate.orientationLock = .portrait
+            UIApplication.shared.windows.first?.overrideUserInterfaceStyle = .light
         }
         .onChange(of: viewModel.isInit) { newValue in
             if newValue {
@@ -176,6 +200,178 @@ struct GroupVideoCallView: View {
 }
 
 fileprivate extension GroupVideoCallView {
+    
+    struct MoreMenuSheet: View {
+        @ObservedObject var viewModel: GroupVideoCallViewModel
+        
+        var body: some View {
+            VStack {
+                HStack {
+                    Text(LocalizableText.videoCallMoreMenu)
+                        .font(.robotoBold(size: 15))
+                        .foregroundColor(.white)
+                    
+                    Spacer()
+                    
+                    Button {
+                        viewModel.showingMoreMenu = false
+                    } label: {
+                        Image(systemName: "xmark")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 14)
+                            .font(.system(size: 24, weight: .bold, design: .rounded))
+                            .foregroundColor(.white)
+                    }
+                    
+                }
+                .padding(15)
+                .background(
+                    Rectangle()
+                        .foregroundColor(.black)
+                )
+                
+                ScrollView {
+                    LazyVStack(spacing: 0) {
+                        Button {
+                            
+                        } label: {
+                            HStack(alignment: .center, spacing: 11) {
+                                Image.videoCallQuestionIcon
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 23)
+                                
+                                Text(LocalizableText.videoCallQna)
+                                    .foregroundColor(.white)
+                                    .font(.robotoRegular(size: 16))
+                                
+                                Spacer()
+                                
+                                Image(systemName: "chevron.right")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .foregroundColor(.white)
+                                    .frame(width: 8)
+                                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                            }
+                            .padding(15)
+                            .contentShape(Rectangle())
+                        }
+                        
+                        Button {
+                            
+                        } label: {
+                            HStack(alignment: .center, spacing: 11) {
+                                Image.videoCallPollingIcon
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 23)
+                                
+                                Text(LocalizableText.videoCallPolls)
+                                    .foregroundColor(.white)
+                                    .font(.robotoRegular(size: 16))
+                                
+                                Spacer()
+                                
+                                Image(systemName: "chevron.right")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .foregroundColor(.white)
+                                    .frame(width: 8)
+                                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                            }
+                            .padding(15)
+                            .contentShape(Rectangle())
+                        }
+                        
+                        Button {
+                            
+                        } label: {
+                            HStack(alignment: .center, spacing: 11) {
+                                Image.videoCallNewParticipantIcon
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 23)
+                                
+                                Text(LocalizableText.participant)
+                                    .foregroundColor(.white)
+                                    .font(.robotoRegular(size: 16))
+                                
+                                Spacer()
+                                
+                                Image(systemName: "chevron.right")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .foregroundColor(.white)
+                                    .frame(width: 8)
+                                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                            }
+                            .padding(15)
+                            .contentShape(Rectangle())
+                        }
+                        
+                        if viewModel.localUser?.canDoParticipantHostControls() ?? false {
+                            Button {
+                                
+                            } label: {
+                                HStack(alignment: .center, spacing: 11) {
+                                    Image.videoCallRecordVideoIcon
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 23)
+                                    
+                                    Text(LocalizableText.videoCallRecord)
+                                        .foregroundColor(.white)
+                                        .font(.robotoRegular(size: 16))
+                                    
+                                    Spacer()
+                                    
+                                    Image(systemName: "chevron.right")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .foregroundColor(.white)
+                                        .frame(width: 8)
+                                        .font(.system(size: 10, weight: .bold, design: .rounded))
+                                }
+                                .padding(15)
+                                .contentShape(Rectangle())
+                            }
+                        }
+                        
+                        Button {
+                            
+                        } label: {
+                            HStack(alignment: .center, spacing: 11) {
+                                Image.videoCallInformationIcon
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 23)
+                                
+                                Text(LocalizableText.videoCallInformation)
+                                    .foregroundColor(.white)
+                                    .font(.robotoRegular(size: 16))
+                                
+                                Spacer()
+                                
+                                Image(systemName: "chevron.right")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .foregroundColor(.white)
+                                    .frame(width: 8)
+                                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                            }
+                            .padding(15)
+                            .contentShape(Rectangle())
+                        }
+                    }
+                }
+                .background(Color(red: 0.15, green: 0.16, blue: 0.17))
+            }
+            .background(Color(red: 0.15, green: 0.16, blue: 0.17))
+        }
+    }
+    
     struct BottomToolBar: View {
         @ObservedObject var viewModel: GroupVideoCallViewModel
         

@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "ic-question-icon.png",
+      "filename" : "ic-participant-new.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "ic-question-icon@2x.png",
+      "filename" : "ic-participant-new@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "ic-question-icon@3x.png",
+      "filename" : "ic-participant-new@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

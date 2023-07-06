@@ -54,12 +54,7 @@
 		EC30D10926BE879200570F48 /* LoginViewUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC30D10826BE879200570F48 /* LoginViewUser.swift */; };
 		EC38FEEF287BD8A00007CFC6 /* OneSignal in Frameworks */ = {isa = PBXBuildFile; productRef = EC38FEEE287BD8A00007CFC6 /* OneSignal */; };
 		EC38FEF1287BD8A00007CFC6 /* OneSignalExtension in Frameworks */ = {isa = PBXBuildFile; productRef = EC38FEF0287BD8A00007CFC6 /* OneSignalExtension */; };
-		EC3B97672A419372006D7B1B /* WebRTC in Frameworks */ = {isa = PBXBuildFile; productRef = EC3B97662A419372006D7B1B /* WebRTC */; };
 		EC3B97722A41A134006D7B1B /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC5DF309285CD36500885D67 /* StoreKit.framework */; };
-		EC3B97752A41A13F006D7B1B /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC3B97732A41A13E006D7B1B /* Starscream.framework */; };
-		EC3B97762A41A13F006D7B1B /* Starscream.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = EC3B97732A41A13E006D7B1B /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		EC3B97772A41A13F006D7B1B /* DyteiOSSocketIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC3B97742A41A13E006D7B1B /* DyteiOSSocketIO.framework */; };
-		EC3B97782A41A13F006D7B1B /* DyteiOSSocketIO.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = EC3B97742A41A13E006D7B1B /* DyteiOSSocketIO.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		EC3B977D2A41B4F1006D7B1B /* GroupVideoCallViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3B977C2A41B4F1006D7B1B /* GroupVideoCallViewModel.swift */; };
 		EC3B97802A41B4FF006D7B1B /* GroupVideoCallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3B977F2A41B4FF006D7B1B /* GroupVideoCallView.swift */; };
 		EC47636A2833E03C009EE2FB /* HTMLViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4763692833E03C009EE2FB /* HTMLViewer.swift */; };
@@ -367,18 +362,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		EC3B97792A41A13F006D7B1B /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				EC3B97762A41A13F006D7B1B /* Starscream.framework in Embed Frameworks */,
-				EC3B97782A41A13F006D7B1B /* DyteiOSSocketIO.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		EC48E2CE287BE236000FD848 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 12;
@@ -438,8 +421,6 @@
 		EC2C67FA26C582BE008F094D /* MultilineTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultilineTextField.swift; sourceTree = "<group>"; };
 		EC30D10826BE879200570F48 /* LoginViewUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewUser.swift; sourceTree = "<group>"; };
 		EC38FEDC28787B270007CFC6 /* DinotisApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DinotisApp.entitlements; sourceTree = "<group>"; };
-		EC3B97732A41A13E006D7B1B /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Starscream.framework; sourceTree = "<group>"; };
-		EC3B97742A41A13E006D7B1B /* DyteiOSSocketIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DyteiOSSocketIO.framework; sourceTree = "<group>"; };
 		EC3B977C2A41B4F1006D7B1B /* GroupVideoCallViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupVideoCallViewModel.swift; sourceTree = "<group>"; };
 		EC3B977F2A41B4FF006D7B1B /* GroupVideoCallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupVideoCallView.swift; sourceTree = "<group>"; };
 		EC4763692833E03C009EE2FB /* HTMLViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLViewer.swift; sourceTree = "<group>"; };
@@ -730,20 +711,17 @@
 			files = (
 				ECB0A26C28FED3210050EC71 /* FirebaseDatabaseSwift in Frameworks */,
 				EC1256722849299400A82DB7 /* QGrid in Frameworks */,
-				EC3B97772A41A13F006D7B1B /* DyteiOSSocketIO.framework in Frameworks */,
 				ECCE52F82784BBB100B67CC8 /* CurrencyFormatter in Frameworks */,
 				EC722261294EFFA700C05A1B /* WaterfallGrid in Frameworks */,
 				ECA7F7DD270DA83900CFB3AD /* SDWebImageSVGCoder in Frameworks */,
 				ECCE52FC2784BBB100B67CC8 /* CurrencyTextSwiftUI in Frameworks */,
 				EC72920C2A4374E400C9AAD5 /* DyteiOSCore in Frameworks */,
-				EC3B97752A41A13F006D7B1B /* Starscream.framework in Frameworks */,
 				ECD6C20A2701F37300A09AD8 /* SDWebImageSwiftUI in Frameworks */,
 				EC789C6B27C4C33C005872E2 /* Introspect in Frameworks */,
 				EC8BB8C527D223460078216B /* IQKeyboardManagerSwift in Frameworks */,
 				ECCEFEAA277E9DD100E9B0AD /* ReactiveMoya in Frameworks */,
 				ECCEFEAC277E9DD100E9B0AD /* RxMoya in Frameworks */,
 				ECBA9F3826D653A5008CCCDB /* SlideOverCard in Frameworks */,
-				EC3B97672A419372006D7B1B /* WebRTC in Frameworks */,
 				EC7292112A4375D800C9AAD5 /* TwilioConversationsClient in Frameworks */,
 				EC62576027B79F010079AA10 /* SwiftUINavigation in Frameworks */,
 				EC38FEF1287BD8A00007CFC6 /* OneSignalExtension in Frameworks */,
@@ -2421,8 +2399,6 @@
 		ECF2274C27F0B451001777DC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				EC3B97742A41A13E006D7B1B /* DyteiOSSocketIO.framework */,
-				EC3B97732A41A13E006D7B1B /* Starscream.framework */,
 				EC5DF309285CD36500885D67 /* StoreKit.framework */,
 			);
 			name = Frameworks;
@@ -2974,7 +2950,6 @@
 				ECBA13DF26B78F77004D452C /* Frameworks */,
 				ECBA13E026B78F77004D452C /* Resources */,
 				EC48E2CE287BE236000FD848 /* Embed Foundation Extensions */,
-				EC3B97792A41A13F006D7B1B /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -3012,7 +2987,6 @@
 				EC722260294EFFA700C05A1B /* WaterfallGrid */,
 				EC47EE74297538A100D7D86D /* DinotisData */,
 				ECC1EE7C29EA61C400C9B402 /* Shimmer */,
-				EC3B97662A419372006D7B1B /* WebRTC */,
 				EC72920B2A4374E400C9AAD5 /* DyteiOSCore */,
 				EC7292102A4375D800C9AAD5 /* TwilioConversationsClient */,
 			);
@@ -3068,7 +3042,6 @@
 				ECB0A26828FED3210050EC71 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				EC72225F294EFFA600C05A1B /* XCRemoteSwiftPackageReference "WaterfallGrid" */,
 				ECC1EE7B29EA61C400C9B402 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
-				EC3B97652A419371006D7B1B /* XCRemoteSwiftPackageReference "webrtc" */,
 				EC7292092A430BA700C9AAD5 /* XCRemoteSwiftPackageReference "DyteMobileCoreiOS" */,
 				EC72920F2A4375D800C9AAD5 /* XCRemoteSwiftPackageReference "conversations-ios" */,
 			);
@@ -4050,14 +4023,6 @@
 				minimumVersion = 3.0.0;
 			};
 		};
-		EC3B97652A419371006D7B1B /* XCRemoteSwiftPackageReference "webrtc" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/jitsi/webrtc.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 		EC4E500027FC0B34009D66FF /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/airbnb/lottie-ios";
@@ -4086,8 +4051,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/dyte-in/DyteMobileCoreiOS.git";
 			requirement = {
-				kind = exactVersion;
-				version = 0.4.7;
+				branch = main;
+				kind = branch;
 			};
 		};
 		EC72920F2A4375D800C9AAD5 /* XCRemoteSwiftPackageReference "conversations-ios" */ = {
@@ -4235,11 +4200,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EC38FEED287BD8A00007CFC6 /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */;
 			productName = OneSignalExtension;
-		};
-		EC3B97662A419372006D7B1B /* WebRTC */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = EC3B97652A419371006D7B1B /* XCRemoteSwiftPackageReference "webrtc" */;
-			productName = WebRTC;
 		};
 		EC47EE74297538A100D7D86D /* DinotisData */ = {
 			isa = XCSwiftPackageProductDependency;
