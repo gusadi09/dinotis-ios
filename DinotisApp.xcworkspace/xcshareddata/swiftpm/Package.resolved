@@ -33,7 +33,7 @@
       "location" : "https://github.com/twilio/conversations-ios.git",
       "state" : {
         "branch" : "master",
-        "revision" : "598f2d743c817abd0df42d6a5ca51d3122f19d41"
+        "revision" : "15b4bdd792739a809137f5a41854ead03bea1345"
       }
     },
     {
@@ -55,12 +55,21 @@
       }
     },
     {
+      "identity" : "dyteiossocketio",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dyte-in/DyteiOSSocketIO.git",
+      "state" : {
+        "branch" : "0.1.3",
+        "revision" : "0ed8f1d29aeaa9f0dcb9f99c7130dd8e56c94b0c"
+      }
+    },
+    {
       "identity" : "dytemobilecoreios",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/dyte-in/DyteMobileCoreiOS.git",
       "state" : {
-        "revision" : "4900df13c974566d28a93cee8f0f760c424e6eb2",
-        "version" : "0.4.7"
+        "branch" : "main",
+        "revision" : "299540e098630f30aa40daf5a19eaaadd5d86df0"
       }
     },
     {
@@ -86,8 +95,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/GoogleDataTransport.git",
       "state" : {
-        "revision" : "7874c1b48cbffd086ce8a052c4be873a78613775",
-        "version" : "9.2.3"
+        "revision" : "98a00258d4518b7521253a70b7f70bb76d2120fe",
+        "version" : "9.2.4"
       }
     },
     {
@@ -95,8 +104,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/GoogleUtilities.git",
       "state" : {
-        "revision" : "871d43135925cde39ef7421d8723ce47edfdcc39",
-        "version" : "7.11.1"
+        "revision" : "58d03d22beae762eaddbd30cb5a61af90d4b309f",
+        "version" : "7.11.3"
       }
     },
     {

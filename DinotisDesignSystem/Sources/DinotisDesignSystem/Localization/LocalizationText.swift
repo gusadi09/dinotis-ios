@@ -1719,4 +1719,30 @@ public enum LocalizableText {
         bundle: .module,
         comment: "general live text"
     )
+    
+    public static let videoCallMoreMenu = NSLocalizedString(
+        "video_call_more_menu",
+        bundle: .module,
+        comment: "more menu text for more menu sheet title"
+    )
+    public static let videoCallQna = NSLocalizedString(
+        "video_call_qna",
+        bundle: .module,
+        comment: "qna text"
+    )
+    public static let videoCallPolls = NSLocalizedString(
+        "video_call_polls",
+        bundle: .module,
+        comment: "polls text"
+    )
+    public static let videoCallRecord = NSLocalizedString(
+        "video_call_record",
+        bundle: .module,
+        comment: "record text"
+    )
+    public static let videoCallInformation = NSLocalizedString(
+        "video_call_information",
+        bundle: .module,
+        comment: "information text"
+    )
 }

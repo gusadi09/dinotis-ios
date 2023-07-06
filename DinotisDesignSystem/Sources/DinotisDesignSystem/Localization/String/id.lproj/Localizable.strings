@@ -388,3 +388,9 @@
 "outdated_version_update_text" = "Perbarui Sekarang";
 "outdated_version_subtitle_content" = "Pastikan bahwa Anda telah menginstal versi terbaru aplikasi kami untuk meningkatkan pengalaman anda saat menggunakan layanan kami.";
 "outdated_version_title_content" = "Yuk! Update Aplikasi Dinotis Kamu";
+
+"video_call_more_menu" = "Menu Lainnya";
+"video_call_qna" = "QnA";
+"video_call_polls" = "Polling";
+"video_call_record" = "Rekam";
+"video_call_information" = "Informasi";

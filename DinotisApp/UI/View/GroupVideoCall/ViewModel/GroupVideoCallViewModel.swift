@@ -8,6 +8,7 @@
 import Foundation
 import DyteiOSCore
 import UIKit
+import SwiftUI
 
 enum CameraPosition {
     case front
@@ -15,6 +16,8 @@ enum CameraPosition {
 }
 
 final class GroupVideoCallViewModel: ObservableObject {
+    private var timer: Timer?
+    
     var backToRoot: () -> Void
     var backToHome: () -> Void
     
@@ -35,6 +38,10 @@ final class GroupVideoCallViewModel: ObservableObject {
     
     @Published var stringTime = "00:00:00"
     @Published var isNearbyEnd = false
+    @Published var isMeetingForceEnd = false
+    @Published var futureDate = Date()
+    @Published var dateTime = Date()
+    @Published var isShowNearEndAlert = false
     
     @Published var isShowingToolbar = true
     @Published var isShowAboutCallBottomSheet = false
@@ -52,6 +59,34 @@ final class GroupVideoCallViewModel: ObservableObject {
     ) {
         self.backToHome = backToHome
         self.backToRoot = backToRoot
+    }
+    
+    func getRealTime() {
+        let getting = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(getTime), userInfo: nil, repeats: true)
+        
+        self.timer = getting
+    }
+    
+    @objc func getTime() {
+        
+        let countDown = Calendar.current.dateComponents([.hour, .minute, .second], from: Date(), to: self.futureDate)
+        guard let hours = countDown.hour else { return }
+        guard let minutes = countDown.minute else { return }
+        guard let seconds = countDown.second else { return }
+        
+        self.dateTime = Date()
+        
+//        self.isNearbyEnd = dateTime <= meeting.endAt.orCurrentDate().addingTimeInterval(-300)
+        
+//        if hours == 0 && minutes == 0 && seconds == 0 {
+//            self.checkMeetingEnd()
+//        }
+        
+//        withAnimation {
+//            self.isShowNearEndAlert = minutes == 5 && seconds == 0 && hours == 0
+//        }
+
+        self.stringTime = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
     }
     
     func joinMeeting() {
@@ -97,16 +132,18 @@ final class GroupVideoCallViewModel: ObservableObject {
     func switchCamera() {
         DispatchQueue.main.async { [weak self] in
             if let devices = self?.meeting.localUser.getVideoDevices() {
-                for device in devices {
-                    if device.type != self?.meeting.localUser.getSelectedVideoDevice().type {
-                        self?.meeting.localUser.setVideoDevice(dyteVideoDevice: device)
-                        if self?.position == .front {
-                            self?.position = .rear
-                        } else {
-                            self?.position = .front
+                if let type = self?.meeting.localUser.getSelectedVideoDevice()?.type {
+                    for device in devices {
+                        if device.type != type {
+                            self?.meeting.localUser.setVideoDevice(dyteVideoDevice: device)
+                            if (self?.position ?? .front) == .front {
+                                self?.position = .rear
+                            } else {
+                                self?.position = .front
+                            }
+                            
+                            break
                         }
-                        
-                        break
                     }
                 }
             }
@@ -119,6 +156,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     
     func onAppear() {
         disableIdleTimer()
+        getRealTime()
         meeting.addMeetingRoomEventsListener(meetingRoomEventsListener: self)
         meeting.addParticipantEventsListener(participantEventsListener: self)
         meeting.addSelfEventsListener(selfEventsListener: self)
@@ -132,6 +170,22 @@ final class GroupVideoCallViewModel: ObservableObject {
 }
 
 extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
+    func onConnectedToMeetingRoom() {
+        
+    }
+    
+    func onConnectingToMeetingRoom() {
+        
+    }
+    
+    func onDisconnectedFromMeetingRoom() {
+        
+    }
+    
+    func onMeetingRoomConnectionFailed() {
+        
+    }
+    
     func onDisconnectedFromMeetingRoom(reason: String) {
         
     }
