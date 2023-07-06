@@ -9,6 +9,20 @@ import Foundation
 import DyteiOSCore
 import UIKit
 import SwiftUI
+import DinotisDesignSystem
+
+struct DummyChatMessage: Identifiable {
+    let id = UUID()
+    var date: Date
+    var name: String
+    var isYou: Bool
+    var message: String
+}
+
+struct TabBarItem: Identifiable {
+    let id: Int
+    let title: String
+}
 
 enum CameraPosition {
     case front
@@ -49,6 +63,53 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var isShowingChat = false
     
     @Published var index = 0
+    
+    @Published var pinnedChat: DummyChatMessage?
+    @Published var messageText = ""
+    @Published var searchText = ""
+    @Published var tabSelection = 0
+    @Published var isHost = false
+    
+    @Published var bottomSheetTabItems: [TabBarItem] = [
+        .init(id: 0, title: LocalizableText.labelChat),
+        .init(id: 1, title: LocalizableText.participant),
+        .init(id: 2, title: LocalizableText.labelPolls)
+    ]
+    
+    @Published var dummyParicipant: [DummyParticipantModel] = [
+        .init(name: "Ahmad Rifai", isMicOn: false, isVideoOn: false, isJoining: false, isSpeaker: true),
+        .init(name: "Bambanb", isMicOn: true, isVideoOn: false, isJoining: false, isSpeaker: true),
+        .init(name: "Citra Kirana", isMicOn: false, isVideoOn: false, isJoining: true, isSpeaker: false),
+        .init(name: "Dimas Agung", isMicOn: false, isVideoOn: false, isJoining: false, isSpeaker: false),
+        .init(name: "Endika Koala", isMicOn: false, isVideoOn: false, isJoining: true, isSpeaker: false),
+        .init(name: "Faris van Java", isMicOn: false, isVideoOn: false, isJoining: false, isSpeaker: false)
+    ]
+    
+    @Published var dummyChatList: [DummyChatMessage] = [
+        .init(date: DateComponents(year: 2023, month: 7, day: 5, hour: 21, minute: 30).date ?? .now, name: "Wade Warren", isYou: false, message: "Lorem ipsum dolor sit amet consectetur. Nec leosdsdLorem ipsum dolor sit amet consectetur. Nec leo.."),
+        .init(date: DateComponents(year: 2023, month: 7, day: 5, hour: 21, minute: 31).date ?? .now, name: "Sujono", isYou: false, message: "Lorem ipsum dolor sit amet consectetur. Nec leo."),
+        .init(date: DateComponents(year: 2023, month: 7, day: 5, hour: 21, minute: 32).date ?? .now, name: "Hansamu Yama", isYou: false, message: "Lorem Ipsum")
+    ]
+    
+    var searchedParticipant: [DummyParticipantModel] {
+        if searchText.isEmpty {
+            return dummyParicipant
+        } else {
+            return dummyParicipant.filter({ $0.name.contains(searchText) })
+        }
+    }
+    
+    var joiningParticipant: [DummyParticipantModel] {
+        searchedParticipant.filter({ $0.isJoining })
+    }
+    
+    var speakerParticipant: [DummyParticipantModel] {
+        searchedParticipant.filter({ $0.isSpeaker && $0.isJoining == false })
+    }
+    
+    var viewerSpeaker: [DummyParticipantModel] {
+        searchedParticipant.filter({ $0.isSpeaker == false && $0.isJoining == false })
+    }
     
     @Published var participants = [DyteJoinedMeetingParticipant]()
     @Published var localUser: DyteSelfParticipant? = nil
@@ -166,6 +227,13 @@ final class GroupVideoCallViewModel: ObservableObject {
         meeting.addRecordingEventsListener(recordingEventsListener: self)
         meeting.addWaitlistEventsListener(waitlistEventsListener: self)
         meeting.doInit(dyteMeetingInfo_: meetingInfo)
+    }
+    
+    func sendMessage() {
+        let message = DummyChatMessage(date: .now, name: "Iqbaal", isYou: true, message: messageText)
+        withAnimation {
+            self.dummyChatList.append(message)
+        }
     }
 }
 
