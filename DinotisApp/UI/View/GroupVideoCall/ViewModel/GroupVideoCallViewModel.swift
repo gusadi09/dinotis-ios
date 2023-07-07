@@ -19,6 +19,13 @@ struct DummyChatMessage: Identifiable {
     var message: String
 }
 
+struct DummyQuestion: Identifiable {
+    let id = UUID()
+    var date: Date
+    var name: String
+    var question: String
+}
+
 struct TabBarItem: Identifiable {
     let id: Int
     let title: String
@@ -61,19 +68,28 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var isShowAboutCallBottomSheet = false
     @Published var showingMoreMenu = false
     @Published var isShowingChat = false
+    @Published var isShowingQnA = false
+    @Published var isShowQuestionBox = false
     
     @Published var index = 0
     
     @Published var pinnedChat: DummyChatMessage?
     @Published var messageText = ""
+    @Published var questionText = ""
     @Published var searchText = ""
     @Published var tabSelection = 0
+    @Published var qnaTabSelection = 0
     @Published var isHost = false
     
     @Published var bottomSheetTabItems: [TabBarItem] = [
         .init(id: 0, title: LocalizableText.labelChat),
         .init(id: 1, title: LocalizableText.participant),
         .init(id: 2, title: LocalizableText.labelPolls)
+    ]
+    
+    @Published var qnaTabItems: [TabBarItem] = [
+        .init(id: 0, title: "Questions"),
+        .init(id: 1, title: "Answered")
     ]
     
     @Published var dummyParicipant: [DummyParticipantModel] = [
@@ -90,6 +106,15 @@ final class GroupVideoCallViewModel: ObservableObject {
         .init(date: DateComponents(year: 2023, month: 7, day: 5, hour: 21, minute: 31).date ?? .now, name: "Sujono", isYou: false, message: "Lorem ipsum dolor sit amet consectetur. Nec leo."),
         .init(date: DateComponents(year: 2023, month: 7, day: 5, hour: 21, minute: 32).date ?? .now, name: "Hansamu Yama", isYou: false, message: "Lorem Ipsum")
     ]
+    
+    @Published var dummyQuestionList: [DummyQuestion] = [
+        .init(date: .now, name: "Wade Warren", question: "Lorem ipsum dolor sit amet consectetur. Nec leosdsdLorem ipsum dolor sit amet consectetur. Nec leo.."),
+        .init(date: .now, name: "Mr. Singh", question: "Lorem ipsum dolor sit amet consectetur."),
+        .init(date: .now, name: "Abrar Maulana", question: "Lorem ipsum dolor sit amet consectetur. Nec leosdsdLorem ipsum dolor"),
+        .init(date: .now, name: "Xavier", question: "Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur")
+    ]
+    
+    @Published var dummyAnsweredList: [DummyQuestion] = []
     
     var searchedParticipant: [DummyParticipantModel] {
         if searchText.isEmpty {
@@ -120,6 +145,24 @@ final class GroupVideoCallViewModel: ObservableObject {
     ) {
         self.backToHome = backToHome
         self.backToRoot = backToRoot
+    }
+    
+    func answerQuestion(at index: Int) {
+        withAnimation {
+            dummyAnsweredList.append(dummyQuestionList[index])
+            DispatchQueue.main.asyncAfter(deadline: .now()+0.1) { [weak self] in
+                self?.dummyQuestionList.remove(at: index)
+            }
+        }
+    }
+    
+    func unanswerQuestion(at index: Int) {
+        withAnimation {
+            dummyQuestionList.append(dummyAnsweredList[index])
+            DispatchQueue.main.asyncAfter(deadline: .now()+0.1) { [weak self] in
+                self?.dummyAnsweredList.remove(at: index)
+            }
+        }
     }
     
     func getRealTime() {
@@ -317,6 +360,34 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
 }
 
 extension GroupVideoCallViewModel: DyteParticipantEventsListener {
+    func onActiveSpeakerChanged(participant: DyteJoinedMeetingParticipant) {
+        
+    }
+    
+    func onParticipantJoin(participant: DyteJoinedMeetingParticipant) {
+        
+    }
+    
+    func onParticipantLeave(participant: DyteJoinedMeetingParticipant) {
+        
+    }
+    
+    func onParticipantPinned(participant: DyteJoinedMeetingParticipant) {
+        
+    }
+    
+    func onParticipantUnpinned(participant: DyteJoinedMeetingParticipant) {
+        
+    }
+    
+    func onScreenShareEnded(participant: DyteScreenShareMeetingParticipant) {
+        
+    }
+    
+    func onScreenShareStarted(participant: DyteScreenShareMeetingParticipant) {
+        
+    }
+    
     func onActiveParticipantsChanged(active: [DyteJoinedMeetingParticipant]) {
         
     }
@@ -468,6 +539,22 @@ extension GroupVideoCallViewModel: DyteRecordingEventsListener {
 }
 
 extension GroupVideoCallViewModel: DyteWaitlistEventsListener {
+    func onWaitListParticipantAccepted(participant: DyteWaitlistedParticipant) {
+        
+    }
+    
+    func onWaitListParticipantClosed(participant: DyteWaitlistedParticipant) {
+        
+    }
+    
+    func onWaitListParticipantJoined(participant: DyteWaitlistedParticipant) {
+        
+    }
+    
+    func onWaitListParticipantRejected(participant: DyteWaitlistedParticipant) {
+        
+    }
+    
     func onWaitListParticipantAccepted(participant: DyteMeetingParticipant) {
         
     }

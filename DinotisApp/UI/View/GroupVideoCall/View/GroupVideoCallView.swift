@@ -199,6 +199,18 @@ struct GroupVideoCallView: View {
         .sheet(isPresented: $viewModel.isShowAboutCallBottomSheet) {
             AboutCallBottomSheet(viewModel: viewModel)
         }
+        .sheet(isPresented: $viewModel.isShowingQnA) {
+            QnAListBottomSheet(viewModel: viewModel)
+        }
+        .sheet(isPresented: $viewModel.isShowQuestionBox) {
+            if #available(iOS 16.0, *) {
+                QuestionBoxBottomSheet(viewModel: viewModel)
+                    .presentationDetents([.medium, .large])
+                    .presentationDragIndicator(.hidden)
+            } else {
+                QuestionBoxBottomSheet(viewModel: viewModel)
+            }
+        }
     }
 }
 
@@ -237,7 +249,10 @@ fileprivate extension GroupVideoCallView {
                 ScrollView {
                     LazyVStack(spacing: 0) {
                         Button {
-                            
+                            viewModel.showingMoreMenu = false
+                            DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                                self.viewModel.isShowingQnA.toggle()
+                            }
                         } label: {
                             HStack(alignment: .center, spacing: 11) {
                                 Image.videoCallQuestionIcon
@@ -439,7 +454,9 @@ fileprivate extension GroupVideoCallView {
                 
                 Button {
                     withAnimation(.spring()) {
-                        viewModel.leaveMeeting()
+//                        viewModel.leaveMeeting()
+//                        MARK: For Testing Only. Remove this when the feature is ready
+                        viewModel.isShowQuestionBox.toggle()
                     }
                 } label: {
                     ZStack {
@@ -646,6 +663,222 @@ fileprivate extension GroupVideoCallView {
         }
     }
     
+    struct QnAListBottomSheet: View {
+        @ObservedObject var viewModel: GroupVideoCallViewModel
+        @Environment(\.presentationMode) var presentationMode
+        @Namespace var namespace
+        
+        var body: some View {
+            VStack(alignment: .leading) {
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text("List Questions")
+                            .font(.robotoBold(size: 16))
+                        
+                        Spacer()
+                        
+                        Button {
+                            presentationMode.wrappedValue.dismiss()
+                        } label: {
+                            Image(systemName: "xmark")
+                        }
+                    }
+                    .foregroundColor(.white)
+                    .padding()
+                    
+                    HStack(spacing: 16) {
+                        ForEach(viewModel.qnaTabItems, id: \.id) { item in
+                            Button {
+                                withAnimation {
+                                    viewModel.qnaTabSelection = item.id
+                                }
+                            } label: {
+                                VStack(spacing: 16) {
+                                    Text(item.title)
+                                        .font(viewModel.qnaTabSelection == item.id ? .robotoBold(size: 16) : .robotoRegular(size: 16))
+                                        .foregroundColor(viewModel.qnaTabSelection == item.id ? .blue : Color(red: 0.63, green: 0.64, blue: 0.66))
+                                    
+                                    if viewModel.qnaTabSelection == item.id {
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .frame(width: 24, height: 2)
+                                            .foregroundColor(.blue)
+                                            .matchedGeometryEffect(id: "qna-bottom", in: namespace)
+                                    } else {
+                                        Rectangle()
+                                            .frame(width: 24, height: 2)
+                                            .foregroundColor(.clear)
+                                    }
+                                }
+                                .animation(.spring(), value: viewModel.qnaTabSelection)
+                            }
+                        }
+                        
+                        Spacer()
+                    }
+                    .padding(.horizontal)
+                }
+                .background(Color(red: 0.1, green: 0.11, blue: 0.12))
+                
+                TabView(selection: $viewModel.qnaTabSelection) {
+                    ScrollView {
+                        VStack(spacing: 22) {
+                            if !viewModel.dummyQuestionList.isEmpty {
+                                ForEach(0...viewModel.dummyQuestionList.count-1, id: \.self) { index in
+                                    Button {
+                                        viewModel.answerQuestion(at: index)
+                                    } label: {
+                                        QnARowView(data: viewModel.dummyQuestionList[index], hasAnswered: false)
+                                    }
+                                }
+                            }
+                        }
+                        .padding(.horizontal)
+                        .padding(.top)
+                    }
+                    .tag(0)
+                    
+                    ScrollView {
+                        VStack(spacing: 22) {
+                            if !viewModel.dummyAnsweredList.isEmpty {
+                                ForEach(0...viewModel.dummyAnsweredList.count-1, id: \.self) { index in
+                                    Button {
+                                        viewModel.unanswerQuestion(at: index)
+                                    } label: {
+                                        QnARowView(data: viewModel.dummyAnsweredList[index], hasAnswered: true)
+                                    }
+                                }
+                            }
+                        }
+                        .padding(.horizontal)
+                        .padding(.top)
+                    }
+                    .tag(1)
+                }
+                .tabViewStyle(.page(indexDisplayMode: .never))
+            }
+            .background(Color(red: 0.15, green: 0.16, blue: 0.17))
+        }
+    }
+    
+    struct QuestionBoxBottomSheet: View {
+        
+        @ObservedObject var viewModel: GroupVideoCallViewModel
+        @Environment(\.presentationMode) var presentationMode
+        
+        var body: some View {
+            VStack(spacing: 14) {
+                HStack {
+                    Text("Question Box")
+                        .font(.robotoBold(size: 16))
+                    
+                    Spacer()
+                    
+                    Button {
+                        presentationMode.wrappedValue.dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                    }
+                }
+                .foregroundColor(.white)
+                .padding()
+                .background(Color(red: 0.1, green: 0.11, blue: 0.12))
+                
+                Spacer()
+                
+                ZStack(alignment: .top) {
+                    VStack {
+                        MultilineTextField("Question here...", text: $viewModel.questionText)
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 8)
+                        
+                        Spacer()
+                    }
+                    .frame(height: 152)
+                    
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color(red: 0.32, green: 0.34, blue: 0.36), lineWidth: 1)
+                        .frame(height: 152)
+                }
+                .frame(height: 152)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .padding(.horizontal)
+                
+                Button {
+                    viewModel.questionText = ""
+                    presentationMode.wrappedValue.dismiss()
+                } label: {
+                    HStack(spacing: 13) {
+                        Spacer()
+                        Text("Kirim Pertanyaan")
+                            .font(.robotoBold(size: 16))
+                        
+                        Image(systemName: "paperplane.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .rotationEffect(.degrees(45))
+                            .frame(height: 18)
+                        
+                        Spacer()
+                    }
+                    .foregroundColor(.white)
+                    .padding(.horizontal)
+                    .padding(.vertical, 12)
+                    .background((viewModel.questionText.isEmpty || !viewModel.questionText.isStringContainWhitespaceAndText()) ? Color.dinotisGray : Color.blue)
+                    .cornerRadius(11)
+                    .disabled(viewModel.questionText.isEmpty || !viewModel.questionText.isStringContainWhitespaceAndText())
+                }
+                .padding(.horizontal)
+                .padding(.bottom)
+            }
+            .background(Color(red: 0.15, green: 0.16, blue: 0.17))
+        }
+    }
+    
+    struct QnARowView: View {
+        
+        @State var data: DummyQuestion
+        @State var hasAnswered: Bool
+        
+        var body: some View {
+            HStack(alignment: .top, spacing: 18) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 4)
+                        .foregroundColor(hasAnswered ? .blue : Color(red: 0.74, green: 0.74, blue: 0.74))
+                    
+                    Image(systemName: "checkmark")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundColor(.white)
+                        .font(.system(.headline))
+                        .padding(4)
+                        .isHidden(!hasAnswered)
+                }
+                .frame(width: 18, height: 18)
+                
+                VStack(alignment: .leading, spacing: 14) {
+                    HStack {
+                        Text(data.name)
+                            .font(.robotoMedium(size: 12))
+                        
+                        Spacer()
+                        
+                        Text(data.date, style: .time)
+                            .font(.robotoBold(size: 12))
+                    }
+                    .foregroundColor(Color(red: 0.63, green: 0.64, blue: 0.66))
+                    
+                    Text(data.question)
+                        .font(.robotoMedium(size: 12))
+                        .foregroundColor(.white)
+                        .multilineTextAlignment(.leading)
+                }
+                .padding(12)
+                .background(Color(red: 0.26, green: 0.27, blue: 0.28))
+                .cornerRadius(6)
+            }
+        }
+    }
+    
     
     struct ParticipantTabView: View {
         
@@ -811,98 +1044,6 @@ fileprivate extension GroupVideoCallView {
                 }
                 .listStyle(PlainListStyle())
                 .animation(.spring(), value: viewModel.searchedParticipant)
-            }
-        }
-    }
-    
-    struct QuestionList: View {
-        
-        @ObservedObject var viewModel: TwilioLiveStreamViewModel
-        @EnvironmentObject var participantVM: ParticipantsViewModel
-        @EnvironmentObject var speakerSettingsManager: SpeakerSettingsManager
-        @EnvironmentObject var streamVM: StreamViewModel
-        @Environment(\.presentationMode) var presentationMode
-        
-        var body: some View {
-            NavigationView {
-                VStack {
-                    
-                    Picker(selection: $viewModel.QnASegment) {
-                        Text("Unanswered").tag(0)
-                        
-                        Text("Answered").tag(1)
-                    } label: {
-                        Text("")
-                    }
-                    .labelsHidden()
-                    .pickerStyle(.segmented)
-                    .padding(.horizontal)
-                    
-                    DinotisList { view in
-                        view.separatorStyle = .none
-                    } content: {
-                        VStack {
-                            ForEach(viewModel.qnaFiltered(), id:\.id) { item in
-                                Button {
-                                    viewModel.putQuestion(questionId: item.id.orZero(), item: item, streamVM: streamVM)
-                                } label: {
-                                    VStack(alignment: .leading) {
-                                        HStack {
-                                            if item.isAnswered ?? false {
-                                                Image(systemName: "checkmark.square")
-                                                    .foregroundColor(.DinotisDefault.primary)
-                                            } else {
-                                                Image(systemName: "square")
-                                                    .foregroundColor(.DinotisDefault.primary)
-                                            }
-                                            
-                                            Text((item.user?.name).orEmpty())
-                                                .font(.robotoBold(size: 14))
-                                                .foregroundColor(.dinotisGray)
-                                            
-                                            Spacer()
-                                            
-                                            Text(DateUtils.dateFormatter(item.createdAt.orCurrentDate(), forFormat: .HHmm))
-                                                .font(.robotoRegular(size: 12))
-                                                .foregroundColor(.dinotisGray)
-                                        }
-                                        
-                                        Divider()
-                                        
-                                        Text(item.question.orEmpty())
-                                            .font(.robotoRegular(size: 14))
-                                            .foregroundColor(.dinotisGray)
-                                            .multilineTextAlignment(.leading)
-                                    }
-                                    .padding()
-                                    .background(Color.secondaryViolet)
-                                    .cornerRadius(12)
-                                }
-                                .disabled(viewModel.QnASegment == 1)
-                                .buttonStyle(.plain)
-                            }
-                        }
-                    }
-                    
-                }
-                .padding(.vertical)
-                .onAppear {
-                    viewModel.getQuestion(meetingId: viewModel.meeting.id.orEmpty())
-                    
-                    streamVM.hasNewQuestion = false
-                }
-                .onDisappear(perform: {
-                    streamVM.hasNewQuestion = false
-                })
-                .navigationTitle("Q&A")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button(LocaleText.back) {
-                            presentationMode.wrappedValue.dismiss()
-                        }
-                    }
-                }
             }
         }
     }
