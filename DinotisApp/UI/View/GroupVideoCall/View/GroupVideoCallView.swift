@@ -165,7 +165,7 @@ struct GroupVideoCallView: View {
                 HStack(spacing: 5) {
                     ForEach(0...1, id: \.self) { index in
                         RoundedRectangle(cornerRadius: 30)
-                            .foregroundColor(viewModel.index == index ? .blue : .gray)
+                            .foregroundColor(viewModel.index == index ? .DinotisDefault.primary : .gray)
                             .frame(width: 16, height: 8)
                     }
                 }
@@ -435,6 +435,15 @@ fileprivate extension GroupVideoCallView {
                         .scaledToFit()
                         .frame(height: 45)
                         .foregroundColor(.white)
+                        .overlay(alignment: .trailing) {
+                            if viewModel.hasNewMessage {
+                                Circle()
+                                    .foregroundColor(.red)
+                                    .frame(width: 10, height: 10)
+                                    .padding(.trailing, 10)
+                                    .padding(.bottom, 12)
+                            }
+                        }
                 }
                 
                 Button {
@@ -454,9 +463,9 @@ fileprivate extension GroupVideoCallView {
                 
                 Button {
                     withAnimation(.spring()) {
-//                        viewModel.leaveMeeting()
+                        viewModel.leaveMeeting()
 //                        MARK: For Testing Only. Remove this when the feature is ready
-                        viewModel.isShowQuestionBox.toggle()
+//                        viewModel.isShowQuestionBox.toggle()
                     }
                 } label: {
                     ZStack {
@@ -624,13 +633,13 @@ fileprivate extension GroupVideoCallView {
                         } label: {
                             VStack(spacing: 16) {
                                 Text(item.title)
-                                    .font(.robotoBold(size: 16))
-                                    .foregroundColor(viewModel.tabSelection == item.id ? .blue : .white)
+                                    .font(viewModel.tabSelection == item.id ? .robotoBold(size: 16) : .robotoRegular(size: 16))
+                                    .foregroundColor(viewModel.tabSelection == item.id ? .white : Color(red: 0.63, green: 0.64, blue: 0.66))
                                 
                                 if viewModel.tabSelection == item.id {
                                     RoundedRectangle(cornerRadius: 8)
                                         .frame(width: 24, height: 2)
-                                        .foregroundColor(.blue)
+                                        .foregroundColor(.DinotisDefault.primary)
                                         .matchedGeometryEffect(id: "bottom", in: namespace)
                                 } else {
                                     Rectangle()
@@ -1088,40 +1097,49 @@ fileprivate extension GroupVideoCallView {
                     VStack(spacing: 0) {
                         ScrollView {
                             LazyVStack {
-                                ForEach(viewModel.dummyChatList, id: \.id) { message in
+                                ForEach(viewModel.meeting.chat.messages, id: \.self) { message in
                                     VStack(alignment: .leading, spacing: 9) {
                                         ChatHeaderView(
-                                            author: message.name,
-                                            isAuthorYou: message.isYou,
-                                            date: message.date
+                                            author: message.displayName,
+                                            isAuthorYou: message.userId == viewModel.localUserId,
+                                            date: message.time
                                         )
-                                        ChatBubbleView(
-                                            messageBody: message.message,
-                                            isAuthorYou: message.isYou
-                                        )
-                                        .contextMenu {
-                                            Button {
-                                                withAnimation(.spring(response: 0.4, dampingFraction: 0.4)) {
-                                                    viewModel.pinnedChat = message
-                                                }
-                                            } label: {
-                                                Label("Pin this chat", systemImage: "pin.fill")
+                                        switch message.type {
+                                        case .text:
+                                            if let chat = message as? DyteTextMessage {
+                                                ChatBubbleView(
+                                                    messageBody: chat.message,
+                                                    isAuthorYou: message.userId == viewModel.localUserId
+                                                )
+                                                /// Pin chat is not available in Dyte SDK
+//                                                .contextMenu {
+//                                                    Button {
+//                                                        withAnimation(.spring(response: 0.4, dampingFraction: 0.4)) {
+//
+//                                                        }
+//                                                    } label: {
+//                                                        Label("Pin this chat", systemImage: "pin.fill")
+//                                                    }
+//                                                }
                                             }
+                                        default:
+                                            EmptyView()
                                         }
                                     }
                                     .padding(.horizontal)
                                     .padding(.vertical, 7)
-                                    .id(message.id)
+                                    .id(message)
+                                    .onAppear {
+                                        viewModel.hasNewMessage = false
+                                    }
                                 }
                                 
                             }
                             
                         }
-                        .onChange(of: viewModel.dummyChatList.count) { _ in
+                        .onChange(of: viewModel.meeting.chat.messages) { value in
                             withAnimation {
-                                if let id = viewModel.dummyChatList.last?.id {
-                                    scrollView.scrollTo(id, anchor: .bottom)
-                                }
+                                scrollView.scrollTo(value.last, anchor: .bottom)
                             }
                         }
                         
@@ -1129,21 +1147,21 @@ fileprivate extension GroupVideoCallView {
                             
                             HStack(alignment: .bottom) {
                                 MultilineTextField("Message here...", text: $viewModel.messageText)
-                                Button(action: {
-                                    
-                                }, label: {
-                                    Image(systemName: "link")
-                                        .foregroundColor(.white)
-                                })
-                                .padding(.vertical, 5)
-                                
-                                Button(action: {
-                                    shouldShowImagePicker.toggle()
-                                }, label: {
-                                    Image(systemName: "photo.on.rectangle.angled")
-                                        .foregroundColor(.white)
-                                })
-                                .padding(.vertical, 5)
+//                                Button(action: {
+//
+//                                }, label: {
+//                                    Image(systemName: "link")
+//                                        .foregroundColor(.white)
+//                                })
+//                                .padding(.vertical, 5)
+//
+//                                Button(action: {
+//                                    shouldShowImagePicker.toggle()
+//                                }, label: {
+//                                    Image(systemName: "photo.on.rectangle.angled")
+//                                        .foregroundColor(.white)
+//                                })
+//                                .padding(.vertical, 5)
                                 
                             }
                             .padding(.horizontal, 14)
@@ -1155,7 +1173,6 @@ fileprivate extension GroupVideoCallView {
                             
                             Button {
                                 viewModel.sendMessage()
-                                viewModel.messageText = ""
                             } label: {
                                 Image(systemName: "paperplane.fill")
                                     .resizable()
@@ -1167,7 +1184,7 @@ fileprivate extension GroupVideoCallView {
                             .padding(.vertical, 15)
                             .padding(.leading, 16)
                             .padding(.trailing, 22)
-                            .background((viewModel.messageText.isEmpty || !viewModel.messageText.isStringContainWhitespaceAndText()) ? Color.dinotisGray : Color.blue)
+                            .background((viewModel.messageText.isEmpty || !viewModel.messageText.isStringContainWhitespaceAndText()) ? Color.dinotisGray : Color.DinotisDefault.primary)
                             .cornerRadius(11)
                             .disabled(viewModel.messageText.isEmpty || !viewModel.messageText.isStringContainWhitespaceAndText())
                             
@@ -1176,42 +1193,46 @@ fileprivate extension GroupVideoCallView {
                     }
                     
                 }
-                .overlay(alignment: .top) {
-                    if let message = viewModel.pinnedChat {
-                        VStack(alignment: .leading, spacing: 4) {
-                            HStack {
-                                Text((message.name))
-                                    .font(.robotoMedium(size: 12))
-                                    .foregroundColor(Color(red: 0.61, green: 0.62, blue: 0.62))
-                                
-                                Spacer()
-                                
-                                Button {
-                                    withAnimation {
-                                        viewModel.pinnedChat = nil
-                                    }
-                                } label: {
-                                    Image(systemName: "pin.fill")
-                                        .foregroundColor(Color(red: 0.61, green: 0.62, blue: 0.62))
-                                }
-                            }
-                            
-                            ChatBubbleView(messageBody: message.message, isAuthorYou: message.isYou)
-                        }
-                        .padding()
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 6)
-                                .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [6, 6]))
-                                .foregroundColor(.white)
-                        )
-                        .background(
-                            RoundedRectangle(cornerRadius: 6)
-                                .foregroundColor(Color(red: 0.15, green: 0.16, blue: 0.17))
-                        )
-                        .padding()
-                        .transition(.move(edge: .top))
-                    }
-                }
+                /// Pin Chat is not available in Dyte SDK
+//                .overlay(alignment: .top) {
+//                    if let message = viewModel.pinnedChat {
+//                        VStack(alignment: .leading, spacing: 4) {
+//                            HStack {
+//                                Text((message.name))
+//                                    .font(.robotoMedium(size: 12))
+//                                    .foregroundColor(Color(red: 0.61, green: 0.62, blue: 0.62))
+//
+//                                Spacer()
+//
+//                                Button {
+//                                    withAnimation {
+//                                        viewModel.pinnedChat = nil
+//                                    }
+//                                } label: {
+//                                    Image(systemName: "pin.fill")
+//                                        .foregroundColor(Color(red: 0.61, green: 0.62, blue: 0.62))
+//                                }
+//                            }
+//
+//                            ChatBubbleView(messageBody: message.message, isAuthorYou: message.isYou)
+//                        }
+//                        .padding()
+//                        .overlay(
+//                            RoundedRectangle(cornerRadius: 6)
+//                                .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [6, 6]))
+//                                .foregroundColor(.white)
+//                        )
+//                        .background(
+//                            RoundedRectangle(cornerRadius: 6)
+//                                .foregroundColor(Color(red: 0.15, green: 0.16, blue: 0.17))
+//                        )
+//                        .padding()
+//                        .transition(.move(edge: .top))
+//                    }
+//                }
+            }
+            .onAppear {
+                viewModel.hasNewMessage = false
             }
         }
     }
@@ -1219,7 +1240,7 @@ fileprivate extension GroupVideoCallView {
     struct ChatHeaderView: View {
         let author: String
         let isAuthorYou: Bool
-        let date: Date
+        let date: String
         
         let dateFormatter: DateFormatter = {
             let formatter = DateFormatter()
@@ -1232,7 +1253,7 @@ fileprivate extension GroupVideoCallView {
                 Text("\(author)\(isAuthorYou ? " (\(LocaleText.you))" : "")")
                     .lineLimit(1)
                 Spacer()
-                Text(dateFormatter.string(from: date))
+                Text(date)
             }
             .foregroundColor(Color(red: 0.63, green: 0.64, blue: 0.66))
             .font(.robotoBold(size: 12))
@@ -1248,7 +1269,7 @@ fileprivate extension GroupVideoCallView {
                 .font(.robotoRegular(size: 14))
                 .foregroundColor(.white)
                 .padding(10)
-                .background(isAuthorYou ? Color.blue : Color(red: 0.26, green: 0.27, blue: 0.28))
+                .background(isAuthorYou ? Color.DinotisDefault.primary : Color(red: 0.26, green: 0.27, blue: 0.28))
                 .cornerRadius(8)
                 .multilineTextAlignment(.leading)
         }
