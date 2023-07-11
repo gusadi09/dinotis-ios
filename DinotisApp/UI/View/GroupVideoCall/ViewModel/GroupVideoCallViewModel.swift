@@ -11,13 +11,6 @@ import UIKit
 import SwiftUI
 import DinotisDesignSystem
 
-struct DummyChatMessage: Identifiable {
-    let id = UUID()
-    var date: Date
-    var name: String
-    var isYou: Bool
-    var message: String
-}
 
 struct DummyQuestion: Identifiable {
     let id = UUID()
@@ -43,9 +36,13 @@ final class GroupVideoCallViewModel: ObservableObject {
     var backToHome: () -> Void
     
     let meeting = DyteiOSClientBuilder().build()
+    var localUserId = ""
     
     let meetingInfo = DyteMeetingInfoV2(
         authToken: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdJZCI6IjQ2ODdlYjllLWMyNjItNDhmOS1iZWI0LTQ3ODhiNjJlYjY4YSIsIm1lZXRpbmdJZCI6ImJiYjczNDg4LTA2NTctNDIzZC1hM2QxLWY2NjQ1Mjk3OTA1YyIsInBhcnRpY2lwYW50SWQiOiJhYWFjNzMzZS0wNDQxLTQyNzMtYTRhNy01NWQ5NGUyMTA3NmMiLCJwcmVzZXRJZCI6Ijk5YmZlNTZkLWVhYjMtNGMyNy05ZTQwLTEyMGY3ZTg0OWI3NyIsImlhdCI6MTY4NzMzMjYyNywiZXhwIjoxNjk1OTcyNjI3fQ.Wukf5VcOrjSAGBraH66WSrypR59AHfVeK7OfAfUVA7TMcy6TSj98UVWMB_fwpYXDxL9cAtZHyzadFlkUQ1WbPHiXJ-ZpE0UyE44QNk7AxlnczBv_QyKmLwG2LReXxNSNsDnnq3LPQFYWWh_26z0Cac2UVzwc4HjSD29YxO4-0tsd1cORsgSFaeysshhrf3ZmyNSv3mw5BFFePd5pwuzdX6wk5l5-HQAgEcvNyyzCIHMXzynGcbhv-2WziFNRu7FyIPQZFDiZVTZOzoo_r9f3PDogRCHf7HZ3UZAZP_gHr0LjwJk7zzTwMis-6pGuxz99rBfqskQg2_kdl5EVhIIt-Q",
+        
+        /// Irham's Vidcall token (Host)
+//        authToken: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdJZCI6Ijk4YWE2YWVlLTY4MTUtNDE4Yi04OTk5LWQzNjE4MzliN2IyYSIsIm1lZXRpbmdJZCI6ImJiYmY1NTg5LTQwMWYtNGY5MS1hOTI2LTY5MzZhMjY2ODRmNyIsInBhcnRpY2lwYW50SWQiOiJhYWFjYjczZC1hZGE3LTQ2MmMtYWM2Yi01ZGRkN2FmN2E5YTIiLCJwcmVzZXRJZCI6IjBiYjBjZDgyLTYxZjEtNDkwZi05ZmQ3LTcwMjYyNGEzNmFiMSIsImlhdCI6MTY4ODk2NjkzNywiZXhwIjoxNjk3NjA2OTM3fQ.NjbI_C_aU3hsOWydP2c4UBu-fcnDw8oM4cAUVVmFvHf6a5e2gKL3Or8NyqQ7_Q_nFRU2qmFwGomavwTYEILf1RUsiL0hM8W9RT85_Sq0GMd4ycOnj16oMrM6x70EHzQCLjZmDl9wFhAn59MZUEVVfoHyXjUv5ocTiVUpaUqedmf0G0QH3ijpzfeaZVMOo9KCPuYYWpBt7dgtoelnnuEG_ty_ixmKrA_-9T7X5Op2OdnNVVehy4r7iJSR4EVXwdvEAnBtZ4IaBI_S-hM-bGlmzvkhsmj7e3hQEi9R8KlnE0ro6NcIERSjtei5OfOBMN_HFdYbdqcGF6pm1Fs9l_V_dA",
         enableAudio: true,
         enableVideo: true,
         baseUrl: "https://api.cluster.dyte.in/v2"
@@ -56,6 +53,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var isAudioOn = true
     @Published var position: CameraPosition = .front
     @Published var isJoined = false
+    @Published var hasNewMessage = false
     
     @Published var stringTime = "00:00:00"
     @Published var isNearbyEnd = false
@@ -73,7 +71,6 @@ final class GroupVideoCallViewModel: ObservableObject {
     
     @Published var index = 0
     
-    @Published var pinnedChat: DummyChatMessage?
     @Published var messageText = ""
     @Published var questionText = ""
     @Published var searchText = ""
@@ -99,12 +96,6 @@ final class GroupVideoCallViewModel: ObservableObject {
         .init(name: "Dimas Agung", isMicOn: false, isVideoOn: false, isJoining: false, isSpeaker: false),
         .init(name: "Endika Koala", isMicOn: false, isVideoOn: false, isJoining: true, isSpeaker: false),
         .init(name: "Faris van Java", isMicOn: false, isVideoOn: false, isJoining: false, isSpeaker: false)
-    ]
-    
-    @Published var dummyChatList: [DummyChatMessage] = [
-        .init(date: DateComponents(year: 2023, month: 7, day: 5, hour: 21, minute: 30).date ?? .now, name: "Wade Warren", isYou: false, message: "Lorem ipsum dolor sit amet consectetur. Nec leosdsdLorem ipsum dolor sit amet consectetur. Nec leo.."),
-        .init(date: DateComponents(year: 2023, month: 7, day: 5, hour: 21, minute: 31).date ?? .now, name: "Sujono", isYou: false, message: "Lorem ipsum dolor sit amet consectetur. Nec leo."),
-        .init(date: DateComponents(year: 2023, month: 7, day: 5, hour: 21, minute: 32).date ?? .now, name: "Hansamu Yama", isYou: false, message: "Lorem Ipsum")
     ]
     
     @Published var dummyQuestionList: [DummyQuestion] = [
@@ -273,9 +264,11 @@ final class GroupVideoCallViewModel: ObservableObject {
     }
     
     func sendMessage() {
-        let message = DummyChatMessage(date: .now, name: "Iqbaal", isYou: true, message: messageText)
-        withAnimation {
-            self.dummyChatList.append(message)
+        do {
+            try self.meeting.chat.sendTextMessage(message: messageText)
+            self.messageText = ""
+        } catch {
+            print("Error to send message \(self.messageText)")
         }
     }
 }
@@ -325,6 +318,7 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
         self.participants = meeting.participants.active
         self.localUser = meeting.localUser
         self.isJoined = true
+        self.localUserId = meeting.localUser.userId
     }
     
     func onMeetingRoomJoinFailed(exception: KotlinException) {
@@ -503,7 +497,7 @@ extension GroupVideoCallViewModel: DyteChatEventsListener {
     }
     
     func onNewChatMessage(message: DyteChatMessage) {
-        
+        hasNewMessage = true
     }
     
 }
