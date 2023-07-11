@@ -39,10 +39,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     var localUserId = ""
     
     let meetingInfo = DyteMeetingInfoV2(
-        authToken: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdJZCI6IjQ2ODdlYjllLWMyNjItNDhmOS1iZWI0LTQ3ODhiNjJlYjY4YSIsIm1lZXRpbmdJZCI6ImJiYjczNDg4LTA2NTctNDIzZC1hM2QxLWY2NjQ1Mjk3OTA1YyIsInBhcnRpY2lwYW50SWQiOiJhYWFjNzMzZS0wNDQxLTQyNzMtYTRhNy01NWQ5NGUyMTA3NmMiLCJwcmVzZXRJZCI6Ijk5YmZlNTZkLWVhYjMtNGMyNy05ZTQwLTEyMGY3ZTg0OWI3NyIsImlhdCI6MTY4NzMzMjYyNywiZXhwIjoxNjk1OTcyNjI3fQ.Wukf5VcOrjSAGBraH66WSrypR59AHfVeK7OfAfUVA7TMcy6TSj98UVWMB_fwpYXDxL9cAtZHyzadFlkUQ1WbPHiXJ-ZpE0UyE44QNk7AxlnczBv_QyKmLwG2LReXxNSNsDnnq3LPQFYWWh_26z0Cac2UVzwc4HjSD29YxO4-0tsd1cORsgSFaeysshhrf3ZmyNSv3mw5BFFePd5pwuzdX6wk5l5-HQAgEcvNyyzCIHMXzynGcbhv-2WziFNRu7FyIPQZFDiZVTZOzoo_r9f3PDogRCHf7HZ3UZAZP_gHr0LjwJk7zzTwMis-6pGuxz99rBfqskQg2_kdl5EVhIIt-Q",
-        
-        /// Irham's Vidcall token (Host)
-//        authToken: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdJZCI6Ijk4YWE2YWVlLTY4MTUtNDE4Yi04OTk5LWQzNjE4MzliN2IyYSIsIm1lZXRpbmdJZCI6ImJiYmY1NTg5LTQwMWYtNGY5MS1hOTI2LTY5MzZhMjY2ODRmNyIsInBhcnRpY2lwYW50SWQiOiJhYWFjYjczZC1hZGE3LTQ2MmMtYWM2Yi01ZGRkN2FmN2E5YTIiLCJwcmVzZXRJZCI6IjBiYjBjZDgyLTYxZjEtNDkwZi05ZmQ3LTcwMjYyNGEzNmFiMSIsImlhdCI6MTY4ODk2NjkzNywiZXhwIjoxNjk3NjA2OTM3fQ.NjbI_C_aU3hsOWydP2c4UBu-fcnDw8oM4cAUVVmFvHf6a5e2gKL3Or8NyqQ7_Q_nFRU2qmFwGomavwTYEILf1RUsiL0hM8W9RT85_Sq0GMd4ycOnj16oMrM6x70EHzQCLjZmDl9wFhAn59MZUEVVfoHyXjUv5ocTiVUpaUqedmf0G0QH3ijpzfeaZVMOo9KCPuYYWpBt7dgtoelnnuEG_ty_ixmKrA_-9T7X5Op2OdnNVVehy4r7iJSR4EVXwdvEAnBtZ4IaBI_S-hM-bGlmzvkhsmj7e3hQEi9R8KlnE0ro6NcIERSjtei5OfOBMN_HFdYbdqcGF6pm1Fs9l_V_dA",
+        authToken: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdJZCI6IjQ2ODdlYjllLWMyNjItNDhmOS1iZWI0LTQ3ODhiNjJlYjY4YSIsIm1lZXRpbmdJZCI6ImJiYjBiMDk0LTY2MmEtNDllMS1hMTk4LTViNGQ0ODcwYmVjOSIsInBhcnRpY2lwYW50SWQiOiJhYWE4MWI3Yy1mNzQzLTRmNzYtOGVhMy0zZjk2ZWE2NmZjMDQiLCJwcmVzZXRJZCI6IjUxMGI5Zjc5LTBmYWUtNGZiYS05YTQwLTdiNmM2MTE3MzkyMCIsImlhdCI6MTY4ODcxNzgzNiwiZXhwIjoxNjk3MzU3ODM2fQ.kistDXquYuxp9Szu0POO8tPjhkuyWp9QM6dqxZJFFdk6J2wbW_f23JTZ55R_vGKw4qUvlUCc69ON56OVDGkAk0FTcl73MngL7E-9l-dScT-HKiUu2eypPZFvjnWQrglt0MYXw2fhf-pwf_3_r39EbRdU89Epw-oH3hFFAiAKzcnI6ZPk2tN_4uKloUgxb6I-aPLQOnJ8gLOpcJqB0F8q0FxiU-5Od5He_u3lPJqsC7b29dBGmOmXXku7junSSvrHLXhyGfgmi6CW5UE0D1Z6-3mZMXRdIlvGkBFpEMuKw54YtpHV2w1dIueSD9qjMhHfMFg56BepX3-q61In0w9r2A",
         enableAudio: true,
         enableVideo: true,
         baseUrl: "https://api.cluster.dyte.in/v2"
@@ -129,6 +126,8 @@ final class GroupVideoCallViewModel: ObservableObject {
     
     @Published var participants = [DyteJoinedMeetingParticipant]()
     @Published var localUser: DyteSelfParticipant? = nil
+    @Published var screenShareUser = [DyteScreenShareMeetingParticipant]()
+    @Published var screenShareId: DyteScreenShareMeetingParticipant?
     
     init(
         backToRoot: @escaping () -> Void,
@@ -317,6 +316,8 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     func onMeetingRoomJoinCompleted() {
         self.participants = meeting.participants.active
         self.localUser = meeting.localUser
+        self.screenShareUser = meeting.participants.screenshares
+        self.screenShareId = meeting.participants.screenshares.first
         self.isJoined = true
         self.localUserId = meeting.localUser.userId
     }
@@ -418,15 +419,33 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
     }
     
     func onScreenShareEnded(participant: DyteMeetingParticipant) {
-        
+        if meeting.participants.screenshares.count != screenShareUser.count {
+            self.screenShareUser = meeting.participants.screenshares
+        }
+        if self.screenShareId == nil || self.meeting.participants.screenshares.count <= 1 {
+            self.screenShareId = nil
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+                self.screenShareId = self.meeting.participants.screenshares.last
+            }
+        }
     }
     
     func onScreenShareStarted(participant: DyteMeetingParticipant) {
-        
+        if meeting.participants.screenshares.count != screenShareUser.count {
+            self.screenShareUser = meeting.participants.screenshares
+        }
+        if self.screenShareId == nil || self.meeting.participants.screenshares.count <= 1 {
+            self.screenShareId = nil
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+                self.screenShareId = self.meeting.participants.screenshares.first
+            }
+        }
     }
     
     func onScreenSharesUpdated() {
-        
+        if meeting.participants.screenshares.count != screenShareUser.count {
+            self.screenShareUser = meeting.participants.screenshares
+        }
     }
     
     func onUpdate(participants: DyteRoomParticipants) {

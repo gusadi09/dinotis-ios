@@ -14,63 +14,69 @@ struct GroupVideoCallView: View {
     @ObservedObject var viewModel: GroupVideoCallViewModel
     
     var body: some View {
-        
-        GeometryReader { geo in
-            VStack {
-                Spacer()
-                    .frame(height: 50)
-                    .isHidden(!viewModel.isShowingToolbar || UIDevice.current.orientation.isLandscape, remove: !viewModel.isShowingToolbar || UIDevice.current.orientation.isLandscape)
-                
-                TabView(selection: $viewModel.index) {
-                    VStack {
+        VStack {
+            Spacer()
+                .frame(height: 50)
+                .isHidden(!viewModel.isShowingToolbar || UIDevice.current.orientation.isLandscape, remove: !viewModel.isShowingToolbar || UIDevice.current.orientation.isLandscape)
+            
+            TabView(selection: $viewModel.index) {
+                VStack {
+                    if viewModel.screenShareUser.isEmpty {
                         LocalUserVideoContainerView(viewModel: viewModel)
                             .padding(.horizontal)
                             .padding(.bottom)
-                        
-                        Spacer()
-                            .frame(height: 116)
-                            .isHidden(!viewModel.isShowingToolbar || UIDevice.current.orientation.isLandscape, remove: !viewModel.isShowingToolbar || UIDevice.current.orientation.isLandscape)
-                    }
-                    .sheet(isPresented: $viewModel.showingMoreMenu, content: {
-                        if #available(iOS 16.0, *) {
-                            MoreMenuSheet(viewModel: viewModel)
-                                .presentationDetents([.medium, .large])
-                                .presentationDragIndicator(.hidden)
-                        } else {
-                            MoreMenuSheet(viewModel: viewModel)
-                        }
-                    })
-                    .tag(0)
-                    
-                    VStack {
-                        ScrollView {
-                            if viewModel.isJoined {
-                                LazyVGrid(columns: [GridItem(.adaptive(minimum: 176))]) {
-                                    ForEach($viewModel.participants, id: \.id) { item in
-                                        RemoteUserJoinedVideoContainerView(viewModel: viewModel, participant: item)
-                                    }
-                                }
-                            }
+                    } else {
+                        ZStack(alignment: .top) {
+                            
+                            RemoteScreenShareVideoContainerView(viewModel: viewModel, participant: $viewModel.screenShareId)
+                                .padding(.horizontal)
+                                .padding(.bottom)
                             
                         }
                     }
-                    .tag(1)
+                    
+                    Spacer()
+                        .frame(height: 116)
+                        .isHidden(!viewModel.isShowingToolbar || UIDevice.current.orientation.isLandscape, remove: !viewModel.isShowingToolbar || UIDevice.current.orientation.isLandscape)
                 }
-                .tabViewStyle(.page(indexDisplayMode: .never))
-                .onChange(of: viewModel.index, perform: { newValue in
-                    if viewModel.isJoined {
-                        if newValue == 0 {
-                            viewModel.localUser = viewModel.meeting.localUser
-                        } else {
-                            viewModel.localUser = nil
-                            viewModel.participants = viewModel.meeting.participants.active
-                        }
+                .sheet(isPresented: $viewModel.showingMoreMenu, content: {
+                    if #available(iOS 16.0, *) {
+                        MoreMenuSheet(viewModel: viewModel)
+                            .presentationDetents([.medium, .large])
+                            .presentationDragIndicator(.hidden)
+                    } else {
+                        MoreMenuSheet(viewModel: viewModel)
                     }
                 })
-                .onTapGesture {
-                    withAnimation {
-                        viewModel.isShowingToolbar.toggle()
+                .tag(0)
+                
+                VStack {
+                    ScrollView {
+                        if viewModel.isJoined {
+                            LazyVGrid(columns: [GridItem(.adaptive(minimum: 176))]) {
+                                ForEach($viewModel.participants, id: \.id) { item in
+                                    RemoteUserJoinedVideoContainerView(viewModel: viewModel, participant: item)
+                                }
+                            }
+                        }
+                        
                     }
+                }
+                .tag(1)
+            }
+            .tabViewStyle(.page(indexDisplayMode: .never))
+            .onChange(of: viewModel.index, perform: { newValue in
+                if viewModel.isJoined {
+                    if newValue == 0 {
+                        viewModel.localUser = viewModel.meeting.localUser
+                    } else {
+                        viewModel.localUser = nil
+                    }
+                }
+            })
+            .onTapGesture {
+                withAnimation {
+                    viewModel.isShowingToolbar.toggle()
                 }
             }
         }
@@ -83,6 +89,52 @@ struct GroupVideoCallView: View {
         .overlay {
             VStack {
                 HStack {
+                    if !viewModel.screenShareUser.isEmpty && viewModel.screenShareUser.count > 1 {
+                        Menu {
+                            ForEach(viewModel.screenShareUser, id: \.id) { item in
+                                Button {
+                                    viewModel.screenShareId = nil
+                                    
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+                                        self.viewModel.screenShareId = item
+                                    }
+                                } label: {
+                                    HStack {
+                                        if viewModel.screenShareId?.id ?? "" == item.id {
+                                            Image(systemName: "checkmark")
+                                        }
+                                        
+                                        Text(item.name + " (Screen Share)")
+                                    }
+                                }
+                                .tag(item)
+                                .buttonStyle(.plain)
+                            }
+                            
+                        } label: {
+                            HStack(spacing: 10) {
+                                Text("\(viewModel.screenShareId?.name ?? "") (Screen Share)")
+                                    .font(.robotoRegular(size: 12))
+                                    .foregroundColor(.white)
+
+                                Image(systemName: "chevron.down")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 5)
+                                    .foregroundColor(.white)
+                            }
+                            .padding(.horizontal, 15)
+                            .padding(.vertical, 10)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .foregroundColor(.DinotisDefault.black1)
+                            )
+                            .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.DinotisDefault.primary, lineWidth: 1))
+                        }
+                        
+                        Spacer()
+                    }
+                    
                     HStack(spacing: 4) {
                         Image.videoCallClockWhiteIcon
                             .renderingMode(.template)
@@ -105,6 +157,7 @@ struct GroupVideoCallView: View {
                     Spacer()
                     
                     if viewModel.isJoined {
+                        
                         if viewModel.meeting.localUser.permissions.media.canPublishVideo {
                             Button {
                                 withAnimation(.spring()) {
@@ -602,6 +655,54 @@ fileprivate extension GroupVideoCallView {
         }
     }
     
+    struct RemoteScreenShareVideoContainerView: View {
+        
+        @ObservedObject var viewModel: GroupVideoCallViewModel
+        @Binding var participant: DyteScreenShareMeetingParticipant?
+        
+        var body: some View {
+            ZStack(alignment: .bottomLeading) {
+                if viewModel.index == 0 && viewModel.localUser?.id == participant?.id {
+                    RoundedRectangle(cornerRadius: 10)
+                        .foregroundColor(.DinotisDefault.green)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    if let video = participant?.getScreenShareVideoView() {
+                        UIVideoView(videoView: video, width: .infinity, height: .infinity)
+                            .background(
+                                Color.black
+                            )
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                    } else {
+                        RoundedRectangle(cornerRadius: 10)
+                            .foregroundColor(.DinotisDefault.black1)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    }
+                }
+                
+                HStack(spacing: 0) {
+                    if !(participant?.fetchAudioEnabled() ?? false) {
+                        Image.videoCallMicOffStrokeIcon
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 12)
+                    }
+                    
+                    Text(" \(participant?.name ?? "") (Screen Share)")
+                        .font(.robotoMedium(size: 10))
+                        .foregroundColor(.white)
+                }
+                .padding(5)
+                .background(
+                    Capsule()
+                        .foregroundColor(.gray.opacity(0.5))
+                )
+                .padding(10)
+            }
+        }
+    }
+    
     struct AboutCallBottomSheet: View {
         @ObservedObject var viewModel: GroupVideoCallViewModel
         @Environment(\.presentationMode) var presentationMode
@@ -1066,32 +1167,32 @@ fileprivate extension GroupVideoCallView {
         
         var body: some View {
             VStack {
-//                MARK: Uncomment when the feature is ready
-//                HStack {
-//                    Image(systemName: "person.3")
-//                        .resizable()
-//                        .scaledToFit()
-//                        .frame(width: 24)
-//                        .foregroundColor(.white)
-//
-//                    Text("To Everyone")
-//                        .foregroundColor(.white)
-//                        .font(.system(size: 16))
-//
-//                    Spacer()
-//                    Button {
-//
-//                    } label: {
-//                        Image(systemName: "chevron.down")
-//                            .resizable()
-//                            .frame(width: 12, height: 7)
-//                            .foregroundColor(.white)
-//                    }
-//
-//                }
-//                .padding()
-//
-//                Divider()
+                //                MARK: Uncomment when the feature is ready
+                //                HStack {
+                //                    Image(systemName: "person.3")
+                //                        .resizable()
+                //                        .scaledToFit()
+                //                        .frame(width: 24)
+                //                        .foregroundColor(.white)
+                //
+                //                    Text("To Everyone")
+                //                        .foregroundColor(.white)
+                //                        .font(.system(size: 16))
+                //
+                //                    Spacer()
+                //                    Button {
+                //
+                //                    } label: {
+                //                        Image(systemName: "chevron.down")
+                //                            .resizable()
+                //                            .frame(width: 12, height: 7)
+                //                            .foregroundColor(.white)
+                //                    }
+                //
+                //                }
+                //                .padding()
+                //
+                //                Divider()
                 
                 ScrollViewReader { scrollView in
                     VStack(spacing: 0) {
