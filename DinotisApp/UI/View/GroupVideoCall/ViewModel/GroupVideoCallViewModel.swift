@@ -29,6 +29,26 @@ enum CameraPosition {
     case rear
 }
 
+enum PresetConstant {
+    case host
+    case coHost
+    case admin
+    case viewer
+    
+    var value: String {
+        switch self {
+        case .host:
+            return "dinotis_host"
+        case .coHost:
+            return "dinotis_cohost"
+        case .admin:
+            return "dinotis_admin"
+        case .viewer:
+            return "dinotis_viewer"
+        }
+    }
+}
+
 final class GroupVideoCallViewModel: ObservableObject {
     private var timer: Timer?
     
@@ -39,7 +59,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     var localUserId = ""
     
     let meetingInfo = DyteMeetingInfoV2(
-        authToken: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdJZCI6IjQ2ODdlYjllLWMyNjItNDhmOS1iZWI0LTQ3ODhiNjJlYjY4YSIsIm1lZXRpbmdJZCI6ImJiYjBiMDk0LTY2MmEtNDllMS1hMTk4LTViNGQ0ODcwYmVjOSIsInBhcnRpY2lwYW50SWQiOiJhYWE4MWI3Yy1mNzQzLTRmNzYtOGVhMy0zZjk2ZWE2NmZjMDQiLCJwcmVzZXRJZCI6IjUxMGI5Zjc5LTBmYWUtNGZiYS05YTQwLTdiNmM2MTE3MzkyMCIsImlhdCI6MTY4ODcxNzgzNiwiZXhwIjoxNjk3MzU3ODM2fQ.kistDXquYuxp9Szu0POO8tPjhkuyWp9QM6dqxZJFFdk6J2wbW_f23JTZ55R_vGKw4qUvlUCc69ON56OVDGkAk0FTcl73MngL7E-9l-dScT-HKiUu2eypPZFvjnWQrglt0MYXw2fhf-pwf_3_r39EbRdU89Epw-oH3hFFAiAKzcnI6ZPk2tN_4uKloUgxb6I-aPLQOnJ8gLOpcJqB0F8q0FxiU-5Od5He_u3lPJqsC7b29dBGmOmXXku7junSSvrHLXhyGfgmi6CW5UE0D1Z6-3mZMXRdIlvGkBFpEMuKw54YtpHV2w1dIueSD9qjMhHfMFg56BepX3-q61In0w9r2A",
+        authToken: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdJZCI6IjQ2ODdlYjllLWMyNjItNDhmOS1iZWI0LTQ3ODhiNjJlYjY4YSIsIm1lZXRpbmdJZCI6ImJiYjBiMDk0LTY2MmEtNDllMS1hMTk4LTViNGQ0ODcwYmVjOSIsInBhcnRpY2lwYW50SWQiOiJhYWE0ZTZjYS0wMzg2LTRmMjEtYmMxOS00YmEwM2VkYzY3NTkiLCJwcmVzZXRJZCI6ImIzYWYxYWFmLThiOWQtNGFmMC05OGI2LTZiYjc2N2Y4NjZmYiIsImlhdCI6MTY4OTE0MzU3NSwiZXhwIjoxNjk3NzgzNTc1fQ.Cbv0NvmLQSiimvsF-u5D8aenot2nn31OXduLnrqoRwholCGCjSfTdqVEOo-B_5hN09UK5WjCLYHZjYQt9DZE22y8QpgbJknLixgz0T-2vY9srj-qWU4YtMD9wQHEMzgTdOKyahTBq6Q0yoUPZFP4S8dJWHn1b500d2ID85npKwiCXlwUAlyZZ7zeBfRzwjpKaI7neCTMYy67YjPnncrYPbJ7_17QcMxZJKUgog-AvuR1i2wmZEkx7Lkd0XIs9q1REqg0gjg4YAbdw3p_PVg9_rtLQ0RSi0dGfSVpRsfwJGn9l5JwGnWrKmFUUl5jygIzPo6uKrGtWEfl-q12UCOYxg",
         enableAudio: true,
         enableVideo: true,
         baseUrl: "https://api.cluster.dyte.in/v2"
@@ -128,6 +148,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var localUser: DyteSelfParticipant? = nil
     @Published var screenShareUser = [DyteScreenShareMeetingParticipant]()
     @Published var screenShareId: DyteScreenShareMeetingParticipant?
+    @Published var pinned: DyteJoinedMeetingParticipant?
     
     init(
         backToRoot: @escaping () -> Void,
@@ -143,6 +164,18 @@ final class GroupVideoCallViewModel: ObservableObject {
             DispatchQueue.main.asyncAfter(deadline: .now()+0.1) { [weak self] in
                 self?.dummyQuestionList.remove(at: index)
             }
+        }
+    }
+    
+    func userType(preset: String) -> String {
+        if preset == PresetConstant.admin.value {
+            return "(Admin)"
+        } else if preset == PresetConstant.host.value {
+            return "(Host)"
+        } else if preset == PresetConstant.coHost.value {
+            return "(Co-Host)"
+        } else {
+            return ""
         }
     }
     
@@ -319,6 +352,7 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
         self.screenShareUser = meeting.participants.screenshares
         self.screenShareId = meeting.participants.screenshares.first
         self.isJoined = true
+        self.pinned = meeting.participants.pinned
         self.localUserId = meeting.localUser.userId
     }
     
@@ -360,27 +394,51 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
     }
     
     func onParticipantJoin(participant: DyteJoinedMeetingParticipant) {
-        
+        self.participants.removeAll()
+        self.participants = meeting.participants.active
     }
     
     func onParticipantLeave(participant: DyteJoinedMeetingParticipant) {
-        
+        self.participants.removeAll()
+        self.participants = meeting.participants.active
     }
     
     func onParticipantPinned(participant: DyteJoinedMeetingParticipant) {
+        self.pinned = nil
         
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+            self.pinned = participant
+        }
     }
     
     func onParticipantUnpinned(participant: DyteJoinedMeetingParticipant) {
+        self.pinned = nil
         
+        self.participants = self.meeting.participants.active
     }
     
     func onScreenShareEnded(participant: DyteScreenShareMeetingParticipant) {
-        
+        if meeting.participants.screenshares.count != screenShareUser.count {
+            self.screenShareUser = meeting.participants.screenshares
+        }
+        if self.screenShareId == nil || self.meeting.participants.screenshares.count <= 1 {
+            self.screenShareId = nil
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+                self.screenShareId = self.meeting.participants.screenshares.last
+            }
+        }
     }
     
     func onScreenShareStarted(participant: DyteScreenShareMeetingParticipant) {
-        
+        if meeting.participants.screenshares.count != screenShareUser.count {
+            self.screenShareUser = meeting.participants.screenshares
+        }
+        if self.screenShareId == nil || self.meeting.participants.screenshares.count <= 1 {
+            self.screenShareId = nil
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+                self.screenShareId = self.meeting.participants.screenshares.first
+            }
+        }
     }
     
     func onActiveParticipantsChanged(active: [DyteJoinedMeetingParticipant]) {
@@ -400,48 +458,6 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
         
     }
     
-    func onParticipantJoin(participant: DyteMeetingParticipant) {
-        self.participants.removeAll()
-        self.participants = meeting.participants.active
-    }
-    
-    func onParticipantLeave(participant: DyteMeetingParticipant) {
-        self.participants.removeAll()
-        self.participants = meeting.participants.active
-    }
-    
-    func onParticipantPinned(participant: DyteMeetingParticipant) {
-        
-    }
-    
-    func onParticipantUnpinned(participant: DyteMeetingParticipant) {
-        
-    }
-    
-    func onScreenShareEnded(participant: DyteMeetingParticipant) {
-        if meeting.participants.screenshares.count != screenShareUser.count {
-            self.screenShareUser = meeting.participants.screenshares
-        }
-        if self.screenShareId == nil || self.meeting.participants.screenshares.count <= 1 {
-            self.screenShareId = nil
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
-                self.screenShareId = self.meeting.participants.screenshares.last
-            }
-        }
-    }
-    
-    func onScreenShareStarted(participant: DyteMeetingParticipant) {
-        if meeting.participants.screenshares.count != screenShareUser.count {
-            self.screenShareUser = meeting.participants.screenshares
-        }
-        if self.screenShareId == nil || self.meeting.participants.screenshares.count <= 1 {
-            self.screenShareId = nil
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
-                self.screenShareId = self.meeting.participants.screenshares.first
-            }
-        }
-    }
-    
     func onScreenSharesUpdated() {
         if meeting.participants.screenshares.count != screenShareUser.count {
             self.screenShareUser = meeting.participants.screenshares
@@ -449,7 +465,8 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
     }
     
     func onUpdate(participants: DyteRoomParticipants) {
-        
+        self.participants.removeAll()
+        self.participants = meeting.participants.active
     }
     
     func onVideoUpdate(videoEnabled: Bool, participant: DyteMeetingParticipant) {

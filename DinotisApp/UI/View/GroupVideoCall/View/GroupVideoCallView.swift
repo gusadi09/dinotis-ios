@@ -20,42 +20,37 @@ struct GroupVideoCallView: View {
                 .isHidden(!viewModel.isShowingToolbar || UIDevice.current.orientation.isLandscape, remove: !viewModel.isShowingToolbar || UIDevice.current.orientation.isLandscape)
             
             TabView(selection: $viewModel.index) {
-                VStack {
-                    if viewModel.screenShareUser.isEmpty {
-                        LocalUserVideoContainerView(viewModel: viewModel)
-                            .padding(.horizontal)
-                            .padding(.bottom)
-                    } else {
-                        ZStack(alignment: .top) {
+                if viewModel.pinned != nil || !viewModel.screenShareUser.isEmpty {
+                    VStack {
+                        if viewModel.screenShareUser.isEmpty {
                             
-                            RemoteScreenShareVideoContainerView(viewModel: viewModel, participant: $viewModel.screenShareId)
+                            RemoteUserJoinedPrimaryVideoContainerView(viewModel: viewModel, participant: $viewModel.pinned)
                                 .padding(.horizontal)
                                 .padding(.bottom)
                             
+                        } else {
+                            ZStack(alignment: .top) {
+                                
+                                RemoteScreenShareVideoContainerView(viewModel: viewModel, participant: $viewModel.screenShareId)
+                                    .padding(.horizontal)
+                                    .padding(.bottom)
+                                
+                            }
                         }
+                        
+                        Spacer()
+                            .frame(height: 116)
+                            .isHidden(!viewModel.isShowingToolbar || UIDevice.current.orientation.isLandscape, remove: !viewModel.isShowingToolbar || UIDevice.current.orientation.isLandscape)
                     }
-                    
-                    Spacer()
-                        .frame(height: 116)
-                        .isHidden(!viewModel.isShowingToolbar || UIDevice.current.orientation.isLandscape, remove: !viewModel.isShowingToolbar || UIDevice.current.orientation.isLandscape)
+                    .tag(0)
                 }
-                .sheet(isPresented: $viewModel.showingMoreMenu, content: {
-                    if #available(iOS 16.0, *) {
-                        MoreMenuSheet(viewModel: viewModel)
-                            .presentationDetents([.medium, .large])
-                            .presentationDragIndicator(.hidden)
-                    } else {
-                        MoreMenuSheet(viewModel: viewModel)
-                    }
-                })
-                .tag(0)
                 
                 VStack {
                     ScrollView {
                         if viewModel.isJoined {
                             LazyVGrid(columns: [GridItem(.adaptive(minimum: 176))]) {
                                 ForEach($viewModel.participants, id: \.id) { item in
-                                    RemoteUserJoinedVideoContainerView(viewModel: viewModel, participant: item)
+                                    RemoteUserJoinedTileVideoContainerView(viewModel: viewModel, participant: item)
                                 }
                             }
                         }
@@ -79,6 +74,15 @@ struct GroupVideoCallView: View {
                     viewModel.isShowingToolbar.toggle()
                 }
             }
+            .sheet(isPresented: $viewModel.showingMoreMenu, content: {
+                if #available(iOS 16.0, *) {
+                    MoreMenuSheet(viewModel: viewModel)
+                        .presentationDetents([.medium, .large])
+                        .presentationDragIndicator(.hidden)
+                } else {
+                    MoreMenuSheet(viewModel: viewModel)
+                }
+            })
         }
         .background(
             Image.videoCallBackgroundPattern
@@ -216,9 +220,15 @@ struct GroupVideoCallView: View {
                 Spacer()
                 
                 HStack(spacing: 5) {
-                    ForEach(0...1, id: \.self) { index in
+                    if viewModel.pinned != nil || !viewModel.screenShareUser.isEmpty {
+                        ForEach(0...1, id: \.self) { index in
+                            RoundedRectangle(cornerRadius: 30)
+                                .foregroundColor(viewModel.index == index ? .DinotisDefault.primary : .gray)
+                                .frame(width: 16, height: 8)
+                        }
+                    } else {
                         RoundedRectangle(cornerRadius: 30)
-                            .foregroundColor(viewModel.index == index ? .DinotisDefault.primary : .gray)
+                            .foregroundColor(.DinotisDefault.primary)
                             .frame(width: 16, height: 8)
                     }
                 }
@@ -587,7 +597,7 @@ fileprivate extension GroupVideoCallView {
                                 .frame(width: 15)
                         }
                         
-                        Text(" \(viewModel.localUser?.name ?? "") \(viewModel.localUser?.canDoParticipantHostControls() ?? false ? "(host)" : "")")
+                        Text(" \(viewModel.localUser?.name ?? "") \(viewModel.userType(preset: (viewModel.localUser?.presetName).orEmpty()))")
                             .font(.robotoMedium(size: 10))
                             .foregroundColor(.white)
                     }
@@ -602,17 +612,38 @@ fileprivate extension GroupVideoCallView {
         }
     }
     
-    struct RemoteUserJoinedVideoContainerView: View {
+    struct RemoteUserJoinedTileVideoContainerView: View {
         
         @ObservedObject var viewModel: GroupVideoCallViewModel
         @Binding var participant: DyteJoinedMeetingParticipant
         
         var body: some View {
             ZStack(alignment: .bottomLeading) {
-                if viewModel.index == 0 && (viewModel.localUser?.id).orEmpty() == participant.id {
-                    RoundedRectangle(cornerRadius: 10)
-                        .foregroundColor(.DinotisDefault.black1)
-                        .frame(width: 176, height: 246)
+                if viewModel.index == 0 && ((viewModel.localUser?.id).orEmpty() == participant.id || (viewModel.pinned?.id).orEmpty() == participant.id) {
+                    if viewModel.pinned == nil && viewModel.screenShareUser.isEmpty {
+                        if participant.fetchVideoEnabled() {
+                            if let video = participant.getVideoView() {
+                                UIVideoView(videoView: video, width: 176, height: 246)
+                                    .frame(width: 176, height: 246)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                            }
+                            
+                        } else {
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundColor(.DinotisDefault.black1)
+                                .frame(width: 176, height: 246)
+                                .overlay(
+                                    ImageLoader(url: participant.picture.orEmpty(), width: 136, height: 136)
+                                        .frame(width: 136, height: 136)
+                                        .clipShape(Circle())
+                                )
+                        }
+                    } else {
+                        RoundedRectangle(cornerRadius: 10)
+                            .foregroundColor(.DinotisDefault.black1)
+                            .frame(width: 176, height: 246)
+                    }
+                    
                 } else {
                     if participant.fetchVideoEnabled() {
                         if let video = participant.getVideoView() {
@@ -641,9 +672,74 @@ fileprivate extension GroupVideoCallView {
                             .frame(width: 12)
                     }
                     
-                    Text(" \(participant.name) \(participant.isHost ? "(host)" : "")")
-                        .font(.robotoMedium(size: 10))
-                        .foregroundColor(.white)
+                    if participant.isPinned {
+                        Text(" \(participant.name) \(viewModel.userType(preset: participant.presetName)) \(Image(systemName: "pin"))")
+                            .font(.robotoMedium(size: 10))
+                            .foregroundColor(.white)
+                    } else {
+                        Text(" \(participant.name) \(viewModel.userType(preset: participant.presetName))")
+                            .font(.robotoMedium(size: 10))
+                            .foregroundColor(.white)
+                    }
+                }
+                .padding(5)
+                .background(
+                    Capsule()
+                        .foregroundColor(.gray.opacity(0.5))
+                )
+                .padding(10)
+            }
+        }
+    }
+    
+    struct RemoteUserJoinedPrimaryVideoContainerView: View {
+        
+        @ObservedObject var viewModel: GroupVideoCallViewModel
+        @Binding var participant: DyteJoinedMeetingParticipant?
+        
+        var body: some View {
+            ZStack(alignment: .bottomLeading) {
+                if viewModel.index == 1 && (viewModel.localUser?.id == participant?.id || viewModel.pinned?.id == participant?.id) {
+                    RoundedRectangle(cornerRadius: 10)
+                        .foregroundColor(.DinotisDefault.black1)
+                        .frame(width: .infinity, height: .infinity)
+                } else {
+                    if participant?.fetchVideoEnabled() ?? false {
+                        if let video = participant?.getVideoView() {
+                            UIVideoView(videoView: video, width: .infinity, height: .infinity)
+                                .frame(width: .infinity, height: .infinity)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                        }
+                        
+                    } else {
+                        RoundedRectangle(cornerRadius: 10)
+                            .foregroundColor(.DinotisDefault.black1)
+                            .frame(width: .infinity, height: .infinity)
+                            .overlay(
+                                ImageLoader(url: (participant?.picture).orEmpty(), width: 136, height: 136)
+                                    .frame(width: 136, height: 136)
+                                    .clipShape(Circle())
+                            )
+                    }
+                }
+                
+                HStack(spacing: 0) {
+                    if !(participant?.fetchAudioEnabled() ?? false) {
+                        Image.videoCallMicOffStrokeIcon
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 12)
+                    }
+                    
+                    if participant?.isPinned ?? false {
+                        Text(" \((participant?.name).orEmpty()) \(viewModel.userType(preset: (participant?.presetName).orEmpty())) \(Image(systemName: "pin"))")
+                            .font(.robotoMedium(size: 10))
+                            .foregroundColor(.white)
+                    } else {
+                        Text(" \((participant?.name).orEmpty()) \(viewModel.userType(preset: (participant?.presetName).orEmpty()))")
+                            .font(.robotoMedium(size: 10))
+                            .foregroundColor(.white)
+                    }
                 }
                 .padding(5)
                 .background(
