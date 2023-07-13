@@ -5,12 +5,12 @@
 //  Created by Gus Adi on 20/06/23.
 //
 
-import Foundation
+import Combine
 import DyteiOSCore
 import UIKit
 import SwiftUI
 import DinotisDesignSystem
-
+import DinotisData
 
 struct DummyQuestion: Identifiable {
     let id = UUID()
@@ -55,6 +55,9 @@ final class GroupVideoCallViewModel: ObservableObject {
     var backToRoot: () -> Void
     var backToHome: () -> Void
     
+    private let meetRepository: MeetingsRepository
+    private var cancellables = Set<AnyCancellable>()
+    
     let meeting = DyteiOSClientBuilder().build()
     var localUserId = ""
     
@@ -65,11 +68,27 @@ final class GroupVideoCallViewModel: ObservableObject {
         baseUrl: "https://api.cluster.dyte.in/v2"
     )
     
+    @Published var userMeeting: UserMeetingData
+    var hostNames: String {
+        var names: [String] = []
+        names.append((userMeeting.user?.name).orEmpty())
+        names.append(contentsOf: userMeeting.meetingCollaborations?.compactMap({ item in
+            (item.user?.name).orEmpty()
+        }) ?? [])
+        return names.joined(separator: ", ")
+    }
+    
     @Published var isInit = false
+    @Published var isPreview = true
     @Published var isCameraOn = true
     @Published var isAudioOn = true
     @Published var position: CameraPosition = .front
     @Published var isJoined = false
+    @Published var isConnecting = false
+    @Published var isError = false
+    @Published var isLoading = false
+    @Published var success = false
+    @Published var error: String?
     @Published var hasNewMessage = false
     
     @Published var stringTime = "00:00:00"
@@ -85,6 +104,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var isShowingChat = false
     @Published var isShowingQnA = false
     @Published var isShowQuestionBox = false
+    @Published var isShowSessionInfo = false
     
     @Published var index = 0
     
@@ -152,10 +172,15 @@ final class GroupVideoCallViewModel: ObservableObject {
     
     init(
         backToRoot: @escaping () -> Void,
-        backToHome: @escaping () -> Void
+        backToHome: @escaping () -> Void,
+        meetRepository: MeetingsRepository = MeetingsDefaultRepository(),
+        userMeeting: UserMeetingData
     ) {
         self.backToHome = backToHome
         self.backToRoot = backToRoot
+        self.meetRepository = meetRepository
+        self.userMeeting = userMeeting
+        self.futureDate = userMeeting.endAt.orCurrentDate()
     }
     
     func answerQuestion(at index: Int) {
@@ -203,17 +228,62 @@ final class GroupVideoCallViewModel: ObservableObject {
         
         self.dateTime = Date()
         
-//        self.isNearbyEnd = dateTime <= meeting.endAt.orCurrentDate().addingTimeInterval(-300)
+        self.isNearbyEnd = dateTime <= userMeeting.endAt.orCurrentDate().addingTimeInterval(-300)
+
+        if hours == 0 && minutes == 0 && seconds == 0 {
+            self.checkMeetingEnd()
+        }
         
-//        if hours == 0 && minutes == 0 && seconds == 0 {
-//            self.checkMeetingEnd()
-//        }
-        
-//        withAnimation {
-//            self.isShowNearEndAlert = minutes == 5 && seconds == 0 && hours == 0
-//        }
+        if minutes == 5 && seconds == 0 && hours == 0 {
+            self.isShowNearEndAlert = true
+        }
 
         self.stringTime = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+    }
+    
+    func checkMeetingEnd() {
+        onStartFetch()
+        
+        self.stringTime = "00:00:00"
+        
+        meetRepository
+            .providePostCheckMeetingEnd(meetingId: userMeeting.id.orEmpty())
+            .sink { result in
+                switch result {
+                case .failure(let error):
+                    DispatchQueue.main.async {[weak self] in
+                        if error.statusCode.orZero() == 401 {
+                            
+                        } else {
+                            self?.isLoading = false
+                            self?.isError = true
+                            
+                            self?.error = error.message.orEmpty()
+                        }
+                    }
+                    
+                case .finished:
+                    DispatchQueue.main.async { [weak self] in
+                        self?.success = true
+                        self?.isLoading = false
+                        
+                    }
+                }
+            } receiveValue: { value in
+                self.futureDate = value.endAt.orCurrentDate()
+                guard let isEnded = value.isEnd else { return }
+                self.isMeetingForceEnd = isEnded
+            }
+            .store(in: &cancellables)
+    }
+    
+    func onStartFetch() {
+        DispatchQueue.main.async {[weak self] in
+            self?.isError = false
+            self?.isLoading = true
+            self?.success = false
+            self?.error = nil
+        }
     }
     
     func joinMeeting() {
@@ -307,11 +377,11 @@ final class GroupVideoCallViewModel: ObservableObject {
 
 extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     func onConnectedToMeetingRoom() {
-        
+        self.isConnecting = false
     }
     
     func onConnectingToMeetingRoom() {
-        
+        self.isConnecting = true
     }
     
     func onDisconnectedFromMeetingRoom() {
@@ -319,7 +389,7 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     }
     
     func onMeetingRoomConnectionFailed() {
-        
+        self.isConnecting = false
     }
     
     func onDisconnectedFromMeetingRoom(reason: String) {
@@ -327,6 +397,7 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     }
     
     func onMeetingInitCompleted() {
+        self.localUser = meeting.localUser
         self.isInit = true
     }
     
@@ -335,7 +406,7 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     }
     
     func onMeetingInitStarted() {
-        
+        self.isConnecting = true
     }
     
     func onMeetingRoomConnectionError(errorMessage: String) {
@@ -348,10 +419,13 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     
     func onMeetingRoomJoinCompleted() {
         self.participants = meeting.participants.active
-        self.localUser = meeting.localUser
         self.screenShareUser = meeting.participants.screenshares
         self.screenShareId = meeting.participants.screenshares.first
-        self.isJoined = true
+        withAnimation {
+            self.isJoined = true
+        }
+        self.isConnecting = false
+        self.isPreview = false
         self.pinned = meeting.participants.pinned
         self.localUserId = meeting.localUser.userId
     }
@@ -361,7 +435,7 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     }
     
     func onMeetingRoomJoinStarted() {
-    
+        self.isConnecting = true
     }
     
     func onMeetingRoomLeaveCompleted() {
@@ -375,15 +449,15 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     }
     
     func onMeetingRoomReconnectionFailed() {
-        
+        self.isConnecting = false
     }
     
     func onReconnectedToMeetingRoom() {
-        
+        self.isConnecting = false
     }
     
     func onReconnectingToMeetingRoom() {
-        
+        self.isConnecting = true
     }
     
 }

@@ -448,8 +448,8 @@ final class ScheduleDetailViewModel: ObservableObject {
         }
     }
     
-    func routeToResearch() {
-        let viewModel = GroupVideoCallViewModel(backToRoot: self.backToRoot, backToHome: self.backToHome)
+    func routeToResearch(meeting: UserMeetingData) {
+        let viewModel = GroupVideoCallViewModel(backToRoot: self.backToRoot, backToHome: self.backToHome, userMeeting: meeting)
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .research(viewModel: viewModel)
