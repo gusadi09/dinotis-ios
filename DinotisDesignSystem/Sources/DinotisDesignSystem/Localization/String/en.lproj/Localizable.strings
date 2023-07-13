@@ -264,6 +264,7 @@
 "search_session_not_found_title" = "There are no sessions that match the search yet";
 "search_session_not_found_desc" = "Let's find another session!";
 "search_text" = "Search";
+"general_search_placeholder" = "Search...";
 
 "talent_detail_session" = "Session";
 "talent_detail_follower" = "Follower";
@@ -394,3 +395,27 @@
 "video_call_polls" = "Polls";
 "video_call_record" = "Records";
 "video_call_information" = "Information";
+"video_call_message_placeholder" = "Message here...";
+"video_call_poll_by_host" = "Poll Question by Host";
+"video_call_poll_by_host" = "Poll Question by Host";
+"video_call_poll_question_title" = "Poll Question";
+"video_call_poll_question_placeholder" = "What is your poll for?";
+"video_call_poll_add_option" = "Add an option";
+"anonymous_text" = "Anonymous";
+"video_call_poll_hide_result" = "Hide result before voting";
+"video_call_create_poll_title" = "Create Poll";
+"video_call_cancel_poll_title" = "Cancel Poll";
+"video_call_create_new_poll_title" = "Create New Poll";
+"video_call_create_poll_footer" = "Engage Your Participant With Poll!";
+"video_call_five_minutes_left_alert_title" = "You have 5 minutes left";
+"video_call_five_minutes_left_alert_desc" = "Don’t forget to say goodbye first!";
+"understood_text" = "Understood";
+"video_call_screen_share_text" = "Screen Share";
+"video_call_session_title" = "%@'s Session";
+"video_call_scheduled_text" = "Scheduled";
+"time_text" = "Time";
+"type_text" = "Type";
+"group_call_text" = "Group Call";
+"video_call_list_question_title" = "Question List";
+"video_call_box_question_title" = "Question Box";
+"video_call_send_question_title" = "Send Question";

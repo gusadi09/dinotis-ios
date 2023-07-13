@@ -309,7 +309,7 @@ struct UserScheduleDetail: View {
 
 									if !(meet.isPrivate ?? false) {
 //										self.viewModel.routeToTwilioLiveStream(meeting: meet)
-                                        self.viewModel.routeToResearch()
+                                        self.viewModel.routeToResearch(meeting: meet)
 									} else {
 										self.viewModel.routeToVideoCall(meeting: meet)
 									}
@@ -376,7 +376,7 @@ struct UserScheduleDetail: View {
 
 									if (meet.slots).orZero() > 1 {
 //										self.viewModel.routeToTwilioLiveStream(meeting: meet)
-                                        self.viewModel.routeToResearch()
+                                        self.viewModel.routeToResearch(meeting: meet)
 									} else {
 										self.viewModel.routeToVideoCall(meeting: meet)
 									}

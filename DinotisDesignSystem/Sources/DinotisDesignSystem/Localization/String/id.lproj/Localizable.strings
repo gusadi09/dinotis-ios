@@ -264,6 +264,7 @@
 "search_session_not_found_title" = "Belum ada sesi yang sesuai pencarian";
 "search_session_not_found_desc" = "Yuk, cari sesi lain!";
 "search_text" = "Pencarian";
+"general_search_placeholder" = "Cari di sini...";
 
 "talent_detail_session" = "Sesi";
 "talent_detail_follower" = "Pengikut";
@@ -394,3 +395,26 @@
 "video_call_polls" = "Polling";
 "video_call_record" = "Rekam";
 "video_call_information" = "Informasi";
+"video_call_message_placeholder" = "Ketik pesan...";
+"video_call_poll_by_host" = "Pertanyaan Polling oleh Host";
+"video_call_poll_question_title" = "Pertanyaan Polling";
+"video_call_poll_question_placeholder" = "Untuk apa polling kamu?";
+"video_call_poll_add_option" = "Tambahkan opsi";
+"anonymous_text" = "Anonim";
+"video_call_poll_hide_result" = "Sembunyikan hasil sebelum voting";
+"video_call_create_poll_title" = "Buat Polling";
+"video_call_cancel_poll_title" = "Batalkan Polling";
+"video_call_create_new_poll_title" = "Buat Polling Baru";
+"video_call_create_poll_footer" = "Buat Polling Untuk Interaksi Lebih Menarik!";
+"video_call_five_minutes_left_alert_title" = "Waktu kamu sisa 5 menit";
+"video_call_five_minutes_left_alert_desc" = "Jangan lupa untuk beri salam perpisahan ya!";
+"understood_text" = "Understood";
+"video_call_screen_share_text" = "Berbagi Layar";
+"video_call_session_title" = "Sesi %@";
+"video_call_scheduled_text" = "Jadwal";
+"time_text" = "Waktu";
+"type_text" = "Tipe";
+"group_call_text" = "Group Call";
+"video_call_list_question_title" = "Daftar Pertanyaan";
+"video_call_box_question_title" = "Kotak Pertanyaan";
+"video_call_send_question_title" = "Kirim Pertanyaan";

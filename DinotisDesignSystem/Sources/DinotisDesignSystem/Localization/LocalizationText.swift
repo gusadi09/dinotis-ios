@@ -1745,4 +1745,132 @@ public enum LocalizableText {
         bundle: .module,
         comment: "information text"
     )
+    public static let generalSearchPlaceholder = NSLocalizedString(
+        "general_search_placeholder",
+        bundle: .module,
+        comment: "for general search bar placeholder"
+    )
+    public static let videoCallMessagePlaceholder = NSLocalizedString(
+        "video_call_message_placeholder",
+        bundle: .module,
+        comment: "for message bar placeholder"
+    )
+    public static let videoCallPollByHost = NSLocalizedString(
+        "video_call_poll_by_host",
+        bundle: .module,
+        comment: "poll by host title in video call"
+    )
+    public static let videoCallPollQuestionTitle = NSLocalizedString(
+        "video_call_poll_question_title",
+        bundle: .module,
+        comment: "poll question title in video call"
+    )
+    public static let videoCallPollQuestionPlaceholder = NSLocalizedString(
+        "video_call_poll_question_placeholder",
+        bundle: .module,
+        comment: "for poll question bar placeholder"
+    )
+    public static let videoCallPollAddOption = NSLocalizedString(
+        "video_call_poll_add_option",
+        bundle: .module,
+        comment: "add option text"
+    )
+    public static let anonymousText = NSLocalizedString(
+        "anonymous_text",
+        bundle: .module,
+        comment: "anonymous text"
+    )
+    public static let videoCallPollHideResult = NSLocalizedString(
+        "video_call_poll_hide_result",
+        bundle: .module,
+        comment: "for video call hide polling result text"
+    )
+    public static let videoCallCreatePollTitle = NSLocalizedString(
+        "video_call_create_poll_title",
+        bundle: .module,
+        comment: "for video call create polling title"
+    )
+    public static let videoCallCancelPollTitle = NSLocalizedString(
+        "video_call_cancel_poll_title",
+        bundle: .module,
+        comment: "for video call cancel polling title"
+    )
+    public static let videoCallCreateNewPollTitle = NSLocalizedString(
+        "video_call_create_new_poll_title",
+        bundle: .module,
+        comment: "for video call create new polling title"
+    )
+    public static let videoCallCreatePollFooter = NSLocalizedString(
+        "video_call_create_poll_footer",
+        bundle: .module,
+        comment: "for video call create polling footer"
+    )
+    public static let videoCallFiveMinutesLeftAlertTitle = NSLocalizedString(
+        "video_call_five_minutes_left_alert_title",
+        bundle: .module,
+        comment: "for video call alert title when session is about to end"
+    )
+    public static let videoCallFiveMinutesLeftAlertDesc = NSLocalizedString(
+        "video_call_five_minutes_left_alert_desc",
+        bundle: .module,
+        comment: "for video call alert description when session is about to end"
+    )
+    public static let understoodText = NSLocalizedString(
+        "understood_text",
+        bundle: .module,
+        comment: "understood text"
+    )
+    public static let videoCallScreenShareText = NSLocalizedString(
+        "video_call_screen_share_text",
+        bundle: .module,
+        comment: "video call screen share text"
+    )
+    
+    public static func videoCallSessionTitle(creatorName: String) -> String {
+        String(
+            format: NSLocalizedString(
+                "video_call_session_title",
+                bundle: .module,
+                comment: "video call session title"
+            ),
+            creatorName
+        )
+    }
+    
+    public static let videoCallScheduledText = NSLocalizedString(
+        "video_call_scheduled_text",
+        bundle: .module,
+        comment: "video call schedule text"
+    )
+    public static let timeText = NSLocalizedString(
+        "time_text",
+        bundle: .module,
+        comment: "time text"
+    )
+    public static let typeText = NSLocalizedString(
+        "type_text",
+        bundle: .module,
+        comment: "type text"
+    )
+    public static let groupCallText = NSLocalizedString(
+        "group_call_text",
+        bundle: .module,
+        comment: "type text"
+    )
+    public static let videoCallListQuestionTitle = NSLocalizedString(
+        "video_call_list_question_title",
+        bundle: .module,
+        comment: "video call list of question title"
+    )
+    public static let videoCallBoxQuestionTitle = NSLocalizedString(
+        "video_call_box_question_title",
+        bundle: .module,
+        comment: "video call question box title"
+    )
+    public static let videoCallSendQuestionTitle = NSLocalizedString(
+        "video_call_send_question_title",
+        bundle: .module,
+        comment: "video call send question title"
+    )
+    
 }
