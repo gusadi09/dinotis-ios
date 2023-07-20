@@ -419,3 +419,5 @@
 "video_call_list_question_title" = "Question List";
 "video_call_box_question_title" = "Question Box";
 "video_call_send_question_title" = "Send Question";
+"video_call_waiting_room_title" = "Waiting Room";
+"video_call_waiting_room_desc" = "You are in the waiting room, the host will let you in soon.";

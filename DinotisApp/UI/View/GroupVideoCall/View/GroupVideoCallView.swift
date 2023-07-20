@@ -499,6 +499,64 @@ fileprivate extension GroupVideoCallView {
         }
     }
     
+    struct WaitingRoomView: View {
+        
+        @ObservedObject var viewModel: GroupVideoCallViewModel
+        @Environment(\.verticalSizeClass) var verticalSizeClass
+        @Environment(\.horizontalSizeClass) var horizontalSizeClass
+        var isPortrait: Bool {
+            horizontalSizeClass == .compact && verticalSizeClass == .regular
+        }
+        
+        var body: some View {
+            AdaptiveStack(
+                isHorizontalStack: !isPortrait,
+                spacing: 22) {
+                    VStack(spacing: 12) {
+                        Text(LocalizableText.videoCallWaitingRoomTitle)
+                            .font(.robotoBold(size: 20))
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.center)
+                        
+                        Text(LocalizableText.videoCallWaitingRoomDesc)
+                            .font(.robotoRegular(size: 12))
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.center)
+                        
+                        CircleLoadingView()
+                    }
+                    
+                    VStack {
+                        Spacer()
+                        
+                        Image.logoWhiteText
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: 130)
+                        
+                        Spacer()
+                        
+                        Text(LocalizableText.videoCallSessionTitle(
+                            creatorName: (viewModel.userMeeting.user?.name).orEmpty()
+                        ))
+                        .font(.robotoBold(size: 16))
+                        .foregroundColor(.white)
+                        .multilineTextAlignment(.center)
+                        
+                        Text("\(LocalizableText.videoCallScheduledText): \(DateUtils.dateFormatter(viewModel.userMeeting.startedAt.orCurrentDate(), forFormat: .EEEEdMMMMhmma))")
+                            .font(.robotoMedium(size: 12))
+                            .foregroundColor(Color(red: 0.63, green: 0.64, blue: 0.66))
+                            .multilineTextAlignment(.center)
+                    }
+                    .padding(46)
+                    .frame(maxWidth: .infinity)
+                    .background(Color(red: 0.15, green: 0.16, blue: 0.17))
+                    .cornerRadius(20)
+                }
+                .padding()
+        }
+    }
+    
     struct MoreMenuSheet: View {
         @ObservedObject var viewModel: GroupVideoCallViewModel
         
