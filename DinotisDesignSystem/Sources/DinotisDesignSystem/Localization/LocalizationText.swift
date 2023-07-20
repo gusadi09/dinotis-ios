@@ -1872,5 +1872,14 @@ public enum LocalizableText {
         bundle: .module,
         comment: "video call send question title"
     )
-    
+    public static let videoCallWaitingRoomTitle = NSLocalizedString(
+        "video_call_waiting_room_title",
+        bundle: .module,
+        comment: "video call waiting room title"
+    )
+    public static let videoCallWaitingRoomDesc = NSLocalizedString(
+        "video_call_waiting_room_desc",
+        bundle: .module,
+        comment: "video call waiting room description"
+    )
 }

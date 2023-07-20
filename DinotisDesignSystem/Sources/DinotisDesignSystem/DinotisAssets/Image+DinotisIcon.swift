@@ -11,6 +11,7 @@ public extension Image {
     static let generalBackIcon = Image("ic-back-general", bundle: Bundle.module)
     static let generalQuestionIcon = Image("ic-question-general", bundle: Bundle.module)
     static let logoWithText = Image("logo-with-text", bundle: Bundle.module)
+    static let logoWhiteText = Image("logo-white-text", bundle: .module)
     
     static let talentProfileGmailIcon = Image("ic-gmail-talent-profile", bundle: Bundle.module)
     static let talentProfileInstagramIcon = Image("ic-instagram-talent-profile", bundle: Bundle.module)
