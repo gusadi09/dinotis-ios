@@ -72,22 +72,41 @@ struct FormScheduleTalentCardView: View {
     var isShowRemove: Bool = false
     
     var isEdit: Bool
+    var disableEdit: Bool
     
     @State var selected = ""
     
-    init(collab: Binding<[MeetingCollaborationData]>, managements: Binding<[ManagementWrappedData]?>, meetingForm: Binding<MeetingForm>, onTapRemove: @escaping (() -> Void), isShowRemove: Bool = false, isEdit: Bool) {
+    init(collab: Binding<[MeetingCollaborationData]>, managements: Binding<[ManagementWrappedData]?>, meetingForm: Binding<MeetingForm>, onTapRemove: @escaping (() -> Void), isShowRemove: Bool = false, isEdit: Bool, disableEdit: Bool = false) {
         self._collab = collab
         self._managements = managements
         self._meetingForm = meetingForm
         self.onTapRemove = onTapRemove
         self.isShowRemove = isShowRemove
         self.isEdit = isEdit
+        self.disableEdit = disableEdit
     }
     
     var body: some View {
         ZStack(alignment: .top) {
             ZStack(alignment: .topTrailing) {
                 VStack(spacing: 20) {
+                    Text(.init(LocalizableText.creatorRescheduleWarning))
+                        .font(.robotoRegular(size: 12))
+                        .foregroundColor(.DinotisDefault.darkPrimary)
+                        .padding(.vertical, 16)
+                        .padding(.horizontal, 11)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .foregroundColor(.DinotisDefault.lightPrimary)
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .inset(by: 0.5)
+                                .stroke(Color.DinotisDefault.darkPrimary, lineWidth: 1)
+                        )
+                        .isHidden(!isEdit, remove: !isEdit)
+                    
                     VStack(spacing: 10) {
                         HStack {
                             Image("ic-vidcall-form")
@@ -111,6 +130,10 @@ struct FormScheduleTalentCardView: View {
                                 .accentColor(.black)
                                 .padding(.horizontal)
                                 .padding(.vertical, 15)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 6)
+                                        .foregroundColor(.gray.opacity(disableEdit ? 0.1 : 0))
+                                )
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
                                 )
@@ -120,6 +143,10 @@ struct FormScheduleTalentCardView: View {
                                 .accentColor(.black)
                                 .padding(.horizontal, 10)
                                 .padding(.vertical, 10)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 6)
+                                        .foregroundColor(.gray.opacity(disableEdit ? 0.1 : 0))
+                                )
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
                                 )
@@ -152,7 +179,6 @@ struct FormScheduleTalentCardView: View {
                                 .scaledToFit()
                                 .frame(height: 15)
                         }
-                        .background(Color.white)
                         .clipShape(RoundedRectangle(cornerRadius: 6))
                         .padding(.horizontal)
                         .padding(.vertical, 15)
@@ -164,6 +190,7 @@ struct FormScheduleTalentCardView: View {
                             self.presentTalentPicker = false
                             UIApplication.shared.endEditing()
                         }
+                        .background(disableEdit ? Color.gray.opacity(0.1) : Color.white)
                         .overlay(
                             RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
                         )
@@ -206,7 +233,6 @@ struct FormScheduleTalentCardView: View {
                                     .scaledToFit()
                                     .frame(height: 15)
                             }
-                            .background(Color.white)
                             .clipShape(RoundedRectangle(cornerRadius: 6))
                             .padding(.horizontal)
                             .padding(.vertical, 15)
@@ -217,6 +243,7 @@ struct FormScheduleTalentCardView: View {
                                 self.sessionPresent = false
                                 UIApplication.shared.endEditing()
                             }
+                            .background(disableEdit ? Color.gray.opacity(0.1) : Color.white)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
                             )
@@ -233,7 +260,6 @@ struct FormScheduleTalentCardView: View {
                                     .scaledToFit()
                                     .frame(height: 15)
                             }
-                            .background(Color.white)
                             .clipShape(RoundedRectangle(cornerRadius: 6))
                             .padding(.horizontal)
                             .padding(.vertical, 15)
@@ -244,6 +270,7 @@ struct FormScheduleTalentCardView: View {
                                 self.sessionPresent = false
                                 UIApplication.shared.endEditing()
                             }
+                            .background(disableEdit ? Color.gray.opacity(0.1) : Color.white)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
                             )
@@ -329,7 +356,7 @@ struct FormScheduleTalentCardView: View {
                                     .padding(.vertical)
                                     .background(
                                         RoundedRectangle(cornerRadius: 10)
-                                            .foregroundColor(.white)
+                                            .foregroundColor(disableEdit ? Color.gray.opacity(0.1) : .white)
                                     )
                                     .overlay(RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0))
                                     .onChange(of: selected) { val in
@@ -347,6 +374,10 @@ struct FormScheduleTalentCardView: View {
                                         .accentColor(.black)
                                         .padding(.horizontal)
                                         .padding(.vertical, 15)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 6)
+                                                .foregroundColor(.gray.opacity(disableEdit ? 0.1 : 0))
+                                        )
                                         .overlay(
                                             RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
                                         )
@@ -507,7 +538,7 @@ struct FormScheduleTalentCardView: View {
                                     .padding(.vertical)
                                     .background(
                                         RoundedRectangle(cornerRadius: 10)
-                                            .foregroundColor(.white)
+                                            .foregroundColor(disableEdit ? .gray.opacity(0.1) : .white)
                                     )
                                     .overlay(RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0))
                                     .onChange(of: meetingForm.managementId) { val in
@@ -544,7 +575,6 @@ struct FormScheduleTalentCardView: View {
                                 
                                 Spacer()
                             }
-                            .background(Color.white)
                             .clipShape(RoundedRectangle(cornerRadius: 6))
                             .padding(.horizontal)
                             .padding(.vertical, 15)
@@ -556,6 +586,7 @@ struct FormScheduleTalentCardView: View {
                                 self.sessionPresent = false
                                 UIApplication.shared.endEditing()
                             }
+                            .background(disableEdit ? Color.gray.opacity(0.1) : Color.white)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
                             )
@@ -1016,6 +1047,7 @@ struct FormScheduleTalentCardView: View {
             }
             
         }
+        .disabled(isEdit && disableEdit)
     }
     
 }

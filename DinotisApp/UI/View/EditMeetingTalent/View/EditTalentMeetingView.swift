@@ -87,7 +87,15 @@ struct EditTalentMeetingView: View {
 						}
 					} content: {
 						VStack {
-                            FormScheduleTalentCardView(collab: $viewModel.talent, managements: $viewModel.managements, meetingForm: $viewModel.meetingForm, onTapRemove: {}, isShowRemove: false, isEdit: true)
+                            FormScheduleTalentCardView(
+                                collab: $viewModel.talent,
+                                managements: $viewModel.managements,
+                                meetingForm: $viewModel.meetingForm,
+                                onTapRemove: {},
+                                isShowRemove: false,
+                                isEdit: true,
+                                disableEdit: viewModel.isDisableEdit
+                            )
 						}
 						.padding(.vertical, 15)
 					}
@@ -109,14 +117,10 @@ struct EditTalentMeetingView: View {
 
 								Spacer()
 							}
-							.background(!viewModel.meetingForm.urls.isEmpty && viewModel.meetingForm.urls.allSatisfy({
-                                !$0.url.validateURL()
-                            }) ? Color.DinotisDefault.lightPrimary : Color.DinotisDefault.primary)
+                            .background(viewModel.disableSaveButton() ? Color.DinotisDefault.lightPrimary : Color.DinotisDefault.primary)
 							.clipShape(RoundedRectangle(cornerRadius: 8))
 						})
-                        .disabled(!viewModel.meetingForm.urls.isEmpty && viewModel.meetingForm.urls.allSatisfy({
-                            !$0.url.validateURL()
-                        }))
+                        .disabled(viewModel.disableSaveButton())
 						.padding()
 						.background(
 							Color.white
