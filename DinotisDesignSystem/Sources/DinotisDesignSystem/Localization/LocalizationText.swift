@@ -1882,4 +1882,9 @@ public enum LocalizableText {
         bundle: .module,
         comment: "video call waiting room description"
     )
+    public static let creatorRescheduleWarning = NSLocalizedString(
+        "creator_reschedule_warning",
+        bundle: .module,
+        comment: "reschedule warning when creator wants to edit the schedule"
+    )
 }

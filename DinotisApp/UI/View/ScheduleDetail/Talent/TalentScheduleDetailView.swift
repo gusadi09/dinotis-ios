@@ -133,7 +133,11 @@ struct TalentScheduleDetailView: View {
                                 TalentDetailScheduleCardView(
                                     data: .constant(data),
                                     onTapEdit: {
-                                        viewModel.routeToEditRateCardSchedule()
+                                        if viewModel.dataMeeting?.meetingRequest != nil {
+                                            viewModel.routeToEditRateCardSchedule()
+                                        } else {
+                                            viewModel.routeToEditSchedule()
+                                        }
                                     }, onTapDelete: {
                                         viewModel.isDeleteShow.toggle()
                                     }, onTapEnd: {

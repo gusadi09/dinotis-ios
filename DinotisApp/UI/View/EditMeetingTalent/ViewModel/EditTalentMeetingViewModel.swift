@@ -34,6 +34,7 @@ final class EditTalentMeetingViewModel: ObservableObject {
 	@Published var meetingID: String
 
 	@Published var isShowSuccess = false
+    @Published var isDisableEdit = false
     @Published var talent = [MeetingCollaborationData]()
 
   @Published var meetingForm = MeetingForm(id: "", title: "", description: "", price: 0, startAt: "", endAt: "", isPrivate: false, slots: 0, managementId: nil, urls: [])
@@ -149,6 +150,10 @@ final class EditTalentMeetingViewModel: ObservableObject {
                 self.meetingForm.title = response.title.orEmpty()
                 self.meetingForm.managementId = response.managementId
                 
+                if let startAt = response.startAt {
+                    self.toggleDisableEdit(from: startAt)
+                }
+                
                 self.meetingForm.urls = response.meetingUrls?.compactMap({ value in
                     MeetingURL(title: value.title.orEmpty(), url: value.url.orEmpty())
                 }) ?? []
@@ -158,8 +163,6 @@ final class EditTalentMeetingViewModel: ObservableObject {
                 })
                 
                 self.talent = response.meetingCollaborations ?? []
-                
-                print("Collab: ", self.talent)
             }
             .store(in: &cancellables)
     }
@@ -198,4 +201,12 @@ final class EditTalentMeetingViewModel: ObservableObject {
 			}
 			.store(in: &cancellables)
 	}
+    
+    func toggleDisableEdit(from date: Date) {
+        isDisableEdit = date.timeIntervalSinceNow < 900
+    }
+    
+    func disableSaveButton() -> Bool {
+        (!meetingForm.urls.isEmpty && meetingForm.urls.allSatisfy({!$0.url.validateURL()})) || isDisableEdit
+    }
 }
