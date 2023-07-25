@@ -59,6 +59,18 @@ struct UserScheduleDetail: View {
                             EmptyView()
                         }
                     )
+                    
+                    NavigationLink(
+                        unwrapping: $viewModel.route,
+                        case: /HomeRouting.research,
+                        destination: {viewModel in
+                            GroupVideoCallView(viewModel: viewModel.wrappedValue)
+                        },
+                        onNavigate: {_ in},
+                        label: {
+                            EmptyView()
+                        }
+                    )
 					
 					NavigationLink(
 						unwrapping: $viewModel.route,
@@ -296,7 +308,8 @@ struct UserScheduleDetail: View {
                                     viewModel.startPresented.toggle()
 
 									if !(meet.isPrivate ?? false) {
-										self.viewModel.routeToTwilioLiveStream(meeting: meet)
+//										self.viewModel.routeToTwilioLiveStream(meeting: meet)
+                                        self.viewModel.routeToResearch(meeting: meet)
 									} else {
 										self.viewModel.routeToVideoCall(meeting: meet)
 									}
@@ -362,7 +375,8 @@ struct UserScheduleDetail: View {
 									guard let meet = viewModel.dataBooking?.meeting else { return }
 
 									if (meet.slots).orZero() > 1 {
-										self.viewModel.routeToTwilioLiveStream(meeting: meet)
+//										self.viewModel.routeToTwilioLiveStream(meeting: meet)
+                                        self.viewModel.routeToResearch(meeting: meet)
 									} else {
 										self.viewModel.routeToVideoCall(meeting: meet)
 									}
