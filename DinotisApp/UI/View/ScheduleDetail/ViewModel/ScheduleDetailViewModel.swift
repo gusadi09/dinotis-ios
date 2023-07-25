@@ -436,15 +436,23 @@ final class ScheduleDetailViewModel: ObservableObject {
         }
     }
     
-    func routeToTwilioLiveStream(meeting: UserMeetingData) {
-        let viewModel = TwilioLiveStreamViewModel(
+    func routeToGroupCall(meeting: UserMeetingData) {
+        let viewModel = GroupVideoCallViewModel(
             backToRoot: self.backToRoot,
             backToHome: self.backToHome,
-            meeting: meeting
+            userMeeting: meeting
         )
         
         DispatchQueue.main.async { [weak self] in
-            self?.route = .twilioLiveStream(viewModel: viewModel)
+            self?.route = .research(viewModel: viewModel)
+        }
+    }
+    
+    func routeToResearch(meeting: UserMeetingData) {
+        let viewModel = GroupVideoCallViewModel(backToRoot: self.backToRoot, backToHome: self.backToHome, userMeeting: meeting)
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .research(viewModel: viewModel)
         }
     }
   
@@ -619,7 +627,7 @@ final class ScheduleDetailViewModel: ObservableObject {
 						if detailMeet.isPrivate ?? false {
 							self?.routeToVideoCall(meeting: converted)
 						} else if !(detailMeet.isPrivate ?? false) {
-							self?.routeToTwilioLiveStream(
+							self?.routeToGroupCall(
 								meeting: converted
 							)
 						}

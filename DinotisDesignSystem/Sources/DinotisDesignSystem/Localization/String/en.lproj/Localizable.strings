@@ -222,6 +222,7 @@
 "continue_payment_label" = "Continue Payment";
 "session_completed" = "Sessions Completed";
 "in_app_purchase_error_trx" = "Can't make transaction.";
+"creator_reschedule_warning" = "If you need to edit the session schedule, **please make sure you change it 15 minutes before the event** to avoid surprising your audience";
 
 "cancel_payment_question" = "Want to cancel the payment?";
 "cancel_payment_title_question" = "Are you sure want to cancel this payment?";
@@ -264,6 +265,7 @@
 "search_session_not_found_title" = "There are no sessions that match the search yet";
 "search_session_not_found_desc" = "Let's find another session!";
 "search_text" = "Search";
+"general_search_placeholder" = "Search...";
 
 "talent_detail_session" = "Session";
 "talent_detail_follower" = "Follower";
@@ -388,3 +390,45 @@
 "outdated_version_update_text" = "Update Now";
 "outdated_version_subtitle_content" = "Please ensure that you have installed the latest version of our app to enhance your user experience and continue enjoying our services.";
 "outdated_version_title_content" = "Update your Dinotis App";
+
+"video_call_more_menu" = "More Menu";
+"video_call_qna" = "QnA";
+"video_call_polls" = "Polls";
+"video_call_record" = "Records";
+"video_call_information" = "Information";
+"video_call_message_placeholder" = "Message here...";
+"video_call_poll_by_host" = "Poll Question by Host";
+"video_call_poll_by_host" = "Poll Question by Host";
+"video_call_poll_question_title" = "Poll Question";
+"video_call_poll_question_placeholder" = "What is your poll for?";
+"video_call_poll_add_option" = "Add an option";
+"anonymous_text" = "Anonymous";
+"video_call_poll_hide_result" = "Hide result before voting";
+"video_call_create_poll_title" = "Create Poll";
+"video_call_cancel_poll_title" = "Cancel Poll";
+"video_call_create_new_poll_title" = "Create New Poll";
+"video_call_create_poll_footer" = "Engage Your Participant With Poll!";
+"video_call_five_minutes_left_alert_title" = "You have 5 minutes left";
+"video_call_five_minutes_left_alert_desc" = "Don’t forget to say goodbye first!";
+"understood_text" = "Understood";
+"video_call_screen_share_text" = "Screen Share";
+"video_call_session_title" = "%@'s Session";
+"video_call_scheduled_text" = "Scheduled";
+"time_text" = "Time";
+"type_text" = "Type";
+"group_call_text" = "Group Call";
+"video_call_list_question_title" = "Question List";
+"video_call_box_question_title" = "Question Box";
+"video_call_send_question_title" = "Send Question";
+"video_call_join_stage_request" = "Join Stage Request";
+"video_call_pin_participant" = "Pin";
+"video_call_mute_participant" = "Mute";
+"video_call_off_video" = "Turn off video";
+"video_call_put_to_viewer" = "Put to viewer";
+"video_call_kick_from_session" = "Kick from session";
+"video_call_unpin_participant" = "Unpin";
+"video_call_alert_kick_participant" = "Are you sure you want to remove this participant?";
+"video_call_primary_button_alert_kick_participant" = "No";
+"video_call_secondary_button_alert_kick_participant" = "Yes";
+"video_call_waiting_room_title" = "Waiting Room";
+"video_call_waiting_room_desc" = "You are in the waiting room, the host will let you in soon.";
