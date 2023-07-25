@@ -662,7 +662,7 @@ extension TwilioGroupVideoCallView {
                                         
                                         Button {
                                             
-                                        } label: {
+                                        }label: {
                                             Text(LocalizableText.acceptToJoinLabel)
                                                 .font(.robotoBold(size: 12))
                                                 .foregroundColor(.blue)
