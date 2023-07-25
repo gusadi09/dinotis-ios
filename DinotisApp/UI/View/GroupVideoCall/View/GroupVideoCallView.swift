@@ -214,7 +214,7 @@ fileprivate extension GroupVideoCallView {
                                     Text("\(viewModel.screenShareId?.name ?? "") (\(LocalizableText.videoCallScreenShareText))")
                                         .font(.robotoRegular(size: 12))
                                         .foregroundColor(.white)
-
+                                    
                                     Image(systemName: "chevron.down")
                                         .resizable()
                                         .scaledToFit()
@@ -880,8 +880,8 @@ fileprivate extension GroupVideoCallView {
                 Button {
                     withAnimation(.spring()) {
                         viewModel.leaveMeeting()
-//                        MARK: For Testing Only. Remove this when the feature is ready
-//                        viewModel.isShowQuestionBox.toggle()
+                        //                        MARK: For Testing Only. Remove this when the feature is ready
+                        //                        viewModel.isShowQuestionBox.toggle()
                     }
                 } label: {
                     ZStack {
@@ -1188,19 +1188,20 @@ fileprivate extension GroupVideoCallView {
                         } label: {
                             VStack(spacing: 16) {
                                 Text(item.title)
-                                    .font(viewModel.tabSelection == item.id ? .robotoBold(size: 16) : .robotoMedium(size: 16))
+                                    .font(viewModel.tabSelection == item.id ? .robotoBold(size: 16) : .robotoRegular(size: 16))
                                     .foregroundColor(viewModel.tabSelection == item.id ? .white : Color(red: 0.63, green: 0.64, blue: 0.66))
-                                
                                 if viewModel.tabSelection == item.id {
                                     RoundedRectangle(cornerRadius: 8)
-                                        .frame(width: 24, height: 2)
+                                        .frame(width: CGFloat(item.title.count * 8), height: 2)
                                         .foregroundColor(.DinotisDefault.primary)
                                         .matchedGeometryEffect(id: "bottom", in: namespace)
                                 } else {
                                     Rectangle()
-                                        .frame(width: 24, height: 2)
+                                        .frame(width: CGFloat(item.title.count * 8), height: 2)
                                         .foregroundColor(.clear)
                                 }
+                                
+                                
                             }
                             .animation(.spring(), value: viewModel.tabSelection)
                         }
@@ -1224,6 +1225,8 @@ fileprivate extension GroupVideoCallView {
                 }
                 .animation(.easeInOut, value: viewModel.tabSelection)
             }
+            
+            
         }
     }
     
@@ -1548,6 +1551,7 @@ fileprivate extension GroupVideoCallView {
     struct ParticipantTabView: View {
         
         @ObservedObject var viewModel: GroupVideoCallViewModel
+        @State var isAlert: Bool = false
         
         var body: some View {
             VStack {
@@ -1565,17 +1569,78 @@ fileprivate extension GroupVideoCallView {
                 .background(Color(red: 0.18, green: 0.19, blue: 0.2))
                 
                 List {
-                    if viewModel.isHost {
-                        if !viewModel.joiningParticipant.isEmpty {
+                    if viewModel.localUser?.canDoParticipantHostControls() ?? false {
+                        if !viewModel.meeting.webinar.requestedParticipants.isEmpty {
                             Section(
                                 header: HStack {
-                                    Text("\(LocalizableText.titleWaitingRoom) (\(viewModel.joiningParticipant.count))")
+                                    Text("\(LocalizableText.videoCallJoinStageRequest) (\(viewModel.meeting.webinar.requestedParticipants.count))")
                                         .font(.robotoBold(size: 16))
                                         .foregroundColor(.white)
                                     
                                     Spacer()
                                     
                                     Button {
+                                        viewModel.meeting.webinar.acceptAllRequest()
+                                    } label: {
+                                        Text(LocalizableText.acceptAllLabel)
+                                            .font(.robotoBold(size: 12))
+                                            .foregroundColor(.white)
+                                            .padding(.horizontal, 10)
+                                            .padding(.vertical, 8)
+                                            .frame(width: 103, alignment: .center)
+                                            .background(Color.DinotisDefault.primary)
+                                            .cornerRadius(8)
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                            ) {
+                                ForEach(viewModel.meeting.webinar.requestedParticipants, id: \.id) { participant in
+                                    HStack(spacing: 16) {
+                                        Circle()
+                                            .foregroundColor(Color.DinotisDefault.primary)
+                                            .frame(width: 42, height: 42)
+                                        
+                                        Text(participant.name)
+                                            .font(.robotoBold(size: 16))
+                                            .foregroundColor(.white)
+                                        
+                                        Spacer()
+                                        
+                                        Button {
+                                            viewModel.meeting.webinar.acceptRequest(id: participant.id)
+                                        } label: {
+                                            Text(LocalizableText.acceptToJoinLabel)
+                                                .font(.robotoBold(size: 12))
+                                                .foregroundColor(.white)
+                                                .padding(.horizontal, 10)
+                                                .padding(.vertical, 8)
+                                                .frame(width: 103, alignment: .center)
+                                                .cornerRadius(8)
+                                                .overlay(
+                                                    RoundedRectangle(cornerRadius: 8)
+                                                        .inset(by: 0.5)
+                                                        .stroke(Color.DinotisDefault.black2, lineWidth: 1)
+                                                )
+                                        }
+                                        .buttonStyle(.plain)
+                                    }
+                                    .listRowSeparator(.hidden)
+                                }
+                            }
+                            .listRowSeparator(.hidden)
+                        }
+                        
+                        if !viewModel.meeting.participants.waitlisted.isEmpty {
+                            Section(
+                                header: HStack {
+                                    Text("\(LocalizableText.titleWaitingRoom) (\(viewModel.meeting.participants.waitlisted.count))")
+                                        .font(.robotoBold(size: 16))
+                                        .foregroundColor(.white)
+                                    
+                                    Spacer()
+                                    
+                                    Button {
+                                        viewModel.acceptAllWaitingRequest()
                                         
                                     } label: {
                                         Text(LocalizableText.acceptAllLabel)
@@ -1590,10 +1655,10 @@ fileprivate extension GroupVideoCallView {
                                     .buttonStyle(.plain)
                                 }
                             ) {
-                                ForEach(viewModel.joiningParticipant, id: \.id) { participant in
+                                ForEach(viewModel.meeting.participants.waitlisted, id: \.id) { participant in
                                     HStack(spacing: 16) {
                                         Circle()
-                                            .foregroundColor(.DinotisDefault.primary)
+                                            .foregroundColor(Color.DinotisDefault.primary)
                                             .frame(width: 42, height: 42)
                                         
                                         Text(participant.name)
@@ -1603,11 +1668,16 @@ fileprivate extension GroupVideoCallView {
                                         Spacer()
                                         
                                         Button {
+                                            do {
+                                                try participant.acceptWaitListedRequest()
+                                            }catch {
+                                                
+                                            }
                                             
                                         } label: {
                                             Text(LocalizableText.acceptToJoinLabel)
                                                 .font(.robotoBold(size: 12))
-                                                .foregroundColor(.DinotisDefault.primary)
+                                                .foregroundColor(.white)
                                                 .padding(.horizontal, 10)
                                                 .padding(.vertical, 8)
                                                 .frame(width: 103, alignment: .center)
@@ -1615,7 +1685,7 @@ fileprivate extension GroupVideoCallView {
                                                 .overlay(
                                                     RoundedRectangle(cornerRadius: 8)
                                                         .inset(by: 0.5)
-                                                        .stroke(Color.DinotisDefault.primary, lineWidth: 1)
+                                                        .stroke(Color.DinotisDefault.black2, lineWidth: 1)
                                                 )
                                         }
                                         .buttonStyle(.plain)
@@ -1627,20 +1697,161 @@ fileprivate extension GroupVideoCallView {
                         }
                     }
                     
-                    if !viewModel.speakerParticipant.isEmpty {
+                    if !viewModel.participants.unique().isEmpty {
                         Section(
                             header: HStack {
-                                Text("\(LocalizableText.speakerTitle) (\(viewModel.speakerParticipant.count))")
+                                Text("\(LocalizableText.speakerTitle) (\(viewModel.participants.unique().count))")
                                     .font(.robotoBold(size: 16))
                                     .foregroundColor(.white)
                                 
                                 Spacer()
                             }
                         ) {
-                            ForEach(viewModel.speakerParticipant, id: \.id) { participant in
+                            ForEach(viewModel.participants.unique(), id: \.id) { participant in
                                 HStack(spacing: 16) {
                                     Circle()
-                                        .foregroundColor(.DinotisDefault.primary)
+                                        .foregroundColor(Color.DinotisDefault.primary)
+                                        .frame(width: 42, height: 42)
+                                    
+                                    Text("\(participant.name) \(viewModel.userType(preset: participant.presetName))")
+                                        .font(.robotoBold(size: 16))
+                                        .foregroundColor(.white)
+                                    
+                                    Spacer()
+                                    
+                                    HStack(spacing: 8) {
+                                        (participant.fetchAudioEnabled() ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 24)
+
+                                        (participant.fetchVideoEnabled() ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 24)
+                                        
+                                        if viewModel.localUser?.canDoParticipantHostControls() ?? false {
+                                            Menu {
+                                                Button {
+                                                    do {
+                                                        try participant.pin()
+                                                    }catch {
+                                                        
+                                                    }
+                                                    
+                                                } label: {
+                                                    (participant.isPinned ? Image(systemName: "pin.slash") : Image.videoCallPinIcon)
+                                                        .resizable()
+                                                        .scaledToFit()
+                                                        .frame(width: 24)
+                                                    Text(participant.isPinned ? LocalizableText.videoCallUnpinParticipant : LocalizableText.videoCallPinParticipant)
+                                                }
+                                                if participant.id != (viewModel.localUser?.id).orEmpty() {
+                                                    Button {
+                                                        do {
+                                                            try participant.disableAudio()
+                                                        }catch {
+                                                            
+                                                        }
+                                                    } label: {
+                                                        (participant.fetchAudioEnabled() ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
+                                                            .resizable()
+                                                            .scaledToFit()
+                                                            .frame(width: 24)
+                                                        Text(LocalizableText.videoCallMuteParticipant)
+                                                    }
+                                                }
+                                                if participant.id != (viewModel.localUser?.id).orEmpty() {
+                                                    Button {
+                                                        do {
+                                                            try participant.disableVideo()
+                                                        }catch {
+                                                            
+                                                        }
+                                                    } label: {
+                                                        (participant.fetchVideoEnabled() ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
+                                                            .resizable()
+                                                            .scaledToFit()
+                                                            .frame(width: 24)
+                                                        Text(LocalizableText.videoCallOffVideo)
+                                                    }
+                                                }
+                                                
+                                                if participant.id != (viewModel.localUser?.id).orEmpty() {
+                                                    Button(role: .destructive) {
+                                                    
+                                                    } label: {
+                                                        Image.videoCallPutParticipant
+                                                            .resizable()
+                                                            .scaledToFit()
+                                                            .frame(width: 24)
+                                                        Text(LocalizableText.videoCallPutToViewer)
+                                                        
+                                                    }
+                                                }
+                                                
+                                                if participant.id != (viewModel.localUser?.id).orEmpty() {
+                                                    Button(role: .destructive) {
+                                                        isAlert.toggle()
+                                                        
+                                                    } label: {
+                                                        Image.videoCallKickParticipantIcon
+                                                            .resizable()
+                                                            .scaledToFit()
+                                                            .frame(width: 24)
+                                                        Text(LocalizableText.videoCallKickFromSession)
+                                                    }
+                                                }
+                                            } label: {
+                                                Image.videoCallMenu
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .frame(width: 24)
+                                            }
+                                            .foregroundColor(.white)
+                                            
+                                        }
+                                        
+                                    }
+                                    .alert(isPresented: $isAlert) { () -> Alert in
+                                        Alert(title: Text(""), message: Text(LocalizableText.videoCallKickAlertFromSession), primaryButton: .default(Text(LocalizableText.videoCallKickAlertPrimaryButton)), secondaryButton: .default(Text(LocalizableText.videoCallKickAlertSecondaryButton), action: {
+                                            do {
+                                                guard let index = viewModel.participants.firstIndex(where: { item in
+                                                    item.id == participant.id
+                                                })
+                                               else {
+                                                   return
+                                               }
+                                                try viewModel.participants[index].kick()
+                                            }catch {
+                                                print("error kick")
+                                            }
+                                        }))
+                                }
+                                }
+                                .listRowSeparator(.hidden)
+
+                            }
+                        }
+                        
+                        .listRowSeparator(.hidden)
+                    }
+                    
+                    
+                    if !viewModel.filteredViewerParticipants().isEmpty {
+                        Section(
+                            header: HStack {
+                                Text("\(LocalizableText.viewerTitle) (\(viewModel.filteredViewerParticipants().count))")
+                                    .font(.robotoBold(size: 16))
+                                    .foregroundColor(.white)
+                                
+                                Spacer()
+                            }
+                        ) {
+                            ForEach(viewModel.filteredViewerParticipants(), id: \.id) { participant in
+                                HStack(spacing: 16) {
+                                    Circle()
+                                        .foregroundColor(.blue)
                                         .frame(width: 42, height: 42)
                                     
                                     Text(participant.name)
@@ -1650,12 +1861,12 @@ fileprivate extension GroupVideoCallView {
                                     Spacer()
                                     
                                     HStack(spacing: 8) {
-                                        (participant.isMicOn ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
+                                        (participant.fetchAudioEnabled() ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
                                             .resizable()
                                             .scaledToFit()
                                             .frame(width: 24)
                                         
-                                        (participant.isVideoOn ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
+                                        (participant.fetchVideoEnabled() ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
                                             .resizable()
                                             .scaledToFit()
                                             .frame(width: 24)
@@ -1665,46 +1876,6 @@ fileprivate extension GroupVideoCallView {
                             }
                         }
                         .listRowSeparator(.hidden)
-                        
-                        if !viewModel.viewerSpeaker.isEmpty {
-                            Section(
-                                header: HStack {
-                                    Text("\(LocalizableText.viewerTitle) (\(viewModel.viewerSpeaker.count))")
-                                        .font(.robotoBold(size: 16))
-                                        .foregroundColor(.white)
-                                    
-                                    Spacer()
-                                }
-                            ) {
-                                ForEach(viewModel.viewerSpeaker, id: \.id) { participant in
-                                    HStack(spacing: 16) {
-                                        Circle()
-                                            .foregroundColor(.DinotisDefault.primary)
-                                            .frame(width: 42, height: 42)
-                                        
-                                        Text(participant.name)
-                                            .font(.robotoBold(size: 16))
-                                            .foregroundColor(.white)
-                                        
-                                        Spacer()
-                                        
-                                        HStack(spacing: 8) {
-                                            (participant.isMicOn ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: 24)
-                                            
-                                            (participant.isVideoOn ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: 24)
-                                        }
-                                    }
-                                    .listRowSeparator(.hidden)
-                                }
-                            }
-                            .listRowSeparator(.hidden)
-                        }
                     }
                 }
                 .listStyle(PlainListStyle())
@@ -1768,15 +1939,15 @@ fileprivate extension GroupVideoCallView {
                                                     isAuthorYou: message.userId == viewModel.localUserId
                                                 )
                                                 /// Pin chat is not available in Dyte SDK
-//                                                .contextMenu {
-//                                                    Button {
-//                                                        withAnimation(.spring(response: 0.4, dampingFraction: 0.4)) {
-//
-//                                                        }
-//                                                    } label: {
-//                                                        Label("Pin this chat", systemImage: "pin.fill")
-//                                                    }
-//                                                }
+                                                //                                                .contextMenu {
+                                                //                                                    Button {
+                                                //                                                        withAnimation(.spring(response: 0.4, dampingFraction: 0.4)) {
+                                                //
+                                                //                                                        }
+                                                //                                                    } label: {
+                                                //                                                        Label("Pin this chat", systemImage: "pin.fill")
+                                                //                                                    }
+                                                //                                                }
                                             }
                                         default:
                                             EmptyView()
@@ -1803,21 +1974,21 @@ fileprivate extension GroupVideoCallView {
                             
                             HStack(alignment: .bottom) {
                                 MultilineTextField(LocalizableText.videoCallMessagePlaceholder, text: $viewModel.messageText)
-//                                Button(action: {
-//
-//                                }, label: {
-//                                    Image(systemName: "link")
-//                                        .foregroundColor(.white)
-//                                })
-//                                .padding(.vertical, 5)
-//
-//                                Button(action: {
-//                                    shouldShowImagePicker.toggle()
-//                                }, label: {
-//                                    Image(systemName: "photo.on.rectangle.angled")
-//                                        .foregroundColor(.white)
-//                                })
-//                                .padding(.vertical, 5)
+                                //                                Button(action: {
+                                //
+                                //                                }, label: {
+                                //                                    Image(systemName: "link")
+                                //                                        .foregroundColor(.white)
+                                //                                })
+                                //                                .padding(.vertical, 5)
+                                //
+                                //                                Button(action: {
+                                //                                    shouldShowImagePicker.toggle()
+                                //                                }, label: {
+                                //                                    Image(systemName: "photo.on.rectangle.angled")
+                                //                                        .foregroundColor(.white)
+                                //                                })
+                                //                                .padding(.vertical, 5)
                                 
                             }
                             .padding(.horizontal, 14)
@@ -1850,42 +2021,42 @@ fileprivate extension GroupVideoCallView {
                     
                 }
                 /// Pin Chat is not available in Dyte SDK
-//                .overlay(alignment: .top) {
-//                    if let message = viewModel.pinnedChat {
-//                        VStack(alignment: .leading, spacing: 4) {
-//                            HStack {
-//                                Text((message.name))
-//                                    .font(.robotoMedium(size: 12))
-//                                    .foregroundColor(Color(red: 0.61, green: 0.62, blue: 0.62))
-//
-//                                Spacer()
-//
-//                                Button {
-//                                    withAnimation {
-//                                        viewModel.pinnedChat = nil
-//                                    }
-//                                } label: {
-//                                    Image(systemName: "pin.fill")
-//                                        .foregroundColor(Color(red: 0.61, green: 0.62, blue: 0.62))
-//                                }
-//                            }
-//
-//                            ChatBubbleView(messageBody: message.message, isAuthorYou: message.isYou)
-//                        }
-//                        .padding()
-//                        .overlay(
-//                            RoundedRectangle(cornerRadius: 6)
-//                                .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [6, 6]))
-//                                .foregroundColor(.white)
-//                        )
-//                        .background(
-//                            RoundedRectangle(cornerRadius: 6)
-//                                .foregroundColor(Color(red: 0.15, green: 0.16, blue: 0.17))
-//                        )
-//                        .padding()
-//                        .transition(.move(edge: .top))
-//                    }
-//                }
+                //                .overlay(alignment: .top) {
+                //                    if let message = viewModel.pinnedChat {
+                //                        VStack(alignment: .leading, spacing: 4) {
+                //                            HStack {
+                //                                Text((message.name))
+                //                                    .font(.robotoMedium(size: 12))
+                //                                    .foregroundColor(Color(red: 0.61, green: 0.62, blue: 0.62))
+                //
+                //                                Spacer()
+                //
+                //                                Button {
+                //                                    withAnimation {
+                //                                        viewModel.pinnedChat = nil
+                //                                    }
+                //                                } label: {
+                //                                    Image(systemName: "pin.fill")
+                //                                        .foregroundColor(Color(red: 0.61, green: 0.62, blue: 0.62))
+                //                                }
+                //                            }
+                //
+                //                            ChatBubbleView(messageBody: message.message, isAuthorYou: message.isYou)
+                //                        }
+                //                        .padding()
+                //                        .overlay(
+                //                            RoundedRectangle(cornerRadius: 6)
+                //                                .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [6, 6]))
+                //                                .foregroundColor(.white)
+                //                        )
+                //                        .background(
+                //                            RoundedRectangle(cornerRadius: 6)
+                //                                .foregroundColor(Color(red: 0.15, green: 0.16, blue: 0.17))
+                //                        )
+                //                        .padding()
+                //                        .transition(.move(edge: .top))
+                //                    }
+                //                }
             }
             .onAppear {
                 viewModel.hasNewMessage = false

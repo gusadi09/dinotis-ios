@@ -1872,6 +1872,66 @@ public enum LocalizableText {
         bundle: .module,
         comment: "video call send question title"
     )
+    
+    public static let videoCallJoinStageRequest = NSLocalizedString(
+        "video_call_join_stage_request",
+        bundle: .module,
+        comment: "video call join stage request"
+    )
+    
+    public static let videoCallPinParticipant = NSLocalizedString(
+        "video_call_pin_participant",
+        bundle: .module,
+        comment: "video call pin participant"
+    )
+    
+    public static let videoCallUnpinParticipant = NSLocalizedString(
+        "video_call_unpin_participant",
+        bundle: .module,
+        comment: "video call unpin participant"
+    )
+    
+    public static let videoCallMuteParticipant = NSLocalizedString(
+        "video_call_mute_participant",
+        bundle: .module,
+        comment: "video call mute participant"
+    )
+    
+    public static let videoCallOffVideo = NSLocalizedString(
+        "video_call_off_video",
+        bundle: .module,
+        comment: "video call off video"
+    )
+    
+    public static let videoCallPutToViewer = NSLocalizedString(
+        "video_call_put_to_viewer",
+        bundle: .module,
+        comment: "video call put to viewer"
+    )
+    
+    public static let videoCallKickFromSession = NSLocalizedString(
+        "video_call_kick_from_session",
+        bundle: .module,
+        comment: "video call kick from session"
+    )
+    
+    public static let videoCallKickAlertFromSession = NSLocalizedString(
+        "video_call_alert_kick_participant",
+        bundle: .module,
+        comment: "video call kick alert from session"
+    )
+    
+    public static let videoCallKickAlertSecondaryButton = NSLocalizedString(
+        "video_call_secondary_button_alert_kick_participant",
+        bundle: .module,
+        comment: "video call kick alert secondary button"
+    )
+    
+    public static let videoCallKickAlertPrimaryButton = NSLocalizedString(
+        "video_call_primary_button_alert_kick_participant",
+        bundle: .module,
+        comment: "video call kick alert primary button"
+    )
     public static let videoCallWaitingRoomTitle = NSLocalizedString(
         "video_call_waiting_room_title",
         bundle: .module,

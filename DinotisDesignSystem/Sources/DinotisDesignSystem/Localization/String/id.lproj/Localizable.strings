@@ -419,5 +419,15 @@
 "video_call_list_question_title" = "Daftar Pertanyaan";
 "video_call_box_question_title" = "Kotak Pertanyaan";
 "video_call_send_question_title" = "Kirim Pertanyaan";
+"video_call_join_request" = "Minta Bergabung";
+"video_call_pin_participant" = "Pin";
+"video_call_mute_participant" = "Bisukan";
+"video_call_off_video" = "Matikan kamera";
+"video_call_put_to_viewer" = "Pindahkan ke viewer";
+"video_call_kick_from_session" = "Keluarkan dari sesi";
+"video_call_unpin_participant" = "Buka pin";
+"video_call_alert_kick_participant" = "Yakin ingin mengeluarkan peserta berikut?";
+"video_call_primary_button_alert_kick_participant" = "Tidak"
+"video_call_secondary_button_alert_kick_participant" = "Ya"
 "video_call_waiting_room_title" = "Ruang Tunggu";
 "video_call_waiting_room_desc" = "Anda berada di ruang tunggu, host akan segera mengizinkan Anda masuk.";

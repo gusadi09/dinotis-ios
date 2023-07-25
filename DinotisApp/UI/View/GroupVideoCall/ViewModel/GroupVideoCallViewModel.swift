@@ -173,6 +173,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var screenShareUser = [DyteScreenShareMeetingParticipant]()
     @Published var screenShareId: DyteScreenShareMeetingParticipant?
     @Published var pinned: DyteJoinedMeetingParticipant?
+    @Published var kicked: DyteJoinedMeetingParticipant?
     
     @Published var isRefreshFailed = false
     
@@ -435,6 +436,23 @@ final class GroupVideoCallViewModel: ObservableObject {
             print("Error to send message \(self.messageText)")
         }
     }
+    
+    func filteredViewerParticipants() -> [DyteJoinedMeetingParticipant] {
+        meeting.participants.joined.filter({ item in
+                !meeting.participants.active.contains(where: { part in
+                    item.id == part.id
+                })
+            })
+    }
+    
+    func acceptAllWaitingRequest() {
+        do {
+            try self.meeting.participants.acceptAllWaitingRequests()
+        }catch {
+            
+        }
+    }
+    
 }
 
 extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
@@ -494,6 +512,7 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
         self.isPreview = false
         self.pinned = meeting.participants.pinned
         self.localUserId = meeting.localUser.userId
+       
     }
     
     func onMeetingRoomJoinFailed(exception: KotlinException) {

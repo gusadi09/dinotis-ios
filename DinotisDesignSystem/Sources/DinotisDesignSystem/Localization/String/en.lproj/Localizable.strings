@@ -420,5 +420,15 @@
 "video_call_list_question_title" = "Question List";
 "video_call_box_question_title" = "Question Box";
 "video_call_send_question_title" = "Send Question";
+"video_call_join_stage_request" = "Join Stage Request";
+"video_call_pin_participant" = "Pin";
+"video_call_mute_participant" = "Mute";
+"video_call_off_video" = "Turn off video";
+"video_call_put_to_viewer" = "Put to viewer";
+"video_call_kick_from_session" = "Kick from session";
+"video_call_unpin_participant" = "Unpin";
+"video_call_alert_kick_participant" = "Are you sure you want to remove this participant?";
+"video_call_primary_button_alert_kick_participant" = "No";
+"video_call_secondary_button_alert_kick_participant" = "Yes";
 "video_call_waiting_room_title" = "Waiting Room";
 "video_call_waiting_room_desc" = "You are in the waiting room, the host will let you in soon.";
