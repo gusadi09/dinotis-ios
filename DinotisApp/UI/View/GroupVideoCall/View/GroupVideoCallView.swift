@@ -31,12 +31,15 @@ struct GroupVideoCallView: View {
             }
             .ignoresSafeArea()
             
-            if viewModel.isJoined {
-                MainGroupVideoCallView(viewModel: viewModel)
-            } else {
-                if viewModel.isInit {
+            if viewModel.isInit {
+                if viewModel.meeting.localUser.waitListStatus == .waiting || viewModel.meeting.localUser.waitListStatus == .rejected {
+                    WaitingRoomView(viewModel: viewModel)
+                } else if viewModel.isJoined {
+                    MainGroupVideoCallView(viewModel: viewModel)
+                } else {
                     GroupVideoCallPreview(viewModel: viewModel)
                 }
+                
             }
             
             DinotisLoadingView(.fullscreen, hide: !viewModel.isConnecting)
@@ -93,6 +96,16 @@ struct GroupVideoCallView: View {
                 title: Text(LocalizableText.videoCallFiveMinutesLeftAlertTitle),
                 message: Text(LocalizableText.videoCallFiveMinutesLeftAlertDesc),
                 dismissButton: .default(Text(LocalizableText.understoodText))
+            )
+        }
+        .alert(isPresented: $viewModel.isKicked) {
+            Alert(
+                title: Text(LocalizableText.attentionText),
+                message: Text("You removed from meeting"),
+                dismissButton: .default(
+                    Text(LocalizableText.understoodText),
+                    action: viewModel.backToHome
+                )
             )
         }
     }
@@ -589,33 +602,35 @@ fileprivate extension GroupVideoCallView {
                 
                 ScrollView {
                     LazyVStack(spacing: 0) {
-                        Button {
-                            viewModel.showingMoreMenu = false
-                            DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
-                                self.viewModel.isShowingQnA.toggle()
+                        if viewModel.localUser?.permissions.media.canPublishVideo ?? false {
+                            Button {
+                                viewModel.showingMoreMenu = false
+                                DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                                    self.viewModel.isShowingQnA.toggle()
+                                }
+                            } label: {
+                                HStack(alignment: .center, spacing: 11) {
+                                    Image.videoCallQuestionIcon
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 23)
+                                    
+                                    Text(LocalizableText.videoCallQna)
+                                        .foregroundColor(.white)
+                                        .font(.robotoRegular(size: 16))
+                                    
+                                    Spacer()
+                                    
+                                    Image(systemName: "chevron.right")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .foregroundColor(.white)
+                                        .frame(width: 8)
+                                        .font(.system(size: 10, weight: .bold, design: .rounded))
+                                }
+                                .padding(15)
+                                .contentShape(Rectangle())
                             }
-                        } label: {
-                            HStack(alignment: .center, spacing: 11) {
-                                Image.videoCallQuestionIcon
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 23)
-                                
-                                Text(LocalizableText.videoCallQna)
-                                    .foregroundColor(.white)
-                                    .font(.robotoRegular(size: 16))
-                                
-                                Spacer()
-                                
-                                Image(systemName: "chevron.right")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .foregroundColor(.white)
-                                    .frame(width: 8)
-                                    .font(.system(size: 10, weight: .bold, design: .rounded))
-                            }
-                            .padding(15)
-                            .contentShape(Rectangle())
                         }
                         
                         Button {
@@ -749,45 +764,102 @@ fileprivate extension GroupVideoCallView {
             HStack(spacing: 12) {
                 Button {
                     withAnimation(.spring()) {
-                        viewModel.toggleMicrophone()
+                        if viewModel.localUser?.permissions.media.canPublishAudio ?? false {
+                            viewModel.toggleMicrophone()
+                        } else {
+                            if viewModel.meeting.webinar.canJoinStage() {
+                                if viewModel.isRaised {
+                                    viewModel.meeting.webinar.withdrawRequestToJoin()
+                                } else {
+                                    viewModel.meeting.webinar.requestToJoin()
+                                }
+                            }
+                        }
                     }
                 } label: {
-                    (viewModel.isAudioOn ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 32)
+                    if viewModel.localUser?.permissions.media.canPublishAudio ?? false {
+                        (viewModel.isAudioOn ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 32)
+                    } else {
+                        if viewModel.isRaised {
+                            Image.videoCallRaiseHandInactive
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 32)
+                        } else {
+                            Image.videoCallRaiseHandActive
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 40)
+                        }
+                    }
                 }
                 .disabled(false) // Add logic when audio is locked
                 
                 Button {
                     withAnimation(.spring()) {
-                        viewModel.toggleCamera()
+                        if viewModel.localUser?.permissions.media.canPublishVideo ?? false {
+                            viewModel.toggleCamera()
+                        } else {
+                            viewModel.tabSelection = 0
+                            viewModel.isShowAboutCallBottomSheet.toggle()
+                        }
                     }
                 } label: {
-                    (viewModel.isCameraOn ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 32)
+                    if viewModel.localUser?.permissions.media.canPublishVideo ?? false {
+                        (viewModel.isCameraOn ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 32)
+                    } else {
+                        Image.videoCallChatIcon
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 45)
+                            .foregroundColor(.white)
+                            .overlay(alignment: .trailing) {
+                                if viewModel.hasNewMessage {
+                                    Circle()
+                                        .foregroundColor(.red)
+                                        .frame(width: 10, height: 10)
+                                        .padding(.trailing, 10)
+                                        .padding(.bottom, 12)
+                                }
+                            }
+                    }
                 }
                 
                 Button {
-                    viewModel.tabSelection = 0
-                    viewModel.isShowAboutCallBottomSheet.toggle()
+                    if viewModel.localUser?.permissions.media.canPublishVideo ?? false {
+                        viewModel.tabSelection = 0
+                        viewModel.isShowAboutCallBottomSheet.toggle()
+                    } else {
+                        viewModel.isShowQuestionBox.toggle()
+                    }
                 } label: {
-                    Image.videoCallChatIcon
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 45)
-                        .foregroundColor(.white)
-                        .overlay(alignment: .trailing) {
-                            if viewModel.hasNewMessage {
-                                Circle()
-                                    .foregroundColor(.red)
-                                    .frame(width: 10, height: 10)
-                                    .padding(.trailing, 10)
-                                    .padding(.bottom, 12)
+                    if viewModel.localUser?.permissions.media.canPublishVideo ?? false {
+                        Image.videoCallChatIcon
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 45)
+                            .foregroundColor(.white)
+                            .overlay(alignment: .trailing) {
+                                if viewModel.hasNewMessage {
+                                    Circle()
+                                        .foregroundColor(.red)
+                                        .frame(width: 10, height: 10)
+                                        .padding(.trailing, 10)
+                                        .padding(.bottom, 12)
+                                }
                             }
-                        }
+                    } else {
+                        Image.videoCallQuestionIcon
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 30)
+                    }
                 }
                 
                 Button {
