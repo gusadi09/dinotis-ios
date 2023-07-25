@@ -443,20 +443,9 @@ struct TalentScheduleDetailView: View {
 
 							NavigationLink(
 								unwrapping: $viewModel.route,
-								case: /HomeRouting.twilioLiveStream,
+								case: /HomeRouting.research,
 								destination: {viewModel in
-									TwilioGroupVideoCallView(
-										viewModel: viewModel.wrappedValue,
-										meetingId: .constant(meetId), speaker: SpeakerVideoViewModel()
-									)
-									.environmentObject(streamViewModel)
-									.environmentObject(participantsViewModel)
-									.environmentObject(streamManager)
-									.environmentObject(speakerGridViewModel)
-									.environmentObject(presentationLayoutViewModel)
-									.environmentObject(speakerSettingsManager)
-									.environmentObject(hostControlsManager)
-									.environmentObject(chatManager)
+                                    GroupVideoCallView(viewModel: viewModel.wrappedValue)
 								},
 								onNavigate: {_ in},
 								label: {

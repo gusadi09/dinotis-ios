@@ -56,27 +56,28 @@ final class GroupVideoCallViewModel: ObservableObject {
     var backToHome: () -> Void
     
     private let meetRepository: MeetingsRepository
+    private let addDyteParticipantUseCase: AddDyteParticipantUseCase
     private var cancellables = Set<AnyCancellable>()
     
     let meeting = DyteiOSClientBuilder().build()
     var localUserId = ""
     
-    let meetingInfo = DyteMeetingInfoV2(
-        authToken: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdJZCI6IjQ2ODdlYjllLWMyNjItNDhmOS1iZWI0LTQ3ODhiNjJlYjY4YSIsIm1lZXRpbmdJZCI6ImJiYjBiMDk0LTY2MmEtNDllMS1hMTk4LTViNGQ0ODcwYmVjOSIsInBhcnRpY2lwYW50SWQiOiJhYWE0ZTZjYS0wMzg2LTRmMjEtYmMxOS00YmEwM2VkYzY3NTkiLCJwcmVzZXRJZCI6ImIzYWYxYWFmLThiOWQtNGFmMC05OGI2LTZiYjc2N2Y4NjZmYiIsImlhdCI6MTY4OTE0MzU3NSwiZXhwIjoxNjk3NzgzNTc1fQ.Cbv0NvmLQSiimvsF-u5D8aenot2nn31OXduLnrqoRwholCGCjSfTdqVEOo-B_5hN09UK5WjCLYHZjYQt9DZE22y8QpgbJknLixgz0T-2vY9srj-qWU4YtMD9wQHEMzgTdOKyahTBq6Q0yoUPZFP4S8dJWHn1b500d2ID85npKwiCXlwUAlyZZ7zeBfRzwjpKaI7neCTMYy67YjPnncrYPbJ7_17QcMxZJKUgog-AvuR1i2wmZEkx7Lkd0XIs9q1REqg0gjg4YAbdw3p_PVg9_rtLQ0RSi0dGfSVpRsfwJGn9l5JwGnWrKmFUUl5jygIzPo6uKrGtWEfl-q12UCOYxg",
+//    let meetingInfo = DyteMeetingInfoV2(
+//        authToken: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdJZCI6IjQ2ODdlYjllLWMyNjItNDhmOS1iZWI0LTQ3ODhiNjJlYjY4YSIsIm1lZXRpbmdJZCI6ImJiYjBiMDk0LTY2MmEtNDllMS1hMTk4LTViNGQ0ODcwYmVjOSIsInBhcnRpY2lwYW50SWQiOiJhYWE5ZDUzMS1hODU1LTRhNGUtYTMxYS05Yjg1NDEyNzcxZDUiLCJwcmVzZXRJZCI6IjcyMDA2ZmQ4LWUxYjItNGZiMS05MGQzLWIxNDg3NmUwZjkyMSIsImlhdCI6MTY4OTU4NTg5MCwiZXhwIjoxNjk4MjI1ODkwfQ.dCaZ5JTSYM8sHx2Ge5cl58pM8j-wXIUCD_bASgdD6CeBKsxrHbZxv7LGGP1F4_6iYZya2Y7APxMUIIeFWp4sjQqUnjKcwo1_jhVDzl6pkC0aBdPa9r0ZunfG80Gix-LBM223pX8FJC914nIFffbxG8xKb9UkoRo73SmP9xEX8Ak5V6KO8yLtBLZI1wFO7YcEffx36uRQjRXMv8xFrH148fxIlbNNAIqhXwfaZ2dAi14hv359SY9PYnJI008BaAOaOFNJE0d-ka41wVO3WBTS14g8P2r5R3tDYfyFuWV8z0HroBO35e1fP2KAyZ0LVbpzsM3A8TfEWfHuOs_R4yURSw",
+//        enableAudio: true,
+//        enableVideo: true,
+//        baseUrl: "https://api.cluster.dyte.in/v2"
+//    )
+    
+    var meetingInfo = DyteMeetingInfoV2(
+        authToken: "",
         enableAudio: true,
         enableVideo: true,
         baseUrl: "https://api.cluster.dyte.in/v2"
     )
     
     @Published var userMeeting: UserMeetingData
-    var hostNames: String {
-        var names: [String] = []
-        names.append((userMeeting.user?.name).orEmpty())
-        names.append(contentsOf: userMeeting.meetingCollaborations?.compactMap({ item in
-            (item.user?.name).orEmpty()
-        }) ?? [])
-        return names.joined(separator: ", ")
-    }
+    @Published var hostNames: String = ""
     
     @Published var isInit = false
     @Published var isPreview = true
@@ -114,6 +115,9 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var tabSelection = 0
     @Published var qnaTabSelection = 0
     @Published var isHost = false
+    @Published var isRaised = false
+    
+    @Published var isKicked = false
     
     @Published var bottomSheetTabItems: [TabBarItem] = [
         .init(id: 0, title: LocalizableText.labelChat),
@@ -170,17 +174,71 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var screenShareId: DyteScreenShareMeetingParticipant?
     @Published var pinned: DyteJoinedMeetingParticipant?
     
+    @Published var isRefreshFailed = false
+    
     init(
         backToRoot: @escaping () -> Void,
         backToHome: @escaping () -> Void,
         meetRepository: MeetingsRepository = MeetingsDefaultRepository(),
-        userMeeting: UserMeetingData
+        userMeeting: UserMeetingData,
+        addDyteParticipantUseCase: AddDyteParticipantUseCase = AddDyteParticipantDefaultUseCase()
     ) {
         self.backToHome = backToHome
         self.backToRoot = backToRoot
         self.meetRepository = meetRepository
         self.userMeeting = userMeeting
         self.futureDate = userMeeting.endAt.orCurrentDate()
+        self.addDyteParticipantUseCase = addDyteParticipantUseCase
+        
+        var names: [String] = []
+        names.append((userMeeting.user?.name).orEmpty())
+        names.append(contentsOf: userMeeting.meetingCollaborations?.compactMap({ item in
+            (item.user?.name).orEmpty()
+        }) ?? [])
+        self.hostNames = names.joined(separator: ", ")
+    }
+    
+    @MainActor
+    func addParticipant() async {
+        self.isConnecting = true
+        self.isError = false
+        self.error = nil
+        
+        let result = await addDyteParticipantUseCase.execute(for: userMeeting.id.orEmpty())
+        
+        switch result {
+        case .success(let data):
+            self.meetingInfo = DyteMeetingInfoV2(
+                authToken: data.token.orEmpty(),
+                enableAudio: true,
+                enableVideo: true,
+                baseUrl: "https://api.cluster.dyte.in/v2"
+            )
+        case .failure(let error):
+            handleDefaultError(error: error)
+        }
+    }
+    
+    func handleDefaultError(error: Error) {
+        DispatchQueue.main.async { [weak self] in
+            self?.isLoading = false
+            self?.isConnecting = false
+            
+            if let error = error as? ErrorResponse {
+                
+                if error.statusCode.orZero() == 401 {
+                    self?.error = error.message.orEmpty()
+                    self?.isRefreshFailed.toggle()
+                } else {
+                    self?.error = error.message.orEmpty()
+                    self?.isError = true
+                }
+            } else {
+                self?.isError = true
+                self?.error = error.localizedDescription
+            }
+            
+        }
     }
     
     func answerQuestion(at index: Int) {
@@ -229,7 +287,7 @@ final class GroupVideoCallViewModel: ObservableObject {
         self.dateTime = Date()
         
         self.isNearbyEnd = dateTime <= userMeeting.endAt.orCurrentDate().addingTimeInterval(-300)
-
+        
         if hours == 0 && minutes == 0 && seconds == 0 {
             self.checkMeetingEnd()
         }
@@ -237,7 +295,7 @@ final class GroupVideoCallViewModel: ObservableObject {
         if minutes == 5 && seconds == 0 && hours == 0 {
             self.isShowNearEndAlert = true
         }
-
+        
         self.stringTime = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
     }
     
@@ -353,16 +411,20 @@ final class GroupVideoCallViewModel: ObservableObject {
     
     func onAppear() {
         disableIdleTimer()
-        getRealTime()
-        meeting.addMeetingRoomEventsListener(meetingRoomEventsListener: self)
-        meeting.addParticipantEventsListener(participantEventsListener: self)
-        meeting.addSelfEventsListener(selfEventsListener: self)
-        meeting.addParticipantEventsListener(participantEventsListener: self)
-        meeting.addChatEventsListener(chatEventsListener: self)
-        meeting.addPollEventsListener(pollEventsListener: self)
-        meeting.addRecordingEventsListener(recordingEventsListener: self)
-        meeting.addWaitlistEventsListener(waitlistEventsListener: self)
-        meeting.doInit(dyteMeetingInfo_: meetingInfo)
+        Task {
+            getRealTime()
+            await addParticipant()
+            meeting.addMeetingRoomEventsListener(meetingRoomEventsListener: self)
+            meeting.addParticipantEventsListener(participantEventsListener: self)
+            meeting.addSelfEventsListener(selfEventsListener: self)
+            meeting.addParticipantEventsListener(participantEventsListener: self)
+            meeting.addChatEventsListener(chatEventsListener: self)
+            meeting.addPollEventsListener(pollEventsListener: self)
+            meeting.addRecordingEventsListener(recordingEventsListener: self)
+            meeting.addWaitlistEventsListener(waitlistEventsListener: self)
+            meeting.addWebinarEventsListener(webinarEventsListener: self)
+            meeting.doInit(dyteMeetingInfo_: meetingInfo)
+        }
     }
     
     func sendMessage() {
@@ -398,7 +460,11 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     
     func onMeetingInitCompleted() {
         self.localUser = meeting.localUser
+        if !meeting.localUser.permissions.media.canPublishAudio {
+            joinMeeting()
+        }
         self.isInit = true
+        
     }
     
     func onMeetingInitFailed(exception: KotlinException) {
@@ -516,7 +582,8 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
     }
     
     func onActiveParticipantsChanged(active: [DyteJoinedMeetingParticipant]) {
-        
+        self.participants.removeAll()
+        self.participants = meeting.participants.active
     }
     
     func onActiveSpeakerChanged(participant: DyteMeetingParticipant) {
@@ -551,6 +618,14 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
 }
 
 extension GroupVideoCallViewModel: DyteSelfEventsListener {
+    func onStageStatusUpdated(stageStatus: StageStatus) {
+        localUser = nil
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0001) {
+            self.localUser = self.meeting.localUser
+        }
+    }
+    
     func onRoomMessage(message: String) {
         
     }
@@ -576,7 +651,7 @@ extension GroupVideoCallViewModel: DyteSelfEventsListener {
     }
     
     func onRemovedFromMeeting() {
-        
+        isKicked = true
     }
     
     func onStoppedPresenting() {
@@ -592,7 +667,9 @@ extension GroupVideoCallViewModel: DyteSelfEventsListener {
     }
     
     func onWaitListStatusUpdate(waitListStatus: WaitListStatus) {
-        
+        if waitListStatus == .waiting {
+            self.isConnecting = false
+        }
     }
     
     func onWebinarPresentRequestReceived() {
@@ -675,4 +752,39 @@ extension GroupVideoCallViewModel: DyteWaitlistEventsListener {
         
     }
     
+}
+
+extension GroupVideoCallViewModel: DyteWebinarEventsListener {
+    func onAddedToStage() {
+        // when this user is joined to stage
+        localUser = nil
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0001) {
+            self.localUser = self.meeting.localUser
+        }
+    }
+    func onPresentRequestClosed(participant: RequestToPresentParticipant) {
+        // when a user who was trying to join stage leaves the call.
+    }
+    func onPresentRequestReceived() {
+        // when host requests this user to join stage. Here one should give choice to either accept the request or decline it.
+    }
+    func onPresetRequestAccepted(participant: RequestToPresentParticipant) {
+        // when a join stage request is accepted by host
+    }
+    func onPresetRequestAdded(participant: RequestToPresentParticipant) {
+        // when a user is requesting to join the stage
+        self.isRaised = true
+        
+    }
+    func onPresetRequestRejected(participant: RequestToPresentParticipant) {
+        // when a join stage request is denied by host
+    }
+    func onPresetRequestWithdrawn(participant: RequestToPresentParticipant) {
+        // when a user who was trying to join stage withdraws their request to join.
+        self.isRaised = false
+    }
+    func onRemovedFromStage() {
+        // when this user is no longer on stage
+    }
 }
