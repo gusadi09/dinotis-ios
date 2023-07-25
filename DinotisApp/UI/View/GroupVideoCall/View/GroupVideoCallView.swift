@@ -610,10 +610,19 @@ fileprivate extension GroupVideoCallView {
                                 }
                             } label: {
                                 HStack(alignment: .center, spacing: 11) {
-                                    Image.videoCallQuestionIcon
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 23)
+                                    ZStack(alignment: .topTrailing, content: {
+                                        Image.videoCallQuestionIcon
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 23)
+                                        
+                                        if viewModel.hasNewQuestion {
+                                            Circle()
+                                                .scaledToFit()
+                                                .frame(width: 10)
+                                        }
+                                    })
+                                    
                                     
                                     Text(LocalizableText.videoCallQna)
                                         .foregroundColor(.white)
@@ -1338,6 +1347,7 @@ fileprivate extension GroupVideoCallView {
         
         var body: some View {
             VStack(alignment: .leading) {
+                
                 VStack(alignment: .leading) {
                     HStack {
                         Text(LocalizableText.videoCallListQuestionTitle)
@@ -1388,31 +1398,56 @@ fileprivate extension GroupVideoCallView {
                 .background(Color(red: 0.1, green: 0.11, blue: 0.12))
                 
                 TabView(selection: $viewModel.qnaTabSelection) {
-                    ScrollView {
-                        VStack(spacing: 22) {
-                            if !viewModel.dummyQuestionList.isEmpty {
-                                ForEach(0...viewModel.dummyQuestionList.count-1, id: \.self) { index in
-                                    Button {
-                                        viewModel.answerQuestion(at: index)
-                                    } label: {
-                                        QnARowView(data: viewModel.dummyQuestionList[index], hasAnswered: false)
+                    ScrollViewReader { scroll in
+                        ScrollView {
+                            LazyVStack(spacing: 22) {
+                                if !viewModel.questionData.isEmpty {
+                                    ForEach(viewModel.questionData.filter({ item in
+                                        item.isAnswered == false
+                                    }), id: \.id) { item in
+                                        Button {
+                                            viewModel.putQuestion(item: item)
+                                        } label: {
+                                            QnARowView(data: item, hasAnswered: false, viewModel: viewModel)
+                                        }
+                                        .id(item.id)
                                     }
                                 }
                             }
+                            .onAppear {
+                                viewModel.getQuestion(meetingId: viewModel.userMeeting.id.orEmpty())
+                            }
+                            .padding(.horizontal)
+                            .padding(.top)
                         }
-                        .padding(.horizontal)
-                        .padding(.top)
+                        .onChange(of: viewModel.questionData.filter({ item in
+                            item.isAnswered == false
+                        }).count, perform: { _ in
+                            withAnimation {
+                                scroll.scrollTo((viewModel.questionData.filter({ item in
+                                    item.isAnswered == false
+                                }).last?.id).orZero())
+                            }
+                        })
+                        .onChange(
+                            of: viewModel.hasNewQuestion,
+                            perform: { _ in
+                                viewModel.getQuestion(meetingId: viewModel.userMeeting.id.orEmpty())
+                            }
+                        )
                     }
                     .tag(0)
                     
                     ScrollView {
-                        VStack(spacing: 22) {
-                            if !viewModel.dummyAnsweredList.isEmpty {
-                                ForEach(0...viewModel.dummyAnsweredList.count-1, id: \.self) { index in
+                        LazyVStack(spacing: 22) {
+                            if !viewModel.questionData.isEmpty {
+                                ForEach(viewModel.questionData.filter({ item in
+                                    item.isAnswered == true
+                                }), id: \.id) { item in
                                     Button {
-                                        viewModel.unanswerQuestion(at: index)
+                                        viewModel.putQuestion(item: item)
                                     } label: {
-                                        QnARowView(data: viewModel.dummyAnsweredList[index], hasAnswered: true)
+                                        QnARowView(data: item, hasAnswered: true, viewModel: viewModel)
                                     }
                                 }
                             }
@@ -1423,8 +1458,13 @@ fileprivate extension GroupVideoCallView {
                     .tag(1)
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
+                
             }
             .background(Color(red: 0.15, green: 0.16, blue: 0.17))
+            .onDisappear {
+                self.viewModel.hasNewQuestion = false
+            }
+            
         }
     }
     
@@ -1472,8 +1512,7 @@ fileprivate extension GroupVideoCallView {
                 .padding(.horizontal)
                 
                 Button {
-                    viewModel.questionText = ""
-                    presentationMode.wrappedValue.dismiss()
+                    viewModel.postQuestion(meetingId: viewModel.userMeeting.id.orEmpty())
                 } label: {
                     HStack(spacing: 13) {
                         Spacer()
@@ -1504,8 +1543,9 @@ fileprivate extension GroupVideoCallView {
     
     struct QnARowView: View {
         
-        @State var data: DummyQuestion
+        @State var data: QuestionResponse
         @State var hasAnswered: Bool
+        @ObservedObject var viewModel: GroupVideoCallViewModel
         
         var body: some View {
             HStack(alignment: .top, spacing: 18) {
@@ -1525,17 +1565,17 @@ fileprivate extension GroupVideoCallView {
                 
                 VStack(alignment: .leading, spacing: 14) {
                     HStack {
-                        Text(data.name)
+                        Text((data.user?.name).orEmpty())
                             .font(.robotoMedium(size: 12))
                         
                         Spacer()
                         
-                        Text(data.date, style: .time)
+                        Text((data.createdAt).orCurrentDate(), style: .time)
                             .font(.robotoBold(size: 12))
                     }
                     .foregroundColor(Color(red: 0.63, green: 0.64, blue: 0.66))
                     
-                    Text(data.question)
+                    Text((data.question).orEmpty())
                         .font(.robotoMedium(size: 12))
                         .foregroundColor(.white)
                         .multilineTextAlignment(.leading)

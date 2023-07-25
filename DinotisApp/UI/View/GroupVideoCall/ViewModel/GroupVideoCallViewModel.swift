@@ -11,6 +11,7 @@ import UIKit
 import SwiftUI
 import DinotisDesignSystem
 import DinotisData
+import FirebaseDatabase
 
 struct DummyQuestion: Identifiable {
     let id = UUID()
@@ -56,18 +57,20 @@ final class GroupVideoCallViewModel: ObservableObject {
     var backToHome: () -> Void
     
     private let meetRepository: MeetingsRepository
+    private let questionRepository: QuestionRepository
+    
     private let addDyteParticipantUseCase: AddDyteParticipantUseCase
     private var cancellables = Set<AnyCancellable>()
     
     let meeting = DyteiOSClientBuilder().build()
     var localUserId = ""
     
-//    let meetingInfo = DyteMeetingInfoV2(
-//        authToken: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdJZCI6IjQ2ODdlYjllLWMyNjItNDhmOS1iZWI0LTQ3ODhiNjJlYjY4YSIsIm1lZXRpbmdJZCI6ImJiYjBiMDk0LTY2MmEtNDllMS1hMTk4LTViNGQ0ODcwYmVjOSIsInBhcnRpY2lwYW50SWQiOiJhYWE5ZDUzMS1hODU1LTRhNGUtYTMxYS05Yjg1NDEyNzcxZDUiLCJwcmVzZXRJZCI6IjcyMDA2ZmQ4LWUxYjItNGZiMS05MGQzLWIxNDg3NmUwZjkyMSIsImlhdCI6MTY4OTU4NTg5MCwiZXhwIjoxNjk4MjI1ODkwfQ.dCaZ5JTSYM8sHx2Ge5cl58pM8j-wXIUCD_bASgdD6CeBKsxrHbZxv7LGGP1F4_6iYZya2Y7APxMUIIeFWp4sjQqUnjKcwo1_jhVDzl6pkC0aBdPa9r0ZunfG80Gix-LBM223pX8FJC914nIFffbxG8xKb9UkoRo73SmP9xEX8Ak5V6KO8yLtBLZI1wFO7YcEffx36uRQjRXMv8xFrH148fxIlbNNAIqhXwfaZ2dAi14hv359SY9PYnJI008BaAOaOFNJE0d-ka41wVO3WBTS14g8P2r5R3tDYfyFuWV8z0HroBO35e1fP2KAyZ0LVbpzsM3A8TfEWfHuOs_R4yURSw",
-//        enableAudio: true,
-//        enableVideo: true,
-//        baseUrl: "https://api.cluster.dyte.in/v2"
-//    )
+    //    let meetingInfo = DyteMeetingInfoV2(
+    //        authToken: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdJZCI6IjQ2ODdlYjllLWMyNjItNDhmOS1iZWI0LTQ3ODhiNjJlYjY4YSIsIm1lZXRpbmdJZCI6ImJiYjBiMDk0LTY2MmEtNDllMS1hMTk4LTViNGQ0ODcwYmVjOSIsInBhcnRpY2lwYW50SWQiOiJhYWE5ZDUzMS1hODU1LTRhNGUtYTMxYS05Yjg1NDEyNzcxZDUiLCJwcmVzZXRJZCI6IjcyMDA2ZmQ4LWUxYjItNGZiMS05MGQzLWIxNDg3NmUwZjkyMSIsImlhdCI6MTY4OTU4NTg5MCwiZXhwIjoxNjk4MjI1ODkwfQ.dCaZ5JTSYM8sHx2Ge5cl58pM8j-wXIUCD_bASgdD6CeBKsxrHbZxv7LGGP1F4_6iYZya2Y7APxMUIIeFWp4sjQqUnjKcwo1_jhVDzl6pkC0aBdPa9r0ZunfG80Gix-LBM223pX8FJC914nIFffbxG8xKb9UkoRo73SmP9xEX8Ak5V6KO8yLtBLZI1wFO7YcEffx36uRQjRXMv8xFrH148fxIlbNNAIqhXwfaZ2dAi14hv359SY9PYnJI008BaAOaOFNJE0d-ka41wVO3WBTS14g8P2r5R3tDYfyFuWV8z0HroBO35e1fP2KAyZ0LVbpzsM3A8TfEWfHuOs_R4yURSw",
+    //        enableAudio: true,
+    //        enableVideo: true,
+    //        baseUrl: "https://api.cluster.dyte.in/v2"
+    //    )
     
     var meetingInfo = DyteMeetingInfoV2(
         authToken: "",
@@ -119,6 +122,15 @@ final class GroupVideoCallViewModel: ObservableObject {
     
     @Published var isKicked = false
     
+    @Published var questionData = Question()
+    @Published var questionResponse: QuestionResponse?
+    @Published var isLoadingQuestion: Bool = false
+    @Published var isErrorQuestion: Bool = false
+    @Published var errorQuestion: String?
+    @Published var successQuestion: Bool = false
+    @Published var hasNewQuestion = false
+    
+    
     @Published var bottomSheetTabItems: [TabBarItem] = [
         .init(id: 0, title: LocalizableText.labelChat),
         .init(id: 1, title: LocalizableText.participant),
@@ -156,6 +168,7 @@ final class GroupVideoCallViewModel: ObservableObject {
         }
     }
     
+    
     var joiningParticipant: [DummyParticipantModel] {
         searchedParticipant.filter({ $0.isJoining })
     }
@@ -182,6 +195,7 @@ final class GroupVideoCallViewModel: ObservableObject {
         backToHome: @escaping () -> Void,
         meetRepository: MeetingsRepository = MeetingsDefaultRepository(),
         userMeeting: UserMeetingData,
+        questRepository: QuestionRepository = QuestionDefaultRepository(),
         addDyteParticipantUseCase: AddDyteParticipantUseCase = AddDyteParticipantDefaultUseCase()
     ) {
         self.backToHome = backToHome
@@ -190,6 +204,7 @@ final class GroupVideoCallViewModel: ObservableObject {
         self.userMeeting = userMeeting
         self.futureDate = userMeeting.endAt.orCurrentDate()
         self.addDyteParticipantUseCase = addDyteParticipantUseCase
+        self.questionRepository = questRepository
         
         var names: [String] = []
         names.append((userMeeting.user?.name).orEmpty())
@@ -215,6 +230,7 @@ final class GroupVideoCallViewModel: ObservableObject {
                 enableVideo: true,
                 baseUrl: "https://api.cluster.dyte.in/v2"
             )
+            self.listenRoomDocument(object: data.roomDocument.orEmpty())
         case .failure(let error):
             handleDefaultError(error: error)
         }
@@ -251,6 +267,8 @@ final class GroupVideoCallViewModel: ObservableObject {
         }
     }
     
+    
+    
     func userType(preset: String) -> String {
         if preset == PresetConstant.admin.value {
             return "(Admin)"
@@ -261,6 +279,143 @@ final class GroupVideoCallViewModel: ObservableObject {
         } else {
             return ""
         }
+    }
+    
+    func getQuestion(meetingId: String) {
+        
+        questionRepository.provideGetQuestion(meetingId: meetingId)
+            .sink { result in
+                switch result {
+                case .failure(let error):
+                    DispatchQueue.main.async {[weak self] in
+                        if error.statusCode.orZero() == 401 {
+                            
+                        } else {
+                            self?.isError = true
+                            
+                            self?.error = error.message.orEmpty()
+                        }
+                    }
+                    
+                case .finished:
+                    DispatchQueue.main.async { [weak self] in
+                        self?.success = true
+                    }
+                    
+                }
+            } receiveValue: { value in
+                self.questionData = value
+            }
+            .store(in: &cancellables)
+        
+    }
+    
+    func putQuestion(item: QuestionResponse) {
+        
+        let parameter = QuestionBodyParam(isAnswered: !(item.isAnswered ?? false))
+        
+        questionRepository.providePutQuestion(questionId: item.id.orZero(), params: parameter)
+            .sink { result in
+                switch result {
+                case .failure(let error):
+                    DispatchQueue.main.async {[weak self] in
+                        if error.statusCode.orZero() == 401 {
+                            
+                        } else {
+                            self?.isError = true
+                            
+                            self?.error = error.message.orEmpty()
+                        }
+                    }
+                    
+                case .finished:
+                    DispatchQueue.main.async { [weak self] in
+                        self?.success = true
+                        
+                    }
+                }
+            } receiveValue: { [self] value in
+                questionResponse = value
+                getQuestion(meetingId: userMeeting.id.orEmpty())
+                
+            }
+            .store(in: &cancellables)
+    }
+    
+    func startPostQuestion() {
+        DispatchQueue.main.async {[weak self] in
+            self?.isLoadingQuestion = true
+            self?.isErrorQuestion = false
+            self?.errorQuestion = nil
+            self?.successQuestion = false
+        }
+    }
+    
+    func postQuestion(meetingId: String) {
+        startPostQuestion()
+        
+        let params = QuestionParams(question: questionText, meetingId: meetingId, userId: StateObservable.shared.userId)
+        
+        questionRepository.provideSendQuestion(params: params)
+            .sink { result in
+                switch result {
+                case .failure(let error):
+                    DispatchQueue.main.async {[weak self] in
+                        if error.statusCode.orZero() == 401 {
+                            
+                        } else {
+                            self?.isLoadingQuestion = false
+                            self?.isErrorQuestion = true
+                            
+                            self?.errorQuestion = error.message.orEmpty()
+                        }
+                    }
+                    
+                case .finished:
+                    DispatchQueue.main.async { [weak self] in
+                        self?.successQuestion = true
+                        self?.isLoadingQuestion = false
+                        self?.isShowQuestionBox.toggle()
+                        self?.questionText = ""
+                    }
+                }
+            } receiveValue: { response in
+                self.questionResponse = response
+            }
+            .store(in: &cancellables)
+        
+    }
+    
+    private func listenRoomDocument(object: String) {
+        lazy var databasePathRoomDoc: DatabaseReference? = {
+            let ref = Database.database(url: Configuration.shared.environment.firebaseRealtimeURL).reference(withPath: object)
+            
+            return ref
+        }()
+        
+        guard let databasePathRoomDoc = databasePathRoomDoc else {
+            return
+        }
+        
+        databasePathRoomDoc
+            .observe(.value) { snapshot, _ in
+                guard
+                    let json = snapshot.value as? [String: Any]
+                else {
+                    return
+                }
+                
+                if let qna = json["qnaSent"] as? Bool {
+                    self.hasNewQuestion = qna
+                }
+                
+            }
+    }
+    
+    func qnaFiltered() -> Question {
+        return questionData.filter({ item in
+            qnaTabSelection == 0 ? !(item.isAnswered ?? false) : (item.isAnswered ?? false)
+        })
     }
     
     func unanswerQuestion(at index: Int) {
@@ -482,8 +637,8 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
             joinMeeting()
         }
         self.isInit = true
-        
     }
+    
     
     func onMeetingInitFailed(exception: KotlinException) {
         self.isInit = false
