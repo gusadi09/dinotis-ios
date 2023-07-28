@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/dyte-in/DyteMobileCoreiOS.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "f49b42b47ed0dd61d9fa65d2790333d82e7a4d04"
+        "revision" : "1e13995bb25cbb3d2865dcda7bfd83a504ed7c5b",
+        "version" : "0.7.1"
       }
     },
     {
@@ -257,8 +257,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-protobuf.git",
       "state" : {
-        "revision" : "f25867a208f459d3c5a06935dceb9083b11cd539",
-        "version" : "1.22.0"
+        "revision" : "ce20dc083ee485524b802669890291c0d8090170",
+        "version" : "1.22.1"
       }
     },
     {

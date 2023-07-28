@@ -388,7 +388,7 @@ final class ScheduleDetailViewModel: ObservableObject {
             updatedAt: meet.updatedAt,
             deletedAt: meet.deletedAt,
             bookings: [],
-			user: nil,
+            user: meet.user,
 			participantDetails: [],
 			meetingBundleId: meet.meetingBundleId,
 			meetingRequestId: meet.meetingRequestId,

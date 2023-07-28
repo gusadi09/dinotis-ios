@@ -156,14 +156,15 @@ fileprivate extension GroupVideoCallView {
                     
                     VStack {
                         ScrollView {
-                            if viewModel.isJoined {
-                                LazyVGrid(columns: [GridItem(.adaptive(minimum: 176))]) {
-                                    ForEach($viewModel.participants, id: \.id) { item in
-                                        RemoteUserJoinedTileVideoContainerView(viewModel: viewModel, participant: item)
+                            LazyVStack {
+                                if viewModel.isJoined {
+                                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 176))]) {
+                                        ForEach($viewModel.participants, id: \.id) { item in
+                                            RemoteUserJoinedTileVideoContainerView(viewModel: viewModel, participant: item)
+                                        }
                                     }
                                 }
                             }
-                            
                         }
                     }
                     .tag(1)
@@ -618,6 +619,7 @@ fileprivate extension GroupVideoCallView {
                                         
                                         if viewModel.hasNewQuestion {
                                             Circle()
+                                                .foregroundColor(.red)
                                                 .scaledToFit()
                                                 .frame(width: 10)
                                         }
@@ -671,6 +673,7 @@ fileprivate extension GroupVideoCallView {
                             .padding(15)
                             .contentShape(Rectangle())
                         }
+                        .isHidden(true, remove: true)
                         
                         Button {
                             viewModel.showingMoreMenu = false
@@ -728,6 +731,7 @@ fileprivate extension GroupVideoCallView {
                                 .padding(15)
                                 .contentShape(Rectangle())
                             }
+                            .isHidden(true, remove: true)
                         }
                         
                         Button {
@@ -776,12 +780,10 @@ fileprivate extension GroupVideoCallView {
                         if viewModel.localUser?.permissions.media.canPublishAudio ?? false {
                             viewModel.toggleMicrophone()
                         } else {
-                            if viewModel.meeting.webinar.canJoinStage() {
-                                if viewModel.isRaised {
-                                    viewModel.meeting.webinar.withdrawRequestToJoin()
-                                } else {
-                                    viewModel.meeting.webinar.requestToJoin()
-                                }
+                            if viewModel.isRaised {
+                                viewModel.meeting.stage.cancelRequestAccess()
+                            } else {
+                                viewModel.meeting.stage.requestAccess()
                             }
                         }
                     }
@@ -883,14 +885,19 @@ fileprivate extension GroupVideoCallView {
                                 .scaledToFit()
                                 .frame(height: 45)
                         }
+                        
+                        if viewModel.hasNewQuestion {
+                            Circle()
+                                .foregroundColor(.red)
+                                .scaledToFit()
+                                .frame(width: 10)
+                        }
                     }
                 }
                 
                 Button {
                     withAnimation(.spring()) {
                         viewModel.leaveMeeting()
-                        //                        MARK: For Testing Only. Remove this when the feature is ready
-                        //                        viewModel.isShowQuestionBox.toggle()
                     }
                 } label: {
                     ZStack {
@@ -1610,17 +1617,21 @@ fileprivate extension GroupVideoCallView {
                 
                 List {
                     if viewModel.localUser?.canDoParticipantHostControls() ?? false {
-                        if !viewModel.meeting.webinar.requestedParticipants.isEmpty {
+                        if !viewModel.meeting.stage.accessRequests.isEmpty {
                             Section(
                                 header: HStack {
-                                    Text("\(LocalizableText.videoCallJoinStageRequest) (\(viewModel.meeting.webinar.requestedParticipants.count))")
+                                    Text("\(LocalizableText.videoCallJoinStageRequest) (\(viewModel.meeting.stage.accessRequests.count))")
                                         .font(.robotoBold(size: 16))
                                         .foregroundColor(.white)
                                     
                                     Spacer()
                                     
                                     Button {
-                                        viewModel.meeting.webinar.acceptAllRequest()
+                                        let ids = viewModel.meeting.stage.accessRequests.compactMap { item in
+                                            item.id
+                                        }
+                                        
+                                        viewModel.meeting.stage.grantAccess(ids: ids)
                                     } label: {
                                         Text(LocalizableText.acceptAllLabel)
                                             .font(.robotoBold(size: 12))
@@ -1634,11 +1645,11 @@ fileprivate extension GroupVideoCallView {
                                     .buttonStyle(.plain)
                                 }
                             ) {
-                                ForEach(viewModel.meeting.webinar.requestedParticipants, id: \.id) { participant in
+                                ForEach(viewModel.meeting.stage.accessRequests, id: \.id) { participant in
                                     HStack(spacing: 16) {
-                                        Circle()
-                                            .foregroundColor(Color.DinotisDefault.primary)
+                                        ImageLoader(url: participant.picture, width: 42, height: 42)
                                             .frame(width: 42, height: 42)
+                                            .clipShape(Circle())
                                         
                                         Text(participant.name)
                                             .font(.robotoBold(size: 16))
@@ -1647,7 +1658,7 @@ fileprivate extension GroupVideoCallView {
                                         Spacer()
                                         
                                         Button {
-                                            viewModel.meeting.webinar.acceptRequest(id: participant.id)
+                                            viewModel.meeting.stage.grantAccess(ids: [participant.id])
                                         } label: {
                                             Text(LocalizableText.acceptToJoinLabel)
                                                 .font(.robotoBold(size: 12))
@@ -1697,9 +1708,9 @@ fileprivate extension GroupVideoCallView {
                             ) {
                                 ForEach(viewModel.meeting.participants.waitlisted, id: \.id) { participant in
                                     HStack(spacing: 16) {
-                                        Circle()
-                                            .foregroundColor(Color.DinotisDefault.primary)
+                                        ImageLoader(url: participant.picture, width: 42, height: 42)
                                             .frame(width: 42, height: 42)
+                                            .clipShape(Circle())
                                         
                                         Text(participant.name)
                                             .font(.robotoBold(size: 16))
@@ -1749,9 +1760,9 @@ fileprivate extension GroupVideoCallView {
                         ) {
                             ForEach(viewModel.participants.unique(), id: \.id) { participant in
                                 HStack(spacing: 16) {
-                                    Circle()
-                                        .foregroundColor(Color.DinotisDefault.primary)
+                                    ImageLoader(url: participant.picture, width: 42, height: 42)
                                         .frame(width: 42, height: 42)
+                                        .clipShape(Circle())
                                     
                                     Text("\(participant.name) \(viewModel.userType(preset: participant.presetName))")
                                         .font(.robotoBold(size: 16))
@@ -1773,8 +1784,14 @@ fileprivate extension GroupVideoCallView {
                                         if viewModel.localUser?.canDoParticipantHostControls() ?? false {
                                             Menu {
                                                 Button {
+                                                    
                                                     do {
-                                                        try participant.pin()
+                                                        if participant.isPinned {
+                                                            try participant.pin()
+                                                        } else {
+                                                            try participant.unpin()
+                                                        }
+                                                        
                                                     }catch {
                                                         
                                                     }
@@ -1819,7 +1836,7 @@ fileprivate extension GroupVideoCallView {
                                                 
                                                 if participant.id != (viewModel.localUser?.id).orEmpty() {
                                                     Button(role: .destructive) {
-                                                    
+                                                        viewModel.meeting.stage.kick(id: participant.id)
                                                     } label: {
                                                         Image.videoCallPutParticipant
                                                             .resizable()
@@ -1890,9 +1907,9 @@ fileprivate extension GroupVideoCallView {
                         ) {
                             ForEach(viewModel.filteredViewerParticipants(), id: \.id) { participant in
                                 HStack(spacing: 16) {
-                                    Circle()
-                                        .foregroundColor(.blue)
+                                    ImageLoader(url: participant.picture, width: 42, height: 42)
                                         .frame(width: 42, height: 42)
+                                        .clipShape(Circle())
                                     
                                     Text(participant.name)
                                         .font(.robotoBold(size: 16))

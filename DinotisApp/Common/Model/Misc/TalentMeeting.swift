@@ -104,7 +104,7 @@ struct DetailMeeting: Codable {
 	var deletedAt: Date?
 	let meetingBundleId: String?
 	let meetingRequestId: String?
-	let user: User?
+	let user: UserResponse?
 	var bookings: [BookingMeeting]?
 	var participantDetails: [User]
 	let status: String?

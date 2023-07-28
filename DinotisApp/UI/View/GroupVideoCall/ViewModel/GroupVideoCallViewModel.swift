@@ -62,15 +62,8 @@ final class GroupVideoCallViewModel: ObservableObject {
     private let addDyteParticipantUseCase: AddDyteParticipantUseCase
     private var cancellables = Set<AnyCancellable>()
     
-    let meeting = DyteiOSClientBuilder().build()
+    @Published var meeting = DyteiOSClientBuilder().build()
     var localUserId = ""
-    
-    //    let meetingInfo = DyteMeetingInfoV2(
-    //        authToken: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdJZCI6IjQ2ODdlYjllLWMyNjItNDhmOS1iZWI0LTQ3ODhiNjJlYjY4YSIsIm1lZXRpbmdJZCI6ImJiYjBiMDk0LTY2MmEtNDllMS1hMTk4LTViNGQ0ODcwYmVjOSIsInBhcnRpY2lwYW50SWQiOiJhYWE5ZDUzMS1hODU1LTRhNGUtYTMxYS05Yjg1NDEyNzcxZDUiLCJwcmVzZXRJZCI6IjcyMDA2ZmQ4LWUxYjItNGZiMS05MGQzLWIxNDg3NmUwZjkyMSIsImlhdCI6MTY4OTU4NTg5MCwiZXhwIjoxNjk4MjI1ODkwfQ.dCaZ5JTSYM8sHx2Ge5cl58pM8j-wXIUCD_bASgdD6CeBKsxrHbZxv7LGGP1F4_6iYZya2Y7APxMUIIeFWp4sjQqUnjKcwo1_jhVDzl6pkC0aBdPa9r0ZunfG80Gix-LBM223pX8FJC914nIFffbxG8xKb9UkoRo73SmP9xEX8Ak5V6KO8yLtBLZI1wFO7YcEffx36uRQjRXMv8xFrH148fxIlbNNAIqhXwfaZ2dAi14hv359SY9PYnJI008BaAOaOFNJE0d-ka41wVO3WBTS14g8P2r5R3tDYfyFuWV8z0HroBO35e1fP2KAyZ0LVbpzsM3A8TfEWfHuOs_R4yURSw",
-    //        enableAudio: true,
-    //        enableVideo: true,
-    //        baseUrl: "https://api.cluster.dyte.in/v2"
-    //    )
     
     var meetingInfo = DyteMeetingInfoV2(
         authToken: "",
@@ -78,6 +71,8 @@ final class GroupVideoCallViewModel: ObservableObject {
         enableVideo: true,
         baseUrl: "https://api.cluster.dyte.in/v2"
     )
+    
+    @Published var currentPage: Int32 = 0
     
     @Published var userMeeting: UserMeetingData
     @Published var hostNames: String = ""
@@ -189,6 +184,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var kicked: DyteJoinedMeetingParticipant?
     
     @Published var isRefreshFailed = false
+    @Published var isReceivedStageInvite = false
     
     init(
         backToRoot: @escaping () -> Void,
@@ -212,6 +208,7 @@ final class GroupVideoCallViewModel: ObservableObject {
             (item.user?.name).orEmpty()
         }) ?? [])
         self.hostNames = names.joined(separator: ", ")
+        
     }
     
     @MainActor
@@ -578,7 +575,7 @@ final class GroupVideoCallViewModel: ObservableObject {
             meeting.addPollEventsListener(pollEventsListener: self)
             meeting.addRecordingEventsListener(recordingEventsListener: self)
             meeting.addWaitlistEventsListener(waitlistEventsListener: self)
-            meeting.addWebinarEventsListener(webinarEventsListener: self)
+            meeting.addStageEventsListener(stageEventsListener: self)
             meeting.doInit(dyteMeetingInfo_: meetingInfo)
         }
     }
@@ -847,7 +844,7 @@ extension GroupVideoCallViewModel: DyteSelfEventsListener {
     }
     
     func onWebinarPresentRequestReceived() {
-        
+        print("TRIGERREDX")
     }
     
 }
@@ -910,25 +907,9 @@ extension GroupVideoCallViewModel: DyteWaitlistEventsListener {
         
     }
     
-    func onWaitListParticipantAccepted(participant: DyteMeetingParticipant) {
-        
-    }
-    
-    func onWaitListParticipantClosed(participant: DyteMeetingParticipant) {
-        
-    }
-    
-    func onWaitListParticipantJoined(participant: DyteMeetingParticipant) {
-        
-    }
-    
-    func onWaitListParticipantRejected(participant: DyteMeetingParticipant) {
-        
-    }
-    
 }
 
-extension GroupVideoCallViewModel: DyteWebinarEventsListener {
+extension GroupVideoCallViewModel: DyteStageEventListener {
     func onAddedToStage() {
         // when this user is joined to stage
         localUser = nil
@@ -937,28 +918,41 @@ extension GroupVideoCallViewModel: DyteWebinarEventsListener {
             self.localUser = self.meeting.localUser
         }
     }
-    func onPresentRequestClosed(participant: RequestToPresentParticipant) {
-        // when a user who was trying to join stage leaves the call.
-    }
-    func onPresentRequestReceived() {
-        // when host requests this user to join stage. Here one should give choice to either accept the request or decline it.
-    }
-    func onPresetRequestAccepted(participant: RequestToPresentParticipant) {
-        // when a join stage request is accepted by host
-    }
-    func onPresetRequestAdded(participant: RequestToPresentParticipant) {
-        // when a user is requesting to join the stage
-        self.isRaised = true
+    
+    func onPresentRequestAccepted(participant: DyteStageParticipant) {
         
     }
-    func onPresetRequestRejected(participant: RequestToPresentParticipant) {
-        // when a join stage request is denied by host
+    
+    func onPresentRequestAdded(participant: DyteStageParticipant) {
+        
     }
-    func onPresetRequestWithdrawn(participant: RequestToPresentParticipant) {
-        // when a user who was trying to join stage withdraws their request to join.
-        self.isRaised = false
+    
+    func onPresentRequestClosed(participant: DyteStageParticipant) {
+        
     }
+    
+    func onPresentRequestReceived() {
+        
+    }
+    
+    func onPresentRequestRejected(participant: DyteStageParticipant) {
+        
+    }
+    
+    func onPresentRequestWithdrawn(participant: DyteStageParticipant) {
+        
+    }
+    
     func onRemovedFromStage() {
         // when this user is no longer on stage
+        localUser = nil
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0001) {
+            self.localUser = self.meeting.localUser
+        }
+    }
+    
+    func onStageRequestsUpdated(accessRequests: [DyteStageParticipant]) {
+        
     }
 }
