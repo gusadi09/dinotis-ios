@@ -1947,4 +1947,9 @@ public enum LocalizableText {
         bundle: .module,
         comment: "reschedule warning when creator wants to edit the schedule"
     )
+    public static let videoCallPutToSpeaker = NSLocalizedString(
+        "video-call-put-to-speaker",
+        bundle: .module,
+        comment: "video call viewer put to speaker"
+    )
 }
