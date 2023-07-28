@@ -1599,6 +1599,7 @@ fileprivate extension GroupVideoCallView {
         
         @ObservedObject var viewModel: GroupVideoCallViewModel
         @State var isAlert: Bool = false
+        @State var isAlertPutToSpeaker: Bool = false
         
         var body: some View {
             VStack {
@@ -1927,7 +1928,58 @@ fileprivate extension GroupVideoCallView {
                                             .resizable()
                                             .scaledToFit()
                                             .frame(width: 24)
+                                        
+                                        if viewModel.localUser?.canDoParticipantHostControls() ?? false {
+                                            Menu {
+                                                if participant.id != (viewModel.localUser?.id).orEmpty() {
+                                                    Button {
+                                                    
+                                                    } label: {
+                                                        Image.videoCallPutToSpeaker
+                                                            .resizable()
+                                                            .scaledToFit()
+                                                            .frame(width: 24)
+                                                        Text(LocalizableText.videoCallPutToSpeaker)
+                                                        
+                                                    }
+                                                }
+                                                
+                                                if participant.id != (viewModel.localUser?.id).orEmpty() {
+                                                    Button(role: .destructive) {
+                                                        isAlertPutToSpeaker.toggle()
+                                                        
+                                                    } label: {
+                                                        Image.videoCallKickParticipantIcon
+                                                            .resizable()
+                                                            .scaledToFit()
+                                                            .frame(width: 24)
+                                                        Text(LocalizableText.videoCallKickFromSession)
+                                                    }
+                                                }
+                                            } label: {
+                                                Image.videoCallMenu
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .frame(width: 24)
+                                            }
+                                            .foregroundColor(.white)
+                                        }
                                     }
+                                    .alert(isPresented: $isAlertPutToSpeaker) { () -> Alert in
+                                        Alert(title: Text(""), message: Text(LocalizableText.videoCallKickAlertFromSession), primaryButton: .default(Text(LocalizableText.videoCallKickAlertPrimaryButton)), secondaryButton: .default(Text(LocalizableText.videoCallKickAlertSecondaryButton), action: {
+                                            do {
+                                                guard let index = viewModel.participants.firstIndex(where: { item in
+                                                    item.id == participant.id
+                                                })
+                                               else {
+                                                   return
+                                               }
+                                                try viewModel.participants[index].kick()
+                                            }catch {
+                                                print("error kick")
+                                            }
+                                        }))
+                                }
                                 }
                                 .listRowSeparator(.hidden)
                             }
