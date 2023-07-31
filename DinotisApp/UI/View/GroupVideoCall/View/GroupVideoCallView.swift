@@ -683,10 +683,19 @@ fileprivate extension GroupVideoCallView {
                             }
                         } label: {
                             HStack(alignment: .center, spacing: 11) {
-                                Image.videoCallNewParticipantIcon
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 23)
+                                ZStack(alignment: .topTrailing, content: {
+                                    Image.videoCallNewParticipantIcon
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 23)
+                                    
+                                    if viewModel.hasNewParticipantRequest {
+                                        Circle()
+                                            .foregroundColor(.red)
+                                            .scaledToFit()
+                                            .frame(width: 10)
+                                    }
+                                })
                                 
                                 Text(LocalizableText.participant)
                                     .foregroundColor(.white)
@@ -886,7 +895,7 @@ fileprivate extension GroupVideoCallView {
                                 .frame(height: 45)
                         }
                         
-                        if viewModel.hasNewQuestion {
+                        if viewModel.hasNewQuestion || viewModel.hasNewParticipantRequest {
                             Circle()
                                 .foregroundColor(.red)
                                 .scaledToFit()
@@ -1989,6 +1998,9 @@ fileprivate extension GroupVideoCallView {
                 }
                 .listStyle(PlainListStyle())
                 .animation(.spring(), value: viewModel.searchedParticipant)
+                .onAppear {
+                    viewModel.hasNewParticipantRequest = false
+                }
             }
         }
     }

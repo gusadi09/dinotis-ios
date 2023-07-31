@@ -124,6 +124,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var errorQuestion: String?
     @Published var successQuestion: Bool = false
     @Published var hasNewQuestion = false
+    @Published var hasNewParticipantRequest = false
     
     
     @Published var bottomSheetTabItems: [TabBarItem] = [
@@ -900,7 +901,7 @@ extension GroupVideoCallViewModel: DyteWaitlistEventsListener {
     }
     
     func onWaitListParticipantJoined(participant: DyteWaitlistedParticipant) {
-        
+        self.hasNewParticipantRequest = true
     }
     
     func onWaitListParticipantRejected(participant: DyteWaitlistedParticipant) {
@@ -924,7 +925,7 @@ extension GroupVideoCallViewModel: DyteStageEventListener {
     }
     
     func onPresentRequestAdded(participant: DyteStageParticipant) {
-        
+        self.hasNewParticipantRequest = true
     }
     
     func onPresentRequestClosed(participant: DyteStageParticipant) {
