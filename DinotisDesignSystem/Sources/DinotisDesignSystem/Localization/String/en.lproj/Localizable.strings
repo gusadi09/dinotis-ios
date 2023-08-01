@@ -432,4 +432,6 @@
 "video_call_secondary_button_alert_kick_participant" = "Yes";
 "video_call_waiting_room_title" = "Waiting Room";
 "video_call_waiting_room_desc" = "You are in the waiting room, the host will let you in soon.";
-"video-call-put-to-speaker" = "Put to speaker"
+"video-call-put-to-speaker" = "Put to speaker";
+"video_call_qna_empty" = "Engage Your Participants with a Questions";
+"video_call_qna_answered_empty" = "No question was answered";

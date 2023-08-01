@@ -565,8 +565,8 @@ final class GroupVideoCallViewModel: ObservableObject {
     
     func onAppear() {
         disableIdleTimer()
+        getRealTime()
         Task {
-            getRealTime()
             await addParticipant()
             meeting.addMeetingRoomEventsListener(meetingRoomEventsListener: self)
             meeting.addParticipantEventsListener(participantEventsListener: self)

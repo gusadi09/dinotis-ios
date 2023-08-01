@@ -895,7 +895,7 @@ fileprivate extension GroupVideoCallView {
                                 .frame(height: 45)
                         }
                         
-                        if viewModel.hasNewQuestion || viewModel.hasNewParticipantRequest {
+                        if (viewModel.hasNewQuestion || viewModel.hasNewParticipantRequest) && (viewModel.localUser?.canDoParticipantHostControls() ?? false) {
                             Circle()
                                 .foregroundColor(.red)
                                 .scaledToFit()
@@ -1415,26 +1415,44 @@ fileprivate extension GroupVideoCallView {
                 
                 TabView(selection: $viewModel.qnaTabSelection) {
                     ScrollViewReader { scroll in
-                        ScrollView {
-                            LazyVStack(spacing: 22) {
-                                if !viewModel.questionData.isEmpty {
-                                    ForEach(viewModel.questionData.filter({ item in
-                                        item.isAnswered == false
-                                    }), id: \.id) { item in
-                                        Button {
-                                            viewModel.putQuestion(item: item)
-                                        } label: {
-                                            QnARowView(data: item, hasAnswered: false, viewModel: viewModel)
+                        Group {
+                            if !viewModel.questionData.filter({ item in
+                                item.isAnswered == false
+                            }).isEmpty {
+                                ScrollView {
+                                    LazyVStack(spacing: 22) {
+                                        
+                                        ForEach(viewModel.questionData.filter({ item in
+                                            item.isAnswered == false
+                                        }), id: \.id) { item in
+                                            Button {
+                                                viewModel.putQuestion(item: item)
+                                            } label: {
+                                                QnARowView(data: item, hasAnswered: false, viewModel: viewModel)
+                                            }
+                                            .id(item.id)
                                         }
-                                        .id(item.id)
+                                        
                                     }
+                                    .padding(.horizontal)
+                                    .padding(.top)
+                                }
+                                
+                            } else {
+                                LazyVStack {
+                                    Spacer()
+                                    
+                                    Text(LocalizableText.videoCallQnAEmptyText)
+                                        .font(.robotoRegular(size: 12))
+                                        .foregroundColor(.DinotisDefault.black3)
+                                        .multilineTextAlignment(.center)
+                                    
+                                    Spacer()
                                 }
                             }
-                            .onAppear {
-                                viewModel.getQuestion(meetingId: viewModel.userMeeting.id.orEmpty())
-                            }
-                            .padding(.horizontal)
-                            .padding(.top)
+                        }
+                        .onAppear {
+                            viewModel.getQuestion(meetingId: viewModel.userMeeting.id.orEmpty())
                         }
                         .onChange(of: viewModel.questionData.filter({ item in
                             item.isAnswered == false
@@ -1454,22 +1472,39 @@ fileprivate extension GroupVideoCallView {
                     }
                     .tag(0)
                     
-                    ScrollView {
-                        LazyVStack(spacing: 22) {
-                            if !viewModel.questionData.isEmpty {
-                                ForEach(viewModel.questionData.filter({ item in
-                                    item.isAnswered == true
-                                }), id: \.id) { item in
-                                    Button {
-                                        viewModel.putQuestion(item: item)
-                                    } label: {
-                                        QnARowView(data: item, hasAnswered: true, viewModel: viewModel)
+                    Group {
+                        if !viewModel.questionData.filter({ item in
+                            item.isAnswered == true
+                        }).isEmpty {
+                            ScrollView {
+                                LazyVStack(spacing: 22) {
+                                    
+                                    ForEach(viewModel.questionData.filter({ item in
+                                        item.isAnswered == true
+                                    }), id: \.id) { item in
+                                        Button {
+                                            viewModel.putQuestion(item: item)
+                                        } label: {
+                                            QnARowView(data: item, hasAnswered: true, viewModel: viewModel)
+                                        }
                                     }
+                                    
                                 }
+                                .padding(.horizontal)
+                                .padding(.top)
+                            }
+                        } else {
+                            LazyVStack {
+                                Spacer()
+                                
+                                Text(LocalizableText.videoCallQnaAnsweredEmptyText)
+                                    .font(.robotoRegular(size: 12))
+                                    .foregroundColor(.DinotisDefault.black3)
+                                    .multilineTextAlignment(.center)
+                                
+                                Spacer()
                             }
                         }
-                        .padding(.horizontal)
-                        .padding(.top)
                     }
                     .tag(1)
                 }

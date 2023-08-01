@@ -432,3 +432,5 @@
 "video_call_waiting_room_title" = "Ruang Tunggu";
 "video_call_waiting_room_desc" = "Anda berada di ruang tunggu, host akan segera mengizinkan Anda masuk.";
 "video-call-put-to-speaker" = "Pindahkan ke speaker";
+"video_call_qna_empty" = "Ayo ajak peserta untuk menanyakan sesuatu";
+"video_call_qna_answered_empty" = "Belum ada pertanyaan yang terjawab";

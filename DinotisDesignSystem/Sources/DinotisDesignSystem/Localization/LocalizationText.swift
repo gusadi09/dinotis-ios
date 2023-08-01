@@ -1952,4 +1952,14 @@ public enum LocalizableText {
         bundle: .module,
         comment: "video call viewer put to speaker"
     )
+    public static let videoCallQnAEmptyText = NSLocalizedString(
+        "video_call_qna_empty",
+        bundle: .module,
+        comment: "empty state qna text"
+    )
+    public static let videoCallQnaAnsweredEmptyText = NSLocalizedString(
+        "video_call_qna_answered_empty",
+        bundle: .module,
+        comment: "empty state qna answered text"
+    )
 }
