@@ -1657,9 +1657,9 @@ fileprivate extension GroupVideoCallView {
                             ) {
                                 ForEach(viewModel.meeting.stage.accessRequests, id: \.id) { participant in
                                     HStack(spacing: 16) {
-                                        ImageLoader(url: participant.picture, width: 42, height: 42)
-                                            .frame(width: 42, height: 42)
-                                            .clipShape(Circle())
+//                                        ImageLoader(url: participant.picture, width: 42, height: 42)
+//                                            .frame(width: 42, height: 42)
+//                                            .clipShape(Circle())
                                         
                                         Text(participant.name)
                                             .font(.robotoBold(size: 16))
@@ -1718,7 +1718,7 @@ fileprivate extension GroupVideoCallView {
                             ) {
                                 ForEach(viewModel.meeting.participants.waitlisted, id: \.id) { participant in
                                     HStack(spacing: 16) {
-                                        ImageLoader(url: participant.picture, width: 42, height: 42)
+                                        ImageLoader(url: participant.picture.orEmpty(), width: 42, height: 42)
                                             .frame(width: 42, height: 42)
                                             .clipShape(Circle())
                                         
@@ -1770,7 +1770,7 @@ fileprivate extension GroupVideoCallView {
                         ) {
                             ForEach(viewModel.participants.unique(), id: \.id) { participant in
                                 HStack(spacing: 16) {
-                                    ImageLoader(url: participant.picture, width: 42, height: 42)
+                                    ImageLoader(url: participant.picture.orEmpty(), width: 42, height: 42)
                                         .frame(width: 42, height: 42)
                                         .clipShape(Circle())
                                     
@@ -1917,7 +1917,7 @@ fileprivate extension GroupVideoCallView {
                         ) {
                             ForEach(viewModel.filteredViewerParticipants(), id: \.id) { participant in
                                 HStack(spacing: 16) {
-                                    ImageLoader(url: participant.picture, width: 42, height: 42)
+                                    ImageLoader(url: participant.picture.orEmpty(), width: 42, height: 42)
                                         .frame(width: 42, height: 42)
                                         .clipShape(Circle())
                                     
@@ -1998,7 +1998,7 @@ fileprivate extension GroupVideoCallView {
                 }
                 .listStyle(PlainListStyle())
                 .animation(.spring(), value: viewModel.searchedParticipant)
-                .onAppear {
+                .onDisappear {
                     viewModel.hasNewParticipantRequest = false
                 }
             }
