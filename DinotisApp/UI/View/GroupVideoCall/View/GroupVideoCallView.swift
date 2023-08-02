@@ -170,15 +170,6 @@ fileprivate extension GroupVideoCallView {
                     .tag(1)
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
-                .onChange(of: viewModel.index, perform: { newValue in
-                    if viewModel.isJoined {
-                        if newValue == 0 {
-                            viewModel.localUser = viewModel.meeting.localUser
-                        } else {
-                            viewModel.localUser = nil
-                        }
-                    }
-                })
                 .onTapGesture {
                     withAnimation {
                         viewModel.isShowingToolbar.toggle()
@@ -999,7 +990,7 @@ fileprivate extension GroupVideoCallView {
         
         var body: some View {
             ZStack(alignment: .bottomLeading) {
-                if viewModel.index == 0 && ((viewModel.localUser?.id).orEmpty() == participant.id || (viewModel.pinned?.id).orEmpty() == participant.id) {
+                if viewModel.index == 0 && (viewModel.pinned?.id).orEmpty() == participant.id {
                     if viewModel.pinned == nil && viewModel.screenShareUser.isEmpty {
                         if participant.fetchVideoEnabled() {
                             if let video = participant.getVideoView() {
@@ -1242,8 +1233,8 @@ fileprivate extension GroupVideoCallView {
                         ChatView(viewModel: viewModel)
                     case 1:
                         ParticipantTabView(viewModel: viewModel)
-                    case 2:
-                        PollingView()
+//                    case 2:
+//                        PollingView()
                     default:
                         EmptyView()
                     }
@@ -1809,9 +1800,15 @@ fileprivate extension GroupVideoCallView {
                                         .frame(width: 42, height: 42)
                                         .clipShape(Circle())
                                     
-                                    Text("\(participant.name) \(viewModel.userType(preset: participant.presetName))")
-                                        .font(.robotoBold(size: 16))
-                                        .foregroundColor(.white)
+                                    if participant.isPinned {
+                                        Text("\(participant.name) \(viewModel.userType(preset: participant.presetName)) \(Image(systemName: "pin"))")
+                                            .font(.robotoBold(size: 16))
+                                            .foregroundColor(.white)
+                                    } else {
+                                        Text("\(participant.name) \(viewModel.userType(preset: participant.presetName))")
+                                            .font(.robotoBold(size: 16))
+                                            .foregroundColor(.white)
+                                    }
                                     
                                     Spacer()
                                     
@@ -1832,10 +1829,12 @@ fileprivate extension GroupVideoCallView {
                                                     
                                                     do {
                                                         if participant.isPinned {
-                                                            try participant.pin()
-                                                        } else {
                                                             try participant.unpin()
+                                                        } else {
+                                                            try participant.pin()
                                                         }
+                                                        
+                                                        viewModel.isShowAboutCallBottomSheet.toggle()
                                                         
                                                     }catch {
                                                         
@@ -2032,7 +2031,6 @@ fileprivate extension GroupVideoCallView {
                     }
                 }
                 .listStyle(PlainListStyle())
-                .animation(.spring(), value: viewModel.searchedParticipant)
                 .onDisappear {
                     viewModel.hasNewParticipantRequest = false
                 }

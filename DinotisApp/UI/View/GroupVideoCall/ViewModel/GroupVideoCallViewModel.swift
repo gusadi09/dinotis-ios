@@ -129,8 +129,8 @@ final class GroupVideoCallViewModel: ObservableObject {
     
     @Published var bottomSheetTabItems: [TabBarItem] = [
         .init(id: 0, title: LocalizableText.labelChat),
-        .init(id: 1, title: LocalizableText.participant),
-        .init(id: 2, title: LocalizableText.labelPolls)
+        .init(id: 1, title: LocalizableText.participant)
+//        .init(id: 2, title: LocalizableText.labelPolls)
     ]
     
     @Published var qnaTabItems: [TabBarItem] = [
@@ -138,44 +138,7 @@ final class GroupVideoCallViewModel: ObservableObject {
         .init(id: 1, title: "Answered")
     ]
     
-    @Published var dummyParicipant: [DummyParticipantModel] = [
-        .init(name: "Ahmad Rifai", isMicOn: false, isVideoOn: false, isJoining: false, isSpeaker: true),
-        .init(name: "Bambanb", isMicOn: true, isVideoOn: false, isJoining: false, isSpeaker: true),
-        .init(name: "Citra Kirana", isMicOn: false, isVideoOn: false, isJoining: true, isSpeaker: false),
-        .init(name: "Dimas Agung", isMicOn: false, isVideoOn: false, isJoining: false, isSpeaker: false),
-        .init(name: "Endika Koala", isMicOn: false, isVideoOn: false, isJoining: true, isSpeaker: false),
-        .init(name: "Faris van Java", isMicOn: false, isVideoOn: false, isJoining: false, isSpeaker: false)
-    ]
-    
-    @Published var dummyQuestionList: [DummyQuestion] = [
-        .init(date: .now, name: "Wade Warren", question: "Lorem ipsum dolor sit amet consectetur. Nec leosdsdLorem ipsum dolor sit amet consectetur. Nec leo.."),
-        .init(date: .now, name: "Mr. Singh", question: "Lorem ipsum dolor sit amet consectetur."),
-        .init(date: .now, name: "Abrar Maulana", question: "Lorem ipsum dolor sit amet consectetur. Nec leosdsdLorem ipsum dolor"),
-        .init(date: .now, name: "Xavier", question: "Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur")
-    ]
-    
     @Published var dummyAnsweredList: [DummyQuestion] = []
-    
-    var searchedParticipant: [DummyParticipantModel] {
-        if searchText.isEmpty {
-            return dummyParicipant
-        } else {
-            return dummyParicipant.filter({ $0.name.contains(searchText) })
-        }
-    }
-    
-    
-    var joiningParticipant: [DummyParticipantModel] {
-        searchedParticipant.filter({ $0.isJoining })
-    }
-    
-    var speakerParticipant: [DummyParticipantModel] {
-        searchedParticipant.filter({ $0.isSpeaker && $0.isJoining == false })
-    }
-    
-    var viewerSpeaker: [DummyParticipantModel] {
-        searchedParticipant.filter({ $0.isSpeaker == false && $0.isJoining == false })
-    }
     
     @Published var participants = [DyteJoinedMeetingParticipant]()
     @Published var localUser: DyteSelfParticipant? = nil
@@ -255,18 +218,7 @@ final class GroupVideoCallViewModel: ObservableObject {
             
         }
     }
-    
-    func answerQuestion(at index: Int) {
-        withAnimation {
-            dummyAnsweredList.append(dummyQuestionList[index])
-            DispatchQueue.main.asyncAfter(deadline: .now()+0.1) { [weak self] in
-                self?.dummyQuestionList.remove(at: index)
-            }
-        }
-    }
-    
-    
-    
+
     func userType(preset: String) -> String {
         if preset == PresetConstant.admin.value {
             return "(Admin)"
@@ -414,15 +366,6 @@ final class GroupVideoCallViewModel: ObservableObject {
         return questionData.filter({ item in
             qnaTabSelection == 0 ? !(item.isAnswered ?? false) : (item.isAnswered ?? false)
         })
-    }
-    
-    func unanswerQuestion(at index: Int) {
-        withAnimation {
-            dummyQuestionList.append(dummyAnsweredList[index])
-            DispatchQueue.main.asyncAfter(deadline: .now()+0.1) { [weak self] in
-                self?.dummyAnsweredList.remove(at: index)
-            }
-        }
     }
     
     func getRealTime() {
