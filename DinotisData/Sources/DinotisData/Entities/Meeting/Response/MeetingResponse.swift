@@ -30,9 +30,11 @@ public struct UserMeetingData: Codable {
     public let meetingCollaborations: [MeetingCollaborationData]?
     public let meetingUrls: [MeetingURLData]?
     public let meetingUploads: [MeetingUploadData]?
+    public let roomSid: String?
+    public let dyteMeetingId: String?
 
 	public enum CodingKeys: String, CodingKey {
-		case id, title
+		case id, title, roomSid, dyteMeetingId
 		case meetingDescription = "description"
 		case price, startAt, endAt, isPrivate, slots, isLiveStreaming, participantDetails, expiredAt
 		case userID = "userId"
@@ -67,7 +69,9 @@ public struct UserMeetingData: Codable {
 		background: [String]?,
         meetingCollaborations: [MeetingCollaborationData]?,
         meetingUrls: [MeetingURLData]?,
-        meetingUploads: [MeetingUploadData]?
+        meetingUploads: [MeetingUploadData]?,
+        roomSid: String?,
+        dyteMeetingId: String?
 	) {
 		self.id = id
 		self.title = title
@@ -97,6 +101,8 @@ public struct UserMeetingData: Codable {
         self.meetingCollaborations = meetingCollaborations
         self.meetingUrls = meetingUrls
         self.meetingUploads = meetingUploads
+        self.roomSid = roomSid
+        self.dyteMeetingId = dyteMeetingId
 	}
 }
 
