@@ -140,14 +140,12 @@ struct RateCardServiceBookingView: View {
 				if #available(iOS 16.0, *) {
 					PaymentTypeOption(viewModel: viewModel)
 						.padding(.top)
-						.padding()
-						.padding(.vertical)
-						.presentationDetents([.fraction(0.44), .large])
+                        .padding(.horizontal)
+                        .presentationDetents([.height(240)])
 				} else {
 					PaymentTypeOption(viewModel: viewModel)
 						.padding(.top)
-						.padding()
-						.padding(.vertical)
+                        .padding(.horizontal)
 				}
 
             }
@@ -161,8 +159,8 @@ struct RateCardServiceBookingView: View {
 				if #available(iOS 16.0, *) {
 					CoinPaymentSheetView(viewModel: viewModel)
 						.padding()
-						.padding(.vertical)
-						.presentationDetents([.fraction(0.85), .large])
+						.padding(.top)
+                        .presentationDetents([.fraction(0.9), .large])
 				} else {
 					CoinPaymentSheetView(viewModel: viewModel)
 						.padding()
@@ -176,12 +174,12 @@ struct RateCardServiceBookingView: View {
 				if #available(iOS 16.0, *) {
 					AddCoinSheetView(viewModel: viewModel)
 						.padding()
-						.padding(.vertical)
+						.padding(.top)
 						.presentationDetents([.fraction(0.67), .large])
 				} else {
 					AddCoinSheetView(viewModel: viewModel)
 						.padding()
-						.padding(.vertical)
+						.padding(.top)
 				}
             }
         )
@@ -716,6 +714,8 @@ extension RateCardServiceBookingView {
                 }
                 .frame(height: 90)
                 
+                Spacer()
+                
                 VStack {
                     DinotisPrimaryButton(
                         text: LocalizableText.addCoinLabel,
@@ -748,7 +748,7 @@ extension RateCardServiceBookingView {
         @ObservedObject var viewModel: RateCardServiceBookingFormViewModel
         
         var body: some View {
-            LazyVStack(spacing: 15) {
+            VStack(spacing: 15) {
                 HStack {
                     Text(LocalizableText.paymentConfirmationTitle)
                         .font(.robotoBold(size: 14))
@@ -985,6 +985,8 @@ extension RateCardServiceBookingView {
                 }
                 .padding()
                 .background(RoundedRectangle(cornerRadius: 12).foregroundColor(.DinotisDefault.lightPrimary))
+                
+                Spacer()
                 
                 DinotisPrimaryButton(
                     text: LocalizableText.continuePaymentLabel,
