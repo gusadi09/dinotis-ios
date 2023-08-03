@@ -59,9 +59,9 @@ struct FormRowView: View {
             
             if #available(iOS 16.0, *) {
                 TextField("", text: $form.value, axis: .vertical)
-                    .placeholder(when: form.value.isEmpty, placeholder: {
-                        Text("Message Here").foregroundColor(.white)
-                    })
+//                    .placeholder(when: form.value.isEmpty, placeholder: {
+//                        Text("Message Here").foregroundColor(.white)
+//                    })
                     .autocorrectionDisabled(true)
                     .padding(10)
                     .overlay {

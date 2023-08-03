@@ -65,6 +65,7 @@ final class GroupVideoCallViewModel: ObservableObject {
         baseUrl: "https://api.cluster.dyte.in/v2"
     )
     
+    @Published var route: HomeRouting? = nil
     @Published var currentPage: Int32 = 0
     
     @Published var userMeeting: UserMeetingData
@@ -493,6 +494,14 @@ final class GroupVideoCallViewModel: ObservableObject {
         }
     }
     
+    func routeToAfterCall() {
+        let viewModel = AfterCallViewModel(backToRoot: self.backToRoot, backToHome: self.backToHome)
+        
+        DispatchQueue.main.async {[weak self] in
+            self?.route = .afterCall(viewModel: viewModel)
+        }
+    }
+    
     func onDisappear() {
         enableIdleTimer()
     }
@@ -658,7 +667,7 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     func onMeetingRoomLeaveCompleted() {
         self.isInit = false
         self.isJoined = false
-        backToHome()
+        self.routeToAfterCall()
     }
     
     func onMeetingRoomLeaveStarted() {

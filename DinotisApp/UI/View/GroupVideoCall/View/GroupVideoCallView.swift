@@ -9,6 +9,7 @@ import DinotisDesignSystem
 import DinotisData
 import DyteiOSCore
 import SwiftUI
+import SwiftUINavigation
 
 enum SizeClass {
     case compactRegular
@@ -23,6 +24,18 @@ struct GroupVideoCallView: View {
     
     var body: some View {
         ZStack {
+            NavigationLink(
+                unwrapping: $viewModel.route,
+                case: /HomeRouting.afterCall,
+                destination: { viewModel in
+                    AfterCallView(viewModel: viewModel.wrappedValue)
+                },
+                onNavigate: {_ in},
+                label: {
+                    EmptyView()
+                }
+            )
+            
             GeometryReader { geo in
                 Image.videoCallBackgroundPattern
                     .resizable()
@@ -2271,9 +2284,9 @@ fileprivate extension GroupVideoCallView {
                                         
                                         if #available(iOS 16.0, *) {
                                             TextField("", text: $fieldPoll, axis: .vertical)
-                                                .placeholder(when: fieldPoll.isEmpty, placeholder: {
-                                                    Text(LocalizableText.videoCallPollQuestionPlaceholder).foregroundColor(.white)
-                                                })
+//                                                .placeholder(when: fieldPoll.isEmpty, placeholder: {
+//                                                    Text(LocalizableText.videoCallPollQuestionPlaceholder).foregroundColor(.white)
+//                                                })
                                                 .autocorrectionDisabled(true)
                                                 .lineLimit(3, reservesSpace: true)
                                                 .padding(5)
@@ -2391,6 +2404,6 @@ fileprivate extension GroupVideoCallView {
 
 struct GroupVideoCallView_Previews: PreviewProvider {
     static var previews: some View {
-        GroupVideoCallView(viewModel: GroupVideoCallViewModel(backToRoot: {}, backToHome: {}, userMeeting: .init(id: nil, title: nil, meetingDescription: nil, price: nil, startAt: nil, endAt: nil, isPrivate: nil, isLiveStreaming: nil, slots: nil, participants: nil, userID: nil, startedAt: nil, endedAt: nil, createdAt: nil, updatedAt: nil, deletedAt: nil, bookings: nil, user: nil, participantDetails: nil, meetingBundleId: nil, meetingRequestId: nil, status: nil, meetingRequest: nil, expiredAt: nil, background: nil, meetingCollaborations: nil, meetingUrls: nil, meetingUploads: nil)))
+        GroupVideoCallView(viewModel: GroupVideoCallViewModel(backToRoot: {}, backToHome: {}, userMeeting: .init(id: nil, title: nil, meetingDescription: nil, price: nil, startAt: nil, endAt: nil, isPrivate: nil, isLiveStreaming: nil, slots: nil, participants: nil, userID: nil, startedAt: nil, endedAt: nil, createdAt: nil, updatedAt: nil, deletedAt: nil, bookings: nil, user: nil, participantDetails: nil, meetingBundleId: nil, meetingRequestId: nil, status: nil, meetingRequest: nil, expiredAt: nil, background: nil, meetingCollaborations: nil, meetingUrls: nil, meetingUploads: nil, roomSid: nil, dyteMeetingId: nil)))
     }
 }
