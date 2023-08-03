@@ -734,10 +734,20 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
 
 extension GroupVideoCallViewModel: DyteSelfEventsListener {
     func onStageStatusUpdated(stageStatus: StageStatus) {
-        localUser = nil
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0001) {
-            self.localUser = self.meeting.localUser
+        if stageStatus == .onStage || stageStatus == .offStage {
+            localUser = nil
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+                self.localUser = self.meeting.localUser
+                self.isReceivedStageInvite = false
+            }
+        } else if stageStatus == .acceptedToJoinStage {
+            localUser = nil
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+                self.localUser = self.meeting.localUser
+                self.isReceivedStageInvite = true
+            }
         }
     }
     
@@ -785,10 +795,6 @@ extension GroupVideoCallViewModel: DyteSelfEventsListener {
         if waitListStatus == .waiting {
             self.isConnecting = false
         }
-    }
-    
-    func onWebinarPresentRequestReceived() {
-        print("TRIGERREDX")
     }
     
 }
@@ -858,32 +864,39 @@ extension GroupVideoCallViewModel: DyteStageEventListener {
         // when this user is joined to stage
         localUser = nil
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0001) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
             self.localUser = self.meeting.localUser
         }
     }
     
-    func onPresentRequestAccepted(participant: DyteStageParticipant) {
+    func onPresentRequestAccepted(participant: DyteJoinedMeetingParticipant) {
         
     }
     
-    func onPresentRequestAdded(participant: DyteStageParticipant) {
+    func onPresentRequestAdded(participant: DyteJoinedMeetingParticipant) {
         self.hasNewParticipantRequest = true
     }
     
-    func onPresentRequestClosed(participant: DyteStageParticipant) {
+    func onPresentRequestClosed(participant: DyteJoinedMeetingParticipant) {
         
     }
     
     func onPresentRequestReceived() {
+        localUser = nil
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+            self.localUser = self.meeting.localUser
+            self.localUser?.enableVideo()
+            self.localUser?.enableAudio()
+            self.isReceivedStageInvite = true
+        }
+    }
+    
+    func onPresentRequestRejected(participant: DyteJoinedMeetingParticipant) {
         
     }
     
-    func onPresentRequestRejected(participant: DyteStageParticipant) {
-        
-    }
-    
-    func onPresentRequestWithdrawn(participant: DyteStageParticipant) {
+    func onPresentRequestWithdrawn(participant: DyteJoinedMeetingParticipant) {
         
     }
     
@@ -891,12 +904,12 @@ extension GroupVideoCallViewModel: DyteStageEventListener {
         // when this user is no longer on stage
         localUser = nil
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0001) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
             self.localUser = self.meeting.localUser
         }
     }
     
-    func onStageRequestsUpdated(accessRequests: [DyteStageParticipant]) {
-        
+    func onStageRequestsUpdated(accessRequests: [DyteJoinedMeetingParticipant]) {
+
     }
 }

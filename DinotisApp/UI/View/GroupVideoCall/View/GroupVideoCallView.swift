@@ -35,7 +35,11 @@ struct GroupVideoCallView: View {
                 if viewModel.meeting.localUser.waitListStatus == .waiting || viewModel.meeting.localUser.waitListStatus == .rejected {
                     WaitingRoomView(viewModel: viewModel)
                 } else if viewModel.isJoined {
-                    MainGroupVideoCallView(viewModel: viewModel)
+                    if viewModel.isReceivedStageInvite {
+                        GroupVideoCallPreview(viewModel: viewModel)
+                    } else {
+                        MainGroupVideoCallView(viewModel: viewModel)
+                    }
                 } else {
                     GroupVideoCallPreview(viewModel: viewModel)
                 }
@@ -45,6 +49,7 @@ struct GroupVideoCallView: View {
             DinotisLoadingView(.fullscreen, hide: !viewModel.isConnecting)
         }
         .navigationTitle("")
+        .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)
         .onAppear {
             viewModel.onAppear()
@@ -248,7 +253,7 @@ fileprivate extension GroupVideoCallView {
                         
                         if viewModel.isJoined {
                             
-                            if viewModel.meeting.localUser.permissions.media.canPublishVideo {
+                            if viewModel.localUser?.permissions.media.canPublishVideo ?? false {
                                 Button {
                                     withAnimation(.spring()) {
                                         viewModel.switchCamera()
@@ -410,7 +415,11 @@ fileprivate extension GroupVideoCallView {
                         type: .adaptiveScreen,
                         textColor: .white,
                         bgColor: .DinotisDefault.primary) {
-                            viewModel.joinMeeting()
+                            if viewModel.isReceivedStageInvite {
+                                viewModel.meeting.stage.join()
+                            } else {
+                                viewModel.joinMeeting()
+                            }
                         }
                 }
                 .padding(.horizontal, 20)
@@ -487,7 +496,11 @@ fileprivate extension GroupVideoCallView {
                             type: .adaptiveScreen,
                             textColor: .white,
                             bgColor: .DinotisDefault.primary) {
-                                viewModel.joinMeeting()
+                                if viewModel.isReceivedStageInvite {
+                                    viewModel.meeting.stage.join()
+                                } else {
+                                    viewModel.joinMeeting()
+                                }
                             }
                     }
                     .frame(maxWidth: 320)
@@ -1663,11 +1676,7 @@ fileprivate extension GroupVideoCallView {
                                     Spacer()
                                     
                                     Button {
-                                        let ids = viewModel.meeting.stage.accessRequests.compactMap { item in
-                                            item.id
-                                        }
-                                        
-                                        viewModel.meeting.stage.grantAccess(ids: ids)
+                                        viewModel.meeting.stage.grantAccessAll()
                                     } label: {
                                         Text(LocalizableText.acceptAllLabel)
                                             .font(.robotoBold(size: 12))
@@ -1683,9 +1692,9 @@ fileprivate extension GroupVideoCallView {
                             ) {
                                 ForEach(viewModel.meeting.stage.accessRequests, id: \.id) { participant in
                                     HStack(spacing: 16) {
-//                                        ImageLoader(url: participant.picture, width: 42, height: 42)
-//                                            .frame(width: 42, height: 42)
-//                                            .clipShape(Circle())
+                                        ImageLoader(url: participant.picture.orEmpty(), width: 42, height: 42)
+                                            .frame(width: 42, height: 42)
+                                            .clipShape(Circle())
                                         
                                         Text(participant.name)
                                             .font(.robotoBold(size: 16))
@@ -1694,7 +1703,7 @@ fileprivate extension GroupVideoCallView {
                                         Spacer()
                                         
                                         Button {
-                                            viewModel.meeting.stage.grantAccess(ids: [participant.id])
+                                            viewModel.meeting.stage.grantAccess(id: participant.id)
                                         } label: {
                                             Text(LocalizableText.acceptToJoinLabel)
                                                 .font(.robotoBold(size: 12))
@@ -1784,17 +1793,17 @@ fileprivate extension GroupVideoCallView {
                         }
                     }
                     
-                    if !viewModel.participants.unique().isEmpty {
+                    if !viewModel.meeting.stage.onStage.isEmpty {
                         Section(
                             header: HStack {
-                                Text("\(LocalizableText.speakerTitle) (\(viewModel.participants.unique().count))")
+                                Text("\(LocalizableText.speakerTitle) (\(viewModel.meeting.stage.onStage.count))")
                                     .font(.robotoBold(size: 16))
                                     .foregroundColor(.white)
                                 
                                 Spacer()
                             }
                         ) {
-                            ForEach(viewModel.participants.unique(), id: \.id) { participant in
+                            ForEach(viewModel.meeting.stage.onStage, id: \.id) { participant in
                                 HStack(spacing: 16) {
                                     ImageLoader(url: participant.picture.orEmpty(), width: 42, height: 42)
                                         .frame(width: 42, height: 42)
@@ -1939,17 +1948,17 @@ fileprivate extension GroupVideoCallView {
                     }
                     
                     
-                    if !viewModel.filteredViewerParticipants().isEmpty {
+                    if !viewModel.meeting.stage.viewers.isEmpty {
                         Section(
                             header: HStack {
-                                Text("\(LocalizableText.viewerTitle) (\(viewModel.filteredViewerParticipants().count))")
+                                Text("\(LocalizableText.viewerTitle) (\(viewModel.meeting.stage.viewers.count))")
                                     .font(.robotoBold(size: 16))
                                     .foregroundColor(.white)
                                 
                                 Spacer()
                             }
                         ) {
-                            ForEach(viewModel.filteredViewerParticipants(), id: \.id) { participant in
+                            ForEach(viewModel.meeting.stage.viewers, id: \.id) { participant in
                                 HStack(spacing: 16) {
                                     ImageLoader(url: participant.picture.orEmpty(), width: 42, height: 42)
                                         .frame(width: 42, height: 42)
@@ -1976,7 +1985,7 @@ fileprivate extension GroupVideoCallView {
                                             Menu {
                                                 if participant.id != (viewModel.localUser?.id).orEmpty() {
                                                     Button {
-                                                    
+                                                        viewModel.meeting.stage.grantAccess(id: participant.id)
                                                     } label: {
                                                         Image.videoCallPutToSpeaker
                                                             .resizable()

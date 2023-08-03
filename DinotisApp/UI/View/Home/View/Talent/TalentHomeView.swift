@@ -9,7 +9,6 @@ import CurrencyFormatter
 import DinotisData
 import DinotisDesignSystem
 import Introspect
-import SlideOverCard
 import SwiftUI
 import SwiftUINavigation
 import SwiftUITrackableScrollView

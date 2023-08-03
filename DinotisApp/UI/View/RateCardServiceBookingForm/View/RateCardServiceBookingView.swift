@@ -8,7 +8,6 @@
 import SwiftUI
 import QGrid
 import StoreKit
-import SlideOverCard
 import SwiftUINavigation
 import DinotisDesignSystem
 
