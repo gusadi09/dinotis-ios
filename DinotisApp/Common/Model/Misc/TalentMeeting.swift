@@ -116,9 +116,11 @@ struct DetailMeeting: Codable {
     let managementId: Int?
     let isCollaborationAlreadyConfirmed: Bool?
     let maxEditAt: Date?
+    let roomSid: String?
+    let dyteMeetingId: String?
 	
 	enum CodingKeys: String, CodingKey {
-		case id, title
+		case id, title, roomSid, dyteMeetingId
 		case description = "description"
 		case price, startAt, endAt, isPrivate, slots, isLiveStreaming, participantDetails
 		case userID = "userId"

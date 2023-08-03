@@ -63,5 +63,5 @@ enum HomeRouting {
     case editRateCardSchedule(viewModel: TalentEditRateCardScheduleViewModel)
 	case notification(viewModel: NotificationViewModel)
 	case followedCreator(viewModel: FollowedCreatorViewModel)
-    case research(viewModel: GroupVideoCallViewModel)
+    case dyteGroupVideoCall(viewModel: GroupVideoCallViewModel)
 }

@@ -437,13 +437,36 @@ struct TalentScheduleDetailView: View {
 									message: Text(LocaleText.successConfirmRequestText),
 									dismissButton: .default(Text(LocaleText.okText), action: {
 										presentationMode.wrappedValue.dismiss()
-									})
-								)
-							}
-
-							NavigationLink(
-								unwrapping: $viewModel.route,
-								case: /HomeRouting.research,
+                                    })
+                                )
+                            }
+                            
+                            NavigationLink(
+                                unwrapping: $viewModel.route,
+                                case: /HomeRouting.twilioLiveStream,
+                                destination: {viewModel in
+                                    TwilioGroupVideoCallView(
+                                        viewModel: viewModel.wrappedValue,
+                                        meetingId: .constant(meetId), speaker: SpeakerVideoViewModel()
+                                    )
+                                    .environmentObject(streamViewModel)
+                                    .environmentObject(participantsViewModel)
+                                    .environmentObject(streamManager)
+                                    .environmentObject(speakerGridViewModel)
+                                    .environmentObject(presentationLayoutViewModel)
+                                    .environmentObject(speakerSettingsManager)
+                                    .environmentObject(hostControlsManager)
+                                    .environmentObject(chatManager)
+                                },
+                                onNavigate: {_ in},
+                                label: {
+                                    EmptyView()
+                                }
+                            )
+                            
+                            NavigationLink(
+                                unwrapping: $viewModel.route,
+								case: /HomeRouting.dyteGroupVideoCall,
 								destination: {viewModel in
                                     GroupVideoCallView(viewModel: viewModel.wrappedValue)
 								},
@@ -608,6 +631,8 @@ struct TalentScheduleDetailView: View {
 									.foregroundColor(.black)
 									.multilineTextAlignment(.center)
 							}
+                            
+                            Spacer()
 
 							HStack(spacing: 15) {
 								Button(action: {
@@ -676,6 +701,8 @@ struct TalentScheduleDetailView: View {
 									.foregroundColor(.black)
 									.multilineTextAlignment(.center)
 							}
+                            
+                            Spacer()
 
 							HStack(spacing: 15) {
 								Button(action: {

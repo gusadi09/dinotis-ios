@@ -134,8 +134,7 @@ struct ForgotPasswordView: View {
                             }
                         }
                         .padding()
-                        .padding(.vertical)
-                        .presentationDetents([.fraction(0.45), .large])
+                        .presentationDetents([.fraction(0.34)])
                     } else {
                         SelectChannelView(channel: $viewModel.selectedChannel, geo: geo) {
                             withAnimation {

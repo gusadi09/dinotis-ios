@@ -1962,4 +1962,29 @@ public enum LocalizableText {
         bundle: .module,
         comment: "empty state qna answered text"
     )
+    public static let videoCallQuestionsTitle = NSLocalizedString(
+        "video_call_questions_title",
+        bundle: .module,
+        comment: "questions tab title text"
+    )
+    public static let videoCallAnsweredTitle = NSLocalizedString(
+        "video_call_answered_title",
+        bundle: .module,
+        comment: "answered tab title text"
+    )
+    public static let videoCallRemovedFromRoomMessage = NSLocalizedString(
+        "video_call_removed_from_room_message",
+        bundle: .module,
+        comment: "kicked message"
+    )
+    public static let videoCallWaitingCreatorTitle = NSLocalizedString(
+        "video_call_waiting_creator_title",
+        bundle: .module,
+        comment: "waiting creator title"
+    )
+    public static let videoCallWaitingCreatorSubtitle = NSLocalizedString(
+        "video_call_waiting_creator_subtitle",
+        bundle: .module,
+        comment: "waiting creator subtitle"
+    )
 }

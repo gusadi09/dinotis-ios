@@ -398,7 +398,9 @@ final class ScheduleDetailViewModel: ObservableObject {
             background: [""],
             meetingCollaborations: meet.meetingCollaborations,
             meetingUrls: meet.meetingUrls,
-            meetingUploads: meet.meetingUploads
+            meetingUploads: meet.meetingUploads,
+            roomSid: meet.roomSid,
+            dyteMeetingId: meet.dyteMeetingId
         )
 
         return meet
@@ -444,17 +446,22 @@ final class ScheduleDetailViewModel: ObservableObject {
         )
         
         DispatchQueue.main.async { [weak self] in
-            self?.route = .research(viewModel: viewModel)
+            self?.route = .dyteGroupVideoCall(viewModel: viewModel)
         }
     }
     
-    func routeToResearch(meeting: UserMeetingData) {
-        let viewModel = GroupVideoCallViewModel(backToRoot: self.backToRoot, backToHome: self.backToHome, userMeeting: meeting)
+    func routeToTwilioLiveStream(meeting: UserMeetingData) {
+        let viewModel = TwilioLiveStreamViewModel(
+            backToRoot: self.backToRoot,
+            backToHome: self.backToHome,
+            meeting: meeting
+        )
         
         DispatchQueue.main.async { [weak self] in
-            self?.route = .research(viewModel: viewModel)
+            self?.route = .twilioLiveStream(viewModel: viewModel)
         }
     }
+
   
     func routeToTalentProfile(username: String?) {
         let viewModel = TalentProfileDetailViewModel(backToRoot: self.backToRoot, backToHome: {self.route = nil}, username: username.orEmpty())
@@ -627,9 +634,13 @@ final class ScheduleDetailViewModel: ObservableObject {
 						if detailMeet.isPrivate ?? false {
 							self?.routeToVideoCall(meeting: converted)
 						} else if !(detailMeet.isPrivate ?? false) {
-							self?.routeToGroupCall(
-								meeting: converted
-							)
+                            if detailMeet.dyteMeetingId == nil {
+                                self?.routeToTwilioLiveStream(meeting: converted)
+                            } else {
+                                self?.routeToGroupCall(
+                                    meeting: converted
+                                )
+                            }
 						}
 					}
 				}

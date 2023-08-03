@@ -305,7 +305,7 @@ private extension ScheduleListView {
                                 LazyHStack(spacing: 0) {
                                     Button {
                                         withAnimation {
-											reader.scrollTo(0)
+                                            reader.scrollTo(0, anchor: .center)
 											Task {
 												viewModel.currentTab = .all
 
@@ -341,7 +341,7 @@ private extension ScheduleListView {
                                     Button {
                                         withAnimation {
 
-                                            reader.scrollTo(1)
+                                            reader.scrollTo(1, anchor: .center)
 
 											Task {
 												viewModel.currentTab = .waiting
@@ -375,7 +375,7 @@ private extension ScheduleListView {
                                     Button {
                                         withAnimation {
 
-                                            reader.scrollTo(2)
+                                            reader.scrollTo(2, anchor: .center)
 
 											Task {
 												viewModel.currentTab = .upcoming
@@ -409,7 +409,7 @@ private extension ScheduleListView {
                                     Button {
                                         withAnimation {
 
-                                            reader.scrollTo(3)
+                                            reader.scrollTo(3, anchor: .center)
 
 											Task {
 												viewModel.currentTab = .finished
@@ -444,7 +444,7 @@ private extension ScheduleListView {
                                     Button {
                                         withAnimation {
 
-                                            reader.scrollTo(4)
+                                            reader.scrollTo(4, anchor: .center)
 
 											Task {
 												viewModel.currentTab = .canceled
@@ -480,15 +480,15 @@ private extension ScheduleListView {
                             withAnimation {
                                 switch value {
                                 case .all:
-                                    reader.scrollTo(0)
+                                    reader.scrollTo(0, anchor: .center)
                                 case .waiting:
-                                    reader.scrollTo(1)
+                                    reader.scrollTo(1, anchor: .center)
                                 case .upcoming:
-                                    reader.scrollTo(2)
+                                    reader.scrollTo(2, anchor: .center)
                                 case .finished:
-                                    reader.scrollTo(3)
+                                    reader.scrollTo(3, anchor: .center)
                                 case .canceled:
-                                    reader.scrollTo(4)
+                                    reader.scrollTo(4, anchor: .center)
                                 }
                             }
                         }
@@ -844,73 +844,19 @@ private extension ScheduleListView {
                 }
                 .padding(.bottom)
                 
-                HStack {
-                    Button {
-                        withAnimation {
-                            viewModel.reviewRating = 1
+                HStack(spacing: 32) {
+                    ForEach(1...5, id: \.self) { index in
+                        Button {
+                            withAnimation {
+                                viewModel.reviewRating = index
+                            }
+                        } label: {
+                            Image(systemName: "star.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 40)
+                                .foregroundColor(viewModel.reviewRating >= index ? .DinotisDefault.orange : Color(UIColor.systemGray3))
                         }
-                    } label: {
-                        Image(systemName: "star.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 40)
-                            .foregroundColor(viewModel.reviewRating >= 1 ? .DinotisDefault.orange : Color(UIColor.systemGray3))
-                    }
-
-                    Spacer()
-                    
-                    Button {
-                        withAnimation {
-                            viewModel.reviewRating = 2
-                        }
-                    } label: {
-                        Image(systemName: "star.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 40)
-                            .foregroundColor(viewModel.reviewRating >= 2 ? .DinotisDefault.orange : Color(UIColor.systemGray3))
-                    }
-                    
-                    Spacer()
-                    
-                    Button {
-                        withAnimation {
-                            viewModel.reviewRating = 3
-                        }
-                    } label: {
-                        Image(systemName: "star.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 40)
-                            .foregroundColor(viewModel.reviewRating >= 3 ? .DinotisDefault.orange : Color(UIColor.systemGray3))
-                    }
-                    
-                    Spacer()
-                    
-                    Button {
-                        withAnimation {
-                            viewModel.reviewRating = 4
-                        }
-                    } label: {
-                        Image(systemName: "star.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 40)
-                            .foregroundColor(viewModel.reviewRating >= 4 ? .DinotisDefault.orange : Color(UIColor.systemGray3))
-                    }
-                    
-                    Spacer()
-                    
-                    Button {
-                        withAnimation {
-                            viewModel.reviewRating = 5
-                        }
-                    } label: {
-                        Image(systemName: "star.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 40)
-                            .foregroundColor(viewModel.reviewRating == 5 ? .DinotisDefault.orange : Color(UIColor.systemGray3))
                     }
                 }
                 .padding(.horizontal)
@@ -931,12 +877,12 @@ private extension ScheduleListView {
                     text: LocalizableText.sendReviewLabel,
                     type: .adaptiveScreen,
                     textColor: .white,
-                    bgColor: viewModel.reviewRating == 0 ? .DinotisDefault.lightPrimary : .DinotisDefault.primary) {
+                    bgColor: (viewModel.reviewRating == 0 || !viewModel.reviewMessage.isStringContainWhitespaceAndText()) ? .DinotisDefault.lightPrimary : .DinotisDefault.primary) {
                         Task {
                             await viewModel.giveReview()
                         }
                     }
-                    .disabled(viewModel.reviewRating == 0)
+                    .disabled(viewModel.reviewRating == 0 || !viewModel.reviewMessage.isStringContainWhitespaceAndText())
             }
             .padding()
             .onDisappear {

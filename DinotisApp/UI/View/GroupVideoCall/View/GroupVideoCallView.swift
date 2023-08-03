@@ -9,6 +9,7 @@ import DinotisDesignSystem
 import DinotisData
 import DyteiOSCore
 import SwiftUI
+import SwiftUINavigation
 
 enum SizeClass {
     case compactRegular
@@ -23,6 +24,18 @@ struct GroupVideoCallView: View {
     
     var body: some View {
         ZStack {
+            NavigationLink(
+                unwrapping: $viewModel.route,
+                case: /HomeRouting.afterCall,
+                destination: { viewModel in
+                    AfterCallView(viewModel: viewModel.wrappedValue)
+                },
+                onNavigate: {_ in},
+                label: {
+                    EmptyView()
+                }
+            )
+            
             GeometryReader { geo in
                 Image.videoCallBackgroundPattern
                     .resizable()
@@ -35,7 +48,11 @@ struct GroupVideoCallView: View {
                 if viewModel.meeting.localUser.waitListStatus == .waiting || viewModel.meeting.localUser.waitListStatus == .rejected {
                     WaitingRoomView(viewModel: viewModel)
                 } else if viewModel.isJoined {
-                    MainGroupVideoCallView(viewModel: viewModel)
+                    if viewModel.isReceivedStageInvite {
+                        GroupVideoCallPreview(viewModel: viewModel)
+                    } else {
+                        MainGroupVideoCallView(viewModel: viewModel)
+                    }
                 } else {
                     GroupVideoCallPreview(viewModel: viewModel)
                 }
@@ -45,6 +62,7 @@ struct GroupVideoCallView: View {
             DinotisLoadingView(.fullscreen, hide: !viewModel.isConnecting)
         }
         .navigationTitle("")
+        .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)
         .onAppear {
             viewModel.onAppear()
@@ -101,7 +119,7 @@ struct GroupVideoCallView: View {
         .alert(isPresented: $viewModel.isKicked) {
             Alert(
                 title: Text(LocalizableText.attentionText),
-                message: Text("You removed from meeting"),
+                message: Text(LocalizableText.videoCallRemovedFromRoomMessage),
                 dismissButton: .default(
                     Text(LocalizableText.understoodText),
                     action: viewModel.backToHome
@@ -155,12 +173,36 @@ fileprivate extension GroupVideoCallView {
                     }
                     
                     VStack {
-                        ScrollView {
-                            LazyVStack {
-                                if viewModel.isJoined {
-                                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 176))]) {
-                                        ForEach($viewModel.participants, id: \.id) { item in
-                                            RemoteUserJoinedTileVideoContainerView(viewModel: viewModel, participant: item)
+                        if viewModel.isJoined {
+                            if viewModel.meeting.stage.onStage.isEmpty {
+                                VStack(spacing: 15) {
+                                    Spacer()
+                                    
+                                    LottieView(name: "waiting-talent", loopMode: .loop)
+                                        .scaledToFit()
+                                        .frame(height: 225)
+                                    
+                                    Text(LocalizableText.videoCallWaitingCreatorTitle)
+                                        .font(.robotoBold(size: 22))
+                                        .foregroundColor(.white)
+                                        .multilineTextAlignment(.center)
+                                    
+                                    Text(LocalizableText.videoCallWaitingCreatorSubtitle)
+                                        .font(.robotoRegular(size: 14))
+                                        .foregroundColor(.white)
+                                        .multilineTextAlignment(.center)
+                                    
+                                    Spacer()
+                                }
+                                .padding()
+                                .contentShape(Rectangle())
+                            } else {
+                                ScrollView {
+                                    LazyVStack {
+                                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 176))]) {
+                                            ForEach($viewModel.participants, id: \.id) { item in
+                                                RemoteUserJoinedTileVideoContainerView(viewModel: viewModel, participant: item)
+                                            }
                                         }
                                     }
                                 }
@@ -170,21 +212,15 @@ fileprivate extension GroupVideoCallView {
                     .tag(1)
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
-                .onChange(of: viewModel.index, perform: { newValue in
-                    if viewModel.isJoined {
-                        if newValue == 0 {
-                            viewModel.localUser = viewModel.meeting.localUser
-                        } else {
-                            viewModel.localUser = nil
-                        }
-                    }
-                })
                 .onTapGesture {
                     withAnimation {
                         viewModel.isShowingToolbar.toggle()
                     }
                 }
             }
+            .onChange(of: viewModel.activePage, perform: { newValue in
+                viewModel.setPage(to: newValue)
+            })
             .overlay {
                 VStack {
                     HStack {
@@ -257,7 +293,7 @@ fileprivate extension GroupVideoCallView {
                         
                         if viewModel.isJoined {
                             
-                            if viewModel.meeting.localUser.permissions.media.canPublishVideo {
+                            if viewModel.localUser?.permissions.media.canPublishVideo ?? false {
                                 Button {
                                     withAnimation(.spring()) {
                                         viewModel.switchCamera()
@@ -314,17 +350,56 @@ fileprivate extension GroupVideoCallView {
                     
                     Spacer()
                     
-                    HStack(spacing: 5) {
-                        if viewModel.pinned != nil || !viewModel.screenShareUser.isEmpty {
-                            ForEach(0...1, id: \.self) { index in
+                    VStack {
+                        if viewModel.isJoined {
+                            HStack(spacing: 15) {
+                                
+                                Button {
+                                    viewModel.activePage -= 1
+                                } label: {
+                                    Image(systemName: "chevron.left")
+                                        .font(.system(size: 10, weight: .bold, design: .rounded))
+                                        .foregroundColor(.white.opacity(!viewModel.meeting.participants.canGoPreviousPage ? 0.5 : 1))
+                                        .padding(8)
+                                        .background(
+                                            Circle()
+                                                .foregroundColor(!viewModel.meeting.participants.canGoPreviousPage ? .DinotisDefault.black3 : .DinotisDefault.primary)
+                                        )
+                                }
+                                .disabled(!viewModel.meeting.participants.canGoPreviousPage)
+                                
+                                Text("\(viewModel.activePage == 0 ? "Auto" : "\(viewModel.activePage)")")
+                                    .font(.robotoRegular(size: 14))
+                                    .foregroundColor(.white)
+                                
+                                Button {
+                                    viewModel.activePage += 1
+                                } label: {
+                                    Image(systemName: "chevron.right")
+                                        .font(.system(size: 10, weight: .bold, design: .rounded))
+                                        .foregroundColor(.white.opacity(!viewModel.meeting.participants.canGoNextPage ? 0.5 : 1))
+                                        .padding(8)
+                                        .background(
+                                            Circle()
+                                                .foregroundColor(!viewModel.meeting.participants.canGoNextPage ? .DinotisDefault.black3 : .DinotisDefault.primary)
+                                        )
+                                }
+                                .disabled(!viewModel.meeting.participants.canGoNextPage)
+                            }
+                        }
+                        
+                        HStack(spacing: 5) {
+                            if viewModel.pinned != nil || !viewModel.screenShareUser.isEmpty {
+                                ForEach(0...1, id: \.self) { index in
+                                    RoundedRectangle(cornerRadius: 30)
+                                        .foregroundColor(viewModel.index == index ? .DinotisDefault.primary : .gray)
+                                        .frame(width: 16, height: 8)
+                                }
+                            } else {
                                 RoundedRectangle(cornerRadius: 30)
-                                    .foregroundColor(viewModel.index == index ? .DinotisDefault.primary : .gray)
+                                    .foregroundColor(.DinotisDefault.primary)
                                     .frame(width: 16, height: 8)
                             }
-                        } else {
-                            RoundedRectangle(cornerRadius: 30)
-                                .foregroundColor(.DinotisDefault.primary)
-                                .frame(width: 16, height: 8)
                         }
                     }
                     .padding(.bottom, viewModel.isShowingToolbar ? 0 : 24)
@@ -419,7 +494,11 @@ fileprivate extension GroupVideoCallView {
                         type: .adaptiveScreen,
                         textColor: .white,
                         bgColor: .DinotisDefault.primary) {
-                            viewModel.joinMeeting()
+                            if viewModel.isReceivedStageInvite {
+                                viewModel.meeting.stage.join()
+                            } else {
+                                viewModel.joinMeeting()
+                            }
                         }
                 }
                 .padding(.horizontal, 20)
@@ -496,7 +575,11 @@ fileprivate extension GroupVideoCallView {
                             type: .adaptiveScreen,
                             textColor: .white,
                             bgColor: .DinotisDefault.primary) {
-                                viewModel.joinMeeting()
+                                if viewModel.isReceivedStageInvite {
+                                    viewModel.meeting.stage.join()
+                                } else {
+                                    viewModel.joinMeeting()
+                                }
                             }
                     }
                     .frame(maxWidth: 320)
@@ -999,7 +1082,7 @@ fileprivate extension GroupVideoCallView {
         
         var body: some View {
             ZStack(alignment: .bottomLeading) {
-                if viewModel.index == 0 && ((viewModel.localUser?.id).orEmpty() == participant.id || (viewModel.pinned?.id).orEmpty() == participant.id) {
+                if viewModel.index == 0 && (viewModel.pinned?.id).orEmpty() == participant.id {
                     if viewModel.pinned == nil && viewModel.screenShareUser.isEmpty {
                         if participant.fetchVideoEnabled() {
                             if let video = participant.getVideoView() {
@@ -1242,8 +1325,8 @@ fileprivate extension GroupVideoCallView {
                         ChatView(viewModel: viewModel)
                     case 1:
                         ParticipantTabView(viewModel: viewModel)
-                    case 2:
-                        PollingView()
+//                    case 2:
+//                        PollingView()
                     default:
                         EmptyView()
                     }
@@ -1672,11 +1755,7 @@ fileprivate extension GroupVideoCallView {
                                     Spacer()
                                     
                                     Button {
-                                        let ids = viewModel.meeting.stage.accessRequests.compactMap { item in
-                                            item.id
-                                        }
-                                        
-                                        viewModel.meeting.stage.grantAccess(ids: ids)
+                                        viewModel.meeting.stage.grantAccessAll()
                                     } label: {
                                         Text(LocalizableText.acceptAllLabel)
                                             .font(.robotoBold(size: 12))
@@ -1692,9 +1771,9 @@ fileprivate extension GroupVideoCallView {
                             ) {
                                 ForEach(viewModel.meeting.stage.accessRequests, id: \.id) { participant in
                                     HStack(spacing: 16) {
-//                                        ImageLoader(url: participant.picture, width: 42, height: 42)
-//                                            .frame(width: 42, height: 42)
-//                                            .clipShape(Circle())
+                                        ImageLoader(url: participant.picture.orEmpty(), width: 42, height: 42)
+                                            .frame(width: 42, height: 42)
+                                            .clipShape(Circle())
                                         
                                         Text(participant.name)
                                             .font(.robotoBold(size: 16))
@@ -1703,7 +1782,7 @@ fileprivate extension GroupVideoCallView {
                                         Spacer()
                                         
                                         Button {
-                                            viewModel.meeting.stage.grantAccess(ids: [participant.id])
+                                            viewModel.meeting.stage.grantAccess(id: participant.id)
                                         } label: {
                                             Text(LocalizableText.acceptToJoinLabel)
                                                 .font(.robotoBold(size: 12))
@@ -1764,11 +1843,7 @@ fileprivate extension GroupVideoCallView {
                                         Spacer()
                                         
                                         Button {
-                                            do {
-                                                try participant.acceptWaitListedRequest()
-                                            }catch {
-                                                
-                                            }
+                                            viewModel.acceptWaitlisted(participant)
                                             
                                         } label: {
                                             Text(LocalizableText.acceptToJoinLabel)
@@ -1793,25 +1868,31 @@ fileprivate extension GroupVideoCallView {
                         }
                     }
                     
-                    if !viewModel.participants.unique().isEmpty {
+                    if !viewModel.meeting.stage.onStage.isEmpty {
                         Section(
                             header: HStack {
-                                Text("\(LocalizableText.speakerTitle) (\(viewModel.participants.unique().count))")
+                                Text("\(LocalizableText.speakerTitle) (\(viewModel.meeting.stage.onStage.count))")
                                     .font(.robotoBold(size: 16))
                                     .foregroundColor(.white)
                                 
                                 Spacer()
                             }
                         ) {
-                            ForEach(viewModel.participants.unique(), id: \.id) { participant in
+                            ForEach(viewModel.meeting.stage.onStage, id: \.id) { participant in
                                 HStack(spacing: 16) {
                                     ImageLoader(url: participant.picture.orEmpty(), width: 42, height: 42)
                                         .frame(width: 42, height: 42)
                                         .clipShape(Circle())
                                     
-                                    Text("\(participant.name) \(viewModel.userType(preset: participant.presetName))")
-                                        .font(.robotoBold(size: 16))
-                                        .foregroundColor(.white)
+                                    if participant.isPinned {
+                                        Text("\(participant.name) \(viewModel.userType(preset: participant.presetName)) \(Image(systemName: "pin"))")
+                                            .font(.robotoBold(size: 16))
+                                            .foregroundColor(.white)
+                                    } else {
+                                        Text("\(participant.name) \(viewModel.userType(preset: participant.presetName))")
+                                            .font(.robotoBold(size: 16))
+                                            .foregroundColor(.white)
+                                    }
                                     
                                     Spacer()
                                     
@@ -1830,16 +1911,7 @@ fileprivate extension GroupVideoCallView {
                                             Menu {
                                                 Button {
                                                     
-                                                    do {
-                                                        if participant.isPinned {
-                                                            try participant.pin()
-                                                        } else {
-                                                            try participant.unpin()
-                                                        }
-                                                        
-                                                    }catch {
-                                                        
-                                                    }
+                                                    viewModel.pinParticipant(participant)
                                                     
                                                 } label: {
                                                     (participant.isPinned ? Image(systemName: "pin.slash") : Image.videoCallPinIcon)
@@ -1850,13 +1922,9 @@ fileprivate extension GroupVideoCallView {
                                                 }
                                                 if participant.id != (viewModel.localUser?.id).orEmpty() {
                                                     Button {
-                                                        do {
-                                                            try participant.disableAudio()
-                                                        }catch {
-                                                            
-                                                        }
+                                                        viewModel.forceDisableAudio(participant)
                                                     } label: {
-                                                        (participant.fetchAudioEnabled() ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
+                                                        Image.videoCallMicOffStrokeIcon
                                                             .resizable()
                                                             .scaledToFit()
                                                             .frame(width: 24)
@@ -1865,13 +1933,9 @@ fileprivate extension GroupVideoCallView {
                                                 }
                                                 if participant.id != (viewModel.localUser?.id).orEmpty() {
                                                     Button {
-                                                        do {
-                                                            try participant.disableVideo()
-                                                        }catch {
-                                                            
-                                                        }
+                                                        viewModel.forceDisableVideo(participant)
                                                     } label: {
-                                                        (participant.fetchVideoEnabled() ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
+                                                        Image.videoCallVideoOffStrokeIcon
                                                             .resizable()
                                                             .scaledToFit()
                                                             .frame(width: 24)
@@ -1917,17 +1981,7 @@ fileprivate extension GroupVideoCallView {
                                     }
                                     .alert(isPresented: $isAlert) { () -> Alert in
                                         Alert(title: Text(""), message: Text(LocalizableText.videoCallKickAlertFromSession), primaryButton: .default(Text(LocalizableText.videoCallKickAlertPrimaryButton)), secondaryButton: .default(Text(LocalizableText.videoCallKickAlertSecondaryButton), action: {
-                                            do {
-                                                guard let index = viewModel.participants.firstIndex(where: { item in
-                                                    item.id == participant.id
-                                                })
-                                               else {
-                                                   return
-                                               }
-                                                try viewModel.participants[index].kick()
-                                            }catch {
-                                                print("error kick")
-                                            }
+                                            viewModel.kickParticipant(participant)
                                         }))
                                 }
                                 }
@@ -1940,17 +1994,17 @@ fileprivate extension GroupVideoCallView {
                     }
                     
                     
-                    if !viewModel.filteredViewerParticipants().isEmpty {
+                    if !viewModel.meeting.stage.viewers.isEmpty {
                         Section(
                             header: HStack {
-                                Text("\(LocalizableText.viewerTitle) (\(viewModel.filteredViewerParticipants().count))")
+                                Text("\(LocalizableText.viewerTitle) (\(viewModel.meeting.stage.viewers.count))")
                                     .font(.robotoBold(size: 16))
                                     .foregroundColor(.white)
                                 
                                 Spacer()
                             }
                         ) {
-                            ForEach(viewModel.filteredViewerParticipants(), id: \.id) { participant in
+                            ForEach(viewModel.meeting.stage.viewers, id: \.id) { participant in
                                 HStack(spacing: 16) {
                                     ImageLoader(url: participant.picture.orEmpty(), width: 42, height: 42)
                                         .frame(width: 42, height: 42)
@@ -1977,7 +2031,7 @@ fileprivate extension GroupVideoCallView {
                                             Menu {
                                                 if participant.id != (viewModel.localUser?.id).orEmpty() {
                                                     Button {
-                                                    
+                                                        viewModel.meeting.stage.grantAccess(id: participant.id)
                                                     } label: {
                                                         Image.videoCallPutToSpeaker
                                                             .resizable()
@@ -2011,17 +2065,7 @@ fileprivate extension GroupVideoCallView {
                                     }
                                     .alert(isPresented: $isAlertPutToSpeaker) { () -> Alert in
                                         Alert(title: Text(""), message: Text(LocalizableText.videoCallKickAlertFromSession), primaryButton: .default(Text(LocalizableText.videoCallKickAlertPrimaryButton)), secondaryButton: .default(Text(LocalizableText.videoCallKickAlertSecondaryButton), action: {
-                                            do {
-                                                guard let index = viewModel.participants.firstIndex(where: { item in
-                                                    item.id == participant.id
-                                                })
-                                               else {
-                                                   return
-                                               }
-                                                try viewModel.participants[index].kick()
-                                            }catch {
-                                                print("error kick")
-                                            }
+                                            viewModel.kickParticipant(participant)
                                         }))
                                 }
                                 }
@@ -2032,7 +2076,6 @@ fileprivate extension GroupVideoCallView {
                     }
                 }
                 .listStyle(PlainListStyle())
-                .animation(.spring(), value: viewModel.searchedParticipant)
                 .onDisappear {
                     viewModel.hasNewParticipantRequest = false
                 }
@@ -2307,9 +2350,9 @@ fileprivate extension GroupVideoCallView {
                                         
                                         if #available(iOS 16.0, *) {
                                             TextField("", text: $fieldPoll, axis: .vertical)
-                                                .placeholder(when: fieldPoll.isEmpty, placeholder: {
-                                                    Text(LocalizableText.videoCallPollQuestionPlaceholder).foregroundColor(.white)
-                                                })
+//                                                .placeholder(when: fieldPoll.isEmpty, placeholder: {
+//                                                    Text(LocalizableText.videoCallPollQuestionPlaceholder).foregroundColor(.white)
+//                                                })
                                                 .autocorrectionDisabled(true)
                                                 .lineLimit(3, reservesSpace: true)
                                                 .padding(5)
@@ -2427,6 +2470,6 @@ fileprivate extension GroupVideoCallView {
 
 struct GroupVideoCallView_Previews: PreviewProvider {
     static var previews: some View {
-        GroupVideoCallView(viewModel: GroupVideoCallViewModel(backToRoot: {}, backToHome: {}, userMeeting: .init(id: nil, title: nil, meetingDescription: nil, price: nil, startAt: nil, endAt: nil, isPrivate: nil, isLiveStreaming: nil, slots: nil, participants: nil, userID: nil, startedAt: nil, endedAt: nil, createdAt: nil, updatedAt: nil, deletedAt: nil, bookings: nil, user: nil, participantDetails: nil, meetingBundleId: nil, meetingRequestId: nil, status: nil, meetingRequest: nil, expiredAt: nil, background: nil, meetingCollaborations: nil, meetingUrls: nil, meetingUploads: nil)))
+        GroupVideoCallView(viewModel: GroupVideoCallViewModel(backToRoot: {}, backToHome: {}, userMeeting: .init(id: nil, title: nil, meetingDescription: nil, price: nil, startAt: nil, endAt: nil, isPrivate: nil, isLiveStreaming: nil, slots: nil, participants: nil, userID: nil, startedAt: nil, endedAt: nil, createdAt: nil, updatedAt: nil, deletedAt: nil, bookings: nil, user: nil, participantDetails: nil, meetingBundleId: nil, meetingRequestId: nil, status: nil, meetingRequest: nil, expiredAt: nil, background: nil, meetingCollaborations: nil, meetingUrls: nil, meetingUploads: nil, roomSid: nil, dyteMeetingId: nil)))
     }
 }

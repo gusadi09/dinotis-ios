@@ -628,7 +628,9 @@ struct PrivateVideoCallView_Previews : PreviewProvider {
 					background: nil,
                     meetingCollaborations: nil,
                     meetingUrls: nil,
-                    meetingUploads: nil
+                    meetingUploads: nil,
+                    roomSid: nil,
+                    dyteMeetingId: nil
 				),
 				backToRoot: {},
 				backToHome: {}

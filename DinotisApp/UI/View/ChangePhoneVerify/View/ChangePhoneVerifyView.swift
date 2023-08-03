@@ -108,15 +108,14 @@ struct ChangePhoneVerifyView: View {
 				isPresented: $viewModel.isShowSelectChannel,
 				content: {
 					if #available(iOS 16.0, *) {
-						SelectChannelView(channel: $viewModel.selectedChannel, geo: geo) {
-							withAnimation {
-								viewModel.onResendOTP()
-								viewModel.isShowSelectChannel = false
-							}
-						}
-							.padding()
-							.padding(.vertical)
-							.presentationDetents([.fraction(0.45), .large])
+                        SelectChannelView(channel: $viewModel.selectedChannel, geo: geo) {
+                            withAnimation {
+                                viewModel.onResendOTP()
+                                viewModel.isShowSelectChannel = false
+                            }
+                        }
+                        .padding()
+                        .presentationDetents([.fraction(0.34)])
 					} else {
 						SelectChannelView(channel: $viewModel.selectedChannel, geo: geo) {
 							withAnimation {

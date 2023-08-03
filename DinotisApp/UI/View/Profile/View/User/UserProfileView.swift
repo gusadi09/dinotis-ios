@@ -433,7 +433,6 @@ struct UserProfileView: View {
 							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 							.multilineTextAlignment(.center)
-							.padding(.bottom)
 
 						Spacer()
 
@@ -459,7 +458,7 @@ struct UserProfileView: View {
 					}
 						.padding()
 						.padding(.vertical)
-						.presentationDetents([.fraction(0.55), .large])
+						.presentationDetents([.fraction(0.6), .large])
 				} else {
 					VStack(spacing: 16) {
 
@@ -478,7 +477,6 @@ struct UserProfileView: View {
 							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 							.multilineTextAlignment(.center)
-							.padding(.bottom)
 
 						Spacer()
 
@@ -528,7 +526,6 @@ struct UserProfileView: View {
 							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 							.multilineTextAlignment(.center)
-							.padding(.bottom, 35)
 
 						Spacer()
 
@@ -569,7 +566,7 @@ struct UserProfileView: View {
 					}
 						.padding()
 						.padding(.vertical)
-						.presentationDetents([.fraction(0.45), .large])
+						.presentationDetents([.fraction(0.6), .large])
 				} else {
 					VStack(spacing: 10) {
 						Spacer()
@@ -587,7 +584,6 @@ struct UserProfileView: View {
 							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 							.multilineTextAlignment(.center)
-							.padding(.bottom, 35)
 
 						Spacer()
 
@@ -654,7 +650,6 @@ struct UserProfileView: View {
 							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 							.multilineTextAlignment(.center)
-							.padding(.bottom, 35)
 
 						Spacer()
 
@@ -698,7 +693,6 @@ struct UserProfileView: View {
 							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 							.multilineTextAlignment(.center)
-							.padding(.bottom, 35)
 
 						Spacer()
 

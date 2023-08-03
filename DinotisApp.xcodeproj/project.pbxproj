@@ -10,7 +10,6 @@
 		0A0664CF280F0669009EC7C0 /* TalentProfileDetailView+Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0664CE280F0669009EC7C0 /* TalentProfileDetailView+Component.swift */; };
 		0A0664D1280F4939009EC7C0 /* EmptySchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0664D0280F4939009EC7C0 /* EmptySchedule.swift */; };
 		0AE145A22812801E00108948 /* TalentEditProfile+Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE145A12812801E00108948 /* TalentEditProfile+Component.swift */; };
-		378302692A48A1A100FAB778 /* PollingVideoCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378302682A48A1A100FAB778 /* PollingVideoCall.swift */; };
 		EC01F1E326BFD7C600CA878F /* UserBiodataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC01F1E226BFD7C600CA878F /* UserBiodataView.swift */; };
 		EC0279F227C5E40B00B8C392 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0279F127C5E40A00B8C392 /* RoundedCorner.swift */; };
 		EC0279F527C61D7900B8C392 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0279F427C61D7900B8C392 /* ProfileViewModel.swift */; };
@@ -208,7 +207,7 @@
 		ECBA13F526B78F78004D452C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ECBA13F326B78F78004D452C /* LaunchScreen.storyboard */; };
 		ECBA9F3226D631F6008CCCDB /* ProfileTalentScheduleCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBA9F3126D631F6008CCCDB /* ProfileTalentScheduleCard.swift */; };
 		ECBA9F3526D63662008CCCDB /* TalentProfileDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBA9F3426D63662008CCCDB /* TalentProfileDetailView.swift */; };
-		ECBA9F3826D653A5008CCCDB /* SlideOverCard in Frameworks */ = {isa = PBXBuildFile; productRef = ECBA9F3726D653A5008CCCDB /* SlideOverCard */; };
+		ECBB02DA2A7C1058001DEA6B /* PollingVideoCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBB02D92A7C1058001DEA6B /* PollingVideoCall.swift */; };
 		ECBCA28C285DBECF00EB1656 /* NSDecimalNumber+toString.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBCA28B285DBECE00EB1656 /* NSDecimalNumber+toString.swift */; };
 		ECBCA2912860755700EB1656 /* CoinHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBCA2902860755700EB1656 /* CoinHistoryView.swift */; };
 		ECBCA2942860756800EB1656 /* CoinHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBCA2932860756800EB1656 /* CoinHistoryViewModel.swift */; };
@@ -379,7 +378,6 @@
 		0A0664CE280F0669009EC7C0 /* TalentProfileDetailView+Component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TalentProfileDetailView+Component.swift"; sourceTree = "<group>"; };
 		0A0664D0280F4939009EC7C0 /* EmptySchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptySchedule.swift; sourceTree = "<group>"; };
 		0AE145A12812801E00108948 /* TalentEditProfile+Component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TalentEditProfile+Component.swift"; sourceTree = "<group>"; };
-		378302682A48A1A100FAB778 /* PollingVideoCall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollingVideoCall.swift; sourceTree = "<group>"; };
 		EC01F1E226BFD7C600CA878F /* UserBiodataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserBiodataView.swift; sourceTree = "<group>"; };
 		EC0279F127C5E40A00B8C392 /* RoundedCorner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
 		EC0279F427C61D7900B8C392 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
@@ -566,6 +564,7 @@
 		ECBA13F626B78F78004D452C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ECBA9F3126D631F6008CCCDB /* ProfileTalentScheduleCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTalentScheduleCard.swift; sourceTree = "<group>"; };
 		ECBA9F3426D63662008CCCDB /* TalentProfileDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalentProfileDetailView.swift; sourceTree = "<group>"; };
+		ECBB02D92A7C1058001DEA6B /* PollingVideoCall.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PollingVideoCall.swift; sourceTree = "<group>"; };
 		ECBCA28B285DBECE00EB1656 /* NSDecimalNumber+toString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDecimalNumber+toString.swift"; sourceTree = "<group>"; };
 		ECBCA2902860755700EB1656 /* CoinHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinHistoryView.swift; sourceTree = "<group>"; };
 		ECBCA2932860756800EB1656 /* CoinHistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinHistoryViewModel.swift; sourceTree = "<group>"; };
@@ -721,7 +720,6 @@
 				EC8BB8C527D223460078216B /* IQKeyboardManagerSwift in Frameworks */,
 				ECCEFEAA277E9DD100E9B0AD /* ReactiveMoya in Frameworks */,
 				ECCEFEAC277E9DD100E9B0AD /* RxMoya in Frameworks */,
-				ECBA9F3826D653A5008CCCDB /* SlideOverCard in Frameworks */,
 				EC7292112A4375D800C9AAD5 /* TwilioConversationsClient in Frameworks */,
 				EC62576027B79F010079AA10 /* SwiftUINavigation in Frameworks */,
 				EC38FEF1287BD8A00007CFC6 /* OneSignalExtension in Frameworks */,
@@ -995,9 +993,9 @@
 		EC2A511128C7099800C717B9 /* PresentationLayout */ = {
 			isa = PBXGroup;
 			children = (
+				ECBB02D92A7C1058001DEA6B /* PollingVideoCall.swift */,
 				EC2A511228C7099800C717B9 /* PresentationVideoView.swift */,
 				EC2A511328C7099800C717B9 /* PresentationStatusView.swift */,
-				378302682A48A1A100FAB778 /* PollingVideoCall.swift */,
 			);
 			path = PresentationLayout;
 			sourceTree = "<group>";
@@ -2959,7 +2957,6 @@
 			name = DinotisApp;
 			packageProductDependencies = (
 				EC91B40426CEA64C00C5358C /* SwiftUITrackableScrollView */,
-				ECBA9F3726D653A5008CCCDB /* SlideOverCard */,
 				ECD6C2092701F37300A09AD8 /* SDWebImageSwiftUI */,
 				ECA7F7DC270DA83900CFB3AD /* SDWebImageSVGCoder */,
 				ECA0A383271050100000739E /* SwiftKeychainWrapper */,
@@ -3023,7 +3020,6 @@
 			mainGroup = ECBA13D926B78F77004D452C;
 			packageReferences = (
 				EC91B40326CEA64C00C5358C /* XCRemoteSwiftPackageReference "trackable-scroll-view" */,
-				ECBA9F3626D653A5008CCCDB /* XCRemoteSwiftPackageReference "SlideOverCard" */,
 				ECD6C2082701F37300A09AD8 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				ECA7F7DB270DA83900CFB3AD /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */,
 				ECA0A382271050100000739E /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */,
@@ -3245,6 +3241,7 @@
 				ECC110BF26E9BBD3007FF617 /* TalentTransactionWithdrawView.swift in Sources */,
 				EC28CD5927A113460023A745 /* TopBarInstructionView.swift in Sources */,
 				EC6A755C29111B240030BC41 /* BundlingRemoteDataSource.swift in Sources */,
+				ECBB02DA2A7C1058001DEA6B /* PollingVideoCall.swift in Sources */,
 				F61E53E328CB5010006594B4 /* PrivateSpeakerVideoViewModelFactory.swift in Sources */,
 				EC789C7527C4E81E005872E2 /* BiodataViewModel.swift in Sources */,
 				ECBA9F3226D631F6008CCCDB /* ProfileTalentScheduleCard.swift in Sources */,
@@ -3282,7 +3279,6 @@
 				EC6A755A29111B110030BC41 /* BundlingTargetType.swift in Sources */,
 				EC9C4E362814284C00837469 /* RequestScheduleType.swift in Sources */,
 				F67335052908F190006C1ADF /* RateHorizontalCardView.swift in Sources */,
-				378302692A48A1A100FAB778 /* PollingVideoCall.swift in Sources */,
 				EC9C7F8626D7D46000026F0E /* TalentWalletView.swift in Sources */,
 				EC7222722950B7B000C05A1B /* Friendship.swift in Sources */,
 				F61E53E528CB50F4006594B4 /* PrivateSpeakerVideoViewModel.swift in Sources */,
@@ -4111,14 +4107,6 @@
 				minimumVersion = 9.0.0;
 			};
 		};
-		ECBA9F3626D653A5008CCCDB /* XCRemoteSwiftPackageReference "SlideOverCard" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/joogps/SlideOverCard.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
 		ECC1EE7B29EA61C400C9B402 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/markiv/SwiftUI-Shimmer.git";
@@ -4273,11 +4261,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = ECB0A26828FED3210050EC71 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseDatabaseSwift;
-		};
-		ECBA9F3726D653A5008CCCDB /* SlideOverCard */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = ECBA9F3626D653A5008CCCDB /* XCRemoteSwiftPackageReference "SlideOverCard" */;
-			productName = SlideOverCard;
 		};
 		ECC1EE7C29EA61C400C9B402 /* Shimmer */ = {
 			isa = XCSwiftPackageProductDependency;

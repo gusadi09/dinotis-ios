@@ -189,7 +189,7 @@ struct SearchTalentView: View {
             content: {
                 if #available(iOS 16.0, *) {
                     PaymentTypeOption(viewModel: viewModel)
-                    .presentationDetents([.fraction(viewModel.sessionCard.isPrivate.orFalse() ? 0.44 : 0.33), .large])
+                    .presentationDetents([.fraction(viewModel.sessionCard.isPrivate.orFalse() ? 0.44 : 0.33)])
                 } else {
                     PaymentTypeOption(viewModel: viewModel)
                 }
@@ -985,6 +985,8 @@ private extension SearchTalentView {
                             .foregroundColor(Color(UIColor.systemGray4))
                     }
                 }
+                
+                Spacer()
 
 				ScrollView(.vertical, showsIndicators: false) {
 					LazyVStack(spacing: 16) {
@@ -1060,13 +1062,11 @@ private extension SearchTalentView {
 						}
             .isHidden(!viewModel.sessionCard.isPrivate.orFalse(), remove: !viewModel.sessionCard.isPrivate.orFalse())
 					}
-
+                    .padding(.bottom)
 				}
 
             }
-            .padding(.top)
-            .padding()
-            .padding(.vertical)
+            .padding([.top, .horizontal])
         }
     }
     
