@@ -9,7 +9,6 @@ import CurrencyFormatter
 import DinotisDesignSystem
 import Lottie
 import QGrid
-import SlideOverCard
 import StoreKit
 import SwiftUI
 import SwiftUINavigation

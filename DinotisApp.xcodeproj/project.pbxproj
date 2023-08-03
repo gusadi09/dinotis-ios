@@ -208,7 +208,6 @@
 		ECBA13F526B78F78004D452C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ECBA13F326B78F78004D452C /* LaunchScreen.storyboard */; };
 		ECBA9F3226D631F6008CCCDB /* ProfileTalentScheduleCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBA9F3126D631F6008CCCDB /* ProfileTalentScheduleCard.swift */; };
 		ECBA9F3526D63662008CCCDB /* TalentProfileDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBA9F3426D63662008CCCDB /* TalentProfileDetailView.swift */; };
-		ECBA9F3826D653A5008CCCDB /* SlideOverCard in Frameworks */ = {isa = PBXBuildFile; productRef = ECBA9F3726D653A5008CCCDB /* SlideOverCard */; };
 		ECBCA28C285DBECF00EB1656 /* NSDecimalNumber+toString.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBCA28B285DBECE00EB1656 /* NSDecimalNumber+toString.swift */; };
 		ECBCA2912860755700EB1656 /* CoinHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBCA2902860755700EB1656 /* CoinHistoryView.swift */; };
 		ECBCA2942860756800EB1656 /* CoinHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBCA2932860756800EB1656 /* CoinHistoryViewModel.swift */; };
@@ -721,7 +720,6 @@
 				EC8BB8C527D223460078216B /* IQKeyboardManagerSwift in Frameworks */,
 				ECCEFEAA277E9DD100E9B0AD /* ReactiveMoya in Frameworks */,
 				ECCEFEAC277E9DD100E9B0AD /* RxMoya in Frameworks */,
-				ECBA9F3826D653A5008CCCDB /* SlideOverCard in Frameworks */,
 				EC7292112A4375D800C9AAD5 /* TwilioConversationsClient in Frameworks */,
 				EC62576027B79F010079AA10 /* SwiftUINavigation in Frameworks */,
 				EC38FEF1287BD8A00007CFC6 /* OneSignalExtension in Frameworks */,
@@ -2959,7 +2957,6 @@
 			name = DinotisApp;
 			packageProductDependencies = (
 				EC91B40426CEA64C00C5358C /* SwiftUITrackableScrollView */,
-				ECBA9F3726D653A5008CCCDB /* SlideOverCard */,
 				ECD6C2092701F37300A09AD8 /* SDWebImageSwiftUI */,
 				ECA7F7DC270DA83900CFB3AD /* SDWebImageSVGCoder */,
 				ECA0A383271050100000739E /* SwiftKeychainWrapper */,
@@ -3023,7 +3020,6 @@
 			mainGroup = ECBA13D926B78F77004D452C;
 			packageReferences = (
 				EC91B40326CEA64C00C5358C /* XCRemoteSwiftPackageReference "trackable-scroll-view" */,
-				ECBA9F3626D653A5008CCCDB /* XCRemoteSwiftPackageReference "SlideOverCard" */,
 				ECD6C2082701F37300A09AD8 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				ECA7F7DB270DA83900CFB3AD /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */,
 				ECA0A382271050100000739E /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */,
@@ -4111,14 +4107,6 @@
 				minimumVersion = 9.0.0;
 			};
 		};
-		ECBA9F3626D653A5008CCCDB /* XCRemoteSwiftPackageReference "SlideOverCard" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/joogps/SlideOverCard.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
 		ECC1EE7B29EA61C400C9B402 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/markiv/SwiftUI-Shimmer.git";
@@ -4273,11 +4261,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = ECB0A26828FED3210050EC71 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseDatabaseSwift;
-		};
-		ECBA9F3726D653A5008CCCDB /* SlideOverCard */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = ECBA9F3626D653A5008CCCDB /* XCRemoteSwiftPackageReference "SlideOverCard" */;
-			productName = SlideOverCard;
 		};
 		ECC1EE7C29EA61C400C9B402 /* Shimmer */ = {
 			isa = XCSwiftPackageProductDependency;

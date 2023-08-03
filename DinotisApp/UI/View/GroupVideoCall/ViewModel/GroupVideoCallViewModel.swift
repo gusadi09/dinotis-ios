@@ -13,13 +13,6 @@ import DinotisDesignSystem
 import DinotisData
 import FirebaseDatabase
 
-struct DummyQuestion: Identifiable {
-    let id = UUID()
-    var date: Date
-    var name: String
-    var question: String
-}
-
 struct TabBarItem: Identifiable {
     let id: Int
     let title: String
@@ -63,7 +56,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     @Published var meeting = DyteiOSClientBuilder().build()
-    var localUserId = ""
+    @Published var localUserId = ""
     
     var meetingInfo = DyteMeetingInfoV2(
         authToken: "",
@@ -129,53 +122,14 @@ final class GroupVideoCallViewModel: ObservableObject {
     
     @Published var bottomSheetTabItems: [TabBarItem] = [
         .init(id: 0, title: LocalizableText.labelChat),
-        .init(id: 1, title: LocalizableText.participant),
-        .init(id: 2, title: LocalizableText.labelPolls)
+        .init(id: 1, title: LocalizableText.participant)
+//        .init(id: 2, title: LocalizableText.labelPolls)
     ]
     
     @Published var qnaTabItems: [TabBarItem] = [
-        .init(id: 0, title: "Questions"),
-        .init(id: 1, title: "Answered")
+        .init(id: 0, title: LocalizableText.videoCallQuestionsTitle),
+        .init(id: 1, title: LocalizableText.videoCallAnsweredTitle)
     ]
-    
-    @Published var dummyParicipant: [DummyParticipantModel] = [
-        .init(name: "Ahmad Rifai", isMicOn: false, isVideoOn: false, isJoining: false, isSpeaker: true),
-        .init(name: "Bambanb", isMicOn: true, isVideoOn: false, isJoining: false, isSpeaker: true),
-        .init(name: "Citra Kirana", isMicOn: false, isVideoOn: false, isJoining: true, isSpeaker: false),
-        .init(name: "Dimas Agung", isMicOn: false, isVideoOn: false, isJoining: false, isSpeaker: false),
-        .init(name: "Endika Koala", isMicOn: false, isVideoOn: false, isJoining: true, isSpeaker: false),
-        .init(name: "Faris van Java", isMicOn: false, isVideoOn: false, isJoining: false, isSpeaker: false)
-    ]
-    
-    @Published var dummyQuestionList: [DummyQuestion] = [
-        .init(date: .now, name: "Wade Warren", question: "Lorem ipsum dolor sit amet consectetur. Nec leosdsdLorem ipsum dolor sit amet consectetur. Nec leo.."),
-        .init(date: .now, name: "Mr. Singh", question: "Lorem ipsum dolor sit amet consectetur."),
-        .init(date: .now, name: "Abrar Maulana", question: "Lorem ipsum dolor sit amet consectetur. Nec leosdsdLorem ipsum dolor"),
-        .init(date: .now, name: "Xavier", question: "Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur")
-    ]
-    
-    @Published var dummyAnsweredList: [DummyQuestion] = []
-    
-    var searchedParticipant: [DummyParticipantModel] {
-        if searchText.isEmpty {
-            return dummyParicipant
-        } else {
-            return dummyParicipant.filter({ $0.name.contains(searchText) })
-        }
-    }
-    
-    
-    var joiningParticipant: [DummyParticipantModel] {
-        searchedParticipant.filter({ $0.isJoining })
-    }
-    
-    var speakerParticipant: [DummyParticipantModel] {
-        searchedParticipant.filter({ $0.isSpeaker && $0.isJoining == false })
-    }
-    
-    var viewerSpeaker: [DummyParticipantModel] {
-        searchedParticipant.filter({ $0.isSpeaker == false && $0.isJoining == false })
-    }
     
     @Published var participants = [DyteJoinedMeetingParticipant]()
     @Published var localUser: DyteSelfParticipant? = nil
@@ -255,18 +209,7 @@ final class GroupVideoCallViewModel: ObservableObject {
             
         }
     }
-    
-    func answerQuestion(at index: Int) {
-        withAnimation {
-            dummyAnsweredList.append(dummyQuestionList[index])
-            DispatchQueue.main.asyncAfter(deadline: .now()+0.1) { [weak self] in
-                self?.dummyQuestionList.remove(at: index)
-            }
-        }
-    }
-    
-    
-    
+
     func userType(preset: String) -> String {
         if preset == PresetConstant.admin.value {
             return "(Admin)"
@@ -414,15 +357,6 @@ final class GroupVideoCallViewModel: ObservableObject {
         return questionData.filter({ item in
             qnaTabSelection == 0 ? !(item.isAnswered ?? false) : (item.isAnswered ?? false)
         })
-    }
-    
-    func unanswerQuestion(at index: Int) {
-        withAnimation {
-            dummyQuestionList.append(dummyAnsweredList[index])
-            DispatchQueue.main.asyncAfter(deadline: .now()+0.1) { [weak self] in
-                self?.dummyAnsweredList.remove(at: index)
-            }
-        }
     }
     
     func getRealTime() {
@@ -581,6 +515,59 @@ final class GroupVideoCallViewModel: ObservableObject {
         }
     }
     
+    func pinParticipant(_ participant: DyteJoinedMeetingParticipant) {
+        do {
+            if participant.isPinned {
+                try participant.unpin()
+            } else {
+                try participant.pin()
+            }
+            
+            self.isShowAboutCallBottomSheet = false
+            
+        } catch {
+            
+        }
+    }
+    
+    func forceDisableAudio(_ participant: DyteJoinedMeetingParticipant) {
+        do {
+            try participant.disableAudio()
+        } catch {
+            
+        }
+    }
+    
+    func forceDisableVideo(_ participant: DyteJoinedMeetingParticipant) {
+        do {
+            try participant.disableVideo()
+        } catch {
+            
+        }
+    }
+    
+    func kickParticipant(_ participant: DyteJoinedMeetingParticipant) {
+        do {
+            guard let index = self.participants.firstIndex(where: { item in
+                item.id == participant.id
+            })
+           else {
+               return
+           }
+            try self.participants[index].kick()
+        }catch {
+            print("error kick")
+        }
+    }
+    
+    func acceptWaitlisted(_ participant: DyteWaitlistedParticipant) {
+        do {
+            try participant.acceptWaitListedRequest()
+        } catch {
+            
+        }
+    }
+    
     func sendMessage() {
         do {
             try self.meeting.chat.sendTextMessage(message: messageText)
@@ -590,18 +577,10 @@ final class GroupVideoCallViewModel: ObservableObject {
         }
     }
     
-    func filteredViewerParticipants() -> [DyteJoinedMeetingParticipant] {
-        meeting.participants.joined.filter({ item in
-                !meeting.participants.active.contains(where: { part in
-                    item.id == part.id
-                })
-            })
-    }
-    
     func acceptAllWaitingRequest() {
         do {
             try self.meeting.participants.acceptAllWaitingRequests()
-        }catch {
+        } catch {
             
         }
     }
@@ -791,10 +770,20 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
 
 extension GroupVideoCallViewModel: DyteSelfEventsListener {
     func onStageStatusUpdated(stageStatus: StageStatus) {
-        localUser = nil
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0001) {
-            self.localUser = self.meeting.localUser
+        if stageStatus == .onStage || stageStatus == .offStage {
+            localUser = nil
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+                self.localUser = self.meeting.localUser
+                self.isReceivedStageInvite = false
+            }
+        } else if stageStatus == .acceptedToJoinStage {
+            localUser = nil
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+                self.localUser = self.meeting.localUser
+                self.isReceivedStageInvite = true
+            }
         }
     }
     
@@ -842,10 +831,6 @@ extension GroupVideoCallViewModel: DyteSelfEventsListener {
         if waitListStatus == .waiting {
             self.isConnecting = false
         }
-    }
-    
-    func onWebinarPresentRequestReceived() {
-        print("TRIGERREDX")
     }
     
 }
@@ -915,32 +900,39 @@ extension GroupVideoCallViewModel: DyteStageEventListener {
         // when this user is joined to stage
         localUser = nil
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0001) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
             self.localUser = self.meeting.localUser
         }
     }
     
-    func onPresentRequestAccepted(participant: DyteStageParticipant) {
+    func onPresentRequestAccepted(participant: DyteJoinedMeetingParticipant) {
         
     }
     
-    func onPresentRequestAdded(participant: DyteStageParticipant) {
+    func onPresentRequestAdded(participant: DyteJoinedMeetingParticipant) {
         self.hasNewParticipantRequest = true
     }
     
-    func onPresentRequestClosed(participant: DyteStageParticipant) {
+    func onPresentRequestClosed(participant: DyteJoinedMeetingParticipant) {
         
     }
     
     func onPresentRequestReceived() {
+        localUser = nil
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+            self.localUser = self.meeting.localUser
+            self.localUser?.enableVideo()
+            self.localUser?.enableAudio()
+            self.isReceivedStageInvite = true
+        }
+    }
+    
+    func onPresentRequestRejected(participant: DyteJoinedMeetingParticipant) {
         
     }
     
-    func onPresentRequestRejected(participant: DyteStageParticipant) {
-        
-    }
-    
-    func onPresentRequestWithdrawn(participant: DyteStageParticipant) {
+    func onPresentRequestWithdrawn(participant: DyteJoinedMeetingParticipant) {
         
     }
     
@@ -948,12 +940,12 @@ extension GroupVideoCallViewModel: DyteStageEventListener {
         // when this user is no longer on stage
         localUser = nil
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0001) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
             self.localUser = self.meeting.localUser
         }
     }
     
-    func onStageRequestsUpdated(accessRequests: [DyteStageParticipant]) {
-        
+    func onStageRequestsUpdated(accessRequests: [DyteJoinedMeetingParticipant]) {
+
     }
 }
