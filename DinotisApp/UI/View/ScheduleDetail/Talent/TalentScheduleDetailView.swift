@@ -608,6 +608,8 @@ struct TalentScheduleDetailView: View {
 									.foregroundColor(.black)
 									.multilineTextAlignment(.center)
 							}
+                            
+                            Spacer()
 
 							HStack(spacing: 15) {
 								Button(action: {
@@ -676,6 +678,8 @@ struct TalentScheduleDetailView: View {
 									.foregroundColor(.black)
 									.multilineTextAlignment(.center)
 							}
+                            
+                            Spacer()
 
 							HStack(spacing: 15) {
 								Button(action: {

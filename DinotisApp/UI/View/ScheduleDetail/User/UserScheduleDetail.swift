@@ -280,6 +280,8 @@ struct UserScheduleDetail: View {
 									.foregroundColor(.black)
 									.multilineTextAlignment(.center)
 							}
+                            
+                            Spacer()
 
 							HStack(spacing: 15) {
 								Button(action: {
@@ -349,6 +351,8 @@ struct UserScheduleDetail: View {
 									.foregroundColor(.black)
 									.multilineTextAlignment(.center)
 							}
+                            
+                            Spacer()
 
 							HStack(spacing: 15) {
 								Button(action: {

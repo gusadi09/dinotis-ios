@@ -463,7 +463,7 @@ struct TalentProfileDetailView: View {
                             .padding()
                             .padding(.vertical)
                             .padding(.top)
-                            .presentationDetents([.fraction(0.6), .large])
+                            .presentationDetents([.fraction(0.8), .large])
                     } else {
                         SlideOverCardView(viewModel: viewModel)
                             .padding()
@@ -477,22 +477,14 @@ struct TalentProfileDetailView: View {
                 isPresented: $viewModel.showPaymentMenu,
                 content: {
                     if #available(iOS 16.0, *) {
-                        ScrollView {
-                            PaymentTypeOption(viewModel: viewModel)
-                                .padding(.top)
-                                .padding()
-                                .padding(.vertical)
-                        }
-                        .padding(.top)
-                        .presentationDetents([.fraction(viewModel.totalPart > 1 ? 0.25 : 0.4), .large])
+                        PaymentTypeOption(viewModel: viewModel)
+                            .padding([.top, .horizontal])
+                            .presentationDetents([.fraction(viewModel.totalPart > 1 ? 0.25 : 0.4), .large])
                     } else {
-                        ScrollView {
-                            PaymentTypeOption(viewModel: viewModel)
-                                .padding(.top)
-                                .padding()
-                                .padding(.vertical)
-                        }
-                        .padding(.top)
+                        PaymentTypeOption(viewModel: viewModel)
+                            .padding(.top)
+                            .padding()
+                            .padding(.vertical)
                     }
                 }
             )
