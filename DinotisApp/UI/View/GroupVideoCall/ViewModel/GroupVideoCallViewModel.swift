@@ -13,13 +13,6 @@ import DinotisDesignSystem
 import DinotisData
 import FirebaseDatabase
 
-struct DummyQuestion: Identifiable {
-    let id = UUID()
-    var date: Date
-    var name: String
-    var question: String
-}
-
 struct TabBarItem: Identifiable {
     let id: Int
     let title: String
@@ -63,7 +56,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     @Published var meeting = DyteiOSClientBuilder().build()
-    var localUserId = ""
+    @Published var localUserId = ""
     
     var meetingInfo = DyteMeetingInfoV2(
         authToken: "",
@@ -134,11 +127,9 @@ final class GroupVideoCallViewModel: ObservableObject {
     ]
     
     @Published var qnaTabItems: [TabBarItem] = [
-        .init(id: 0, title: "Questions"),
-        .init(id: 1, title: "Answered")
+        .init(id: 0, title: LocalizableText.videoCallQuestionsTitle),
+        .init(id: 1, title: LocalizableText.videoCallAnsweredTitle)
     ]
-    
-    @Published var dummyAnsweredList: [DummyQuestion] = []
     
     @Published var participants = [DyteJoinedMeetingParticipant]()
     @Published var localUser: DyteSelfParticipant? = nil
@@ -524,6 +515,59 @@ final class GroupVideoCallViewModel: ObservableObject {
         }
     }
     
+    func pinParticipant(_ participant: DyteJoinedMeetingParticipant) {
+        do {
+            if participant.isPinned {
+                try participant.unpin()
+            } else {
+                try participant.pin()
+            }
+            
+            self.isShowAboutCallBottomSheet = false
+            
+        } catch {
+            
+        }
+    }
+    
+    func forceDisableAudio(_ participant: DyteJoinedMeetingParticipant) {
+        do {
+            try participant.disableAudio()
+        } catch {
+            
+        }
+    }
+    
+    func forceDisableVideo(_ participant: DyteJoinedMeetingParticipant) {
+        do {
+            try participant.disableVideo()
+        } catch {
+            
+        }
+    }
+    
+    func kickParticipant(_ participant: DyteJoinedMeetingParticipant) {
+        do {
+            guard let index = self.participants.firstIndex(where: { item in
+                item.id == participant.id
+            })
+           else {
+               return
+           }
+            try self.participants[index].kick()
+        }catch {
+            print("error kick")
+        }
+    }
+    
+    func acceptWaitlisted(_ participant: DyteWaitlistedParticipant) {
+        do {
+            try participant.acceptWaitListedRequest()
+        } catch {
+            
+        }
+    }
+    
     func sendMessage() {
         do {
             try self.meeting.chat.sendTextMessage(message: messageText)
@@ -533,18 +577,10 @@ final class GroupVideoCallViewModel: ObservableObject {
         }
     }
     
-    func filteredViewerParticipants() -> [DyteJoinedMeetingParticipant] {
-        meeting.participants.joined.filter({ item in
-                !meeting.participants.active.contains(where: { part in
-                    item.id == part.id
-                })
-            })
-    }
-    
     func acceptAllWaitingRequest() {
         do {
             try self.meeting.participants.acceptAllWaitingRequests()
-        }catch {
+        } catch {
             
         }
     }

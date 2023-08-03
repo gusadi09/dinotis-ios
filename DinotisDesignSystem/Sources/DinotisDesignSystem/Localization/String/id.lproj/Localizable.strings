@@ -434,3 +434,6 @@
 "video-call-put-to-speaker" = "Pindahkan ke speaker";
 "video_call_qna_empty" = "Ayo ajak peserta untuk menanyakan sesuatu";
 "video_call_qna_answered_empty" = "Belum ada pertanyaan yang terjawab";
+"video_call_questions_title" = "Pertanyaan";
+"video_call_answered_title" = "Terjawab";
+"video_call_removed_from_room_message" = "Kamu dikeluarkan dari meeting";

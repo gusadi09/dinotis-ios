@@ -106,7 +106,7 @@ struct GroupVideoCallView: View {
         .alert(isPresented: $viewModel.isKicked) {
             Alert(
                 title: Text(LocalizableText.attentionText),
-                message: Text("You removed from meeting"),
+                message: Text(LocalizableText.videoCallRemovedFromRoomMessage),
                 dismissButton: .default(
                     Text(LocalizableText.understoodText),
                     action: viewModel.backToHome
@@ -1764,11 +1764,7 @@ fileprivate extension GroupVideoCallView {
                                         Spacer()
                                         
                                         Button {
-                                            do {
-                                                try participant.acceptWaitListedRequest()
-                                            }catch {
-                                                
-                                            }
+                                            viewModel.acceptWaitlisted(participant)
                                             
                                         } label: {
                                             Text(LocalizableText.acceptToJoinLabel)
@@ -1836,18 +1832,7 @@ fileprivate extension GroupVideoCallView {
                                             Menu {
                                                 Button {
                                                     
-                                                    do {
-                                                        if participant.isPinned {
-                                                            try participant.unpin()
-                                                        } else {
-                                                            try participant.pin()
-                                                        }
-                                                        
-                                                        viewModel.isShowAboutCallBottomSheet.toggle()
-                                                        
-                                                    }catch {
-                                                        
-                                                    }
+                                                    viewModel.pinParticipant(participant)
                                                     
                                                 } label: {
                                                     (participant.isPinned ? Image(systemName: "pin.slash") : Image.videoCallPinIcon)
@@ -1858,13 +1843,9 @@ fileprivate extension GroupVideoCallView {
                                                 }
                                                 if participant.id != (viewModel.localUser?.id).orEmpty() {
                                                     Button {
-                                                        do {
-                                                            try participant.disableAudio()
-                                                        }catch {
-                                                            
-                                                        }
+                                                        viewModel.forceDisableAudio(participant)
                                                     } label: {
-                                                        (participant.fetchAudioEnabled() ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
+                                                        Image.videoCallMicOffStrokeIcon
                                                             .resizable()
                                                             .scaledToFit()
                                                             .frame(width: 24)
@@ -1873,13 +1854,9 @@ fileprivate extension GroupVideoCallView {
                                                 }
                                                 if participant.id != (viewModel.localUser?.id).orEmpty() {
                                                     Button {
-                                                        do {
-                                                            try participant.disableVideo()
-                                                        }catch {
-                                                            
-                                                        }
+                                                        viewModel.forceDisableVideo(participant)
                                                     } label: {
-                                                        (participant.fetchVideoEnabled() ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
+                                                        Image.videoCallVideoOffStrokeIcon
                                                             .resizable()
                                                             .scaledToFit()
                                                             .frame(width: 24)
@@ -1925,17 +1902,7 @@ fileprivate extension GroupVideoCallView {
                                     }
                                     .alert(isPresented: $isAlert) { () -> Alert in
                                         Alert(title: Text(""), message: Text(LocalizableText.videoCallKickAlertFromSession), primaryButton: .default(Text(LocalizableText.videoCallKickAlertPrimaryButton)), secondaryButton: .default(Text(LocalizableText.videoCallKickAlertSecondaryButton), action: {
-                                            do {
-                                                guard let index = viewModel.participants.firstIndex(where: { item in
-                                                    item.id == participant.id
-                                                })
-                                               else {
-                                                   return
-                                               }
-                                                try viewModel.participants[index].kick()
-                                            }catch {
-                                                print("error kick")
-                                            }
+                                            viewModel.kickParticipant(participant)
                                         }))
                                 }
                                 }
@@ -2019,17 +1986,7 @@ fileprivate extension GroupVideoCallView {
                                     }
                                     .alert(isPresented: $isAlertPutToSpeaker) { () -> Alert in
                                         Alert(title: Text(""), message: Text(LocalizableText.videoCallKickAlertFromSession), primaryButton: .default(Text(LocalizableText.videoCallKickAlertPrimaryButton)), secondaryButton: .default(Text(LocalizableText.videoCallKickAlertSecondaryButton), action: {
-                                            do {
-                                                guard let index = viewModel.participants.firstIndex(where: { item in
-                                                    item.id == participant.id
-                                                })
-                                               else {
-                                                   return
-                                               }
-                                                try viewModel.participants[index].kick()
-                                            }catch {
-                                                print("error kick")
-                                            }
+                                            viewModel.kickParticipant(participant)
                                         }))
                                 }
                                 }
