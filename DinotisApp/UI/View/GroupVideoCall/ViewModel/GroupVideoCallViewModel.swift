@@ -120,6 +120,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var hasNewQuestion = false
     @Published var hasNewParticipantRequest = false
     
+    @Published var activePage: Int32 = 0
     
     @Published var bottomSheetTabItems: [TabBarItem] = [
         .init(id: 0, title: LocalizableText.labelChat),
@@ -165,6 +166,14 @@ final class GroupVideoCallViewModel: ObservableObject {
         }) ?? [])
         self.hostNames = names.joined(separator: ", ")
         
+    }
+    
+    func setPage(to value: Int32) {
+        do {
+            try self.meeting.participants.setPage(pageNumber: value)
+        } catch {
+            
+        }
     }
     
     @MainActor

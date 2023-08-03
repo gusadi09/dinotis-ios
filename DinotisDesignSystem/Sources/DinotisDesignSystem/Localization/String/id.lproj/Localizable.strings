@@ -437,3 +437,5 @@
 "video_call_questions_title" = "Pertanyaan";
 "video_call_answered_title" = "Terjawab";
 "video_call_removed_from_room_message" = "Kamu dikeluarkan dari meeting";
+"video_call_waiting_creator_title" = "Menunggu Kreator Untuk Bergabung...";
+"video_call_waiting_creator_subtitle" = "Kalau bosan menunggu, kamu bisa menghitung ada berapa logo DINOTIS yang terdapat di halaman ini 😉";

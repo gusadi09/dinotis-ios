@@ -173,12 +173,36 @@ fileprivate extension GroupVideoCallView {
                     }
                     
                     VStack {
-                        ScrollView {
-                            LazyVStack {
-                                if viewModel.isJoined {
-                                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 176))]) {
-                                        ForEach($viewModel.participants, id: \.id) { item in
-                                            RemoteUserJoinedTileVideoContainerView(viewModel: viewModel, participant: item)
+                        if viewModel.isJoined {
+                            if viewModel.meeting.stage.onStage.isEmpty {
+                                VStack(spacing: 15) {
+                                    Spacer()
+                                    
+                                    LottieView(name: "waiting-talent", loopMode: .loop)
+                                        .scaledToFit()
+                                        .frame(height: 225)
+                                    
+                                    Text(LocalizableText.videoCallWaitingCreatorTitle)
+                                        .font(.robotoBold(size: 22))
+                                        .foregroundColor(.white)
+                                        .multilineTextAlignment(.center)
+                                    
+                                    Text(LocalizableText.videoCallWaitingCreatorSubtitle)
+                                        .font(.robotoRegular(size: 14))
+                                        .foregroundColor(.white)
+                                        .multilineTextAlignment(.center)
+                                    
+                                    Spacer()
+                                }
+                                .padding()
+                                .contentShape(Rectangle())
+                            } else {
+                                ScrollView {
+                                    LazyVStack {
+                                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 176))]) {
+                                            ForEach($viewModel.participants, id: \.id) { item in
+                                                RemoteUserJoinedTileVideoContainerView(viewModel: viewModel, participant: item)
+                                            }
                                         }
                                     }
                                 }
@@ -194,6 +218,9 @@ fileprivate extension GroupVideoCallView {
                     }
                 }
             }
+            .onChange(of: viewModel.activePage, perform: { newValue in
+                viewModel.setPage(to: newValue)
+            })
             .overlay {
                 VStack {
                     HStack {
@@ -323,17 +350,56 @@ fileprivate extension GroupVideoCallView {
                     
                     Spacer()
                     
-                    HStack(spacing: 5) {
-                        if viewModel.pinned != nil || !viewModel.screenShareUser.isEmpty {
-                            ForEach(0...1, id: \.self) { index in
+                    VStack {
+                        if viewModel.isJoined {
+                            HStack(spacing: 15) {
+                                
+                                Button {
+                                    viewModel.activePage -= 1
+                                } label: {
+                                    Image(systemName: "chevron.left")
+                                        .font(.system(size: 10, weight: .bold, design: .rounded))
+                                        .foregroundColor(.white.opacity(!viewModel.meeting.participants.canGoPreviousPage ? 0.5 : 1))
+                                        .padding(8)
+                                        .background(
+                                            Circle()
+                                                .foregroundColor(!viewModel.meeting.participants.canGoPreviousPage ? .DinotisDefault.black3 : .DinotisDefault.primary)
+                                        )
+                                }
+                                .disabled(!viewModel.meeting.participants.canGoPreviousPage)
+                                
+                                Text("\(viewModel.activePage == 0 ? "Auto" : "\(viewModel.activePage)")")
+                                    .font(.robotoRegular(size: 14))
+                                    .foregroundColor(.white)
+                                
+                                Button {
+                                    viewModel.activePage += 1
+                                } label: {
+                                    Image(systemName: "chevron.right")
+                                        .font(.system(size: 10, weight: .bold, design: .rounded))
+                                        .foregroundColor(.white.opacity(!viewModel.meeting.participants.canGoNextPage ? 0.5 : 1))
+                                        .padding(8)
+                                        .background(
+                                            Circle()
+                                                .foregroundColor(!viewModel.meeting.participants.canGoNextPage ? .DinotisDefault.black3 : .DinotisDefault.primary)
+                                        )
+                                }
+                                .disabled(!viewModel.meeting.participants.canGoNextPage)
+                            }
+                        }
+                        
+                        HStack(spacing: 5) {
+                            if viewModel.pinned != nil || !viewModel.screenShareUser.isEmpty {
+                                ForEach(0...1, id: \.self) { index in
+                                    RoundedRectangle(cornerRadius: 30)
+                                        .foregroundColor(viewModel.index == index ? .DinotisDefault.primary : .gray)
+                                        .frame(width: 16, height: 8)
+                                }
+                            } else {
                                 RoundedRectangle(cornerRadius: 30)
-                                    .foregroundColor(viewModel.index == index ? .DinotisDefault.primary : .gray)
+                                    .foregroundColor(.DinotisDefault.primary)
                                     .frame(width: 16, height: 8)
                             }
-                        } else {
-                            RoundedRectangle(cornerRadius: 30)
-                                .foregroundColor(.DinotisDefault.primary)
-                                .frame(width: 16, height: 8)
                         }
                     }
                     .padding(.bottom, viewModel.isShowingToolbar ? 0 : 24)

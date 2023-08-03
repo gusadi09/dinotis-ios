@@ -438,3 +438,5 @@
 "video_call_questions_title" = "Questions";
 "video_call_answered_title" = "Answered";
 "video_call_removed_from_room_message" = "You removed from meeting";
+"video_call_waiting_creator_title" = "Waiting creator to join the session...";
+"video_call_waiting_creator_subtitle" = "if you got bored, you can counting on DINOTIS logo on this page 😉";

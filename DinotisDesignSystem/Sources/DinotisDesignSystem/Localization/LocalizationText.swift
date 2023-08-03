@@ -1977,4 +1977,14 @@ public enum LocalizableText {
         bundle: .module,
         comment: "kicked message"
     )
+    public static let videoCallWaitingCreatorTitle = NSLocalizedString(
+        "video_call_waiting_creator_title",
+        bundle: .module,
+        comment: "waiting creator title"
+    )
+    public static let videoCallWaitingCreatorSubtitle = NSLocalizedString(
+        "video_call_waiting_creator_subtitle",
+        bundle: .module,
+        comment: "waiting creator subtitle"
+    )
 }
