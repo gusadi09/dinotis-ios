@@ -507,7 +507,8 @@ struct TalentProfileView: View {
 							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 							.multilineTextAlignment(.center)
-							.padding(.bottom)
+                        
+                        Spacer()
 
 						HStack(spacing: 15) {
 							DinotisSecondaryButton(
@@ -547,7 +548,8 @@ struct TalentProfileView: View {
 							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 							.multilineTextAlignment(.center)
-							.padding(.bottom)
+                        
+                        Spacer()
 
 						HStack(spacing: 15) {
 							DinotisSecondaryButton(
@@ -593,7 +595,8 @@ struct TalentProfileView: View {
 							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 							.multilineTextAlignment(.center)
-							.padding(.bottom, 35)
+                        
+                        Spacer()
 
 						HStack(spacing: 15) {
 							Button(action: {
@@ -648,7 +651,8 @@ struct TalentProfileView: View {
 							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 							.multilineTextAlignment(.center)
-							.padding(.bottom, 35)
+                        
+                        Spacer()
 
 						HStack(spacing: 15) {
 							Button(action: {
@@ -710,7 +714,8 @@ struct TalentProfileView: View {
 							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 							.multilineTextAlignment(.center)
-							.padding(.bottom, 35)
+                        
+                        Spacer()
 
 						HStack(spacing: 15) {
 							Button(action: {
@@ -749,7 +754,8 @@ struct TalentProfileView: View {
 							.font(.robotoRegular(size: 12))
 							.foregroundColor(.black)
 							.multilineTextAlignment(.center)
-							.padding(.bottom, 35)
+                        
+                        Spacer()
 
 						HStack(spacing: 15) {
 							Button(action: {
