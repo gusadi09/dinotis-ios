@@ -435,3 +435,6 @@
 "video-call-put-to-speaker" = "Put to speaker";
 "video_call_qna_empty" = "Engage Your Participants with a Questions";
 "video_call_qna_answered_empty" = "No question was answered";
+"video_call_questions_title" = "Questions";
+"video_call_answered_title" = "Answered";
+"video_call_removed_from_room_message" = "You removed from meeting";
