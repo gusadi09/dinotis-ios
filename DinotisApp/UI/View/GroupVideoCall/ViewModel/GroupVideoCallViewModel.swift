@@ -589,13 +589,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     
     func kickParticipant(_ participant: DyteJoinedMeetingParticipant) {
         do {
-            guard let index = self.participants.firstIndex(where: { item in
-                item.id == participant.id
-            })
-           else {
-               return
-           }
-            try self.participants[index].kick()
+            try participant.kick()
         }catch {
             print("Error in kickParticipant: \(error)")
             let alertController = UIAlertController(title: LocalizableText.videoCallAlertError, message: LocalizableText.videoCallFaiedKickParticipant, preferredStyle: .alert)
@@ -821,21 +815,7 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
 
 extension GroupVideoCallViewModel: DyteSelfEventsListener {
     func onStageStatusUpdated(stageStatus: StageStatus) {
-        if stageStatus == .onStage || stageStatus == .offStage {
-            localUser = nil
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
-                self.localUser = self.meeting.localUser
-                self.isReceivedStageInvite = false
-            }
-        } else if stageStatus == .acceptedToJoinStage {
-            localUser = nil
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
-                self.localUser = self.meeting.localUser
-                self.isReceivedStageInvite = true
-            }
-        }
+        
     }
     
     func onRoomMessage(message: String) {
@@ -871,7 +851,9 @@ extension GroupVideoCallViewModel: DyteSelfEventsListener {
     }
     
     func onUpdate(participant_ participant: DyteSelfParticipant) {
-        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+            self.localUser = self.meeting.localUser
+        }
     }
     
     func onVideoUpdate(videoEnabled: Bool) {
@@ -948,11 +930,9 @@ extension GroupVideoCallViewModel: DyteWaitlistEventsListener {
 
 extension GroupVideoCallViewModel: DyteStageEventListener {
     func onAddedToStage() {
-        // when this user is joined to stage
-        localUser = nil
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
             self.localUser = self.meeting.localUser
+            self.isReceivedStageInvite = false
         }
     }
     
@@ -969,8 +949,6 @@ extension GroupVideoCallViewModel: DyteStageEventListener {
     }
     
     func onPresentRequestReceived() {
-        localUser = nil
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
             self.localUser = self.meeting.localUser
             self.localUser?.enableVideo()
@@ -988,9 +966,6 @@ extension GroupVideoCallViewModel: DyteStageEventListener {
     }
     
     func onRemovedFromStage() {
-        // when this user is no longer on stage
-        localUser = nil
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
             self.localUser = self.meeting.localUser
         }
