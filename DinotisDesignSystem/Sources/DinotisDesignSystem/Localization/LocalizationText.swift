@@ -1987,4 +1987,72 @@ public enum LocalizableText {
         bundle: .module,
         comment: "waiting creator subtitle"
     )
+    
+    public static let videoCallConnectionFailed = NSLocalizedString(
+        "video_call_failed_connect_meeting_room",
+        bundle: .module,
+        comment: "connection_failed"
+    )
+    
+    public static let videoCallFailedJoin = NSLocalizedString(
+        "video_call_failed_join_meeting_room",
+        bundle: .module,
+        comment: "join_failed"
+    )
+    
+    public static let videoCallAlertError = NSLocalizedString(
+        "video_call_alert_error",
+        bundle: .module,
+        comment: "alert_error"
+    )
+    
+    public static let videoCallDismissError = NSLocalizedString(
+        "video_call_dismiss_error",
+        bundle: .module,
+        comment: "dismiss_error"
+    )
+    
+    public static let videoCallFailedPinParticipant = NSLocalizedString(
+        "video_call_failed_pin",
+        bundle: .module,
+        comment: "failed_pin"
+    )
+    
+    public static let videoCallFailedDisableAudio = NSLocalizedString(
+        "video_call_failed_disable_audio",
+        bundle: .module,
+        comment: "failed_disable_audio"
+    )
+    
+    public static let videoCallFailedDisableVideo = NSLocalizedString(
+        "video_call_failed_disable_video",
+        bundle: .module,
+        comment: "failed_disable_video"
+    )
+    
+    public static let videoCallFaiedKickParticipant = NSLocalizedString(
+        "video_call_failed_kick_participant",
+        bundle: .module,
+        comment: "failed_kick_participant"
+    )
+    
+    public static let videoCallFailedAcceptWaitlistedRequest = NSLocalizedString(
+        "video_call_failed_accept_waitlisted_participant",
+        bundle: .module,
+        comment: "failed_accept_waitlisted"
+    )
+    
+    public static let videoCallFailedSendMessage = NSLocalizedString(
+        "video_call_failed_send_request",
+        bundle: .module,
+        comment: "failed_send_message"
+    )
+    
+    public static let videoCallFailedAcceptAllRequest = NSLocalizedString(
+        "video_call_failed_accept_all_waiting_request",
+        bundle: .module,
+        comment: "failed_accept_all_waiting_request"
+    )
 }
+
+

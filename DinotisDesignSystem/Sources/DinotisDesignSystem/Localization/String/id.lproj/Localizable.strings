@@ -439,3 +439,12 @@
 "video_call_removed_from_room_message" = "Kamu dikeluarkan dari meeting";
 "video_call_waiting_creator_title" = "Menunggu Kreator Untuk Bergabung...";
 "video_call_waiting_creator_subtitle" = "Kalau bosan menunggu, kamu bisa menghitung ada berapa logo DINOTIS yang terdapat di halaman ini 😉";
+"video_call_alert_error" = "error";
+"video_call_alert_dismiss" = "dismiss";
+"video_call_failed_pin" = "Gagal menyematkan/melepas sematan peserta.";
+"video_call_failed_disable_audio" = "Gagal menonaktifkan audio";
+"video_call_failed_disable_video" = "Gagal menonaktifkan video";
+"video_call_failed_kick_participant" = "Gagal mengeluarkan peserta";
+"video_call_failed_accept_waitlisted_participant" = "Gagal terima permintaan gabung";
+"video_call_failed_send_request" = "Gagal mengirim pesan";
+"video_call_failed_accept_all_waiting_request" = "Gagal terima semua permintaan gabung";

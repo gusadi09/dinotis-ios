@@ -440,3 +440,12 @@
 "video_call_removed_from_room_message" = "You removed from meeting";
 "video_call_waiting_creator_title" = "Waiting creator to join the session...";
 "video_call_waiting_creator_subtitle" = "if you got bored, you can counting on DINOTIS logo on this page 😉";
+"video_call_alert_error" = "error";
+"video_call_alert_dismiss" = "dismiss";
+"video_call_failed_pin" = "Failed to pin/unpin participant.";
+"video_call_failed_disable_audio" = "Failed to disable audio.";
+"video_call_failed_disable_video" = "Failed to disable video.";
+"video_call_failed_kick_participant" = "Failed to kick participant";
+"video_call_failed_accept_waitlisted_participant" = "Failed to accept waitlisted request.";
+"video_call_failed_send_request" = "Failed to send message.";
+"video_call_failed_accept_all_waiting_request" = "Failed to accept all waiting requests.";

@@ -408,6 +408,16 @@ fileprivate extension GroupVideoCallView {
                         .isHidden(!viewModel.isShowingToolbar, remove: !viewModel.isShowingToolbar)
                 }
             }
+            .alert(isPresented: $viewModel.showConnectionErrorAlert, content: {
+                      Alert(
+                          title: Text("Error"),
+                          message: Text(viewModel.connectionError ?? "An unknown error occurred."),
+                          dismissButton: .default(Text("Rejoin")) {
+                              viewModel.showConnectionErrorAlert = false
+                              viewModel.joinMeeting()
+                          }
+                      )
+                  })
         }
     }
     
