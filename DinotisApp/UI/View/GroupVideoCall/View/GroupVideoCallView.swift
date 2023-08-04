@@ -126,6 +126,35 @@ struct GroupVideoCallView: View {
                 )
             )
         }
+        .alert(
+            LocalizableText.attentionText,
+            isPresented: $viewModel.isError,
+            presenting: viewModel.error
+        ) { action in
+            switch action {
+            case .api(_):
+                Button(LocalizableText.videoCallLeaveRoom, role: .destructive) {
+                    viewModel.leaveMeeting()
+                }
+            case .connection(_):
+                Button(LocalizableText.videoCallLeaveRoom, role: .destructive) {
+                    viewModel.leaveMeeting()
+                }
+                Button(LocalizableText.videoCallRejoin, role: .cancel) {
+                    viewModel.joinMeeting()
+                }
+
+            default:
+                Button {
+                    print(action.errorDescription)
+                } label: {
+                    Text(LocalizableText.okText)
+                }
+
+            }
+        } message: { message in
+            Text(message.errorDescription)
+        }
     }
 }
 
@@ -408,6 +437,16 @@ fileprivate extension GroupVideoCallView {
                         .isHidden(!viewModel.isShowingToolbar, remove: !viewModel.isShowingToolbar)
                 }
             }
+            .alert(isPresented: $viewModel.showConnectionErrorAlert, content: {
+                      Alert(
+                          title: Text("Error"),
+                          message: Text(viewModel.connectionError ?? "An unknown error occurred."),
+                          dismissButton: .default(Text("Rejoin")) {
+                              viewModel.showConnectionErrorAlert = false
+                              viewModel.joinMeeting()
+                          }
+                      )
+                  })
         }
     }
     
