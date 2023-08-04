@@ -43,6 +43,23 @@ enum PresetConstant {
     }
 }
 
+enum ErrorAlert {
+    case defaultError
+    case connection(String)
+    case api(String)
+    
+    var errorDescription: String {
+        switch self {
+        case .defaultError:
+            return LocalizableText.videoCallFailRequest
+        case .connection(let message):
+            return message
+        case .api(let message):
+            return message
+        }
+    }
+}
+
 final class GroupVideoCallViewModel: ObservableObject {
     private var timer: Timer?
     
@@ -81,7 +98,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var isError = false
     @Published var isLoading = false
     @Published var success = false
-    @Published var error: String?
+    @Published var error: ErrorAlert? = nil
     @Published var hasNewMessage = false
     
     @Published var stringTime = "00:00:00"
@@ -121,6 +138,9 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var hasNewParticipantRequest = false
     
     @Published var activePage: Int32 = 0
+    
+    @Published var connectionError: String?
+    @Published var showConnectionErrorAlert = false
     
     @Published var bottomSheetTabItems: [TabBarItem] = [
         .init(id: 0, title: LocalizableText.labelChat),
@@ -204,17 +224,15 @@ final class GroupVideoCallViewModel: ObservableObject {
             self?.isConnecting = false
             
             if let error = error as? ErrorResponse {
-                
+                self?.error = .api(error.message.orEmpty())
                 if error.statusCode.orZero() == 401 {
-                    self?.error = error.message.orEmpty()
                     self?.isRefreshFailed.toggle()
                 } else {
-                    self?.error = error.message.orEmpty()
                     self?.isError = true
                 }
             } else {
                 self?.isError = true
-                self?.error = error.localizedDescription
+                self?.error = .api(error.localizedDescription)
             }
             
         }
@@ -244,7 +262,7 @@ final class GroupVideoCallViewModel: ObservableObject {
                         } else {
                             self?.isError = true
                             
-                            self?.error = error.message.orEmpty()
+                            self?.error = .api(error.message.orEmpty())
                         }
                     }
                     
@@ -275,7 +293,7 @@ final class GroupVideoCallViewModel: ObservableObject {
                         } else {
                             self?.isError = true
                             
-                            self?.error = error.message.orEmpty()
+                            self?.error = .api(error.message.orEmpty())
                         }
                     }
                     
@@ -414,7 +432,7 @@ final class GroupVideoCallViewModel: ObservableObject {
                             self?.isLoading = false
                             self?.isError = true
                             
-                            self?.error = error.message.orEmpty()
+                            self?.error = .api(error.message.orEmpty())
                         }
                     }
                     
@@ -432,6 +450,20 @@ final class GroupVideoCallViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
+    
+    func onConnectionError() {
+            // Handle connection error
+            self.isConnecting = false
+            self.isError = true
+        self.error = .connection(LocalizableText.videoCallConnectionFailed)
+        }
+
+        func onJoinFailed() {
+            // Handle join failed
+            self.isConnecting = false
+            self.isError = true
+            self.error = .connection(LocalizableText.videoCallFailedJoin)
+        }
     
     func onStartFetch() {
         DispatchQueue.main.async {[weak self] in
@@ -544,7 +576,9 @@ final class GroupVideoCallViewModel: ObservableObject {
             self.isShowAboutCallBottomSheet = false
             
         } catch {
-            
+            print("Error in pinParticipant: \(error)")
+            let alertController = UIAlertController(title: LocalizableText.videoCallAlertError, message: LocalizableText.videoCallFailedPinParticipant, preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: LocalizableText.videoCallDismissError, style: .default, handler: nil))
         }
     }
     
@@ -552,7 +586,9 @@ final class GroupVideoCallViewModel: ObservableObject {
         do {
             try participant.disableAudio()
         } catch {
-            
+            print("Error in forceDisableAudio: \(error)")
+            let alertController = UIAlertController(title: LocalizableText.videoCallAlertError, message: LocalizableText.videoCallFailedDisableAudio, preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: LocalizableText.videoCallDismissError, style: .default, handler: nil))
         }
     }
     
@@ -560,7 +596,9 @@ final class GroupVideoCallViewModel: ObservableObject {
         do {
             try participant.disableVideo()
         } catch {
-            
+            print("Error in forceDisableVideo: \(error)")
+            let alertController = UIAlertController(title: LocalizableText.videoCallAlertError, message: LocalizableText.videoCallFailedDisableVideo, preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: LocalizableText.videoCallDismissError, style: .default, handler: nil))
         }
     }
     
@@ -568,7 +606,9 @@ final class GroupVideoCallViewModel: ObservableObject {
         do {
             try participant.kick()
         }catch {
-            print("error kick")
+            print("Error in kickParticipant: \(error)")
+            let alertController = UIAlertController(title: LocalizableText.videoCallAlertError, message: LocalizableText.videoCallFaiedKickParticipant, preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: LocalizableText.videoCallDismissError, style: .default, handler: nil))
         }
     }
     
@@ -576,7 +616,9 @@ final class GroupVideoCallViewModel: ObservableObject {
         do {
             try participant.acceptWaitListedRequest()
         } catch {
-            
+            print("Error in acceptWaitlisted: \(error)")
+            let alertController = UIAlertController(title: LocalizableText.videoCallAlertError, message: LocalizableText.videoCallFailedAcceptWaitlistedRequest, preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: LocalizableText.videoCallDismissError, style: .default, handler: nil))
         }
     }
     
@@ -585,7 +627,9 @@ final class GroupVideoCallViewModel: ObservableObject {
             try self.meeting.chat.sendTextMessage(message: messageText)
             self.messageText = ""
         } catch {
-            print("Error to send message \(self.messageText)")
+            print("Error to send message \(self.messageText): \(error)")
+            let alertController = UIAlertController(title: LocalizableText.videoCallAlertError, message: LocalizableText.videoCallFailedSendMessage, preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: LocalizableText.videoCallDismissError, style: .default, handler: nil))
         }
     }
     
@@ -593,7 +637,9 @@ final class GroupVideoCallViewModel: ObservableObject {
         do {
             try self.meeting.participants.acceptAllWaitingRequests()
         } catch {
-            
+            print("Error in acceptAllWaitingRequest: \(error)")
+            let alertController = UIAlertController(title: LocalizableText.videoCallAlertError, message: LocalizableText.videoCallFailedAcceptAllRequest, preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: LocalizableText.videoCallDismissError, style: .default, handler: nil))
         }
     }
     
@@ -601,7 +647,7 @@ final class GroupVideoCallViewModel: ObservableObject {
 
 extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     func onConnectedToMeetingRoom() {
-        self.isConnecting = false
+        
     }
     
     func onConnectingToMeetingRoom() {
@@ -609,15 +655,17 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     }
     
     func onDisconnectedFromMeetingRoom() {
-        
+        self.onJoinFailed()
     }
     
     func onMeetingRoomConnectionFailed() {
-        self.isConnecting = false
+        self.onConnectionError()
     }
     
     func onDisconnectedFromMeetingRoom(reason: String) {
-        
+        self.isConnecting = false
+        self.showConnectionErrorAlert = false
+        self.connectionError = nil
     }
     
     func onMeetingInitCompleted() {
@@ -638,11 +686,11 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     }
     
     func onMeetingRoomConnectionError(errorMessage: String) {
-        
+        self.onConnectionError()
     }
     
     func onMeetingRoomDisconnected() {
-        
+        self.onConnectionError()
     }
     
     func onMeetingRoomJoinCompleted() {
@@ -660,7 +708,7 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     }
     
     func onMeetingRoomJoinFailed(exception: KotlinException) {
-        
+        self.onJoinFailed()
     }
     
     func onMeetingRoomJoinStarted() {
@@ -678,11 +726,11 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     }
     
     func onMeetingRoomReconnectionFailed() {
-        self.isConnecting = false
+        self.onConnectionError()
     }
     
     func onReconnectedToMeetingRoom() {
-        self.isConnecting = false
+        
     }
     
     func onReconnectingToMeetingRoom() {
