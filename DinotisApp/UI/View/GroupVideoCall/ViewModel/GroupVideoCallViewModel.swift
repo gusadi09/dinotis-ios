@@ -51,7 +51,7 @@ enum ErrorAlert {
     var errorDescription: String {
         switch self {
         case .defaultError:
-            return "Can't continue your request. Please try again later."
+            return LocalizableText.videoCallFailRequest
         case .connection(let message):
             return message
         case .api(let message):

@@ -427,8 +427,8 @@
 "video_call_kick_from_session" = "Keluarkan dari sesi";
 "video_call_unpin_participant" = "Buka pin";
 "video_call_alert_kick_participant" = "Yakin ingin mengeluarkan peserta berikut?";
-"video_call_primary_button_alert_kick_participant" = "Tidak"
-"video_call_secondary_button_alert_kick_participant" = "Ya"
+"video_call_primary_button_alert_kick_participant" = "Tidak";
+"video_call_secondary_button_alert_kick_participant" = "Ya";
 "video_call_waiting_room_title" = "Ruang Tunggu";
 "video_call_waiting_room_desc" = "Anda berada di ruang tunggu, host akan segera mengizinkan Anda masuk.";
 "video-call-put-to-speaker" = "Pindahkan ke speaker";
@@ -448,3 +448,8 @@
 "video_call_failed_accept_waitlisted_participant" = "Gagal terima permintaan gabung";
 "video_call_failed_send_request" = "Gagal mengirim pesan";
 "video_call_failed_accept_all_waiting_request" = "Gagal terima semua permintaan gabung";
+"video_call_failed_connect_meeting_room" = "Gagal menghubungkan ke ruangan meeting";
+"video_call_failed_join_meeting_room" = "Gagal masuk ke ruangan meeting";
+"video_call_fail_request" = "Tidak dapat melanjutkan permintaan kamu, silahkan coba beberapa saat lagi.";
+"video_call_leave_room" = "Keluar";
+"video_call_rejoin" = "Masuk Lagi";

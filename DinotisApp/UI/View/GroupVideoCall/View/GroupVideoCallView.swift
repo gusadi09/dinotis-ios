@@ -132,6 +132,18 @@ struct GroupVideoCallView: View {
             presenting: viewModel.error
         ) { action in
             switch action {
+            case .api(_):
+                Button(LocalizableText.videoCallLeaveRoom, role: .destructive) {
+                    viewModel.leaveMeeting()
+                }
+            case .connection(_):
+                Button(LocalizableText.videoCallLeaveRoom, role: .destructive) {
+                    viewModel.leaveMeeting()
+                }
+                Button(LocalizableText.videoCallRejoin, role: .cancel) {
+                    viewModel.joinMeeting()
+                }
+
             default:
                 Button {
                     print(action.errorDescription)

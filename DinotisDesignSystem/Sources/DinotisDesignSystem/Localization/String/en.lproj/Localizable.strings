@@ -449,3 +449,8 @@
 "video_call_failed_accept_waitlisted_participant" = "Failed to accept waitlisted request.";
 "video_call_failed_send_request" = "Failed to send message.";
 "video_call_failed_accept_all_waiting_request" = "Failed to accept all waiting requests.";
+"video_call_failed_connect_meeting_room" = "Failed to connect meeting room";
+"video_call_failed_join_meeting_room" = "Failed to join meeting room";
+"video_call_fail_request" = "Can't continue your request. Please try again later.";
+"video_call_leave_room" = "Leave";
+"video_call_rejoin" = "Rejoin";

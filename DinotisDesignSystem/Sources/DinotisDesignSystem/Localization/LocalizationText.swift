@@ -2053,6 +2053,24 @@ public enum LocalizableText {
         bundle: .module,
         comment: "failed_accept_all_waiting_request"
     )
+    
+    public static let videoCallFailRequest = NSLocalizedString(
+        "video_call_fail_request",
+        bundle: .module,
+        comment: "failed_request"
+    )
+    
+    public static let videoCallLeaveRoom = NSLocalizedString(
+        "video_call_leave_room",
+        bundle: .module,
+        comment: "leave_room"
+    )
+    
+    public static let videoCallRejoin = NSLocalizedString(
+        "video_call_rejoin",
+        bundle: .module,
+        comment: "rejoin"
+    )
 }
 
 
