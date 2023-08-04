@@ -333,10 +333,10 @@ struct UserScheduleDetail: View {
                                     viewModel.startPresented.toggle()
 
 									if !(meet.isPrivate ?? false) {
-                                        if meet.roomSid == nil {
-                                            self.viewModel.routeToGroupCall(meeting: meet)
-                                        } else {
+                                        if meet.dyteMeetingId == nil {
                                             self.viewModel.routeToTwilioLiveStream(meeting: meet)
+                                        } else {
+                                            self.viewModel.routeToGroupCall(meeting: meet)
                                         }
 									} else {
 										self.viewModel.routeToVideoCall(meeting: meet)
@@ -403,12 +403,14 @@ struct UserScheduleDetail: View {
 								Button(action: {
 
 									guard let meet = viewModel.dataBooking?.meeting else { return }
+                                    
+                                    viewModel.startPresented.toggle()
 
                                     if !(meet.isPrivate ?? false) {
-                                        if meet.roomSid == nil {
-                                            self.viewModel.routeToGroupCall(meeting: meet)
-                                        } else {
+                                        if meet.dyteMeetingId == nil {
                                             self.viewModel.routeToTwilioLiveStream(meeting: meet)
+                                        } else {
+                                            self.viewModel.routeToGroupCall(meeting: meet)
                                         }
 									} else {
 										self.viewModel.routeToVideoCall(meeting: meet)
