@@ -43,6 +43,23 @@ enum PresetConstant {
     }
 }
 
+enum ErrorAlert {
+    case defaultError
+    case connection(String)
+    case api(String)
+    
+    var errorDescription: String {
+        switch self {
+        case .defaultError:
+            return "Can't continue your request. Please try again later."
+        case .connection(let message):
+            return message
+        case .api(let message):
+            return message
+        }
+    }
+}
+
 final class GroupVideoCallViewModel: ObservableObject {
     private var timer: Timer?
     
@@ -81,7 +98,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var isError = false
     @Published var isLoading = false
     @Published var success = false
-    @Published var error: String?
+    @Published var error: ErrorAlert? = nil
     @Published var hasNewMessage = false
     
     @Published var stringTime = "00:00:00"
@@ -207,17 +224,15 @@ final class GroupVideoCallViewModel: ObservableObject {
             self?.isConnecting = false
             
             if let error = error as? ErrorResponse {
-                
+                self?.error = .api(error.message.orEmpty())
                 if error.statusCode.orZero() == 401 {
-                    self?.error = error.message.orEmpty()
                     self?.isRefreshFailed.toggle()
                 } else {
-                    self?.error = error.message.orEmpty()
                     self?.isError = true
                 }
             } else {
                 self?.isError = true
-                self?.error = error.localizedDescription
+                self?.error = .api(error.localizedDescription)
             }
             
         }
@@ -247,7 +262,7 @@ final class GroupVideoCallViewModel: ObservableObject {
                         } else {
                             self?.isError = true
                             
-                            self?.error = error.message.orEmpty()
+                            self?.error = .api(error.message.orEmpty())
                         }
                     }
                     
@@ -278,7 +293,7 @@ final class GroupVideoCallViewModel: ObservableObject {
                         } else {
                             self?.isError = true
                             
-                            self?.error = error.message.orEmpty()
+                            self?.error = .api(error.message.orEmpty())
                         }
                     }
                     
@@ -417,7 +432,7 @@ final class GroupVideoCallViewModel: ObservableObject {
                             self?.isLoading = false
                             self?.isError = true
                             
-                            self?.error = error.message.orEmpty()
+                            self?.error = .api(error.message.orEmpty())
                         }
                     }
                     
@@ -440,14 +455,14 @@ final class GroupVideoCallViewModel: ObservableObject {
             // Handle connection error
             self.isConnecting = false
             self.isError = true
-            self.error = LocalizableText.videoCallConnectionFailed
+        self.error = .connection(LocalizableText.videoCallConnectionFailed)
         }
 
         func onJoinFailed() {
             // Handle join failed
             self.isConnecting = false
             self.isError = true
-            self.error = LocalizableText.videoCallFailedJoin
+            self.error = .connection(LocalizableText.videoCallFailedJoin)
         }
     
     func onStartFetch() {
@@ -632,7 +647,7 @@ final class GroupVideoCallViewModel: ObservableObject {
 
 extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     func onConnectedToMeetingRoom() {
-        self.onConnectionError()
+        
     }
     
     func onConnectingToMeetingRoom() {
@@ -715,7 +730,7 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     }
     
     func onReconnectedToMeetingRoom() {
-        self.onConnectionError()
+        
     }
     
     func onReconnectingToMeetingRoom() {

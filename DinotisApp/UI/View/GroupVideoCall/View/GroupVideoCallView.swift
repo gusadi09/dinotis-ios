@@ -126,6 +126,23 @@ struct GroupVideoCallView: View {
                 )
             )
         }
+        .alert(
+            LocalizableText.attentionText,
+            isPresented: $viewModel.isError,
+            presenting: viewModel.error
+        ) { action in
+            switch action {
+            default:
+                Button {
+                    print(action.errorDescription)
+                } label: {
+                    Text(LocalizableText.okText)
+                }
+
+            }
+        } message: { message in
+            Text(message.errorDescription)
+        }
     }
 }
 
