@@ -44,14 +44,14 @@ enum PresetConstant {
 }
 
 enum ErrorAlert {
-    case defaultError
+    case defaultError(String)
     case connection(String)
     case api(String)
     
     var errorDescription: String {
         switch self {
-        case .defaultError:
-            return LocalizableText.videoCallFailRequest
+        case .defaultError(let message):
+            return message
         case .connection(let message):
             return message
         case .api(let message):
@@ -577,8 +577,9 @@ final class GroupVideoCallViewModel: ObservableObject {
             
         } catch {
             print("Error in pinParticipant: \(error)")
-            let alertController = UIAlertController(title: LocalizableText.videoCallAlertError, message: LocalizableText.videoCallFailedPinParticipant, preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: LocalizableText.videoCallDismissError, style: .default, handler: nil))
+            self.isError = true
+            self.error = .defaultError(LocalizableText.videoCallFailedPinParticipant)
+            
         }
     }
     
@@ -587,8 +588,8 @@ final class GroupVideoCallViewModel: ObservableObject {
             try participant.disableAudio()
         } catch {
             print("Error in forceDisableAudio: \(error)")
-            let alertController = UIAlertController(title: LocalizableText.videoCallAlertError, message: LocalizableText.videoCallFailedDisableAudio, preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: LocalizableText.videoCallDismissError, style: .default, handler: nil))
+            self.isError = true
+            self.error = .defaultError(LocalizableText.videoCallFailedDisableAudio)
         }
     }
     
@@ -597,8 +598,8 @@ final class GroupVideoCallViewModel: ObservableObject {
             try participant.disableVideo()
         } catch {
             print("Error in forceDisableVideo: \(error)")
-            let alertController = UIAlertController(title: LocalizableText.videoCallAlertError, message: LocalizableText.videoCallFailedDisableVideo, preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: LocalizableText.videoCallDismissError, style: .default, handler: nil))
+            self.isError = true
+            self.error = .defaultError(LocalizableText.videoCallFailedDisableVideo)
         }
     }
     
@@ -607,8 +608,8 @@ final class GroupVideoCallViewModel: ObservableObject {
             try participant.kick()
         }catch {
             print("Error in kickParticipant: \(error)")
-            let alertController = UIAlertController(title: LocalizableText.videoCallAlertError, message: LocalizableText.videoCallFaiedKickParticipant, preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: LocalizableText.videoCallDismissError, style: .default, handler: nil))
+            self.isError = true
+            self.error = .defaultError(LocalizableText.videoCallFaiedKickParticipant)
         }
     }
     
@@ -617,8 +618,8 @@ final class GroupVideoCallViewModel: ObservableObject {
             try participant.acceptWaitListedRequest()
         } catch {
             print("Error in acceptWaitlisted: \(error)")
-            let alertController = UIAlertController(title: LocalizableText.videoCallAlertError, message: LocalizableText.videoCallFailedAcceptWaitlistedRequest, preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: LocalizableText.videoCallDismissError, style: .default, handler: nil))
+            self.isError = true
+            self.error = .defaultError(LocalizableText.videoCallFailedAcceptWaitlistedRequest)
         }
     }
     
@@ -628,8 +629,8 @@ final class GroupVideoCallViewModel: ObservableObject {
             self.messageText = ""
         } catch {
             print("Error to send message \(self.messageText): \(error)")
-            let alertController = UIAlertController(title: LocalizableText.videoCallAlertError, message: LocalizableText.videoCallFailedSendMessage, preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: LocalizableText.videoCallDismissError, style: .default, handler: nil))
+            self.isError = true
+            self.error = .defaultError(LocalizableText.videoCallFailedSendMessage)
         }
     }
     
@@ -638,8 +639,8 @@ final class GroupVideoCallViewModel: ObservableObject {
             try self.meeting.participants.acceptAllWaitingRequests()
         } catch {
             print("Error in acceptAllWaitingRequest: \(error)")
-            let alertController = UIAlertController(title: LocalizableText.videoCallAlertError, message: LocalizableText.videoCallFailedAcceptAllRequest, preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: LocalizableText.videoCallDismissError, style: .default, handler: nil))
+            self.isError = true
+            self.error = .defaultError(LocalizableText.videoCallFailedAcceptAllRequest)
         }
     }
     
