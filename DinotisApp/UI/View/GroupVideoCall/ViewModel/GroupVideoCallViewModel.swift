@@ -647,7 +647,7 @@ final class GroupVideoCallViewModel: ObservableObject {
 
 extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     func onConnectedToMeetingRoom() {
-        
+        self.isConnecting = false
     }
     
     func onConnectingToMeetingRoom() {
@@ -664,8 +664,8 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     
     func onDisconnectedFromMeetingRoom(reason: String) {
         self.isConnecting = false
-        self.showConnectionErrorAlert = false
-        self.connectionError = nil
+        self.isError = true
+        self.error = .connection(reason)
     }
     
     func onMeetingInitCompleted() {
@@ -730,7 +730,7 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     }
     
     func onReconnectedToMeetingRoom() {
-        
+        self.isConnecting = false
     }
     
     func onReconnectingToMeetingRoom() {
