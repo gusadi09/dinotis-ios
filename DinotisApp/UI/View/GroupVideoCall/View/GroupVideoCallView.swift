@@ -379,7 +379,7 @@ fileprivate extension GroupVideoCallView {
                     
                     VStack {
                         if viewModel.isJoined {
-                            if ((viewModel.pinned != nil || !viewModel.screenShareUser.isEmpty) && viewModel.index == 1) {
+                            if viewModel.index == 1 {
                                 HStack(spacing: 15) {
                                     
                                     Button {
