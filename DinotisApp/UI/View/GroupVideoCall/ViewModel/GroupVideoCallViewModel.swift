@@ -499,7 +499,8 @@ final class GroupVideoCallViewModel: ObservableObject {
                 meeting.localUser.enableVideo()
             }
         } catch {
-            print("error enable/disable camera")
+            self.isError = true
+            self.error = .defaultError(LocalizableText.videoCallFailedDisableVideo)
         }
     }
     
@@ -511,7 +512,8 @@ final class GroupVideoCallViewModel: ObservableObject {
                 meeting.localUser.enableAudio()
             }
         } catch {
-            print("error enable/disable camera")
+            self.isError = true
+            self.error = .defaultError(LocalizableText.videoCallFailedDisableAudio)
         }
     }
     
@@ -699,6 +701,7 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     
     func onMeetingRoomJoinCompleted() {
         self.participants = meeting.participants.active
+        self.pinned = self.meeting.participants.pinned
         self.screenShareUser = meeting.participants.screenshares
         self.screenShareId = meeting.participants.screenshares.first
         withAnimation {
@@ -706,7 +709,6 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
         }
         self.isConnecting = false
         self.isPreview = false
-        self.pinned = meeting.participants.pinned
         self.localUserId = meeting.localUser.userId
        
     }
@@ -761,19 +763,26 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
     }
     
     func onParticipantPinned(participant: DyteJoinedMeetingParticipant) {
+        self.index = 1
         self.pinned = nil
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
-            self.pinned = participant
-            self.index = 0
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            withAnimation {
+                self.index = 0
+            }
+            self.pinned = self.meeting.participants.pinned
         }
+        
     }
     
     func onParticipantUnpinned(participant: DyteJoinedMeetingParticipant) {
+        self.index = 1
         self.pinned = nil
         
-        self.participants = self.meeting.participants.active
-        self.index = 1
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+            self.pinned = self.meeting.participants.pinned
+        }
     }
     
     func onScreenShareEnded(participant: DyteScreenShareMeetingParticipant) {
