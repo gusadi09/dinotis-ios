@@ -262,12 +262,12 @@ struct TwilioGroupVideoCallView: View {
                                                 .scaledToFit()
                                                 .frame(height: geo.size.height/4)
                                             
-                                            Text("Menunggu Kreator Untuk Bergabung...")
+                                            Text(LocalizableText.videoCallWaitingCreatorTitle)
                                                 .font(.robotoBold(size: 22))
                                                 .foregroundColor(.white)
                                                 .multilineTextAlignment(.center)
                                             
-                                            Text("Kalau bosan menunggu, kamu bisa menghitung ada berapa logo DINOTIS yang terdapat di halaman ini 😉")
+                                            Text(LocalizableText.videoCallWaitingCreatorSubtitle)
                                                 .font(.robotoRegular(size: 14))
                                                 .foregroundColor(.white)
                                                 .multilineTextAlignment(.center)
@@ -650,6 +650,7 @@ struct TwilioGroupVideoCallView: View {
     }
 }
 
+
 struct TwilioGroupVideoCallView_Previews: PreviewProvider {
     static var previews: some View {
         TwilioGroupVideoCallView(
@@ -684,7 +685,9 @@ struct TwilioGroupVideoCallView_Previews: PreviewProvider {
                     background: nil,
                     meetingCollaborations: nil,
                     meetingUrls: nil,
-                    meetingUploads: nil
+                    meetingUploads: nil,
+                    roomSid: nil,
+                    dyteMeetingId: nil
                 )
             ),
             meetingId: .constant(""), speaker: SpeakerVideoViewModel()

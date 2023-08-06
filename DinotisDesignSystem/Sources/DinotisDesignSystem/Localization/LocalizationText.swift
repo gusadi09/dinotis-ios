@@ -1673,4 +1673,404 @@ public enum LocalizableText {
         bundle: .module,
         comment: "title content of outdated version view"
     )
+    public static let labelChat = NSLocalizedString(
+        "label_chat",
+        bundle: .module,
+        comment: "Chat label"
+    )
+    public static let aboutCallTitle = NSLocalizedString(
+        "about_call_title",
+        bundle: .module,
+        comment: "title in about call bottom sheet"
+    )
+    public static let labelPolls = NSLocalizedString(
+        "label_polls",
+        bundle: .module,
+        comment: "label button in polls section"
+    )
+    public static let titleWaitingRoom = NSLocalizedString(
+        "title_waiting_room",
+        bundle: .module,
+        comment: "title in waiting room"
+    )
+    public static let acceptAllLabel = NSLocalizedString(
+        "accept_all_label",
+        bundle: .module,
+        comment: "accept all label in meeting room"
+    )
+    public static let acceptToJoinLabel = NSLocalizedString(
+        "accept_to_join_label",
+        bundle: .module,
+        comment: "accept to join label in meeting room"
+    )
+    public static let speakerTitle = NSLocalizedString(
+        "speaker_title",
+        bundle: .module,
+        comment: "speaker title"
+    )
+    public static let viewerTitle = NSLocalizedString(
+        "viewer_title",
+        bundle: .module,
+        comment: "viewer title"
+    )
+    
+    public static let liveText = NSLocalizedString(
+        "live_text",
+        bundle: .module,
+        comment: "general live text"
+    )
+    
+    public static let videoCallMoreMenu = NSLocalizedString(
+        "video_call_more_menu",
+        bundle: .module,
+        comment: "more menu text for more menu sheet title"
+    )
+    public static let videoCallQna = NSLocalizedString(
+        "video_call_qna",
+        bundle: .module,
+        comment: "qna text"
+    )
+    public static let videoCallPolls = NSLocalizedString(
+        "video_call_polls",
+        bundle: .module,
+        comment: "polls text"
+    )
+    public static let videoCallRecord = NSLocalizedString(
+        "video_call_record",
+        bundle: .module,
+        comment: "record text"
+    )
+    public static let videoCallInformation = NSLocalizedString(
+        "video_call_information",
+        bundle: .module,
+        comment: "information text"
+    )
+    public static let generalSearchPlaceholder = NSLocalizedString(
+        "general_search_placeholder",
+        bundle: .module,
+        comment: "for general search bar placeholder"
+    )
+    public static let videoCallMessagePlaceholder = NSLocalizedString(
+        "video_call_message_placeholder",
+        bundle: .module,
+        comment: "for message bar placeholder"
+    )
+    public static let videoCallPollByHost = NSLocalizedString(
+        "video_call_poll_by_host",
+        bundle: .module,
+        comment: "poll by host title in video call"
+    )
+    public static let videoCallPollQuestionTitle = NSLocalizedString(
+        "video_call_poll_question_title",
+        bundle: .module,
+        comment: "poll question title in video call"
+    )
+    public static let videoCallPollQuestionPlaceholder = NSLocalizedString(
+        "video_call_poll_question_placeholder",
+        bundle: .module,
+        comment: "for poll question bar placeholder"
+    )
+    public static let videoCallPollAddOption = NSLocalizedString(
+        "video_call_poll_add_option",
+        bundle: .module,
+        comment: "add option text"
+    )
+    public static let anonymousText = NSLocalizedString(
+        "anonymous_text",
+        bundle: .module,
+        comment: "anonymous text"
+    )
+    public static let videoCallPollHideResult = NSLocalizedString(
+        "video_call_poll_hide_result",
+        bundle: .module,
+        comment: "for video call hide polling result text"
+    )
+    public static let videoCallCreatePollTitle = NSLocalizedString(
+        "video_call_create_poll_title",
+        bundle: .module,
+        comment: "for video call create polling title"
+    )
+    public static let videoCallCancelPollTitle = NSLocalizedString(
+        "video_call_cancel_poll_title",
+        bundle: .module,
+        comment: "for video call cancel polling title"
+    )
+    public static let videoCallCreateNewPollTitle = NSLocalizedString(
+        "video_call_create_new_poll_title",
+        bundle: .module,
+        comment: "for video call create new polling title"
+    )
+    public static let videoCallCreatePollFooter = NSLocalizedString(
+        "video_call_create_poll_footer",
+        bundle: .module,
+        comment: "for video call create polling footer"
+    )
+    public static let videoCallFiveMinutesLeftAlertTitle = NSLocalizedString(
+        "video_call_five_minutes_left_alert_title",
+        bundle: .module,
+        comment: "for video call alert title when session is about to end"
+    )
+    public static let videoCallFiveMinutesLeftAlertDesc = NSLocalizedString(
+        "video_call_five_minutes_left_alert_desc",
+        bundle: .module,
+        comment: "for video call alert description when session is about to end"
+    )
+    public static let understoodText = NSLocalizedString(
+        "understood_text",
+        bundle: .module,
+        comment: "understood text"
+    )
+    public static let videoCallScreenShareText = NSLocalizedString(
+        "video_call_screen_share_text",
+        bundle: .module,
+        comment: "video call screen share text"
+    )
+    
+    public static func videoCallSessionTitle(creatorName: String) -> String {
+        String(
+            format: NSLocalizedString(
+                "video_call_session_title",
+                bundle: .module,
+                comment: "video call session title"
+            ),
+            creatorName
+        )
+    }
+    
+    public static let videoCallScheduledText = NSLocalizedString(
+        "video_call_scheduled_text",
+        bundle: .module,
+        comment: "video call schedule text"
+    )
+    public static let timeText = NSLocalizedString(
+        "time_text",
+        bundle: .module,
+        comment: "time text"
+    )
+    public static let typeText = NSLocalizedString(
+        "type_text",
+        bundle: .module,
+        comment: "type text"
+    )
+    public static let groupCallText = NSLocalizedString(
+        "group_call_text",
+        bundle: .module,
+        comment: "type text"
+    )
+    public static let videoCallListQuestionTitle = NSLocalizedString(
+        "video_call_list_question_title",
+        bundle: .module,
+        comment: "video call list of question title"
+    )
+    public static let videoCallBoxQuestionTitle = NSLocalizedString(
+        "video_call_box_question_title",
+        bundle: .module,
+        comment: "video call question box title"
+    )
+    public static let videoCallSendQuestionTitle = NSLocalizedString(
+        "video_call_send_question_title",
+        bundle: .module,
+        comment: "video call send question title"
+    )
+    
+    public static let videoCallJoinStageRequest = NSLocalizedString(
+        "video_call_join_stage_request",
+        bundle: .module,
+        comment: "video call join stage request"
+    )
+    
+    public static let videoCallPinParticipant = NSLocalizedString(
+        "video_call_pin_participant",
+        bundle: .module,
+        comment: "video call pin participant"
+    )
+    
+    public static let videoCallUnpinParticipant = NSLocalizedString(
+        "video_call_unpin_participant",
+        bundle: .module,
+        comment: "video call unpin participant"
+    )
+    
+    public static let videoCallMuteParticipant = NSLocalizedString(
+        "video_call_mute_participant",
+        bundle: .module,
+        comment: "video call mute participant"
+    )
+    
+    public static let videoCallOffVideo = NSLocalizedString(
+        "video_call_off_video",
+        bundle: .module,
+        comment: "video call off video"
+    )
+    
+    public static let videoCallPutToViewer = NSLocalizedString(
+        "video_call_put_to_viewer",
+        bundle: .module,
+        comment: "video call put to viewer"
+    )
+    
+    public static let videoCallKickFromSession = NSLocalizedString(
+        "video_call_kick_from_session",
+        bundle: .module,
+        comment: "video call kick from session"
+    )
+    
+    public static let videoCallKickAlertFromSession = NSLocalizedString(
+        "video_call_alert_kick_participant",
+        bundle: .module,
+        comment: "video call kick alert from session"
+    )
+    
+    public static let videoCallKickAlertSecondaryButton = NSLocalizedString(
+        "video_call_secondary_button_alert_kick_participant",
+        bundle: .module,
+        comment: "video call kick alert secondary button"
+    )
+    
+    public static let videoCallKickAlertPrimaryButton = NSLocalizedString(
+        "video_call_primary_button_alert_kick_participant",
+        bundle: .module,
+        comment: "video call kick alert primary button"
+    )
+    public static let videoCallWaitingRoomTitle = NSLocalizedString(
+        "video_call_waiting_room_title",
+        bundle: .module,
+        comment: "video call waiting room title"
+    )
+    public static let videoCallWaitingRoomDesc = NSLocalizedString(
+        "video_call_waiting_room_desc",
+        bundle: .module,
+        comment: "video call waiting room description"
+    )
+    public static let creatorRescheduleWarning = NSLocalizedString(
+        "creator_reschedule_warning",
+        bundle: .module,
+        comment: "reschedule warning when creator wants to edit the schedule"
+    )
+    public static let videoCallPutToSpeaker = NSLocalizedString(
+        "video-call-put-to-speaker",
+        bundle: .module,
+        comment: "video call viewer put to speaker"
+    )
+    public static let videoCallQnAEmptyText = NSLocalizedString(
+        "video_call_qna_empty",
+        bundle: .module,
+        comment: "empty state qna text"
+    )
+    public static let videoCallQnaAnsweredEmptyText = NSLocalizedString(
+        "video_call_qna_answered_empty",
+        bundle: .module,
+        comment: "empty state qna answered text"
+    )
+    public static let videoCallQuestionsTitle = NSLocalizedString(
+        "video_call_questions_title",
+        bundle: .module,
+        comment: "questions tab title text"
+    )
+    public static let videoCallAnsweredTitle = NSLocalizedString(
+        "video_call_answered_title",
+        bundle: .module,
+        comment: "answered tab title text"
+    )
+    public static let videoCallRemovedFromRoomMessage = NSLocalizedString(
+        "video_call_removed_from_room_message",
+        bundle: .module,
+        comment: "kicked message"
+    )
+    public static let videoCallWaitingCreatorTitle = NSLocalizedString(
+        "video_call_waiting_creator_title",
+        bundle: .module,
+        comment: "waiting creator title"
+    )
+    public static let videoCallWaitingCreatorSubtitle = NSLocalizedString(
+        "video_call_waiting_creator_subtitle",
+        bundle: .module,
+        comment: "waiting creator subtitle"
+    )
+    
+    public static let videoCallConnectionFailed = NSLocalizedString(
+        "video_call_failed_connect_meeting_room",
+        bundle: .module,
+        comment: "connection_failed"
+    )
+    
+    public static let videoCallFailedJoin = NSLocalizedString(
+        "video_call_failed_join_meeting_room",
+        bundle: .module,
+        comment: "join_failed"
+    )
+    
+    public static let videoCallAlertError = NSLocalizedString(
+        "video_call_alert_error",
+        bundle: .module,
+        comment: "alert_error"
+    )
+    
+    public static let videoCallDismissError = NSLocalizedString(
+        "video_call_dismiss_error",
+        bundle: .module,
+        comment: "dismiss_error"
+    )
+    
+    public static let videoCallFailedPinParticipant = NSLocalizedString(
+        "video_call_failed_pin",
+        bundle: .module,
+        comment: "failed_pin"
+    )
+    
+    public static let videoCallFailedDisableAudio = NSLocalizedString(
+        "video_call_failed_disable_audio",
+        bundle: .module,
+        comment: "failed_disable_audio"
+    )
+    
+    public static let videoCallFailedDisableVideo = NSLocalizedString(
+        "video_call_failed_disable_video",
+        bundle: .module,
+        comment: "failed_disable_video"
+    )
+    
+    public static let videoCallFaiedKickParticipant = NSLocalizedString(
+        "video_call_failed_kick_participant",
+        bundle: .module,
+        comment: "failed_kick_participant"
+    )
+    
+    public static let videoCallFailedAcceptWaitlistedRequest = NSLocalizedString(
+        "video_call_failed_accept_waitlisted_participant",
+        bundle: .module,
+        comment: "failed_accept_waitlisted"
+    )
+    
+    public static let videoCallFailedSendMessage = NSLocalizedString(
+        "video_call_failed_send_request",
+        bundle: .module,
+        comment: "failed_send_message"
+    )
+    
+    public static let videoCallFailedAcceptAllRequest = NSLocalizedString(
+        "video_call_failed_accept_all_waiting_request",
+        bundle: .module,
+        comment: "failed_accept_all_waiting_request"
+    )
+    
+    public static let videoCallFailRequest = NSLocalizedString(
+        "video_call_fail_request",
+        bundle: .module,
+        comment: "failed_request"
+    )
+    
+    public static let videoCallLeaveRoom = NSLocalizedString(
+        "video_call_leave_room",
+        bundle: .module,
+        comment: "leave_room"
+    )
+    
+    public static let videoCallRejoin = NSLocalizedString(
+        "video_call_rejoin",
+        bundle: .module,
+        comment: "rejoin"
+    )
 }
+
+

@@ -28,7 +28,7 @@ extension TalentProfileDetailView {
                                 Button {
                                     withAnimation {
                                         viewModel.tabNumb = 0
-                                        reader.scrollTo(0)
+                                        reader.scrollTo(0, anchor: .center)
                                     }
                                     
                                 } label: {
@@ -55,7 +55,7 @@ extension TalentProfileDetailView {
                                 Button {
                                     withAnimation {
                                         viewModel.tabNumb = 1
-                                        reader.scrollTo(1)
+                                        reader.scrollTo(1, anchor: .center)
                                     }
                                 } label: {
                                     VStack(spacing: 25) {
@@ -79,7 +79,7 @@ extension TalentProfileDetailView {
                                 Button {
                                     withAnimation {
                                         viewModel.tabNumb = 2
-                                        reader.scrollTo(2)
+                                        reader.scrollTo(2, anchor: .center)
                                     }
                                 } label: {
                                     VStack(spacing: 25) {
@@ -105,7 +105,7 @@ extension TalentProfileDetailView {
                                     Button {
                                         withAnimation {
                                             viewModel.tabNumb = 3
-                                            reader.scrollTo(3)
+                                            reader.scrollTo(3, anchor: .center)
                                         }
                                     } label: {
                                         VStack(spacing: 25) {
@@ -970,6 +970,8 @@ extension TalentProfileDetailView {
                             .foregroundColor(Color(UIColor.systemGray4))
                     }
                 }
+                
+                Spacer()
                 
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 16) {

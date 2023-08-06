@@ -133,7 +133,11 @@ struct TalentScheduleDetailView: View {
                                 TalentDetailScheduleCardView(
                                     data: .constant(data),
                                     onTapEdit: {
-                                        viewModel.routeToEditRateCardSchedule()
+                                        if viewModel.dataMeeting?.meetingRequest != nil {
+                                            viewModel.routeToEditRateCardSchedule()
+                                        } else {
+                                            viewModel.routeToEditSchedule()
+                                        }
                                     }, onTapDelete: {
                                         viewModel.isDeleteShow.toggle()
                                     }, onTapEnd: {
@@ -433,26 +437,38 @@ struct TalentScheduleDetailView: View {
 									message: Text(LocaleText.successConfirmRequestText),
 									dismissButton: .default(Text(LocaleText.okText), action: {
 										presentationMode.wrappedValue.dismiss()
-									})
-								)
-							}
-
-							NavigationLink(
-								unwrapping: $viewModel.route,
-								case: /HomeRouting.twilioLiveStream,
+                                    })
+                                )
+                            }
+                            
+                            NavigationLink(
+                                unwrapping: $viewModel.route,
+                                case: /HomeRouting.twilioLiveStream,
+                                destination: {viewModel in
+                                    TwilioGroupVideoCallView(
+                                        viewModel: viewModel.wrappedValue,
+                                        meetingId: .constant(meetId), speaker: SpeakerVideoViewModel()
+                                    )
+                                    .environmentObject(streamViewModel)
+                                    .environmentObject(participantsViewModel)
+                                    .environmentObject(streamManager)
+                                    .environmentObject(speakerGridViewModel)
+                                    .environmentObject(presentationLayoutViewModel)
+                                    .environmentObject(speakerSettingsManager)
+                                    .environmentObject(hostControlsManager)
+                                    .environmentObject(chatManager)
+                                },
+                                onNavigate: {_ in},
+                                label: {
+                                    EmptyView()
+                                }
+                            )
+                            
+                            NavigationLink(
+                                unwrapping: $viewModel.route,
+								case: /HomeRouting.dyteGroupVideoCall,
 								destination: {viewModel in
-									TwilioGroupVideoCallView(
-										viewModel: viewModel.wrappedValue,
-										meetingId: .constant(meetId), speaker: SpeakerVideoViewModel()
-									)
-									.environmentObject(streamViewModel)
-									.environmentObject(participantsViewModel)
-									.environmentObject(streamManager)
-									.environmentObject(speakerGridViewModel)
-									.environmentObject(presentationLayoutViewModel)
-									.environmentObject(speakerSettingsManager)
-									.environmentObject(hostControlsManager)
-									.environmentObject(chatManager)
+                                    GroupVideoCallView(viewModel: viewModel.wrappedValue)
 								},
 								onNavigate: {_ in},
 								label: {
@@ -615,6 +631,8 @@ struct TalentScheduleDetailView: View {
 									.foregroundColor(.black)
 									.multilineTextAlignment(.center)
 							}
+                            
+                            Spacer()
 
 							HStack(spacing: 15) {
 								Button(action: {
@@ -683,6 +701,8 @@ struct TalentScheduleDetailView: View {
 									.foregroundColor(.black)
 									.multilineTextAlignment(.center)
 							}
+                            
+                            Spacer()
 
 							HStack(spacing: 15) {
 								Button(action: {

@@ -262,8 +262,7 @@ struct LoginViewUser: View {
 							loginVM.doRegister()
 						}
 							.padding()
-							.padding(.vertical)
-							.presentationDetents([.fraction(0.45), .large])
+                            .presentationDetents([.fraction(0.34)])
 					} else {
 						SelectChannelView(channel: $loginVM.selectedChannel, geo: geo) {
 							loginVM.doRegister()

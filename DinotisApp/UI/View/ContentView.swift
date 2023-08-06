@@ -18,7 +18,8 @@ struct ContentView: View {
 		NavigationView {
 			OnboardingView()
 		}
-		.navigationViewStyle(StackNavigationViewStyle())
+        .navigationViewStyle(.stack)
+        .dynamicTypeSize(.large)
         .onAppear {
             UIScrollView.appearance().backgroundColor = .clear
         }

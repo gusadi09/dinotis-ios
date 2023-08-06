@@ -23,6 +23,7 @@ final class TwilioLiveStreamViewModel: ObservableObject {
 	
 	var backToRoot: (() -> Void)
 	var backToHome: (() -> Void)
+    
 	@Published var route: HomeRouting? = nil
 	@Published var isShowingToolbar = true
 	
@@ -77,6 +78,7 @@ final class TwilioLiveStreamViewModel: ObservableObject {
 	@Published var isShowed = false
 	
 	@Published var isSwitched = true
+    
 	
 	private var timer: Timer?
 	
