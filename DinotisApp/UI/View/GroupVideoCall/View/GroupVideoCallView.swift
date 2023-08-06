@@ -316,7 +316,7 @@ fileprivate extension GroupVideoCallView {
                         
                         if viewModel.isJoined {
                             
-                            if (viewModel.localUser?.stageStatus ?? .offStage) == .onStage {
+                            if viewModel.meeting.localUser.stageStatus == .onStage || viewModel.meeting.localUser.isCameraPermissionGranted {
                                 Button {
                                     withAnimation(.spring()) {
                                         viewModel.switchCamera()
@@ -721,11 +721,15 @@ fileprivate extension GroupVideoCallView {
                 
                 ScrollView {
                     LazyVStack(spacing: 0) {
-                        if viewModel.meeting.localUser.stageStatus == .onStage {
+                        if viewModel.meeting.localUser.stageStatus == .onStage || viewModel.meeting.localUser.isCameraPermissionGranted {
                             Button {
                                 viewModel.showingMoreMenu = false
                                 DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
-                                    self.viewModel.isShowingQnA.toggle()
+                                    if self.viewModel.meeting.localUser.presetName == PresetConstant.viewer.value {
+                                        self.viewModel.isShowQuestionBox.toggle()
+                                    } else {
+                                        self.viewModel.isShowingQnA.toggle()
+                                    }
                                 }
                             } label: {
                                 HStack(alignment: .center, spacing: 11) {
@@ -904,7 +908,7 @@ fileprivate extension GroupVideoCallView {
             HStack(spacing: 12) {
                 Button {
                     withAnimation(.spring()) {
-                        if viewModel.meeting.localUser.stageStatus == .onStage {
+                        if viewModel.meeting.localUser.stageStatus == .onStage || viewModel.meeting.localUser.isMicrophonePermissionGranted  {
                             viewModel.toggleMicrophone()
                         } else {
                             if viewModel.isRaised {
@@ -912,10 +916,12 @@ fileprivate extension GroupVideoCallView {
                             } else {
                                 viewModel.meeting.stage.requestAccess()
                             }
+                            
+                            viewModel.isRaised = !viewModel.isRaised
                         }
                     }
                 } label: {
-                    if viewModel.meeting.localUser.stageStatus == .onStage {
+                    if viewModel.meeting.localUser.stageStatus == .onStage || viewModel.meeting.localUser.isMicrophonePermissionGranted {
                         (viewModel.isAudioOn ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
                             .resizable()
                             .scaledToFit()
@@ -938,7 +944,7 @@ fileprivate extension GroupVideoCallView {
                 
                 Button {
                     withAnimation(.spring()) {
-                        if viewModel.meeting.localUser.stageStatus == .onStage {
+                        if viewModel.meeting.localUser.stageStatus == .onStage || viewModel.meeting.localUser.isCameraPermissionGranted  {
                             viewModel.toggleCamera()
                         } else {
                             viewModel.tabSelection = 0
@@ -946,7 +952,7 @@ fileprivate extension GroupVideoCallView {
                         }
                     }
                 } label: {
-                    if viewModel.meeting.localUser.stageStatus == .onStage {
+                    if viewModel.meeting.localUser.stageStatus == .onStage || viewModel.meeting.localUser.isCameraPermissionGranted  {
                         (viewModel.isCameraOn ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
                             .resizable()
                             .scaledToFit()
@@ -970,14 +976,14 @@ fileprivate extension GroupVideoCallView {
                 }
                 
                 Button {
-                    if viewModel.meeting.localUser.stageStatus == .onStage {
+                    if viewModel.meeting.localUser.stageStatus == .onStage || viewModel.meeting.localUser.isCameraPermissionGranted {
                         viewModel.tabSelection = 0
                         viewModel.isShowAboutCallBottomSheet.toggle()
                     } else {
                         viewModel.isShowQuestionBox.toggle()
                     }
                 } label: {
-                    if viewModel.meeting.localUser.stageStatus == .onStage {
+                    if viewModel.meeting.localUser.stageStatus == .onStage || viewModel.meeting.localUser.isCameraPermissionGranted {
                         Image.videoCallChatIcon
                             .resizable()
                             .scaledToFit()
@@ -1993,6 +1999,7 @@ fileprivate extension GroupVideoCallView {
                                                         Text(LocalizableText.videoCallPutToViewer)
                                                         
                                                     }
+                                                    .buttonStyle(.plain)
                                                 }
                                                 
                                                 if participant.id != (viewModel.localUser?.id).orEmpty() {
