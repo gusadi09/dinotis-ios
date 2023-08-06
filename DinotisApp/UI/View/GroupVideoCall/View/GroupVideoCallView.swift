@@ -176,22 +176,18 @@ fileprivate extension GroupVideoCallView {
                     .isHidden(!viewModel.isShowingToolbar || !isPortrait, remove: !viewModel.isShowingToolbar || !isPortrait)
                 
                 TabView(selection: $viewModel.index) {
-                    if viewModel.pinned != nil || !viewModel.screenShareUser.isEmpty {
+                    if viewModel.meeting.participants.pinned != nil || !viewModel.screenShareUser.isEmpty {
                         VStack {
                             if viewModel.screenShareUser.isEmpty {
                                 
-                                RemoteUserJoinedPrimaryVideoContainerView(viewModel: viewModel, participant: $viewModel.pinned)
+                                RemoteUserPinnedPrimaryVideoContainerView(viewModel: viewModel)
                                     .padding(.horizontal)
                                     .padding(.bottom)
                                 
                             } else {
-                                ZStack(alignment: .top) {
-                                    
-                                    RemoteScreenShareVideoContainerView(viewModel: viewModel, participant: $viewModel.screenShareId)
-                                        .padding(.horizontal)
-                                        .padding(.bottom)
-                                    
-                                }
+                                RemoteScreenShareVideoContainerView(viewModel: viewModel, participant: $viewModel.screenShareId)
+                                    .padding(.horizontal)
+                                    .padding(.bottom)
                             }
                             
                             Spacer()
@@ -418,7 +414,7 @@ fileprivate extension GroupVideoCallView {
                         }
                         
                         HStack(spacing: 5) {
-                            if viewModel.pinned != nil || !viewModel.screenShareUser.isEmpty {
+                            if viewModel.meeting.participants.pinned != nil || !viewModel.screenShareUser.isEmpty {
                                 ForEach(0...1, id: \.self) { index in
                                     RoundedRectangle(cornerRadius: 30)
                                         .foregroundColor(viewModel.index == index ? .DinotisDefault.primary : .gray)
@@ -1121,8 +1117,8 @@ fileprivate extension GroupVideoCallView {
         
         var body: some View {
             ZStack(alignment: .bottomLeading) {
-                if viewModel.index == 0 && (viewModel.pinned?.id).orEmpty() == participant.id {
-                    if viewModel.pinned == nil && viewModel.screenShareUser.isEmpty {
+                if viewModel.index == 0 && (viewModel.meeting.participants.pinned?.id).orEmpty() == participant.id {
+                    if viewModel.meeting.participants.pinned == nil && viewModel.screenShareUser.isEmpty {
                         if participant.fetchVideoEnabled() {
                             if let video = participant.getVideoView() {
                                 UIVideoView(videoView: video, width: 176, height: 246)
@@ -1195,31 +1191,35 @@ fileprivate extension GroupVideoCallView {
         }
     }
     
-    struct RemoteUserJoinedPrimaryVideoContainerView: View {
+    struct RemoteUserPinnedPrimaryVideoContainerView: View {
         
         @ObservedObject var viewModel: GroupVideoCallViewModel
-        @Binding var participant: DyteJoinedMeetingParticipant?
         
         var body: some View {
             ZStack(alignment: .bottomLeading) {
-                if viewModel.index == 1 && (viewModel.localUser?.id == participant?.id || viewModel.pinned?.id == participant?.id) {
+                if viewModel.index == 1 && (viewModel.pinned?.id == viewModel.meeting.participants.pinned?.id) {
                     RoundedRectangle(cornerRadius: 10)
                         .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
-                        .frame(width: .infinity, height: .infinity)
                 } else {
-                    if participant?.fetchVideoEnabled() ?? false {
-                        if let video = participant?.getVideoView() {
+                    if viewModel.meeting.participants.pinned?.fetchVideoEnabled() ?? false {
+                        if let video = viewModel.meeting.participants.pinned?.getVideoView() {
                             UIVideoView(videoView: video, width: .infinity, height: .infinity)
-                                .frame(width: .infinity, height: .infinity)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
+                        } else {
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
+                                .overlay(
+                                    ImageLoader(url: (viewModel.meeting.participants.pinned?.picture).orEmpty(), width: 136, height: 136)
+                                        .frame(width: 136, height: 136)
+                                        .clipShape(Circle())
+                                )
                         }
                         
                     } else {
                         RoundedRectangle(cornerRadius: 10)
                             .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
-                            .frame(width: .infinity, height: .infinity)
                             .overlay(
-                                ImageLoader(url: (participant?.picture).orEmpty(), width: 136, height: 136)
+                                ImageLoader(url: (viewModel.meeting.participants.pinned?.picture).orEmpty(), width: 136, height: 136)
                                     .frame(width: 136, height: 136)
                                     .clipShape(Circle())
                             )
@@ -1228,19 +1228,19 @@ fileprivate extension GroupVideoCallView {
                 
                 HStack(spacing: 0) {
                     (
-                        (participant?.fetchAudioEnabled() ?? false) ?
+                        (viewModel.meeting.participants.pinned?.fetchAudioEnabled() ?? false) ?
                         Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon
                     )
                     .resizable()
                     .scaledToFit()
                     .frame(width: 12)
                     
-                    if participant?.isPinned ?? false {
-                        Text(" \((participant?.name).orEmpty()) \(viewModel.userType(preset: (participant?.presetName).orEmpty())) \(Image(systemName: "pin"))")
+                    if viewModel.meeting.participants.pinned?.isPinned ?? false {
+                        Text(" \((viewModel.meeting.participants.pinned?.name).orEmpty()) \(viewModel.userType(preset: (viewModel.meeting.participants.pinned?.presetName).orEmpty())) \(Image(systemName: "pin"))")
                             .font(.robotoMedium(size: 10))
                             .foregroundColor(.white)
                     } else {
-                        Text(" \((participant?.name).orEmpty()) \(viewModel.userType(preset: (participant?.presetName).orEmpty()))")
+                        Text(" \((viewModel.meeting.participants.pinned?.name).orEmpty()) \(viewModel.userType(preset: (viewModel.meeting.participants.pinned?.presetName).orEmpty()))")
                             .font(.robotoMedium(size: 10))
                             .foregroundColor(.white)
                     }
