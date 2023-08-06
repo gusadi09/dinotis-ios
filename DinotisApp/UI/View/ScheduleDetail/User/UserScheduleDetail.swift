@@ -523,8 +523,6 @@ private extension UserScheduleDetail {
 					.padding()
 				}
 				
-				
-				
 				if let detail = viewModel.dataBooking {
 					if viewModel.dataBooking?.meeting?.meetingRequest != nil {
 						if let detail = viewModel.dataBooking?.meeting {
@@ -974,10 +972,6 @@ private extension UserScheduleDetail {
                                                 Text(LocalizableText.stepPaymentDone)
 													.font(.robotoMedium(size: 10))
                                                     .foregroundColor(bookingPay.paidAt != nil ? .DinotisDefault.primary : Color(.systemGray4))
-												
-                                                Text(DateUtils.dateFormatter(bookingPay.paidAt.orCurrentDate(), forFormat: .ddMMyyyyHHmm))
-													.font(.robotoRegular(size: 10))
-													.foregroundColor(.black)
 											}
 											.multilineTextAlignment(.center)
 											.frame(width: 55)
@@ -988,10 +982,7 @@ private extension UserScheduleDetail {
                                                 Text(LocalizableText.stepWaitingForSession)
 													.font(.robotoMedium(size: 10))
                                                     .foregroundColor(bookingPay.paidAt != nil ? .DinotisDefault.primary : Color(.systemGray4))
-												
-                                                Text(DateUtils.dateFormatter(bookingPay.paidAt.orCurrentDate(), forFormat: .ddMMyyyyHHmm))
-													.font(.robotoRegular(size: 10))
-													.foregroundColor(.black)
+
 											}
 											.multilineTextAlignment(.center)
 											.frame(width: 55)
@@ -1008,11 +999,6 @@ private extension UserScheduleDetail {
 															Color(.systemGray4)
 													)
 												
-												Text(
-                                                    DateUtils.dateFormatter(detail.startedAt.orCurrentDate(), forFormat: .ddMMyyyyHHmm)
-												)
-												.font(.robotoRegular(size: 10))
-												.foregroundColor(.black)
 											}
 											.multilineTextAlignment(.center)
 											.frame(width: 55)
@@ -1024,9 +1010,6 @@ private extension UserScheduleDetail {
 													.font(.robotoMedium(size: 10))
                                                     .foregroundColor(detail.endedAt != nil ? .DinotisDefault.primary : Color(.systemGray4))
 												
-                                                Text(DateUtils.dateFormatter(detail.endedAt.orCurrentDate(), forFormat: .ddMMyyyyHHmm))
-													.font(.robotoRegular(size: 10))
-													.foregroundColor(.black)
 											}
 											.multilineTextAlignment(.center)
 											.frame(width: 55)
