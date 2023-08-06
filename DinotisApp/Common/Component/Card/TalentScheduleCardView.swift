@@ -83,19 +83,10 @@ struct TalentScheduleCardView: View {
 								}
                             }
                         } label: {
-                            HStack(spacing: 5) {
-                                Circle()
-                                    .scaledToFit()
-                                    .frame(height: 5)
-                                Circle()
-                                    .scaledToFit()
-                                    .frame(height: 5)
-                                Circle()
-                                    .scaledToFit()
-                                    .frame(height: 5)
-                            }
-                            .foregroundColor(Color("btn-stroke-1"))
-                            .contentShape(Rectangle())
+                            Image(systemName: "ellipsis")
+                                .foregroundColor(.DinotisDefault.darkPrimary)
+                                .imageScale(.large)
+                                .padding()
                         }
 
                     }

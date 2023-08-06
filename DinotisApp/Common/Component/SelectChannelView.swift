@@ -15,6 +15,8 @@ struct SelectChannelView: View {
     
     var body: some View {
         VStack(spacing: 10) {
+            Spacer()
+            
             Button {
                 channel = .whatsapp
                 action()

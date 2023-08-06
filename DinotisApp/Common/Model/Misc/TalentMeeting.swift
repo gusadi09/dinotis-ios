@@ -104,7 +104,7 @@ struct DetailMeeting: Codable {
 	var deletedAt: Date?
 	let meetingBundleId: String?
 	let meetingRequestId: String?
-	let user: User?
+	let user: UserResponse?
 	var bookings: [BookingMeeting]?
 	var participantDetails: [User]
 	let status: String?
@@ -115,13 +115,16 @@ struct DetailMeeting: Codable {
     let meetingUploads: [MeetingUploadData]?
     let managementId: Int?
     let isCollaborationAlreadyConfirmed: Bool?
+    let maxEditAt: Date?
+    let roomSid: String?
+    let dyteMeetingId: String?
 	
 	enum CodingKeys: String, CodingKey {
-		case id, title
+		case id, title, roomSid, dyteMeetingId
 		case description = "description"
 		case price, startAt, endAt, isPrivate, slots, isLiveStreaming, participantDetails
 		case userID = "userId"
-		case startedAt, endedAt, createdAt, updatedAt, deletedAt, bookings, participants, meetingBundleId, meetingRequestId, meetingRequest, status, cancelOptions, user, meetingCollaborations, meetingUrls, meetingUploads, managementId, isCollaborationAlreadyConfirmed
+		case startedAt, endedAt, createdAt, updatedAt, deletedAt, bookings, participants, meetingBundleId, meetingRequestId, meetingRequest, status, cancelOptions, user, meetingCollaborations, meetingUrls, meetingUploads, managementId, isCollaborationAlreadyConfirmed, maxEditAt
 	}
 }
 

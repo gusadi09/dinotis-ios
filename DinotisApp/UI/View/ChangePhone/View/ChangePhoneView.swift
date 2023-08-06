@@ -149,8 +149,7 @@ struct ChangePhoneView: View {
 
 						}
 							.padding()
-							.padding(.vertical)
-							.presentationDetents([.fraction(0.35), .large])
+                            .presentationDetents([.fraction(0.34)])
 					} else {
                         ScrollView {
                             SelectChannelView(channel: $viewModel.selectedChannel, geo: geo) {

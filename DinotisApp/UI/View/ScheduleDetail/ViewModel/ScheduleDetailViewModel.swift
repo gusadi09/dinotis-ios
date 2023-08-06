@@ -388,7 +388,7 @@ final class ScheduleDetailViewModel: ObservableObject {
             updatedAt: meet.updatedAt,
             deletedAt: meet.deletedAt,
             bookings: [],
-			user: nil,
+            user: meet.user,
 			participantDetails: [],
 			meetingBundleId: meet.meetingBundleId,
 			meetingRequestId: meet.meetingRequestId,
@@ -398,7 +398,9 @@ final class ScheduleDetailViewModel: ObservableObject {
             background: [""],
             meetingCollaborations: meet.meetingCollaborations,
             meetingUrls: meet.meetingUrls,
-            meetingUploads: meet.meetingUploads
+            meetingUploads: meet.meetingUploads,
+            roomSid: meet.roomSid,
+            dyteMeetingId: meet.dyteMeetingId
         )
 
         return meet
@@ -436,6 +438,18 @@ final class ScheduleDetailViewModel: ObservableObject {
         }
     }
     
+    func routeToGroupCall(meeting: UserMeetingData) {
+        let viewModel = GroupVideoCallViewModel(
+            backToRoot: self.backToRoot,
+            backToHome: self.backToHome,
+            userMeeting: meeting
+        )
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .dyteGroupVideoCall(viewModel: viewModel)
+        }
+    }
+    
     func routeToTwilioLiveStream(meeting: UserMeetingData) {
         let viewModel = TwilioLiveStreamViewModel(
             backToRoot: self.backToRoot,
@@ -447,6 +461,7 @@ final class ScheduleDetailViewModel: ObservableObject {
             self?.route = .twilioLiveStream(viewModel: viewModel)
         }
     }
+
   
     func routeToTalentProfile(username: String?) {
         let viewModel = TalentProfileDetailViewModel(backToRoot: self.backToRoot, backToHome: {self.route = nil}, username: username.orEmpty())
@@ -619,9 +634,13 @@ final class ScheduleDetailViewModel: ObservableObject {
 						if detailMeet.isPrivate ?? false {
 							self?.routeToVideoCall(meeting: converted)
 						} else if !(detailMeet.isPrivate ?? false) {
-							self?.routeToTwilioLiveStream(
-								meeting: converted
-							)
+                            if detailMeet.dyteMeetingId == nil {
+                                self?.routeToTwilioLiveStream(meeting: converted)
+                            } else {
+                                self?.routeToGroupCall(
+                                    meeting: converted
+                                )
+                            }
 						}
 					}
 				}

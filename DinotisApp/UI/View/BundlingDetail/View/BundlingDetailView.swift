@@ -247,15 +247,12 @@ struct BundlingDetailView: View {
 			.sheet(
 				isPresented: $viewModel.showPaymentMenu,
 				content: {
-					if #available(iOS 16.0, *) {
-						ScrollView {
-							PaymentTypeOption(viewModel: viewModel)
-								.padding(.top)
-								.padding()
-								.padding(.vertical)
-						}
-						.padding(.top)
-						.presentationDetents([.fraction(0.25), .large])
+                    if #available(iOS 16.0, *) {
+                        PaymentTypeOption(viewModel: viewModel)
+                            .padding(.top)
+                            .padding()
+                            .padding(.vertical)
+                            .presentationDetents([.height(130)])
 					} else {
 						ScrollView {
 							PaymentTypeOption(viewModel: viewModel)
@@ -798,7 +795,7 @@ extension BundlingDetailView {
 
 		var body: some View {
 			VStack {
-
+                Spacer()
 				Button {
 					DispatchQueue.main.async {
 						viewModel.showPaymentMenu.toggle()
