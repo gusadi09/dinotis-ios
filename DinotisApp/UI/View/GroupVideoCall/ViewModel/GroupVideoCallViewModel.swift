@@ -766,7 +766,6 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
         self.index = 1
         self.pinned = nil
         
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             withAnimation {
                 self.index = 0
