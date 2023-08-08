@@ -13,6 +13,7 @@ struct FormScheduleTalentCardView: View {
     @Binding var collab: [MeetingCollaborationData]
     @Binding var managements: [ManagementWrappedData]?
     @Binding var meetingForm: MeetingForm
+    @Binding var maxEdit: Int
     
     @State var selectedWallet: String? = nil
     @State var isPresent = false
@@ -76,10 +77,11 @@ struct FormScheduleTalentCardView: View {
     
     @State var selected = ""
     
-    init(collab: Binding<[MeetingCollaborationData]>, managements: Binding<[ManagementWrappedData]?>, meetingForm: Binding<MeetingForm>, onTapRemove: @escaping (() -> Void), isShowRemove: Bool = false, isEdit: Bool, disableEdit: Bool = false) {
+    init(collab: Binding<[MeetingCollaborationData]>, managements: Binding<[ManagementWrappedData]?>, meetingForm: Binding<MeetingForm>, onTapRemove: @escaping (() -> Void), isShowRemove: Bool = false, isEdit: Bool, disableEdit: Bool = false, maxEdit: Binding<Int>) {
         self._collab = collab
         self._managements = managements
         self._meetingForm = meetingForm
+        self._maxEdit = maxEdit
         self.onTapRemove = onTapRemove
         self.isShowRemove = isShowRemove
         self.isEdit = isEdit
@@ -90,22 +92,24 @@ struct FormScheduleTalentCardView: View {
         ZStack(alignment: .top) {
             ZStack(alignment: .topTrailing) {
                 VStack(spacing: 20) {
-                    Text(.init(LocalizableText.creatorRescheduleWarning))
-                        .font(.robotoRegular(size: 12))
-                        .foregroundColor(.DinotisDefault.darkPrimary)
-                        .padding(.vertical, 16)
-                        .padding(.horizontal, 11)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(
-                            RoundedRectangle(cornerRadius: 8)
-                                .foregroundColor(.DinotisDefault.lightPrimary)
-                        )
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8)
-                                .inset(by: 0.5)
-                                .stroke(Color.DinotisDefault.darkPrimary, lineWidth: 1)
-                        )
-                        .isHidden(!isEdit, remove: !isEdit)
+                    if let attr = try? AttributedString(markdown: LocalizableText.creatorRescheduleWarning(maxEdit)) {
+                        Text(attr)
+                            .font(.robotoRegular(size: 12))
+                            .foregroundColor(.DinotisDefault.darkPrimary)
+                            .padding(.vertical, 16)
+                            .padding(.horizontal, 11)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .foregroundColor(.DinotisDefault.lightPrimary)
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .inset(by: 0.5)
+                                    .stroke(Color.DinotisDefault.darkPrimary, lineWidth: 1)
+                            )
+                            .isHidden(!isEdit, remove: !isEdit)
+                    }
                     
                     VStack(spacing: 10) {
                         HStack {
@@ -1049,7 +1053,6 @@ struct FormScheduleTalentCardView: View {
         }
         .disabled(isEdit && disableEdit)
     }
-    
 }
 
 struct FormScheduleTalentCardView_Previews: PreviewProvider {
@@ -1070,7 +1073,8 @@ struct FormScheduleTalentCardView_Previews: PreviewProvider {
                 )
             ),
             onTapRemove: {},
-            isEdit: false
+            isEdit: false,
+            maxEdit: .constant(0)
         )
     }
 }

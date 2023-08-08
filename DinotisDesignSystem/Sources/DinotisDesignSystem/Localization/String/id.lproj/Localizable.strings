@@ -222,7 +222,7 @@
 "continue_payment_label" = "Lanjutkan Pembayaran";
 "session_completed" = "Sesi Selesai";
 "in_app_purchase_error_trx" = "Tidak bisa memuat transaksi.";
-"creator_reschedule_warning" = "Jika mengedit jadwal sesi, **pastikan kamu mengubahnya 15 menit sebelum acara ya**, agar audiens kamu ga kaget";
+"creator_reschedule_warning" = "Jika mengedit jadwal sesi, **pastikan kamu mengubahnya %lld menit sebelum acara ya**, agar audiens kamu ga kaget";
 
 "cancel_payment_question" = "Ingin membatalkan pembayaran?";
 "cancel_payment_title_question" = "Yakin mau membatalkan pembayaran?";

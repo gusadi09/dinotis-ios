@@ -1942,11 +1942,16 @@ public enum LocalizableText {
         bundle: .module,
         comment: "video call waiting room description"
     )
-    public static let creatorRescheduleWarning = NSLocalizedString(
-        "creator_reschedule_warning",
-        bundle: .module,
-        comment: "reschedule warning when creator wants to edit the schedule"
-    )
+    public static func creatorRescheduleWarning(_ minute: Int) -> String {
+        String(
+            format: NSLocalizedString(
+                "creator_reschedule_warning",
+                bundle: .module,
+                comment: "reschedule warning when creator wants to edit the schedule"
+            ),
+            minute
+        )
+    }
     public static let videoCallPutToSpeaker = NSLocalizedString(
         "video-call-put-to-speaker",
         bundle: .module,
