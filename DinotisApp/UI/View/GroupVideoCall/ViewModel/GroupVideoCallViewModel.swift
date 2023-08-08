@@ -966,6 +966,10 @@ extension GroupVideoCallViewModel: DyteWaitlistEventsListener {
 }
 
 extension GroupVideoCallViewModel: DyteStageEventListener {
+    func onParticipantRemovedFromStage(participant: DyteJoinedMeetingParticipant) {
+        
+    }
+    
     func onAddedToStage() {
         self.localUser = self.meeting.localUser
         self.isReceivedStageInvite = false

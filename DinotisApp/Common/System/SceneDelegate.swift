@@ -29,6 +29,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func checkingVersion(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) async {
         
         let result = await versionCheckingUseCase.execute()
+        let isTokenEmpty = self.state.accessToken.isEmpty
         
         switch result {
         case .success(let success):
@@ -47,7 +48,51 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                         if success.version.orEmpty().compare(appVersion, options: .numeric) == .orderedDescending {
                             window.rootViewController = UIHostingController(rootView: OutdatedVersionView())
                         } else {
-                            window.rootViewController = UIHostingController(rootView: contentView)
+                            if !isTokenEmpty &&
+                                ((self?.state.isVerified == "Verified") &&
+                                 self?.state.userType != 0) {
+                                if self?.state.userType == 2 {
+                                    let vm = TalentHomeViewModel(backToRoot: {
+                                        self?.state.accessToken = ""
+                                        self?.onCheckingVersion(scene, willConnectTo: session, options: connectionOptions)
+                                    })
+                                    window.rootViewController = UIHostingController(rootView: TalentHomeView(homeVM: vm))
+                                } else if self?.state.userType == 3 {
+                                    let vm = TabViewContainerViewModel(
+                                        userHomeVM: UserHomeViewModel(backToRoot: {
+                                            self?.state.accessToken = ""
+                                            self?.onCheckingVersion(scene, willConnectTo: session, options: connectionOptions)
+                                        }),
+                                        talentHomeVM: TalentHomeViewModel(backToRoot: {
+                                            self?.state.accessToken = ""
+                                            self?.onCheckingVersion(scene, willConnectTo: session, options: connectionOptions)
+                                        }),
+                                        profileVM: ProfileViewModel(backToRoot: {
+                                            self?.state.accessToken = ""
+                                            self?.onCheckingVersion(scene, willConnectTo: session, options: connectionOptions)
+                                        }, backToHome: {}),
+                                        searchVM: SearchTalentViewModel(backToRoot: {
+                                            self?.state.accessToken = ""
+                                            self?.onCheckingVersion(scene, willConnectTo: session, options: connectionOptions)
+                                        }, backToHome: {}),
+                                        scheduleVM: ScheduleListViewModel(backToRoot: {
+                                            self?.state.accessToken = ""
+                                            self?.onCheckingVersion(scene, willConnectTo: session, options: connectionOptions)
+                                        }, backToHome: {}, currentUserId: ""),
+                                        backToRoot: {
+                                            self?.state.accessToken = ""
+                                            self?.onCheckingVersion(scene, willConnectTo: session, options: connectionOptions)
+                                        }
+                                    )
+                                    window.rootViewController = UIHostingController(rootView: TabViewContainer(viewModel: vm))
+                                }
+                            } else if !isTokenEmpty &&
+                                        ((self?.state.isVerified == "VerifiedNoName") &&
+                                         self?.state.userType != 0) {
+                                window.rootViewController = UIHostingController(rootView: contentView)
+                            } else {
+                                window.rootViewController = UIHostingController(rootView: contentView)
+                            }
                         }
                         self?.window = window
                         if #available(iOS 13.0, *) {

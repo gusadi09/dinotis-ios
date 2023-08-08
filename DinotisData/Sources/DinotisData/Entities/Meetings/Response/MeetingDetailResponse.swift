@@ -7,6 +7,60 @@
 
 import Foundation
 
+public struct TalentMeetingResponse: Codable {
+    public let data: TalentMeetingData?
+    public let filters: FilterData?
+    public let counter: String?
+    public let nextCursor: Int?
+    
+    public init(data: TalentMeetingData?, filters: FilterData?, counter: String?, nextCursor: Int?) {
+        self.data = data
+        self.filters = filters
+        self.counter = counter
+        self.nextCursor = nextCursor
+    }
+}
+
+public struct TalentMeetingData: Codable {
+    public let meetings: [MeetingDetailResponse]?
+    public let bundles: [BundlingData]?
+    
+    public init(meetings: [MeetingDetailResponse]?, bundles: [BundlingData]?) {
+        self.meetings = meetings
+        self.bundles = bundles
+    }
+}
+
+public struct FilterData: Codable {
+    public let options: [OptionQueryResponse]?
+    
+    public init(options: [OptionQueryResponse]?) {
+        self.options = options
+    }
+}
+
+public struct OptionQueryResponse: Codable, Identifiable {
+    public let id = UUID()
+    public let queries: [QueryData]?
+    public let label: String?
+    
+    public init(queries: [QueryData]?, label: String?) {
+        self.queries = queries
+        self.label = label
+    }
+}
+
+public struct QueryData: Codable, Identifiable {
+    public let id = UUID()
+    public let name: String?
+    public let value: String?
+    
+    public init(name: String?, value: String?) {
+        self.name = name
+        self.value = value
+    }
+}
+
 public struct MeetingDetailResponse: Codable, Hashable {
     public let id: String?
     public let title: String?
