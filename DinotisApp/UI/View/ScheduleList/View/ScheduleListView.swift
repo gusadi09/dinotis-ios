@@ -739,7 +739,7 @@ private extension ScheduleListView {
                                 .onAppear {
                                     if item.id == viewModel.bookingData.last?.id && viewModel.nextCursor != nil {
                                         Task {
-                                            viewModel.takeItem += 15
+                                            viewModel.takeItem += 8
                                             await viewModel.getBookingsList(isMore: true)
                                         }
                                     }
@@ -785,7 +785,7 @@ private extension ScheduleListView {
                             .onAppear {
                                 if item.id == viewModel.bookingData.last?.id && viewModel.nextCursor != nil {
                                     Task {
-                                        viewModel.takeItem += 15
+                                        viewModel.takeItem += 8
                                         await viewModel.getBookingsList(isMore: true)
                                     }
                                 }
