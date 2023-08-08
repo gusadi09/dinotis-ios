@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol MeetingsRemoteDataSource {
+public protocol MeetingsRemoteDataSource {
     func getMeetingRules() async throws -> MeetingRulesResponse
     func addMeeting(with body: AddMeetingRequest) async throws -> MeetingDetailResponse
     func getTalentMeeting(params: MeetingsPageRequest) async throws -> TalentMeetingResponse

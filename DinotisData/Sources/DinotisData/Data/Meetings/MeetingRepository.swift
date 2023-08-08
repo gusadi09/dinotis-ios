@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol MeetingsRepository {
+public protocol MeetingsRepository {
     func provideGetMeetingsRules() async throws -> MeetingRulesResponse
     func provideGetTalentMeeting(params: MeetingsPageRequest) async throws -> TalentMeetingResponse
     func provideGetTalentDetailMeeting(userID: String, params: MeetingsPageRequest) async throws -> TalentMeetingResponse

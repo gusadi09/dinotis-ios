@@ -8,7 +8,7 @@
 import Foundation
 import Moya
 
-enum MeetingsTargetType {
+public enum MeetingsTargetType {
     case getRules
     case addMeeting(AddMeetingRequest)
     case TalentMeeting(MeetingsPageRequest)
@@ -119,7 +119,7 @@ extension MeetingsTargetType: DinotisTargetType, AccessTokenAuthorizable {
         }
     }
 
-    var authorizationType: AuthorizationType? {
+    public var authorizationType: AuthorizationType? {
         return .bearer
     }
 
@@ -152,11 +152,11 @@ extension MeetingsTargetType: DinotisTargetType, AccessTokenAuthorizable {
         }
     }
 
-    var task: Task {
+    public var task: Task {
         return .requestParameters(parameters: parameters, encoding: parameterEncoding)
     }
 
-    var path: String {
+    public var path: String {
         switch self {
         case .getRules:
             return "/meetings/rules"
@@ -185,7 +185,7 @@ extension MeetingsTargetType: DinotisTargetType, AccessTokenAuthorizable {
         }
     }
 
-    var method: Moya.Method {
+    public var method: Moya.Method {
         switch self {
         case .getRules:
             return .get
