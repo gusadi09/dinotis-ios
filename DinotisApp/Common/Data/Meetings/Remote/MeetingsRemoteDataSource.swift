@@ -20,6 +20,4 @@ protocol MeetingsRemoteDataSource {
     func postCheckMeetingEnd(meetingId: String) -> AnyPublisher<MeetingEndCheckResponse, UnauthResponse>
     func getDetailMeeting(meetingId: String) -> AnyPublisher<DetailMeeting, UnauthResponse>
 	func patchStartTalentMeeting(by meetingId: String) -> AnyPublisher<EditTalentResponse, UnauthResponse>
-    func getCollabMeeting(by meetingId: String) -> AnyPublisher<DetailMeeting, UnauthResponse>
-    func approveInvitation(with isApprove: Bool, for meetingId: String) -> AnyPublisher<SuccessResponse, UnauthResponse>
 }

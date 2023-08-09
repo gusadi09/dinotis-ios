@@ -59,12 +59,4 @@ final class MeetingsDefaultRepository: MeetingsRepository {
 	func providePatchStartTalentMeeting(by meetingId: String) -> AnyPublisher<EditTalentResponse, UnauthResponse> {
 		self.remote.patchStartTalentMeeting(by: meetingId)
 	}
-    
-    func provideGetCollabMeeting(by meetingId: String) -> AnyPublisher<DetailMeeting, UnauthResponse> {
-        self.remote.getCollabMeeting(by: meetingId)
-    }
-    
-    func provideApproveInvitation(with isApprove: Bool, for meetingId: String) -> AnyPublisher<SuccessResponse, UnauthResponse> {
-        self.remote.approveInvitation(with: isApprove, for: meetingId)
-    }
 }
