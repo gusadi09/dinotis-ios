@@ -85,6 +85,7 @@ public struct MeetingDetailResponse: Codable, Hashable {
     public let meetingCollaborations: [MeetingCollaborationData]?
     public let meetingUrls: [MeetingURLData]?
     public let meetingUploads: [MeetingUploadData]?
+    public let isCollaborationAlreadyConfirmed: Bool?
     
     public init(
         id: String = "",
@@ -109,7 +110,8 @@ public struct MeetingDetailResponse: Codable, Hashable {
 		background: [String]?,
         meetingCollaborations: [MeetingCollaborationData]?,
         meetingUrls: [MeetingURLData]?,
-        meetingUploads: [MeetingUploadData]?
+        meetingUploads: [MeetingUploadData]?,
+        isCollaborationAlreadyConfirmed: Bool?
     ) {
         self.id = id
         self.title = title
@@ -134,6 +136,7 @@ public struct MeetingDetailResponse: Codable, Hashable {
         self.meetingCollaborations = meetingCollaborations
         self.meetingUrls = meetingUrls
         self.meetingUploads = meetingUploads
+        self.isCollaborationAlreadyConfirmed = isCollaborationAlreadyConfirmed
     }
     
     public static func == (lhs: MeetingDetailResponse, rhs: MeetingDetailResponse) -> Bool {

@@ -15,7 +15,8 @@ import OneSignal
 final class NotificationViewModel: ObservableObject {
     
     private let notificationListsUseCase: NotificationListsUseCase
-    private let meetingRepository: MeetingsRepository
+    private let approveInvitationUseCase: ApproveCollaborationInvitationUseCase
+    private let getCollaborationDetailUseCase: GetCollaborationMeetingUseCase
     private let readAllUseCase: ReadAllUseCase
     private let readByIdUseCase: ReadByIdUseCase
     @Published var stateObservable = StateObservable.shared
@@ -48,17 +49,19 @@ final class NotificationViewModel: ObservableObject {
     @Published var resultGeneral = [NotificationData?]()
     @Published var resultTrans = [NotificationData?]()
     
-    @Published var detailMeeting: DetailMeeting?
+    @Published var detailMeeting: MeetingDetailResponse?
     
     init(
         notificationListsUseCase: NotificationListsUseCase = NotificationListsDefaultUseCase(),
-        meetingRepository: MeetingsRepository = MeetingsDefaultRepository(),
+        approveInvitationUseCase: ApproveCollaborationInvitationUseCase = ApproveCollaborationInvitationDefaultUseCase(),
+        getCollaborationDetailUseCase: GetCollaborationMeetingUseCase = GetCollaborationMeetingDefaultUseCase(),
         backToRoot: @escaping () -> Void, backToHome: @escaping () -> Void,
         readAllUseCase: ReadAllUseCase = ReadAllDefaultUseCase(),
         readByIdUseCase: ReadByIdUseCase = ReadByIdDefaultUseCase()
     ) {
         self.notificationListsUseCase = notificationListsUseCase
-        self.meetingRepository = meetingRepository
+        self.approveInvitationUseCase = approveInvitationUseCase
+        self.getCollaborationDetailUseCase = getCollaborationDetailUseCase
         self.backToHome = backToHome
         self.backToRoot = backToRoot
         self.readAllUseCase = readAllUseCase
@@ -86,105 +89,157 @@ final class NotificationViewModel: ObservableObject {
         }
     }
     
-    func approveMeeting(_ value: Bool) {
-        onStartFetchDetail()
+    @MainActor
+    func approveMeeting(_ value: Bool) async {
+        withAnimation {
+            self.isLoadingDetail = true
+            
+            self.isError = false
+            self.error = nil
+            self.success = false
+            self.isRefreshFailed = false
+            self.isShowAlert = false
+            self.alert = .init(
+                isError: false,
+                title: LocalizableText.attentionText,
+                message: "",
+                primaryButton: .init(text: LocalizableText.closeLabel, action: {}),
+                secondaryButton: nil
+            )
+        }
         
-        meetingRepository.provideApproveInvitation(with: value, for: (detailMeeting?.id).orEmpty())
-            .sink { result in
-                switch result {
-                case .failure(let error):
-                    DispatchQueue.main.async {[weak self] in
-                        self?.isShowCollabSheet = false
-                        
-                        if error.statusCode.orZero() == 401 {
-                          self?.alert.isError = true
-                          self?.alert.message = LocalizableText.alertSessionExpired
-                          self?.alert.primaryButton = .init(
-                            text: LocalizableText.okText,
-                            action: {
-                              self?.backToRoot()
-                            }
-                          )
-                        } else {
-                            self?.isLoadingDetail = false
-                            self?.isError = true
-
-                            self?.error = error.message.orEmpty()
-                        }
-                        
-                        self?.isShowAlert = true
-                    }
-                case .finished:
-                    DispatchQueue.main.async { [weak self] in
-                        self?.isShowCollabSheet = false
-                        self?.isLoadingDetail = false
-                        
-                        self?.isShowAlert = true
-                        
-                        if value {
-                            self?.alert = .init(
-                                isError: false,
-                                title: LocalizableText.acceptedInvitationTitle,
-                                message: LocalizableText.acceptedInvitationMessage(name: (self?.detailMeeting?.user?.name).orEmpty(), title: (self?.detailMeeting?.title).orEmpty()),
-                                primaryButton: .init(text: LocalizableText.closeLabel, action: {}),
-                                secondaryButton: nil
-                            )
-                        } else {
-                            self?.alert = .init(
-                                isError: false,
-                                title: LocalizableText.declinedInvitationTitle,
-                                message: LocalizableText.declinedInvitationMessage(name: (self?.detailMeeting?.user?.name).orEmpty(), title: (self?.detailMeeting?.title).orEmpty()),
-                                primaryButton: .init(text: LocalizableText.closeLabel, action: {}),
-                                secondaryButton: nil
-                            )
-                        }
-                    }
-                }
-            } receiveValue: { _ in
-                
+        let result = await approveInvitationUseCase.execute(value, for: (detailMeeting?.id).orEmpty())
+        
+        switch result {
+        case .success(_):
+            self.isShowCollabSheet = false
+            self.isLoadingDetail = false
+            
+            self.isShowAlert = true
+            
+            if value {
+                self.alert = .init(
+                    isError: false,
+                    title: LocalizableText.acceptedInvitationTitle,
+                    message: LocalizableText.acceptedInvitationMessage(name: (self.detailMeeting?.user?.name).orEmpty(), title: (self.detailMeeting?.title).orEmpty()),
+                    primaryButton: .init(text: LocalizableText.closeLabel, action: {}),
+                    secondaryButton: nil
+                )
+            } else {
+                self.alert = .init(
+                    isError: false,
+                    title: LocalizableText.declinedInvitationTitle,
+                    message: LocalizableText.declinedInvitationMessage(name: (self.detailMeeting?.user?.name).orEmpty(), title: (self.detailMeeting?.title).orEmpty()),
+                    primaryButton: .init(text: LocalizableText.closeLabel, action: {}),
+                    secondaryButton: nil
+                )
             }
-            .store(in: &cancellables)
+        case .failure(let error):
+            self.isShowCollabSheet = false
+            self.isLoadingDetail = false
+            
+            if let err = error as? ErrorResponse {
+                if err.statusCode.orZero() == 401 {
+                    self.alert.isError = true
+                    self.alert.message = LocalizableText.alertSessionExpired
+                    self.alert.primaryButton = .init(
+                        text: LocalizableText.okText,
+                        action: {
+                            self.backToRoot()
+                        }
+                    )
+                } else {
+                    self.alert.isError = true
+                    self.alert.message = err.message.orEmpty()
+                    self.alert.title = LocalizableText.attentionText
+                    self.alert.primaryButton = .init(
+                        text: LocalizableText.okText,
+                        action: {
+                            
+                        }
+                    )
+                }
+            } else {
+                self.alert.isError = true
+                self.alert.message = error.localizedDescription
+                self.alert.title = LocalizableText.attentionText
+                self.alert.primaryButton = .init(
+                    text: LocalizableText.okText,
+                    action: {
+                        
+                    }
+                )
+            }
+            
+            self.isShowAlert = true
+        }
     }
     
-    func getDetailCollab(for meetingId: String) {
-        onStartFetchDetail()
+    @MainActor
+    func getDetailCollab(for meetingId: String) async {
+        withAnimation {
+            self.isLoadingDetail = true
+            
+            self.isError = false
+            self.error = nil
+            self.success = false
+            self.isRefreshFailed = false
+            self.isShowAlert = false
+            self.alert = .init(
+                isError: false,
+                title: LocalizableText.attentionText,
+                message: "",
+                primaryButton: .init(text: LocalizableText.closeLabel, action: {}),
+                secondaryButton: nil
+            )
+        }
         
-        meetingRepository.provideGetCollabMeeting(by: meetingId)
-            .sink { result in
-                switch result {
-                case .failure(let error):
-                    DispatchQueue.main.async {[weak self] in
-                        self?.isShowCollabSheet = false
-                        
-                        if error.statusCode.orZero() == 401 {
-                          self?.alert.isError = true
-                          self?.alert.message = LocalizableText.alertSessionExpired
-                          self?.alert.primaryButton = .init(
-                            text: LocalizableText.okText,
-                            action: {
-                              self?.backToRoot()
-                            }
-                          )
-                          self?.isShowAlert = true
-                        } else {
-                            self?.isLoadingDetail = false
-                            self?.isError = true
-
-                            self?.error = error.message.orEmpty()
+        let result = await getCollaborationDetailUseCase.execute(for: meetingId)
+        
+        switch result {
+        case .success(let response):
+            self.isLoadingDetail = false
+            self.detailMeeting = response
+            
+        case .failure(let error):
+            self.isShowCollabSheet = false
+            self.isLoadingDetail = false
+            
+            if let err = error as? ErrorResponse {
+                if err.statusCode.orZero() == 401 {
+                    self.alert.isError = true
+                    self.alert.message = LocalizableText.alertSessionExpired
+                    self.alert.primaryButton = .init(
+                        text: LocalizableText.okText,
+                        action: {
+                            self.backToRoot()
                         }
-                    }
-
-                case .finished:
-                    DispatchQueue.main.async { [weak self] in
-                        self?.isLoadingDetail = false
-                    }
+                    )
+                } else {
+                    self.alert.isError = true
+                    self.alert.message = err.message.orEmpty()
+                    self.alert.title = LocalizableText.attentionText
+                    self.alert.primaryButton = .init(
+                        text: LocalizableText.okText,
+                        action: {
+                            
+                        }
+                    )
                 }
-            } receiveValue: { detail in
-                DispatchQueue.main.async {[weak self] in
-                    self?.detailMeeting = detail
-                }
+            } else {
+                self.alert.isError = true
+                self.alert.message = error.localizedDescription
+                self.alert.title = LocalizableText.attentionText
+                self.alert.primaryButton = .init(
+                    text: LocalizableText.okText,
+                    action: {
+                        
+                    }
+                )
             }
-            .store(in: &cancellables)
+            
+            self.isShowAlert = true
+        }
     }
     
     func onStartFetch(isRead: Bool) {
