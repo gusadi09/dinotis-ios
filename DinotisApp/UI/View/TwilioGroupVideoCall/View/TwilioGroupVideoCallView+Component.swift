@@ -574,7 +574,9 @@ extension TwilioGroupVideoCallView {
                             VStack {
                                 ForEach(viewModel.qnaFiltered(), id:\.id) { item in
                                     Button {
-                                        viewModel.putQuestion(questionId: item.id.orZero(), item: item, streamVM: streamVM)
+                                        Task {
+                                            await viewModel.putQuestion(item: item)
+                                        }
                                     } label: {
                                         VStack(alignment: .leading) {
                                             HStack {
@@ -617,7 +619,9 @@ extension TwilioGroupVideoCallView {
                 }
                 .padding(.vertical)
                 .onAppear {
-                    viewModel.getQuestion(meetingId: viewModel.meeting.id.orEmpty())
+                    Task {
+                       await viewModel.getQuestion()
+                    }
                     
                     streamVM.hasNewQuestion = false
                 }

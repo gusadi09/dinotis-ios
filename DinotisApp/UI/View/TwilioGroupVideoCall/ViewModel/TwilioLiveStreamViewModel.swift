@@ -14,22 +14,26 @@ import DinotisData
 
 final class TwilioLiveStreamViewModel: ObservableObject {
 	
-	private let questionRepository: QuestionRepository
+//	private let questionRepository: QuestionRepository
 	private let authRepository: AuthenticationRepository
 	private let meetRepository: MeetingsRepository
 	private let getUserUseCase: GetUserUseCase
 	private let twilioRepo: TwilioDataRepository
 	private var cancellables = Set<AnyCancellable>()
+    
+    private let getQuestionUseCase: GetQuestionUseCase
+    private let putQuestionUseCase: PutQuestionUseCase
+    private let sendQuestionUseCase: SendQuestionUseCase
 	
 	var backToRoot: (() -> Void)
 	var backToHome: (() -> Void)
     
+    @Published var questionData = [QuestionData]()
 	@Published var route: HomeRouting? = nil
 	@Published var isShowingToolbar = true
 	
 	@Published var meeting: UserMeetingData
 	@Published var userData: UserResponse?
-	@Published var questionData = Question()
 	@Published var hasUnreadQuestion = false
 	
 	@Published var isLockAllParticipantAudio = false
@@ -54,7 +58,7 @@ final class TwilioLiveStreamViewModel: ObservableObject {
 	@Published var isErrorQuestion: Bool = false
 	@Published var errorQuestion: String?
 	@Published var successQuestion: Bool = false
-	@Published var questionResponse: QuestionResponse?
+	@Published var questionResponse: QuestionData?
 	
 	@Published var isRefreshFailed = false
 	@Published var isLoading: Bool = false
@@ -88,25 +92,28 @@ final class TwilioLiveStreamViewModel: ObservableObject {
 		backToRoot: @escaping (() -> Void),
 		backToHome: @escaping (() -> Void),
 		authRepository: AuthenticationRepository = AuthenticationDefaultRepository(),
-		questionRepository: QuestionRepository = QuestionDefaultRepository(),
 		getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
 		twilioRepo: TwilioDataRepository = TwilioDataDefaultRepository(),
 		meetRepository: MeetingsRepository = MeetingsDefaultRepository(),
-		meeting: UserMeetingData
+		meeting: UserMeetingData,
+        getQuestionUseCase: GetQuestionUseCase = GetQuestionDefaultUseCase(),
+        putQuestionUseCase: PutQuestionUseCase = PutQuestionDefaultUseCase(),
+        sendQuestionUseCase: SendQuestionUseCase = SendQuestionDefaultUseCase()
 	) {
 		self.backToHome = backToHome
 		self.backToRoot = backToRoot
 		self.authRepository = authRepository
-		self.questionRepository = questionRepository
 		self.getUserUseCase = getUserUseCase
 		self.twilioRepo = twilioRepo
 		self.meetRepository = meetRepository
 		self.meeting = meeting
-		
+        self.getQuestionUseCase = getQuestionUseCase
+        self.putQuestionUseCase = putQuestionUseCase
+        self.sendQuestionUseCase = sendQuestionUseCase
 		self.futureDate = meeting.endAt.orCurrentDate()
 	}
     
-    func qnaFiltered() -> Question {
+    func qnaFiltered() -> [QuestionData] {
         return questionData.filter({ item in
             QnASegment == 0 ? !(item.isAnswered ?? false) : (item.isAnswered ?? false)
         })
@@ -284,111 +291,170 @@ final class TwilioLiveStreamViewModel: ObservableObject {
             handleDefaultError(error: failure)
         }
     }
+    
+    @MainActor
+    func getQuestion() async {
+        self.isError = false
+        self.error = nil
+
+        let result = await getQuestionUseCase.execute(for: meeting.id.orEmpty())
+
+        switch result {
+        case .success(let data):
+            self.success = true
+            self.questionData = data
+        case .failure(let error):
+            handleDefaultError(error: error)
+        }
+
+    }
+    
+    @MainActor
+    func putQuestion(item: QuestionData) async {
+        self.isError = false
+        self.error = nil
+
+        let parameter = AnsweredRequest(isAnswered: !(item.isAnswered ?? false))
+        let result = await putQuestionUseCase.execute(questionId: item.id.orZero(), params: parameter)
+        
+        switch result {
+        case .success(let data):
+            self.success = true
+            self.questionResponse = data
+            await self.getQuestion()
+            
+        case .failure(let error):
+            handleDefaultError(error: error)
+        }
+    }
+    
+    @MainActor
+    func sendQuestion(meetingId: String) async {
+        self.isLoadingQuestion = true
+        self.isError = false
+        self.error = nil
+        self.successQuestion = false
+
+        let params = QuestionRequest(question: questionText, meetingId: meetingId, userId: StateObservable.shared.userId)
+        let result = await sendQuestionUseCase.execute(params: params)
+
+        switch result {
+        case .success(let data):
+            
+            self.successQuestion = true
+            self.isLoadingQuestion = false
+            self.isShowQuestionBox.toggle()
+            self.questionText = ""
+            self.questionResponse = data
+        case .failure(let error):
+            handleDefaultError(error: error)
+        }
+    }
 	
-	func startPostQuestion() {
-		DispatchQueue.main.async {[weak self] in
-			self?.isLoadingQuestion = true
-			self?.isErrorQuestion = false
-			self?.errorQuestion = nil
-			self?.successQuestion = false
-		}
-	}
-	
-	func postQuestion(meetingId: String) {
-		startPostQuestion()
-		
-		let params = QuestionParams(question: questionText, meetingId: meetingId, userId: (userData?.id).orEmpty())
-		
-		questionRepository.provideSendQuestion(params: params)
-			.sink { result in
-				switch result {
-				case .failure(let error):
-					DispatchQueue.main.async {[weak self] in
-						if error.statusCode.orZero() == 401 {
-							
-						} else {
-							self?.isLoadingQuestion = false
-							self?.isErrorQuestion = true
-							
-							self?.errorQuestion = error.message.orEmpty()
-						}
-					}
-					
-				case .finished:
-					DispatchQueue.main.async { [weak self] in
-						self?.successQuestion = true
-						self?.isLoadingQuestion = false
-						self?.isShowQuestionBox.toggle()
-						self?.questionText = ""
-					}
-				}
-			} receiveValue: { response in
-				self.questionResponse = response
-			}
-			.store(in: &cancellables)
-		
-	}
-	
-	func getQuestion(meetingId: String) {
-		
-		questionRepository.provideGetQuestion(meetingId: meetingId)
-			.sink { result in
-				switch result {
-				case .failure(let error):
-					DispatchQueue.main.async {[weak self] in
-						if error.statusCode.orZero() == 401 {
-							
-						} else {
-							self?.isError = true
-							
-							self?.error = error.message.orEmpty()
-						}
-					}
-					
-				case .finished:
-					DispatchQueue.main.async { [weak self] in
-						self?.success = true
-					}
-					
-				}
-			} receiveValue: { value in
-				self.questionData = value
-			}
-			.store(in: &cancellables)
-		
-	}
-	
-	func putQuestion(questionId: Int, item: QuestionResponse, streamVM: StreamViewModel) {
-		
-		let parameter = QuestionBodyParam(isAnswered: !(item.isAnswered ?? true))
-		
-		questionRepository.providePutQuestion(questionId: questionId, params: parameter)
-			.sink { result in
-				switch result {
-				case .failure(let error):
-					DispatchQueue.main.async {[weak self] in
-						if error.statusCode.orZero() == 401 {
-							
-						} else {
-							self?.isError = true
-							
-							self?.error = error.message.orEmpty()
-						}
-					}
-					
-				case .finished:
-					DispatchQueue.main.async { [weak self] in
-						self?.success = true
-						
-					}
-				}
-			} receiveValue: { [self] value in
-				questionResponse = value
-				getQuestion(meetingId: meeting.id.orEmpty())
-				
-			}
-			.store(in: &cancellables)
-	}
+//	func startPostQuestion() {
+//		DispatchQueue.main.async {[weak self] in
+//			self?.isLoadingQuestion = true
+//			self?.isErrorQuestion = false
+//			self?.errorQuestion = nil
+//			self?.successQuestion = false
+//		}
+//	}
+//
+//	func postQuestion(meetingId: String) {
+//		startPostQuestion()
+//
+//		let params = QuestionParams(question: questionText, meetingId: meetingId, userId: (userData?.id).orEmpty())
+//
+//		questionRepository.provideSendQuestion(params: params)
+//			.sink { result in
+//				switch result {
+//				case .failure(let error):
+//					DispatchQueue.main.async {[weak self] in
+//						if error.statusCode.orZero() == 401 {
+//
+//						} else {
+//							self?.isLoadingQuestion = false
+//							self?.isErrorQuestion = true
+//
+//							self?.errorQuestion = error.message.orEmpty()
+//						}
+//					}
+//
+//				case .finished:
+//					DispatchQueue.main.async { [weak self] in
+//						self?.successQuestion = true
+//						self?.isLoadingQuestion = false
+//						self?.isShowQuestionBox.toggle()
+//						self?.questionText = ""
+//					}
+//				}
+//			} receiveValue: { response in
+//				self.questionResponse = response
+//			}
+//			.store(in: &cancellables)
+//
+//	}
+//
+//	func getQuestion(meetingId: String) {
+//
+//		questionRepository.provideGetQuestion(meetingId: meetingId)
+//			.sink { result in
+//				switch result {
+//				case .failure(let error):
+//					DispatchQueue.main.async {[weak self] in
+//						if error.statusCode.orZero() == 401 {
+//
+//						} else {
+//							self?.isError = true
+//
+//							self?.error = error.message.orEmpty()
+//						}
+//					}
+//
+//				case .finished:
+//					DispatchQueue.main.async { [weak self] in
+//						self?.success = true
+//					}
+//
+//				}
+//			} receiveValue: { value in
+//				self.questionData = value
+//			}
+//			.store(in: &cancellables)
+//
+//	}
+//
+//	func putQuestion(questionId: Int, item: QuestionResponse, streamVM: StreamViewModel) {
+//
+//		let parameter = QuestionBodyParam(isAnswered: !(item.isAnswered ?? true))
+//
+//		questionRepository.providePutQuestion(questionId: questionId, params: parameter)
+//			.sink { result in
+//				switch result {
+//				case .failure(let error):
+//					DispatchQueue.main.async {[weak self] in
+//						if error.statusCode.orZero() == 401 {
+//
+//						} else {
+//							self?.isError = true
+//
+//							self?.error = error.message.orEmpty()
+//						}
+//					}
+//
+//				case .finished:
+//					DispatchQueue.main.async { [weak self] in
+//						self?.success = true
+//
+//					}
+//				}
+//			} receiveValue: { [self] value in
+//				questionResponse = value
+//				getQuestion(meetingId: meeting.id.orEmpty())
+//
+//			}
+//			.store(in: &cancellables)
+//	}
 	
 	func lockAllParticipantAudio(streamManager: StreamManager) {
 		
