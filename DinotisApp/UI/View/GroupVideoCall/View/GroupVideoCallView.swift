@@ -146,6 +146,10 @@ struct GroupVideoCallView: View {
                 Button(LocalizableText.videoCallRejoin, role: .cancel) {
                     viewModel.joinMeeting()
                 }
+            case .disconnected:
+                Button(LocalizableText.videoCallLeaveRoom, role: .destructive) {
+                    viewModel.routeToAfterCall()
+                }
 
             default:
                 Button {
@@ -229,12 +233,13 @@ fileprivate extension GroupVideoCallView {
                             } else {
                                 ScrollView {
                                     LazyVStack {
-                                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 176))]) {
+                                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 175))]) {
                                             ForEach($viewModel.participants, id: \.id) { item in
                                                 RemoteUserJoinedTileVideoContainerView(viewModel: viewModel, participant: item)
                                             }
                                         }
                                     }
+                                    .padding(15)
                                 }
                             }
                         }
@@ -312,10 +317,10 @@ fileprivate extension GroupVideoCallView {
                                 .font(.robotoBold(size: 12))
                         }
                         .foregroundColor(viewModel.isNearbyEnd ? .white : .primaryRed)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 4)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 5)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 8)
+                            Capsule()
                                 .stroke(viewModel.isNearbyEnd ? Color.white : Color.primaryRed, lineWidth: 1)
                         )
                         
@@ -380,46 +385,47 @@ fileprivate extension GroupVideoCallView {
                     
                     Spacer()
                     
-                    VStack {
-                        if viewModel.isJoined {
-                            if viewModel.index == 1 {
-                                HStack(spacing: 15) {
-                                    
-                                    Button {
-                                        viewModel.activePage -= 1
-                                    } label: {
-                                        Image(systemName: "chevron.left")
-                                            .font(.system(size: 10, weight: .bold, design: .rounded))
-                                            .foregroundColor(.white.opacity(!viewModel.meeting.participants.canGoPreviousPage ? 0.5 : 1))
-                                            .padding(8)
-                                            .background(
-                                                Circle()
-                                                    .foregroundColor(!viewModel.meeting.participants.canGoPreviousPage ? .DinotisDefault.black3 : .DinotisDefault.primary)
-                                            )
-                                    }
-                                    .disabled(!viewModel.meeting.participants.canGoPreviousPage)
-                                    
-                                    Text("\(viewModel.activePage == 0 ? "Auto" : "\(viewModel.activePage)")")
-                                        .font(.robotoRegular(size: 14))
-                                        .foregroundColor(.white)
-                                    
-                                    Button {
-                                        viewModel.activePage += 1
-                                    } label: {
-                                        Image(systemName: "chevron.right")
-                                            .font(.system(size: 10, weight: .bold, design: .rounded))
-                                            .foregroundColor(.white.opacity(!viewModel.meeting.participants.canGoNextPage ? 0.5 : 1))
-                                            .padding(8)
-                                            .background(
-                                                Circle()
-                                                    .foregroundColor(!viewModel.meeting.participants.canGoNextPage ? .DinotisDefault.black3 : .DinotisDefault.primary)
-                                            )
-                                    }
-                                    .disabled(!viewModel.meeting.participants.canGoNextPage)
-                                }
+                    if viewModel.isJoined {
+                        HStack {
+                            Button {
+                                
+                            } label: {
+                                Image(systemName: "chevron.left")
+                                    .font(.system(size: 20, weight: .bold, design: .rounded))
+                                    .foregroundColor(.white.opacity(!viewModel.meeting.participants.canGoPreviousPage ? 0.5 : 1))
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 18)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .foregroundColor(.DinotisDefault.black1.opacity(0.8))
+                                    )
                             }
+                            .isHidden(!viewModel.meeting.participants.canGoPreviousPage, remove: !viewModel.meeting.participants.canGoPreviousPage)
+                            
+                            Spacer()
+                            
+                            Button {
+                                
+                            } label: {
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 20, weight: .bold, design: .rounded))
+                                    .foregroundColor(.white.opacity(!viewModel.meeting.participants.canGoNextPage ? 0.5 : 1))
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 18)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .foregroundColor(.DinotisDefault.black1.opacity(0.8))
+                                    )
+                            }
+                            .isHidden(!viewModel.meeting.participants.canGoNextPage, remove: !viewModel.meeting.participants.canGoNextPage)
+                            
                         }
-                        
+                        .padding(10)
+                    }
+                    
+                    Spacer()
+                    
+                    VStack {
                         HStack(spacing: 5) {
                             if viewModel.pinned != nil || !viewModel.screenShareUser.isEmpty {
                                 ForEach(0...1, id: \.self) { index in
@@ -919,6 +925,8 @@ fileprivate extension GroupVideoCallView {
                             } else {
                                 viewModel.meeting.stage.requestAccess()
                             }
+                            
+                            viewModel.isRaised = !viewModel.isRaised
                         }
                     }
                 } label: {
@@ -1052,7 +1060,7 @@ fileprivate extension GroupVideoCallView {
             }
             .padding()
             .padding(.horizontal)
-            .background(Color.DinotisDefault.black1)
+            .background(Color.DinotisDefault.black1.opacity(0.8))
             .cornerRadius(24)
             .padding(.horizontal, 20)
             .padding(.bottom)
@@ -1128,15 +1136,15 @@ fileprivate extension GroupVideoCallView {
                     if viewModel.pinned == nil && viewModel.screenShareUser.isEmpty {
                         if participant.fetchVideoEnabled() {
                             if let video = participant.getVideoView() {
-                                UIVideoView(videoView: video, width: 176, height: 246)
-                                    .frame(width: 176, height: 246)
+                                UIVideoView(videoView: video, width: 175, height: 270)
+                                    .frame(width: 175, height: 270)
                                     .clipShape(RoundedRectangle(cornerRadius: 10))
                             }
                             
                         } else {
                             RoundedRectangle(cornerRadius: 10)
                                 .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
-                                .frame(width: 176, height: 246)
+                                .frame(width: 175, height: 270)
                                 .overlay(
                                     ImageLoader(url: participant.picture.orEmpty(), width: 136, height: 136)
                                         .frame(width: 136, height: 136)
@@ -1146,21 +1154,21 @@ fileprivate extension GroupVideoCallView {
                     } else {
                         RoundedRectangle(cornerRadius: 10)
                             .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
-                            .frame(width: 176, height: 246)
+                            .frame(width: 175, height: 270)
                     }
                     
                 } else {
                     if participant.fetchVideoEnabled() {
                         if let video = participant.getVideoView() {
-                            UIVideoView(videoView: video, width: 176, height: 246)
-                                .frame(width: 176, height: 246)
+                            UIVideoView(videoView: video, width: 175, height: 270)
+                                .frame(width: 175, height: 270)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                         }
                         
                     } else {
                         RoundedRectangle(cornerRadius: 10)
                             .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
-                            .frame(width: 176, height: 246)
+                            .frame(width: 175, height: 270)
                             .overlay(
                                 ImageLoader(url: participant.picture.orEmpty(), width: 136, height: 136)
                                     .frame(width: 136, height: 136)

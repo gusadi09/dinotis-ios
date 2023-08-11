@@ -453,3 +453,4 @@
 "video_call_fail_request" = "Tidak dapat melanjutkan permintaan kamu, silahkan coba beberapa saat lagi.";
 "video_call_leave_room" = "Keluar";
 "video_call_rejoin" = "Masuk Lagi";
+"video_call_disconnected" = "Kamu telah terputus dari meeting.";

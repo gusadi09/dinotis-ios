@@ -44,12 +44,15 @@ enum PresetConstant {
 }
 
 enum ErrorAlert {
+    case disconnected
     case defaultError(String)
     case connection(String)
     case api(String)
     
     var errorDescription: String {
         switch self {
+        case .disconnected:
+            return LocalizableText.videoCallDisconnected
         case .defaultError(let message):
             return message
         case .connection(let message):
@@ -620,15 +623,14 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     }
     
     func onDisconnectedFromMeetingRoom() {
-        if !isLeaving || !isKicked {
-            self.joinMeeting()
+        if !isLeaving {
+            self.isError = true
+            self.error = .disconnected
         }
     }
     
     func onMeetingRoomConnectionFailed() {
-        if !isKicked {
-            self.onConnectionError()
-        }
+        self.onConnectionError()
     }
     
     func onMeetingInitCompleted() {
@@ -657,9 +659,7 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     }
     
     func onMeetingRoomDisconnected() {
-        if !isLeaving || !isKicked {
-            self.joinMeeting()
-        }
+        
     }
     
     func onMeetingRoomJoinCompleted() {
@@ -704,6 +704,7 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     
     func onReconnectedToMeetingRoom() {
         self.isConnecting = false
+        self.isRaised = false
     }
     
     func onReconnectingToMeetingRoom() {
@@ -841,8 +842,8 @@ extension GroupVideoCallViewModel: DyteSelfEventsListener {
     }
     
     func onRemovedFromMeeting() {
+        isError = false
         isKicked = true
-        isLeaving = true
     }
     
     func onStoppedPresenting() {

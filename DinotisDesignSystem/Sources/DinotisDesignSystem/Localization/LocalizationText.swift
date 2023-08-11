@@ -2076,6 +2076,11 @@ public enum LocalizableText {
         bundle: .module,
         comment: "rejoin"
     )
+    public static let videoCallDisconnected = NSLocalizedString(
+        "video_call_disconnected",
+        bundle: .module,
+        comment: "disconnected text"
+    )
 }
 
 

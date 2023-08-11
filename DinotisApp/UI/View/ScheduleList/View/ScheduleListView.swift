@@ -310,7 +310,7 @@ private extension ScheduleListView {
 												viewModel.currentTab = .all
 
 												viewModel.bookingData = []
-												viewModel.takeItem = 15
+												viewModel.takeItem = 8
 												viewModel.status = ""
 												await viewModel.getBookingsList(isMore: false)
 											}
@@ -346,7 +346,7 @@ private extension ScheduleListView {
 											Task {
 												viewModel.currentTab = .waiting
 												viewModel.bookingData = []
-												viewModel.takeItem = 15
+												viewModel.takeItem = 8
 												viewModel.status = SessionStatus.waitingForPayment.rawValue
 												await viewModel.getBookingsList(isMore: false)
 											}
@@ -380,7 +380,7 @@ private extension ScheduleListView {
 											Task {
 												viewModel.currentTab = .upcoming
 												viewModel.bookingData = []
-												viewModel.takeItem = 15
+												viewModel.takeItem = 8
 												viewModel.status = SessionStatus.upcoming.rawValue
 												await viewModel.getBookingsList(isMore: false)
 											}
@@ -414,7 +414,7 @@ private extension ScheduleListView {
 											Task {
 												viewModel.currentTab = .finished
 												viewModel.bookingData = []
-												viewModel.takeItem = 15
+												viewModel.takeItem = 8
 												viewModel.status = SessionStatus.done.rawValue
 												await viewModel.getBookingsList(isMore: false)
 											}
@@ -449,7 +449,7 @@ private extension ScheduleListView {
 											Task {
 												viewModel.currentTab = .canceled
 												viewModel.bookingData = []
-												viewModel.takeItem = 15
+												viewModel.takeItem = 8
 												viewModel.status = SessionStatus.canceled.rawValue
 												await viewModel.getBookingsList(isMore: false)
 											}

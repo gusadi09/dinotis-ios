@@ -454,3 +454,4 @@
 "video_call_fail_request" = "Can't continue your request. Please try again later.";
 "video_call_leave_room" = "Leave";
 "video_call_rejoin" = "Rejoin";
+"video_call_disconnected" = "You are disconnected from meeting.";
