@@ -55,7 +55,7 @@ final class UserTypeViewModel: ObservableObject {
 				((stateObservable.isVerified == "Verified") &&
 				 stateObservable.userType != 0) {
 			if stateObservable.userType == 2 {
-				let homeViewModel = TalentHomeViewModel(backToRoot: { self.route = nil })
+                let homeViewModel = TalentHomeViewModel(isFromUserType: true, backToRoot: { self.route = nil })
 				
 				DispatchQueue.main.async { [weak self] in
 					self?.route = .homeTalent(viewModel: homeViewModel)
@@ -63,8 +63,8 @@ final class UserTypeViewModel: ObservableObject {
 				
 			} else if stateObservable.userType == 3 {
 				let vm = TabViewContainerViewModel(
-					userHomeVM: UserHomeViewModel(backToRoot: {self.route = nil}),
-					talentHomeVM: TalentHomeViewModel(backToRoot: {self.route = nil}),
+                    isFromUserType: true,
+                    userHomeVM: UserHomeViewModel(backToRoot: {self.route = nil}),
 					profileVM: ProfileViewModel(backToRoot: {self.route = nil}, backToHome: {}),
 					searchVM: SearchTalentViewModel(backToRoot: {self.route = nil}, backToHome: {}),
                     scheduleVM: ScheduleListViewModel(backToRoot: {self.route = nil}, backToHome: {}, currentUserId: ""),

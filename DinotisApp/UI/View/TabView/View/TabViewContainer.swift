@@ -16,7 +16,24 @@ struct TabViewContainer: View {
 	@ObservedObject var state = StateObservable.shared
 
 	var body: some View {
-        NavigationView {
+        if viewModel.isFromUserType {
+            MainView(viewModel: viewModel, state: state)
+        } else {
+            NavigationView {
+                MainView(viewModel: viewModel, state: state)
+            }
+            .navigationViewStyle(StackNavigationViewStyle())
+            .navigationBarTitle(Text(""))
+            .navigationBarHidden(true)
+        }
+	}
+    
+    struct MainView: View {
+        
+        @ObservedObject var viewModel: TabViewContainerViewModel
+        @ObservedObject var state: StateObservable
+        
+        var body: some View {
             ZStack {
                 
                 NavigationLink(
@@ -73,10 +90,7 @@ struct TabViewContainer: View {
                 }
                 
                 TabView(selection: $viewModel.tab) {
-                    if viewModel.state.userType == 2 {
-                        TalentHomeView(homeVM: viewModel.talentHomeVM)
-                            .tag(TabRoute.explore)
-                    } else if viewModel.state.userType == 3 {
+                    if viewModel.state.userType == 3 {
                         UserHomeView(homeVM: viewModel.userHomeVM, tabValue: $viewModel.tab)
                             .tag(TabRoute.explore)
                     } else {
@@ -137,17 +151,15 @@ struct TabViewContainer: View {
                 }
             }
         }
-        .navigationBarTitle(Text(""))
-        .navigationBarHidden(true)
-	}
+    }
 }
 
 struct TabViewContainer_Previews: PreviewProvider {
 	static var previews: some View {
 		TabViewContainer(
 			viewModel: TabViewContainerViewModel(
-				userHomeVM: UserHomeViewModel(backToRoot: {}),
-				talentHomeVM: TalentHomeViewModel(backToRoot: {}),
+                isFromUserType: false,
+                userHomeVM: UserHomeViewModel(backToRoot: {}),
 				profileVM: ProfileViewModel(backToRoot: {}, backToHome: {}),
                 searchVM: SearchTalentViewModel(backToRoot: {}, backToHome: {}),
                 scheduleVM: ScheduleListViewModel(backToRoot: {}, backToHome: {}, currentUserId: ""),

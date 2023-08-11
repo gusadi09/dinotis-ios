@@ -18,21 +18,38 @@ struct TalentHomeView: View {
     @ObservedObject var homeVM: TalentHomeViewModel
     @ObservedObject var state = StateObservable.shared
     
-    @Environment(\.viewController) private var viewControllerHolder: ViewControllerHolder
-    
-    var viewController: UIViewController? {
-        self.viewControllerHolder.value
-    }
-
-	private var columns: [GridItem] {
-		[GridItem](
-			repeating: GridItem(.flexible(), spacing: 20),
-			count: 3
-		)
-	}
-    
     var body: some View {
-        NavigationView {
+        if homeVM.isFromUserType {
+            MainView(homeVM: homeVM, state: state)
+        } else {
+            NavigationView {
+                MainView(homeVM: homeVM, state: state)
+            }
+            .navigationViewStyle(StackNavigationViewStyle())
+            .navigationBarTitle(Text(""))
+            .navigationBarHidden(true)
+        }
+    }
+    
+    struct MainView: View {
+        
+        @ObservedObject var homeVM: TalentHomeViewModel
+        @ObservedObject var state: StateObservable
+        
+        @Environment(\.viewController) private var viewControllerHolder: ViewControllerHolder
+        
+        var viewController: UIViewController? {
+            self.viewControllerHolder.value
+        }
+
+        private var columns: [GridItem] {
+            [GridItem](
+                repeating: GridItem(.flexible(), spacing: 20),
+                count: 3
+            )
+        }
+        
+        var body: some View {
             ZStack {
                 
                 NavigationLink(
@@ -742,8 +759,6 @@ struct TalentHomeView: View {
                 }
             }
         }
-        .navigationBarTitle(Text(""))
-        .navigationBarHidden(true)
     }
 }
 

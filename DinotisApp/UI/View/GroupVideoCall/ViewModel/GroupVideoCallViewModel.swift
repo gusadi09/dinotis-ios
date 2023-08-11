@@ -659,13 +659,15 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     }
     
     func onDisconnectedFromMeetingRoom() {
-        if !isLeaving {
+        if !isLeaving || !isKicked {
             self.joinMeeting()
         }
     }
     
     func onMeetingRoomConnectionFailed() {
-        self.onConnectionError()
+        if !isKicked {
+            self.onConnectionError()
+        }
     }
     
     func onMeetingInitCompleted() {
@@ -694,7 +696,7 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     }
     
     func onMeetingRoomDisconnected() {
-        if !isLeaving {
+        if !isLeaving || !isKicked {
             self.joinMeeting()
         }
     }
@@ -710,7 +712,9 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
         self.isConnecting = false
         self.isPreview = false
         self.localUserId = meeting.localUser.userId
-       
+        
+        guard let audio = meeting.localUser.getAudioDevices().first(where: {$0.id.contains("speaker")}) else { return }
+        self.meeting.localUser.setAudioDevice(dyteAndroidDevice: audio)
     }
     
     func onMeetingRoomJoinFailed(exception: KotlinException) {
@@ -883,6 +887,7 @@ extension GroupVideoCallViewModel: DyteSelfEventsListener {
     
     func onRemovedFromMeeting() {
         isKicked = true
+        isLeaving = true
     }
     
     func onStoppedPresenting() {

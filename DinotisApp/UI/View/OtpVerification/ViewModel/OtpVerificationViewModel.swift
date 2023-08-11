@@ -226,8 +226,8 @@ final class OtpVerificationViewModel: ObservableObject {
                         if self?.stateObservable.userType == 3 {
                             self?.stateObservable.isVerified = "Verified"
 							let vm = TabViewContainerViewModel(
-								userHomeVM: UserHomeViewModel(backToRoot: {self?.route = nil}),
-								talentHomeVM: TalentHomeViewModel(backToRoot: {self?.route = nil}),
+                                isFromUserType: true,
+                                userHomeVM: UserHomeViewModel(backToRoot: {self?.route = nil}),
 								profileVM: ProfileViewModel(backToRoot: {self?.route = nil}, backToHome: {}),
 								searchVM: SearchTalentViewModel(backToRoot: {self?.route = nil}, backToHome: {}),
                                 scheduleVM: ScheduleListViewModel(backToRoot: {self?.route = nil}, backToHome: {}, currentUserId: (data?.id).orEmpty()),
@@ -242,7 +242,7 @@ final class OtpVerificationViewModel: ObservableObject {
                             
                             if data?.username != nil {
                                 self?.stateObservable.isVerified = "Verified"
-                                let viewModel = TalentHomeViewModel(backToRoot: self?.onBackToRoot ?? {})
+                                let viewModel = TalentHomeViewModel(isFromUserType: true, backToRoot: self?.onBackToRoot ?? {})
                                 self?.route = .homeTalent(viewModel: viewModel)
                                 
                             } else {

@@ -15,8 +15,8 @@ final class TabViewContainerViewModel: ObservableObject {
     
     private let counterUseCase: GetCounterUseCase
 
+    @Published var isFromUserType: Bool
 	@Published var userHomeVM: UserHomeViewModel
-	@Published var talentHomeVM: TalentHomeViewModel
 	@Published var profileVM: ProfileViewModel
 	@Published var searchVM: SearchTalentViewModel
     @Published var scheduleVM: ScheduleListViewModel
@@ -28,16 +28,16 @@ final class TabViewContainerViewModel: ObservableObject {
 	@Published var route: HomeRouting?
 
 	init(
+        isFromUserType: Bool,
         userHomeVM: UserHomeViewModel,
-        talentHomeVM: TalentHomeViewModel,
         profileVM: ProfileViewModel,
         searchVM: SearchTalentViewModel,
         scheduleVM: ScheduleListViewModel,
         backToRoot: @escaping () -> Void,
         counterUseCase: GetCounterUseCase = GetCounterDefaultUseCase()
     ) {
+        self.isFromUserType = isFromUserType
 		self.userHomeVM = userHomeVM
-		self.talentHomeVM = talentHomeVM
 		self.profileVM = profileVM
 		self.searchVM = searchVM
 		self.backToRoot = backToRoot
