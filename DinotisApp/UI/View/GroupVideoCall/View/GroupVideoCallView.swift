@@ -2077,15 +2077,36 @@ fileprivate extension GroupVideoCallView {
                                     Spacer()
                                     
                                     HStack(spacing: 8) {
-                                        (participant.fetchAudioEnabled() ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: 24)
-                                        
-                                        (participant.fetchVideoEnabled() ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: 24)
+                                        if participant.stageStatus == .requestedToJoinStage {
+                                            HStack(spacing: 5) {
+                                                Image.videoCallNeutralRaiseHand
+                                                    .renderingMode(.template)
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .frame(width: 20)
+                                                    .foregroundColor(.DinotisDefault.black1)
+                                                
+                                                Text(LocalizableText.videoCallRaiseHand)
+                                                    .font(.robotoMedium(size: 12))
+                                                    .foregroundColor(.DinotisDefault.black1)
+                                            }
+                                            .padding(.vertical, 5)
+                                            .padding(.horizontal, 10)
+                                            .background(
+                                                Capsule()
+                                                    .foregroundColor(.white)
+                                            )
+                                        } else {
+                                            (participant.fetchAudioEnabled() ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 24)
+                                            
+                                            (participant.fetchVideoEnabled() ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 24)
+                                        }
                                         
                                         if viewModel.localUser?.canDoParticipantHostControls() ?? false {
                                             Menu {
@@ -2127,7 +2148,7 @@ fileprivate extension GroupVideoCallView {
                                         Alert(title: Text(""), message: Text(LocalizableText.videoCallKickAlertFromSession), primaryButton: .default(Text(LocalizableText.videoCallKickAlertPrimaryButton)), secondaryButton: .default(Text(LocalizableText.videoCallKickAlertSecondaryButton), action: {
                                             viewModel.kickParticipant(participant)
                                         }))
-                                }
+                                    }
                                 }
                                 .listRowSeparator(.hidden)
                             }

@@ -306,7 +306,6 @@ final class GroupVideoCallViewModel: ObservableObject {
                 self?.isError = true
                 self?.error = .api(error.localizedDescription)
             }
-            
         }
     }
 
