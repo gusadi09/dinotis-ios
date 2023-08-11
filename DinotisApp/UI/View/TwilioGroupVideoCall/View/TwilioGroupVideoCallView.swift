@@ -478,7 +478,9 @@ struct TwilioGroupVideoCallView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 8))
 
                         Button {
-                            viewModel.postQuestion(meetingId: viewModel.meeting.id.orEmpty())
+                            Task {
+                               await viewModel.sendQuestion(meetingId: viewModel.meeting.id.orEmpty())
+                            }
 
                         } label: {
                             HStack {
@@ -537,7 +539,9 @@ struct TwilioGroupVideoCallView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 8))
 
                         Button {
-                            viewModel.postQuestion(meetingId: viewModel.meeting.id.orEmpty())
+                            Task {
+                               await viewModel.sendQuestion(meetingId: viewModel.meeting.id.orEmpty())
+                            }
 
                         } label: {
                             HStack {
@@ -636,7 +640,9 @@ struct TwilioGroupVideoCallView: View {
         })
         .onChange(of: streamViewModel.hasNewQuestion, perform: { newValue in
             if newValue {
-                viewModel.getQuestion(meetingId: viewModel.meeting.id.orEmpty())
+                Task {
+                   await viewModel.getQuestion()
+                }
             }
         })
         .navigationBarTitle(Text(""))
