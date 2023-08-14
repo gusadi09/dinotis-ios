@@ -106,7 +106,8 @@ struct ScheduledFormView: View {
 											}
 										},
 										isShowRemove: value.wrappedValue.id != viewModel.meetingArr.first?.id,
-										isEdit: false
+										isEdit: false,
+                                        maxEdit: .constant(0)
 									)
 								}
 							}

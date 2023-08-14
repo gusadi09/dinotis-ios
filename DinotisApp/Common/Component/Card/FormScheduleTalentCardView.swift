@@ -13,6 +13,7 @@ struct FormScheduleTalentCardView: View {
     @Binding var collab: [MeetingCollaborationData]
     @Binding var managements: [ManagementWrappedData]?
     @Binding var meetingForm: MeetingForm
+    @Binding var maxEdit: Int
     
     @State var selectedWallet: String? = nil
     @State var isPresent = false
@@ -76,10 +77,11 @@ struct FormScheduleTalentCardView: View {
     
     @State var selected = ""
     
-    init(collab: Binding<[MeetingCollaborationData]>, managements: Binding<[ManagementWrappedData]?>, meetingForm: Binding<MeetingForm>, onTapRemove: @escaping (() -> Void), isShowRemove: Bool = false, isEdit: Bool, disableEdit: Bool = false) {
+    init(collab: Binding<[MeetingCollaborationData]>, managements: Binding<[ManagementWrappedData]?>, meetingForm: Binding<MeetingForm>, onTapRemove: @escaping (() -> Void), isShowRemove: Bool = false, isEdit: Bool, disableEdit: Bool = false, maxEdit: Binding<Int>) {
         self._collab = collab
         self._managements = managements
         self._meetingForm = meetingForm
+        self._maxEdit = maxEdit
         self.onTapRemove = onTapRemove
         self.isShowRemove = isShowRemove
         self.isEdit = isEdit
@@ -90,22 +92,24 @@ struct FormScheduleTalentCardView: View {
         ZStack(alignment: .top) {
             ZStack(alignment: .topTrailing) {
                 VStack(spacing: 20) {
-                    Text(.init(LocalizableText.creatorRescheduleWarning))
-                        .font(.robotoRegular(size: 12))
-                        .foregroundColor(.DinotisDefault.darkPrimary)
-                        .padding(.vertical, 16)
-                        .padding(.horizontal, 11)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(
-                            RoundedRectangle(cornerRadius: 8)
-                                .foregroundColor(.DinotisDefault.lightPrimary)
-                        )
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8)
-                                .inset(by: 0.5)
-                                .stroke(Color.DinotisDefault.darkPrimary, lineWidth: 1)
-                        )
-                        .isHidden(!isEdit, remove: !isEdit)
+                    if let attr = try? AttributedString(markdown: LocalizableText.creatorRescheduleWarning(maxEdit)) {
+                        Text(attr)
+                            .font(.robotoRegular(size: 12))
+                            .foregroundColor(.DinotisDefault.darkPrimary)
+                            .padding(.vertical, 16)
+                            .padding(.horizontal, 11)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .foregroundColor(.DinotisDefault.lightPrimary)
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .inset(by: 0.5)
+                                    .stroke(Color.DinotisDefault.darkPrimary, lineWidth: 1)
+                            )
+                            .isHidden(!isEdit, remove: !isEdit)
+                    }
                     
                     VStack(spacing: 10) {
                         HStack {
@@ -180,6 +184,7 @@ struct FormScheduleTalentCardView: View {
                                 .frame(height: 15)
                         }
                         .clipShape(RoundedRectangle(cornerRadius: 6))
+                        .contentShape(Rectangle())
                         .padding(.horizontal)
                         .padding(.vertical, 15)
                         .onTapGesture {
@@ -234,6 +239,7 @@ struct FormScheduleTalentCardView: View {
                                     .frame(height: 15)
                             }
                             .clipShape(RoundedRectangle(cornerRadius: 6))
+                            .contentShape(Rectangle())
                             .padding(.horizontal)
                             .padding(.vertical, 15)
                             .onTapGesture {
@@ -248,6 +254,7 @@ struct FormScheduleTalentCardView: View {
                                 RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
                             )
                             
+                            
                             HStack {
                                 Text("\(DateUtils.dateFormatter(timeEnd.orCurrentDate(), forFormat: .HHmm))")
                                     .font(.robotoRegular(size: 12))
@@ -261,6 +268,7 @@ struct FormScheduleTalentCardView: View {
                                     .frame(height: 15)
                             }
                             .clipShape(RoundedRectangle(cornerRadius: 6))
+                            .contentShape(Rectangle())
                             .padding(.horizontal)
                             .padding(.vertical, 15)
                             .onTapGesture {
@@ -274,6 +282,7 @@ struct FormScheduleTalentCardView: View {
                             .overlay(
                                 RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
                             )
+                            
                         }
                     }
                     .onAppear {
@@ -932,124 +941,251 @@ struct FormScheduleTalentCardView: View {
                 }
             })
             .sheet(isPresented: $showsDatePicker) {
-                ZStack {
-                    VStack(alignment: .center, spacing: 0) {
-                        DatePicker("", selection: $changedTimeStart, in: Date()..., displayedComponents: .date)
-                            .datePickerStyle(WheelDatePickerStyle())
-                            .labelsHidden()
-                        
-                        Button(action: {
-                            timeStart = changedTimeStart
-                            meetingForm.startAt = DateUtils.dateFormatter(changedTimeStart, forFormat: .utcV2)
-                            showsDatePicker = false
-                        }, label: {
-                            HStack {
-                                Spacer()
-                                
-                                Text(NSLocalizedString("select_text", comment: ""))
-                                    .foregroundColor(.white)
-                                    .font(.robotoMedium(size: 14))
-                                
-                                Spacer()
-                            }
-                            .padding(.vertical)
-                            .background(Color("btn-stroke-1"))
-                        })
-                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                if #available(iOS 16.0, *) {
+                    ZStack {
+                        VStack(alignment: .center, spacing: 0) {
+                            DatePicker("", selection: $changedTimeStart, in: Date()..., displayedComponents: .date)
+                                .datePickerStyle(WheelDatePickerStyle())
+                                .labelsHidden()
+                            
+                            Spacer()
+                            
+                            Button(action: {
+                                timeStart = changedTimeStart
+                                meetingForm.startAt = DateUtils.dateFormatter(changedTimeStart, forFormat: .utcV2)
+                                showsDatePicker = false
+                            }, label: {
+                                HStack {
+                                    Spacer()
+                                    
+                                    Text(NSLocalizedString("select_text", comment: ""))
+                                        .foregroundColor(.white)
+                                        .font(.robotoMedium(size: 14))
+                                    
+                                    Spacer()
+                                }
+                                .padding(.vertical)
+                                .background(Color.DinotisDefault.primary)
+                            })
+                            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                        }
+                        .padding()
+                        .onAppear {
+                            changedTimeStart = timeStart.orCurrentDate()
+                        }
                     }
-                    .padding()
-                    .onAppear {
-                        changedTimeStart = timeStart.orCurrentDate()
+                    .presentationDetents([.medium])
+                } else {
+                    ZStack {
+                        VStack(alignment: .center, spacing: 0) {
+                            DatePicker("", selection: $changedTimeStart, in: Date()..., displayedComponents: .date)
+                                .datePickerStyle(WheelDatePickerStyle())
+                                .labelsHidden()
+                            
+                            Button(action: {
+                                timeStart = changedTimeStart
+                                meetingForm.startAt = DateUtils.dateFormatter(changedTimeStart, forFormat: .utcV2)
+                                showsDatePicker = false
+                            }, label: {
+                                HStack {
+                                    Spacer()
+                                    
+                                    Text(NSLocalizedString("select_text", comment: ""))
+                                        .foregroundColor(.white)
+                                        .font(.robotoMedium(size: 14))
+                                    
+                                    Spacer()
+                                }
+                                .padding(.vertical)
+                                .background(Color.DinotisDefault.primary)
+                            })
+                            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                        }
+                        .padding()
+                        .onAppear {
+                            changedTimeStart = timeStart.orCurrentDate()
+                        }
                     }
                 }
             }
             .sheet(isPresented: $showsTimePicker) {
-                ZStack {
-                    VStack(alignment: .leading) {
-                        HStack {
-                            Spacer()
-                            
-                            DatePicker("", selection: $changedTimeStart, in: Date()..., displayedComponents: .hourAndMinute)
-                                .datePickerStyle(WheelDatePickerStyle())
-                                .labelsHidden()
-                            
-                            Spacer()
-                        }
-                        
-                        Button(action: {
-                            timeStart = changedTimeStart
-                            meetingForm.startAt = DateUtils.dateFormatter(changedTimeStart, forFormat: .utcV2)
-                            showsTimePicker = false
-                        }, label: {
+                if #available(iOS 16.0, *) {
+                    ZStack {
+                        VStack(alignment: .leading) {
                             HStack {
                                 Spacer()
                                 
-                                Text(NSLocalizedString("select_text", comment: ""))
-                                    .foregroundColor(.white)
-                                    .font(.robotoMedium(size: 14))
+                                DatePicker("", selection: $changedTimeStart, in: Date()..., displayedComponents: .hourAndMinute)
+                                    .datePickerStyle(WheelDatePickerStyle())
+                                    .labelsHidden()
                                 
                                 Spacer()
                             }
-                            .padding(.vertical)
-                            .background(Color("btn-stroke-1"))
-                        })
-                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                        .onAppear {
-                            if changedTimeStart < Date() {
-                                changedTimeStart = Date()
+                            
+                            Spacer()
+                            
+                            Button(action: {
+                                timeStart = changedTimeStart
+                                meetingForm.startAt = DateUtils.dateFormatter(changedTimeStart, forFormat: .utcV2)
+                                showsTimePicker = false
+                            }, label: {
+                                HStack {
+                                    Spacer()
+                                    
+                                    Text(NSLocalizedString("select_text", comment: ""))
+                                        .foregroundColor(.white)
+                                        .font(.robotoMedium(size: 14))
+                                    
+                                    Spacer()
+                                }
+                                .padding(.vertical)
+                                .background(Color.DinotisDefault.primary)
+                            })
+                            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                            .onAppear {
+                                if changedTimeStart < Date() {
+                                    changedTimeStart = Date()
+                                }
                             }
                         }
+                        .padding()
                     }
-                    .padding()
+                    .presentationDetents([.medium])
+                } else {
+                    ZStack {
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Spacer()
+                                
+                                DatePicker("", selection: $changedTimeStart, in: Date()..., displayedComponents: .hourAndMinute)
+                                    .datePickerStyle(WheelDatePickerStyle())
+                                    .labelsHidden()
+                                
+                                Spacer()
+                            }
+                            
+                            Button(action: {
+                                timeStart = changedTimeStart
+                                meetingForm.startAt = DateUtils.dateFormatter(changedTimeStart, forFormat: .utcV2)
+                                showsTimePicker = false
+                            }, label: {
+                                HStack {
+                                    Spacer()
+                                    
+                                    Text(NSLocalizedString("select_text", comment: ""))
+                                        .foregroundColor(.white)
+                                        .font(.robotoMedium(size: 14))
+                                    
+                                    Spacer()
+                                }
+                                .padding(.vertical)
+                                .background(Color.DinotisDefault.primary)
+                            })
+                            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                            .onAppear {
+                                if changedTimeStart < Date() {
+                                    changedTimeStart = Date()
+                                }
+                            }
+                        }
+                        .padding()
+                    }
                 }
+                
             }
             .sheet(isPresented: $showsTimeUntilPicker) {
-                ZStack {
-                    VStack(alignment: .leading) {
-                        HStack {
-                            Spacer()
-                            
-                            DatePicker("", selection: $changedTimeEnd, in: timeStart.orCurrentDate()..., displayedComponents: .hourAndMinute)
-                                .datePickerStyle(WheelDatePickerStyle())
-                                .labelsHidden()
-                            
-                            Spacer()
-                        }
-                        
-                        Button(action: {
-                            timeEnd = changedTimeEnd
-                            meetingForm.endAt = DateUtils.dateFormatter(changedTimeEnd, forFormat: .utcV2)
-                            showsTimeUntilPicker = false
-                            
-                            if meetingForm.startAt.isEmpty {
-                                meetingForm.startAt = DateUtils.dateFormatter(timeStart.orCurrentDate(), forFormat: .utcV2)
-                            }
-                        }, label: {
+                if #available(iOS 16.0, *) {
+                    ZStack {
+                        VStack(alignment: .leading) {
                             HStack {
                                 Spacer()
                                 
-                                Text(NSLocalizedString("select_text", comment: ""))
-                                    .foregroundColor(.white)
-                                    .font(.robotoMedium(size: 14))
+                                DatePicker("", selection: $changedTimeEnd, in: timeStart.orCurrentDate()..., displayedComponents: .hourAndMinute)
+                                    .datePickerStyle(WheelDatePickerStyle())
+                                    .labelsHidden()
                                 
                                 Spacer()
                             }
-                            .padding(.vertical)
-                            .background(Color("btn-stroke-1"))
-                        })
-                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                            
+                            Spacer()
+                            
+                            Button(action: {
+                                timeEnd = changedTimeEnd
+                                meetingForm.endAt = DateUtils.dateFormatter(changedTimeEnd, forFormat: .utcV2)
+                                showsTimeUntilPicker = false
+                                
+                                if meetingForm.startAt.isEmpty {
+                                    meetingForm.startAt = DateUtils.dateFormatter(timeStart.orCurrentDate(), forFormat: .utcV2)
+                                }
+                            }, label: {
+                                HStack {
+                                    Spacer()
+                                    
+                                    Text(NSLocalizedString("select_text", comment: ""))
+                                        .foregroundColor(.white)
+                                        .font(.robotoMedium(size: 14))
+                                    
+                                    Spacer()
+                                }
+                                .padding(.vertical)
+                                .background(Color.DinotisDefault.primary)
+                            })
+                            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                        }
+                        .padding()
+                        .onAppear {
+                            changedTimeEnd = timeEnd.orCurrentDate()
+                        }
                     }
-                    .padding()
-                    .onAppear {
-                        changedTimeEnd = timeEnd.orCurrentDate()
+                    .presentationDetents([.medium])
+                } else {
+                    ZStack {
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Spacer()
+                                
+                                DatePicker("", selection: $changedTimeEnd, in: timeStart.orCurrentDate()..., displayedComponents: .hourAndMinute)
+                                    .datePickerStyle(WheelDatePickerStyle())
+                                    .labelsHidden()
+                                
+                                Spacer()
+                            }
+                            
+                            Button(action: {
+                                timeEnd = changedTimeEnd
+                                meetingForm.endAt = DateUtils.dateFormatter(changedTimeEnd, forFormat: .utcV2)
+                                showsTimeUntilPicker = false
+                                
+                                if meetingForm.startAt.isEmpty {
+                                    meetingForm.startAt = DateUtils.dateFormatter(timeStart.orCurrentDate(), forFormat: .utcV2)
+                                }
+                            }, label: {
+                                HStack {
+                                    Spacer()
+                                    
+                                    Text(NSLocalizedString("select_text", comment: ""))
+                                        .foregroundColor(.white)
+                                        .font(.robotoMedium(size: 14))
+                                    
+                                    Spacer()
+                                }
+                                .padding(.vertical)
+                                .background(Color.DinotisDefault.primary)
+                            })
+                            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                        }
+                        .padding()
+                        .onAppear {
+                            changedTimeEnd = timeEnd.orCurrentDate()
+                        }
                     }
                 }
+                
             }
             
         }
         .disabled(isEdit && disableEdit)
     }
-    
 }
 
 struct FormScheduleTalentCardView_Previews: PreviewProvider {
@@ -1070,7 +1206,8 @@ struct FormScheduleTalentCardView_Previews: PreviewProvider {
                 )
             ),
             onTapRemove: {},
-            isEdit: false
+            isEdit: false,
+            maxEdit: .constant(0)
         )
     }
 }

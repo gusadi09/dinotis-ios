@@ -22,11 +22,15 @@ struct TalentSearchCard: View {
 					
 					VStack(spacing: 5) {
                         if user.isVerified ?? false {
-                            Text("\(user.name.orEmpty()) \(Image.Dinotis.accountVerifiedIcon)")
-                                .font(.robotoBold(size: 12))
-                                .lineLimit(2)
-                                .foregroundColor(.black)
-                                .multilineTextAlignment(.center)
+                            HStack(alignment: .bottom, spacing: 0) {
+                                Text("\(user.name.orEmpty()) ")
+                                    .font(.robotoBold(size: 12))
+                                    .lineLimit(1)
+                                    .foregroundColor(.black)
+                                    .multilineTextAlignment(.center)
+                                
+                                Image.Dinotis.accountVerifiedIcon
+                            }
                         } else {
                             Text("\(user.name.orEmpty())")
                                 .font(.robotoBold(size: 12))

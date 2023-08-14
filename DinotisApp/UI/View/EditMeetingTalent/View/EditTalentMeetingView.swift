@@ -94,7 +94,8 @@ struct EditTalentMeetingView: View {
                                 onTapRemove: {},
                                 isShowRemove: false,
                                 isEdit: true,
-                                disableEdit: viewModel.isDisableEdit
+                                disableEdit: viewModel.isDisableEdit,
+                                maxEdit: $viewModel.maxEdit
                             )
 						}
 						.padding(.vertical, 15)

@@ -383,12 +383,12 @@ final class BiodataViewModel: ObservableObject {
 		DispatchQueue.main.async { [weak self] in
 
 			if self?.stateObservable.userType == 2 {
-				let viewModel = TalentHomeViewModel(backToRoot: self?.backToRoot ?? {})
+                let viewModel = TalentHomeViewModel(isFromUserType: true, backToRoot: self?.backToRoot ?? {})
 				self?.route = .homeTalent(viewModel: viewModel)
 			} else {
 				let vm = TabViewContainerViewModel(
-					userHomeVM: UserHomeViewModel(backToRoot: {self?.backToRoot()}),
-					talentHomeVM: TalentHomeViewModel(backToRoot: {self?.backToRoot()}),
+                    isFromUserType: true,
+                    userHomeVM: UserHomeViewModel(backToRoot: {self?.backToRoot()}),
                     profileVM: ProfileViewModel(backToRoot: {self?.backToRoot()}, backToHome: {}),
 					searchVM: SearchTalentViewModel(backToRoot: {self?.backToRoot()}, backToHome: {}),
                     scheduleVM: ScheduleListViewModel(backToRoot: {self?.backToRoot()}, backToHome: {}, currentUserId: (self?.userData?.id).orEmpty()),

@@ -60,12 +60,4 @@ final class MeetingsDefaultRemoteDataSource: MeetingsRemoteDataSource {
 	func patchStartTalentMeeting(by meetingId: String) -> AnyPublisher<EditTalentResponse, UnauthResponse> {
 		self.provider.request(.startMeeting(meetingId), model: EditTalentResponse.self)
 	}
-    
-    func getCollabMeeting(by meetingId: String) -> AnyPublisher<DetailMeeting, UnauthResponse> {
-        self.provider.request(.collaborationMeetingDetail(meetingId), model: DetailMeeting.self)
-    }
-    
-    func approveInvitation(with isApprove: Bool, for meetingId: String) -> AnyPublisher<SuccessResponse, UnauthResponse> {
-        self.provider.request(.approveInvitation(isApprove, meetingId), model: SuccessResponse.self)
-    }
 }

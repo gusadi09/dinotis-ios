@@ -27,6 +27,7 @@ final class TalentHomeViewModel: ObservableObject {
 	private let meetingRequestUseCase: MeetingRequestUseCase
     private let counterUseCase: GetCounterUseCase
 
+    @Published var isFromUserType: Bool
     @Published var hasNewNotif = false
 	@Published var confirmationSheet: MeetingRequestAcceptanceSelection? = nil
     @Published var filterSelection = ""
@@ -86,6 +87,7 @@ final class TalentHomeViewModel: ObservableObject {
     @Published var tabNumb = 0
     
     init(
+        isFromUserType: Bool,
         backToRoot: @escaping (() -> Void),
         getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
         currentBalanceUseCase: CurrentBalanceUseCase = CurrentBalanceDefaultUseCase(),
@@ -96,6 +98,7 @@ final class TalentHomeViewModel: ObservableObject {
         meetingRequestUseCase: MeetingRequestUseCase = MeetingRequestDefaultUseCase(),
         counterUseCase: GetCounterUseCase = GetCounterDefaultUseCase()
     ) {
+        self.isFromUserType = isFromUserType
         self.backToRoot = backToRoot
         self.getUserUseCase = getUserUseCase
         self.currentBalanceUseCase = currentBalanceUseCase

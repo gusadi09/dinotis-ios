@@ -138,4 +138,6 @@ public extension Image {
     static let videoCallPutParticipant = Image("ic-put-participant", bundle: .module)
     static let videoCallMenu = Image("ic-menu-video", bundle: .module)
     static let videoCallPutToSpeaker = Image("ic-put-speaker", bundle: .module)
+    static let videoCallNeutralRaiseHand = Image("ic-neutral-raise-hand", bundle: .module)
+    static let videoCallHelpCircle = Image("help-circle-icon", bundle: .module)
 }

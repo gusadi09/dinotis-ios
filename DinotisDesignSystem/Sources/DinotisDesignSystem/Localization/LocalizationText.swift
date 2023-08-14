@@ -1942,11 +1942,16 @@ public enum LocalizableText {
         bundle: .module,
         comment: "video call waiting room description"
     )
-    public static let creatorRescheduleWarning = NSLocalizedString(
-        "creator_reschedule_warning",
-        bundle: .module,
-        comment: "reschedule warning when creator wants to edit the schedule"
-    )
+    public static func creatorRescheduleWarning(_ minute: Int) -> String {
+        String(
+            format: NSLocalizedString(
+                "creator_reschedule_warning",
+                bundle: .module,
+                comment: "reschedule warning when creator wants to edit the schedule"
+            ),
+            minute
+        )
+    }
     public static let videoCallPutToSpeaker = NSLocalizedString(
         "video-call-put-to-speaker",
         bundle: .module,
@@ -2070,6 +2075,21 @@ public enum LocalizableText {
         "video_call_rejoin",
         bundle: .module,
         comment: "rejoin"
+    )
+    public static let videoCallDisconnected = NSLocalizedString(
+        "video_call_disconnected",
+        bundle: .module,
+        comment: "disconnected text"
+    )
+    public static let videoCallRaiseHand = NSLocalizedString(
+        "video_call_raise_hand",
+        bundle: .module,
+        comment: "raise hand text"
+    )
+    public static let videoCallViewerMode = NSLocalizedString(
+        "video_call_viewer_mode",
+        bundle: .module,
+        comment: "viewer mode text"
     )
 }
 
