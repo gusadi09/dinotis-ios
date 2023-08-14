@@ -222,7 +222,7 @@
 "continue_payment_label" = "Continue Payment";
 "session_completed" = "Sessions Completed";
 "in_app_purchase_error_trx" = "Can't make transaction.";
-"creator_reschedule_warning" = "If you need to edit the session schedule, **please make sure you change it 15 minutes before the event** to avoid surprising your audience";
+"creator_reschedule_warning" = "If you need to edit the session schedule, **please make sure you change it %lld minutes before the event** to avoid surprising your audience";
 
 "cancel_payment_question" = "Want to cancel the payment?";
 "cancel_payment_title_question" = "Are you sure want to cancel this payment?";
@@ -454,3 +454,6 @@
 "video_call_fail_request" = "Can't continue your request. Please try again later.";
 "video_call_leave_room" = "Leave";
 "video_call_rejoin" = "Rejoin";
+"video_call_disconnected" = "You are disconnected from meeting.";
+"video_call_raise_hand" = "Raise Hand";
+"video_call_viewer_mode" = "Viewer Mode";

@@ -92,7 +92,7 @@ final class ScheduleListViewModel: ObservableObject {
 	@Published var isQr = false
 	@Published var isEwallet = false
     
-    @Published var takeItem = 15
+    @Published var takeItem = 8
     @Published var nextCursor: Int? = 0
     @Published var status = ""
 	
@@ -350,7 +350,7 @@ final class ScheduleListViewModel: ObservableObject {
         }
         
         let query = UserBookingQueryParam(
-            skip: takeItem-15,
+            skip: takeItem-8,
             take: takeItem,
             status: status
         )

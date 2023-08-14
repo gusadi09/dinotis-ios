@@ -65,6 +65,8 @@ struct OutdatedVersionView: View {
             }
             .padding()
         }
+        .navigationBarTitle(Text(""))
+        .navigationBarHidden(true)
     }
 }
 

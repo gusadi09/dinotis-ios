@@ -1309,7 +1309,7 @@ extension TalentProfileDetailView {
         @ObservedObject var viewModel: TalentProfileDetailViewModel
         
         var body: some View {
-            VStack(spacing: 30) {
+            VStack(spacing: 20) {
                 VStack(spacing: 5) {
                     Text(LocaleText.requestScheduleText)
                         .font(.robotoBold(size: 14))
@@ -1320,7 +1320,7 @@ extension TalentProfileDetailView {
                 }
                 .foregroundColor(.black)
                 
-                VStack(spacing: 20) {
+                VStack(spacing: 10) {
                     Button {
                         Task {
                             await viewModel.sendRequest(type: .privateType, message: LocaleText.requestPrivateText)
@@ -1410,8 +1410,7 @@ extension TalentProfileDetailView {
                     )
                 }
             }
-            .padding([.top, .trailing, .leading], -12)
-            .padding(.bottom)
+            .padding(.top)
         }
     }
     

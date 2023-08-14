@@ -342,8 +342,8 @@ final class LoginViewModel: ObservableObject {
 			
 			if self?.stateObservable.userType == 3 {
 				let vm = TabViewContainerViewModel(
-					userHomeVM: UserHomeViewModel(backToRoot: self?.backToRoot ?? {}),
-					talentHomeVM: TalentHomeViewModel(backToRoot: self?.backToRoot ?? {}),
+                    isFromUserType: true,
+                    userHomeVM: UserHomeViewModel(backToRoot: self?.backToRoot ?? {}),
 					profileVM: ProfileViewModel(backToRoot: self?.backToRoot ?? {}, backToHome: {}),
 					searchVM: SearchTalentViewModel(backToRoot: self?.backToRoot ?? {}, backToHome: {}),
                     scheduleVM: ScheduleListViewModel(backToRoot: {self?.route = nil}, backToHome: {}, currentUserId: ""),
@@ -354,7 +354,7 @@ final class LoginViewModel: ObservableObject {
 					self?.route = .tabContainer(viewModel: vm)
 				}
 			} else if self?.stateObservable.userType == 2 {
-				let viewModel = TalentHomeViewModel(backToRoot: self?.backToRoot ?? {})
+                let viewModel = TalentHomeViewModel(isFromUserType: true, backToRoot: self?.backToRoot ?? {})
 				
 				self?.route = .homeTalent(viewModel: viewModel)
 			}

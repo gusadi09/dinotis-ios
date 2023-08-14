@@ -36,6 +36,7 @@ final class EditTalentMeetingViewModel: ObservableObject {
 	@Published var isShowSuccess = false
     @Published var isDisableEdit = false
     @Published var talent = [MeetingCollaborationData]()
+    @Published var maxEdit = 0
 
   @Published var meetingForm = MeetingForm(id: "", title: "", description: "", price: 0, startAt: "", endAt: "", isPrivate: false, slots: 0, managementId: nil, urls: [])
 
@@ -150,8 +151,9 @@ final class EditTalentMeetingViewModel: ObservableObject {
                 self.meetingForm.title = response.title.orEmpty()
                 self.meetingForm.managementId = response.managementId
                 
-                if let startAt = response.startAt {
-                    self.toggleDisableEdit(from: startAt)
+                if let startAt = response.startAt, let maxEdit = response.maxEditAt {
+                    self.toggleDisableEdit(from: maxEdit)
+                    self.maxEdit = self.minuteDifferenceOfMaxEdit(with: maxEdit, from: startAt)
                 }
                 
                 self.meetingForm.urls = response.meetingUrls?.compactMap({ value in
@@ -202,8 +204,25 @@ final class EditTalentMeetingViewModel: ObservableObject {
 			.store(in: &cancellables)
 	}
     
-    func toggleDisableEdit(from date: Date) {
-        isDisableEdit = date.timeIntervalSinceNow < 900
+    func toggleDisableEdit(from maxEdit: Date) {
+        isDisableEdit = maxEdit < Date()
+    }
+    
+    func minuteDifferenceOfMaxEdit(with maxEdit: Date, from start: Date) -> Int {
+        
+        var components1 = Calendar.current.dateComponents([.hour, .minute], from: start)
+        
+        let components2 = Calendar.current.dateComponents([.hour, .minute, .day, .month, .year], from: maxEdit)
+        
+        components1.year = components2.year;
+        components1.month = components2.month;
+        components1.day = components2.day;
+        
+        guard let date3 = Calendar.current.date(from: components1) else { return 0 }
+        
+        let timeIntervalInMinutes = date3.timeIntervalSince(maxEdit)/60
+        
+        return Int(timeIntervalInMinutes)
     }
     
     func disableSaveButton() -> Bool {

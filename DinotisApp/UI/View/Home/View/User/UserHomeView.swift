@@ -26,28 +26,28 @@ struct UserHomeView: View {
     
     var body: some View {
         GeometryReader { geo in
-			ZStack {
+            ZStack {
                 
                 NavigationHelper(homeVM: homeVM, tabValue: $tabValue)
-
-				ZStack(alignment: .center) {
-
-					Color.homeBgColor
-						.edgesIgnoringSafeArea(.bottom)
-
-					VStack(spacing: 0) {
-
-						HeaderView(homeVM: homeVM)
-							.onChange(of: state.isGoToDetailSchedule) { value in
-								if value {
-									homeVM.routeToScheduleList()
-								}
-							}
-
-						ScrolledContent(homeVM: homeVM, geo: geo)
-
-					}
-
+                
+                ZStack(alignment: .center) {
+                    
+                    Color.homeBgColor
+                        .edgesIgnoringSafeArea(.bottom)
+                    
+                    VStack(spacing: 0) {
+                        
+                        HeaderView(homeVM: homeVM)
+                            .onChange(of: state.isGoToDetailSchedule) { value in
+                                if value {
+                                    homeVM.routeToScheduleList()
+                                }
+                            }
+                        
+                        ScrolledContent(homeVM: homeVM, geo: geo)
+                        
+                    }
+                    
                     if !homeVM.announceData.isEmpty {
                         AnnouncementView(
                             items: $homeVM.announceData[homeVM.announceIndex],
@@ -63,12 +63,12 @@ struct UserHomeView: View {
                     
                 }
                 .dinotisAlert(
-                  isPresent: $homeVM.isShowAlert,
-                  title: homeVM.alert.title,
-                  isError: homeVM.alert.isError,
-                  message: homeVM.alert.message,
-                  primaryButton: homeVM.alert.primaryButton,
-                  secondaryButton: homeVM.alert.secondaryButton
+                    isPresent: $homeVM.isShowAlert,
+                    title: homeVM.alert.title,
+                    isError: homeVM.alert.isError,
+                    message: homeVM.alert.message,
+                    primaryButton: homeVM.alert.primaryButton,
+                    secondaryButton: homeVM.alert.secondaryButton
                 )
                 .navigationBarTitle(Text(""))
                 .navigationBarHidden(true)

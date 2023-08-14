@@ -71,7 +71,7 @@ struct UserScheduleDetail: View {
                             EmptyView()
                         }
                     )
-                    
+
                     NavigationLink(
                         unwrapping: $viewModel.route,
                         case: /HomeRouting.twilioLiveStream,
@@ -94,29 +94,6 @@ struct UserScheduleDetail: View {
                             EmptyView()
                         }
                     )
-                    
-					NavigationLink(
-						unwrapping: $viewModel.route,
-						case: /HomeRouting.twilioLiveStream,
-						destination: {viewModel in
-							TwilioGroupVideoCallView(
-								viewModel: viewModel.wrappedValue,
-								meetingId: .constant(meetId), speaker: SpeakerVideoViewModel()
-							)
-							.environmentObject(streamViewModel)
-							.environmentObject(participantsViewModel)
-							.environmentObject(streamManager)
-							.environmentObject(speakerGridViewModel)
-							.environmentObject(presentationLayoutViewModel)
-							.environmentObject(speakerSettingsManager)
-							.environmentObject(hostControlsManager)
-							.environmentObject(chatManager)
-						},
-						onNavigate: {_ in},
-						label: {
-							EmptyView()
-						}
-					)
 					
 					NavigationLink(
 						unwrapping: $viewModel.route,

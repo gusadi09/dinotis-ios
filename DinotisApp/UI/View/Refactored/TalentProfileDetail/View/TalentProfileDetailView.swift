@@ -543,7 +543,7 @@ struct TalentProfileDetailView: View {
                         RequestMenuView(viewModel: viewModel)
                             .padding()
                             .padding(.vertical)
-                            .presentationDetents([.fraction(0.5), .large])
+                            .presentationDetents([.medium, .large])
                     } else {
                         RequestMenuView(viewModel: viewModel)
                             .padding()

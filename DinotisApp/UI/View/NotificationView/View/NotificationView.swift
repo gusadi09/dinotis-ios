@@ -164,7 +164,9 @@ struct NotificationView: View {
                                             data: viewModel.convertToNotificationModel(raw: item),
                                             action: {
                                                 viewModel.isShowCollabSheet.toggle()
-                                                viewModel.getDetailCollab(for: (item?.meetingId).orEmpty())
+                                                Task {
+                                                    await viewModel.getDetailCollab(for: (item?.meetingId).orEmpty())
+                                                }
                                             }
                                         )
                                         .contentShape(Rectangle())
@@ -195,69 +197,71 @@ struct NotificationView: View {
                     }
                     .tag("general")
                     
-                    RefreshableScrollViews {
-                        Task {
-                            viewModel.query.take = 15
-                            viewModel.query.skip = 0
-                            await viewModel.getNotifications(isReplacing: true)
-                        }
-                    } content: {
-                        HStack {
-                            Spacer()
+                    if viewModel.stateObservable.userType == 3 {
+                        RefreshableScrollViews {
+                            Task {
+                                viewModel.query.take = 15
+                                viewModel.query.skip = 0
+                                await viewModel.getNotifications(isReplacing: true)
+                            }
+                        } content: {
+                            HStack {
+                                Spacer()
+                                
+                                ProgressView()
+                                    .progressViewStyle(.circular)
+                                    .padding(.vertical, 10)
+                                
+                                Spacer()
+                            }
+                            .isHidden(!viewModel.isLoading, remove: !viewModel.isLoading)
                             
-                            ProgressView()
-                                .progressViewStyle(.circular)
-                                .padding(.vertical, 10)
-                            
-                            Spacer()
-                        }
-                        .isHidden(!viewModel.isLoading, remove: !viewModel.isLoading)
-                        
-                        LazyVStack(spacing: 0) {
-                            
-                            if viewModel.resultTrans.isEmpty {
-                                VStack(spacing: 15) {
-                                    Image.notificationEmptyImage
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(height: 182)
-                                    
-                                    Text(LocalizableText.notificationTransactionEmptyTitle)
-                                        .font(.robotoBold(size: 14))
-                                        .foregroundColor(.black)
-                                    
-                                    Text(LocalizableText.notificationTransactionEmptyDescription)
-                                        .font(.robotoRegular(size: 12))
-                                        .foregroundColor(.black)
-                                }
-                                .multilineTextAlignment(.center)
-                                .padding()
-                            } else {
-                                ForEach(viewModel.resultTrans, id: \.?.id) { item in
-                                    VStack(spacing: 0) {
-                                        NotificationCard(
-                                            data: viewModel.convertToNotificationModel(raw: item),
-                                            action: {}
-                                        )
-                                        .contentShape(Rectangle())
-                                        .onTapGesture {
-                                            Task {
-                                                await viewModel.readById(id: item?.id)
-                                            }
-                                        }
+                            LazyVStack(spacing: 0) {
+                                
+                                if viewModel.resultTrans.isEmpty {
+                                    VStack(spacing: 15) {
+                                        Image.notificationEmptyImage
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(height: 182)
                                         
+                                        Text(LocalizableText.notificationTransactionEmptyTitle)
+                                            .font(.robotoBold(size: 14))
+                                            .foregroundColor(.black)
                                         
-                                        Divider()
-                                            .padding(.horizontal)
+                                        Text(LocalizableText.notificationTransactionEmptyDescription)
+                                            .font(.robotoRegular(size: 12))
+                                            .foregroundColor(.black)
                                     }
-                                    .onAppear {
-                                        Task {
-                                            if item?.id == viewModel.resultTrans.last??.id {
-                                                if viewModel.nextCursor != nil {
-                                                    viewModel.query.skip = viewModel.query.take
-                                                    viewModel.query.take += 15
-                                                    
-                                                    await viewModel.getNotifications(isReplacing: false)
+                                    .multilineTextAlignment(.center)
+                                    .padding()
+                                } else {
+                                    ForEach(viewModel.resultTrans, id: \.?.id) { item in
+                                        VStack(spacing: 0) {
+                                            NotificationCard(
+                                                data: viewModel.convertToNotificationModel(raw: item),
+                                                action: {}
+                                            )
+                                            .contentShape(Rectangle())
+                                            .onTapGesture {
+                                                Task {
+                                                    await viewModel.readById(id: item?.id)
+                                                }
+                                            }
+                                            
+                                            
+                                            Divider()
+                                                .padding(.horizontal)
+                                        }
+                                        .onAppear {
+                                            Task {
+                                                if item?.id == viewModel.resultTrans.last??.id {
+                                                    if viewModel.nextCursor != nil {
+                                                        viewModel.query.skip = viewModel.query.take
+                                                        viewModel.query.take += 15
+                                                        
+                                                        await viewModel.getNotifications(isReplacing: false)
+                                                    }
                                                 }
                                             }
                                         }
@@ -265,8 +269,8 @@ struct NotificationView: View {
                                 }
                             }
                         }
+                        .tag("transaction")
                     }
-                    .tag("transaction")
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
             }
@@ -448,11 +452,15 @@ private extension NotificationView {
                     if !(viewModel.detailMeeting?.isCollaborationAlreadyConfirmed ?? false) {
                         HStack(spacing: 15) {
                             DinotisSecondaryButton(text: LocalizableText.decline, type: .adaptiveScreen, height: 45, textColor: .black, bgColor: .DinotisDefault.lightPrimary, strokeColor: .DinotisDefault.primary) {
-                                viewModel.approveMeeting(false)
+                                Task {
+                                    await viewModel.approveMeeting(false)
+                                }
                             }
                             
                             DinotisPrimaryButton(text: LocalizableText.acceptInvitation, type: .adaptiveScreen, height: 45, textColor: .white, bgColor: .DinotisDefault.primary) {
-                                viewModel.approveMeeting(true)
+                                Task {
+                                    await viewModel.approveMeeting(true)
+                                }
                             }
                         }
                     }
