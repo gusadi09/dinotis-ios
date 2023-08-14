@@ -2086,6 +2086,11 @@ public enum LocalizableText {
         bundle: .module,
         comment: "raise hand text"
     )
+    public static let videoCallViewerMode = NSLocalizedString(
+        "video_call_viewer_mode",
+        bundle: .module,
+        comment: "viewer mode text"
+    )
 }
 
 

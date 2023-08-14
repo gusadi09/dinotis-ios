@@ -90,7 +90,6 @@ final class GroupVideoCallViewModel: ObservableObject {
     )
     
     @Published var route: HomeRouting? = nil
-    @Published var currentPage: Int32 = 0
     
     @Published var userMeeting: UserMeetingData
     @Published var hostNames: String = ""
@@ -144,10 +143,9 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var hasNewQuestion = false
     @Published var hasNewParticipantRequest = false
     
-    @Published var activePage: Int32 = 0
+    @Published var activePage: Int32 = 1
     
     @Published var connectionError: String?
-    @Published var showConnectionErrorAlert = false
     
     @Published var bottomSheetTabItems: [TabBarItem] = [
         .init(id: 0, title: LocalizableText.labelChat),
@@ -165,6 +163,8 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var screenShareUser = [DyteScreenShareMeetingParticipant]()
     @Published var screenShareId: DyteScreenShareMeetingParticipant?
     @Published var pinned: DyteJoinedMeetingParticipant?
+    @Published var host: DyteJoinedMeetingParticipant?
+    @Published var lastActive: DyteJoinedMeetingParticipant?
     @Published var kicked: DyteJoinedMeetingParticipant?
     
     @Published var isRefreshFailed = false
@@ -610,6 +610,14 @@ final class GroupVideoCallViewModel: ObservableObject {
         }
     }
     
+    func createInitial(_ name: String) -> String {
+        return name.components(separatedBy: .whitespaces)
+                    .filter { !$0.isEmpty }
+                    .reduce("") { partialResult, word in
+                        partialResult + String((word.first ?? Character("")).uppercased())
+                }
+    }
+    
 }
 
 extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
@@ -662,9 +670,17 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     }
     
     func onMeetingRoomJoinCompleted() {
+        self.setPage(to: 0)
         self.participants = meeting.participants.active
         self.screenShareUser = meeting.participants.screenshares
         self.screenShareId = meeting.participants.screenshares.first
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) { [weak self] in
+            self?.host = self?.meeting.participants.joined.first(where: { item in
+                item.presetName.contains(PresetConstant.host.value)
+            })
+            self?.lastActive = self?.meeting.participants.activeSpeaker
+        }
+        
         withAnimation {
             self.isJoined = true
         }
@@ -714,16 +730,31 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
 
 extension GroupVideoCallViewModel: DyteParticipantEventsListener {
     func onActiveSpeakerChanged(participant: DyteJoinedMeetingParticipant) {
-        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) { [weak self] in
+            self?.host = self?.meeting.participants.joined.first(where: { item in
+                item.presetName.contains(PresetConstant.host.value)
+            })
+            self?.lastActive = self?.meeting.participants.activeSpeaker
+        }
     }
     
     func onParticipantJoin(participant: DyteJoinedMeetingParticipant) {
-        self.participants.removeAll()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) { [weak self] in
+            self?.host = self?.meeting.participants.joined.first(where: { item in
+                item.presetName.contains(PresetConstant.host.value)
+            })
+            self?.lastActive = self?.meeting.participants.activeSpeaker
+        }
         self.participants = meeting.participants.active
     }
     
     func onParticipantLeave(participant: DyteJoinedMeetingParticipant) {
-        self.participants.removeAll()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) { [weak self] in
+            self?.host = self?.meeting.participants.joined.first(where: { item in
+                item.presetName.contains(PresetConstant.host.value)
+            })
+            self?.lastActive = self?.meeting.participants.activeSpeaker
+        }
         self.participants = meeting.participants.active
     }
     
@@ -776,16 +807,26 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
     }
     
     func onActiveParticipantsChanged(active: [DyteJoinedMeetingParticipant]) {
-        self.participants.removeAll()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) { [weak self] in
+            self?.host = self?.meeting.participants.joined.first(where: { item in
+                item.presetName.contains(PresetConstant.host.value)
+            })
+            self?.lastActive = self?.meeting.participants.activeSpeaker
+        }
         self.participants = meeting.participants.active
     }
     
     func onActiveSpeakerChanged(participant: DyteMeetingParticipant) {
-        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) { [weak self] in
+            self?.host = self?.meeting.participants.joined.first(where: { item in
+                item.presetName.contains(PresetConstant.host.value)
+            })
+            self?.lastActive = self?.meeting.participants.activeSpeaker
+        }
+        self.participants = meeting.participants.active
     }
     
     func onAudioUpdate(audioEnabled: Bool, participant: DyteMeetingParticipant) {
-        self.participants.removeAll()
         self.participants = meeting.participants.active
     }
     
@@ -800,12 +841,10 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
     }
     
     func onUpdate(participants: DyteRoomParticipants) {
-        self.participants.removeAll()
         self.participants = meeting.participants.active
     }
     
     func onVideoUpdate(videoEnabled: Bool, participant: DyteMeetingParticipant) {
-        self.participants.removeAll()
         self.participants = meeting.participants.active
     }
     

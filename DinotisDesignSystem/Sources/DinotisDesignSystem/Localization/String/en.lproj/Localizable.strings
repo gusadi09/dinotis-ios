@@ -456,3 +456,4 @@
 "video_call_rejoin" = "Rejoin";
 "video_call_disconnected" = "You are disconnected from meeting.";
 "video_call_raise_hand" = "Raise Hand";
+"video_call_viewer_mode" = "Viewer Mode";

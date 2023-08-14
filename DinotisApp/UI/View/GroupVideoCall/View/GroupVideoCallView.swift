@@ -182,23 +182,88 @@ fileprivate extension GroupVideoCallView {
                     .frame(height: 50)
                     .isHidden(!viewModel.isShowingToolbar || !isPortrait, remove: !viewModel.isShowingToolbar || !isPortrait)
                 
+                //                Group {
+                //                    switch viewModel.index {
+                //                    case 0:
+                //                        VStack {
+                //                            if viewModel.screenShareUser.isEmpty {
+                //
+                //                                RemoteUserJoinedPrimaryVideoContainerView(viewModel: viewModel, participant: $viewModel.pinned)
+                //                                    .padding(.horizontal)
+                //                                    .padding(.bottom)
+                //
+                //                            } else {
+                //                                ZStack(alignment: .top) {
+                //
+                //                                    RemoteScreenShareVideoContainerView(viewModel: viewModel, participant: $viewModel.screenShareId)
+                //                                        .padding(.horizontal)
+                //                                        .padding(.bottom)
+                //
+                //                                }
+                //                            }
+                //
+                //                            Spacer()
+                //                                .frame(height: 116)
+                //                                .isHidden(!viewModel.isShowingToolbar || !isPortrait, remove: !viewModel.isShowingToolbar || !isPortrait)
+                //                        }
+                //                    default:
+                //                        Group {
+                //                            if viewModel.meeting.stage.onStage.isEmpty {
+                //                                VStack(spacing: 15) {
+                //                                    Spacer()
+                //
+                //                                    LottieView(name: "waiting-talent", loopMode: .loop)
+                //                                        .scaledToFit()
+                //                                        .frame(height: 225)
+                //
+                //                                    Text(LocalizableText.videoCallWaitingCreatorTitle)
+                //                                        .font(.robotoBold(size: 22))
+                //                                        .foregroundColor(.white)
+                //                                        .multilineTextAlignment(.center)
+                //
+                //                                    Text(LocalizableText.videoCallWaitingCreatorSubtitle)
+                //                                        .font(.robotoRegular(size: 14))
+                //                                        .foregroundColor(.white)
+                //                                        .multilineTextAlignment(.center)
+                //
+                //                                    Spacer()
+                //                                }
+                //                            } else {
+                //                                ScrollView {
+                //                                    LazyVStack {
+                //                                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 175))]) {
+                //                                            ForEach($viewModel.participants, id: \.id) { item in
+                //                                                RemoteUserJoinedTileVideoContainerView(viewModel: viewModel, participant: item)
+                //                                            }
+                //                                        }
+                //                                    }
+                //                                    .padding(15)
+                //                                }
+                //                            }
+                //                        }
+                //                    }
+                //                }
                 TabView(selection: $viewModel.index) {
-                    if viewModel.pinned != nil || !viewModel.screenShareUser.isEmpty {
+                    if viewModel.pinned != nil || !viewModel.screenShareUser.isEmpty || viewModel.host != nil || viewModel.lastActive != nil {
                         VStack {
-                            if viewModel.screenShareUser.isEmpty {
+                            if !viewModel.screenShareUser.isEmpty {
                                 
-                                RemoteUserJoinedPrimaryVideoContainerView(viewModel: viewModel, participant: $viewModel.pinned)
+                                RemoteScreenShareVideoContainerView(viewModel: viewModel, participant: $viewModel.screenShareId)
                                     .padding(.horizontal)
                                     .padding(.bottom)
                                 
+                            } else if viewModel.pinned != nil {
+                                RemoteUserJoinedPrimaryVideoContainerView(viewModel: viewModel, participant: $viewModel.pinned)
+                                    .padding(.horizontal)
+                                    .padding(.bottom)
+                            } else if viewModel.host != nil {
+                                RemoteUserJoinedPrimaryVideoContainerView(viewModel: viewModel, participant: $viewModel.host)
+                                    .padding(.horizontal)
+                                    .padding(.bottom)
                             } else {
-                                ZStack(alignment: .top) {
-                                    
-                                    RemoteScreenShareVideoContainerView(viewModel: viewModel, participant: $viewModel.screenShareId)
-                                        .padding(.horizontal)
-                                        .padding(.bottom)
-                                    
-                                }
+                                RemoteUserJoinedPrimaryVideoContainerView(viewModel: viewModel, participant: $viewModel.lastActive)
+                                    .padding(.horizontal)
+                                    .padding(.bottom)
                             }
                             
                             Spacer()
@@ -247,15 +312,13 @@ fileprivate extension GroupVideoCallView {
                     .tag(1)
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
+                
                 .onTapGesture {
                     withAnimation {
                         viewModel.isShowingToolbar.toggle()
                     }
                 }
             }
-            .onChange(of: viewModel.activePage, perform: { newValue in
-                viewModel.setPage(to: newValue)
-            })
             .overlay {
                 VStack {
                     HStack {
@@ -317,8 +380,8 @@ fileprivate extension GroupVideoCallView {
                                 .font(.robotoBold(size: 12))
                         }
                         .foregroundColor(viewModel.isNearbyEnd ? .white : .primaryRed)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 5)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
                         .overlay(
                             Capsule()
                                 .stroke(viewModel.isNearbyEnd ? Color.white : Color.primaryRed, lineWidth: 1)
@@ -340,22 +403,21 @@ fileprivate extension GroupVideoCallView {
                                         .frame(height: 32)
                                 }
                             } else {
-                                HStack(spacing: 8) {
-                                    Image.videoCallLiveWhiteIcon
+                                HStack(spacing: 4) {
+                                    Image.videoCallHelpCircle
                                         .resizable()
                                         .scaledToFit()
                                         .frame(height: 24)
                                     
-                                    Text(LocalizableText.liveText)
-                                        .font(.robotoBold(size: 12))
+                                    Text(LocalizableText.videoCallViewerMode)
+                                        .font(.robotoMedium(size: 12))
                                         .foregroundColor(.white)
                                 }
-                                .padding(.leading, 6)
-                                .padding(.trailing, 12)
-                                .padding(.vertical, 2)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
                                 .background(
                                     Capsule()
-                                        .foregroundColor(.DinotisDefault.red)
+                                        .foregroundColor(Color(red: 0.28, green: 0.12, blue: 0.45))
                                 )
                             }
                             
@@ -385,60 +447,130 @@ fileprivate extension GroupVideoCallView {
                     
                     Spacer()
                     
-                    if viewModel.isJoined {
-                        HStack {
-                            Button {
-                                
-                            } label: {
-                                Image(systemName: "chevron.left")
-                                    .font(.system(size: 20, weight: .bold, design: .rounded))
-                                    .foregroundColor(.white.opacity(!viewModel.meeting.participants.canGoPreviousPage ? 0.5 : 1))
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 18)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 8)
-                                            .foregroundColor(.DinotisDefault.black1.opacity(0.8))
-                                    )
-                            }
-                            .isHidden(!viewModel.meeting.participants.canGoPreviousPage, remove: !viewModel.meeting.participants.canGoPreviousPage)
-                            
-                            Spacer()
-                            
-                            Button {
-                                
-                            } label: {
-                                Image(systemName: "chevron.right")
-                                    .font(.system(size: 20, weight: .bold, design: .rounded))
-                                    .foregroundColor(.white.opacity(!viewModel.meeting.participants.canGoNextPage ? 0.5 : 1))
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 18)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 8)
-                                            .foregroundColor(.DinotisDefault.black1.opacity(0.8))
-                                    )
-                            }
-                            .isHidden(!viewModel.meeting.participants.canGoNextPage, remove: !viewModel.meeting.participants.canGoNextPage)
-                            
-                        }
-                        .padding(10)
-                    }
+                    //                    if viewModel.isJoined {
+                    //                        HStack {
+                    //                            Button {
+                    //                                if viewModel.pinned != nil || !viewModel.screenShareUser.isEmpty {
+                    //                                    if viewModel.index > 0 {
+                    //                                        viewModel.index -= 1
+                    //                                    }
+                    //                                } else {
+                    //                                    if viewModel.index > 1 {
+                    //                                        viewModel.index -= 1
+                    //                                    }
+                    //                                }
+                    //                            } label: {
+                    //                                Image(systemName: "chevron.left")
+                    //                                    .font(.system(size: 20, weight: .bold, design: .rounded))
+                    //                                    .foregroundColor(.white.opacity(!viewModel.meeting.participants.canGoPreviousPage ? 0.5 : 1))
+                    //                                    .padding(.horizontal, 8)
+                    //                                    .padding(.vertical, 18)
+                    //                                    .background(
+                    //                                        RoundedRectangle(cornerRadius: 8)
+                    //                                            .foregroundColor(.DinotisDefault.black1.opacity(0.8))
+                    //                                    )
+                    //                            }
+                    //
+                    //                            Spacer()
+                    //
+                    //                            Button {
+                    //                                if viewModel.index < viewModel.meeting.participants.pageCount-1 {
+                    //                                    viewModel.index += 1
+                    //                                }
+                    //                            } label: {
+                    //                                Image(systemName: "chevron.right")
+                    //                                    .font(.system(size: 20, weight: .bold, design: .rounded))
+                    //                                    .foregroundColor(.white.opacity(!viewModel.meeting.participants.canGoNextPage ? 0.5 : 1))
+                    //                                    .padding(.horizontal, 8)
+                    //                                    .padding(.vertical, 18)
+                    //                                    .background(
+                    //                                        RoundedRectangle(cornerRadius: 8)
+                    //                                            .foregroundColor(.DinotisDefault.black1.opacity(0.8))
+                    //                                    )
+                    //                            }
+                    //
+                    //                        }
+                    //                        .padding(10)
+                    //                    }
                     
                     Spacer()
                     
                     VStack {
                         HStack(spacing: 5) {
-                            if viewModel.pinned != nil || !viewModel.screenShareUser.isEmpty {
+                            if viewModel.pinned != nil || !viewModel.screenShareUser.isEmpty || viewModel.host != nil || viewModel.lastActive != nil {
                                 ForEach(0...1, id: \.self) { index in
-                                    RoundedRectangle(cornerRadius: 30)
+                                    Circle()
+                                        .scaledToFit()
+                                        .frame(width: viewModel.index == index ? 6 : 4)
                                         .foregroundColor(viewModel.index == index ? .DinotisDefault.primary : .gray)
-                                        .frame(width: 16, height: 8)
                                 }
                             } else {
-                                RoundedRectangle(cornerRadius: 30)
+                                Circle()
+                                    .scaledToFit()
+                                    .frame(width: 6)
                                     .foregroundColor(.DinotisDefault.primary)
-                                    .frame(width: 16, height: 8)
                             }
                         }
+                        .frame(maxWidth: 40, maxHeight: 30)
+                        .padding(.horizontal, 10)
+                        .background(
+                            Capsule()
+                                .foregroundColor(Color(red: 0.15, green: 0.16, blue: 0.17).opacity(0.8))
+                        )
+
+//                        ScrollViewReader { scroll in
+//                            HStack {
+//                                Spacer()
+//
+//                                LazyHStack {
+//                                    ScrollView(.horizontal, showsIndicators: false) {
+//                                        LazyHStack(spacing: 5) {
+//                                            if viewModel.pinned != nil || !viewModel.screenShareUser.isEmpty {
+//                                                ForEach(0...1, id: \.self) { index in
+//                                                    Circle()
+//                                                        .scaledToFit()
+//                                                        .frame(width: viewModel.index == index ? 6 : 4)
+//                                                        .foregroundColor(viewModel.index == index ? .DinotisDefault.primary : .gray)
+////                                                        .tag(index)
+//                                                }
+//                                            } else {
+//                                                //                                                if viewModel.meeting.participants.pageCount == 1 {
+//                                                ForEach(1...1, id: \.self) { index in
+//                                                    Circle()
+//                                                        .scaledToFit()
+//                                                        .frame(width: viewModel.index == index ? 6 : 4)
+//                                                        .foregroundColor(viewModel.index == index ? .DinotisDefault.primary : .gray)
+////                                                        .tag(1)
+//                                                }
+//                                                //                                                } else {
+//                                                //                                                    ForEach(1...2, id: \.self) { index in
+//                                                //                                                        Circle()
+//                                                //                                                            .scaledToFit()
+//                                                //                                                            .frame(width: viewModel.index == index ? 6 : 4)
+//                                                //                                                            .foregroundColor(viewModel.index == index ? .DinotisDefault.primary : .gray)
+//                                                //                                                            .tag(index)
+//                                                //                                                    }
+//                                                //                                                }
+//                                            }
+//                                        }
+//                                        //                                        .onChange(of: viewModel.index) { item in
+//                                        //                                            withAnimation(.spring()) {
+//                                        //                                                scroll.scrollTo(item)
+//                                        //                                            }
+//                                        //                                        }
+//
+//                                    }
+//                                    .frame(maxWidth: 35, maxHeight: 30)
+//                                }
+//                                Spacer()
+//                            }
+//                            .frame(maxWidth: 40, maxHeight: 30)
+//                            .padding(.horizontal, 10)
+//                            .background(
+//                                Capsule()
+//                                    .foregroundColor(Color(red: 0.15, green: 0.16, blue: 0.17).opacity(0.8))
+//                            )
+//                        }
                     }
                     .padding(.bottom, viewModel.isShowingToolbar ? 0 : 24)
                     
@@ -446,16 +578,6 @@ fileprivate extension GroupVideoCallView {
                         .isHidden(!viewModel.isShowingToolbar, remove: !viewModel.isShowingToolbar)
                 }
             }
-            .alert(isPresented: $viewModel.showConnectionErrorAlert, content: {
-                      Alert(
-                          title: Text("Error"),
-                          message: Text(viewModel.connectionError ?? "An unknown error occurred."),
-                          dismissButton: .default(Text("Rejoin")) {
-                              viewModel.showConnectionErrorAlert = false
-                              viewModel.joinMeeting()
-                          }
-                      )
-                  })
         }
     }
     
@@ -1084,14 +1206,29 @@ fileprivate extension GroupVideoCallView {
                         }
                         
                     } else {
-                        RoundedRectangle(cornerRadius: 14)
-                            .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .overlay(
-                                ImageLoader(url: (viewModel.localUser?.picture).orEmpty(), width: .infinity, height: .infinity)
-                                    .frame(width: 136, height: 136)
-                                    .clipShape(Circle())
-                            )
+                        if viewModel.localUser?.picture == nil {
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
+                                .overlay(
+                                    Text(viewModel.createInitial((viewModel.localUser?.picture).orEmpty()))
+                                        .font(.robotoRegular(size: 20))
+                                        .foregroundColor(.white)
+                                        .background(
+                                            Circle()
+                                                .frame(width: 120, height: 120)
+                                                .foregroundColor(.DinotisDefault.primary)
+                                        )
+                                )
+                        } else {
+                            RoundedRectangle(cornerRadius: 14)
+                                .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .overlay(
+                                    ImageLoader(url: (viewModel.localUser?.picture).orEmpty(), width: .infinity, height: .infinity)
+                                        .frame(width: 120, height: 120)
+                                        .clipShape(Circle())
+                                )
+                        }
                     }
                 } else {
                     RoundedRectangle(cornerRadius: 14)
@@ -1122,6 +1259,7 @@ fileprivate extension GroupVideoCallView {
                     .isHidden(viewModel.isPreview)
                 }
             }
+            .clipShape(RoundedRectangle(cornerRadius: 10))
         }
     }
     
@@ -1132,8 +1270,8 @@ fileprivate extension GroupVideoCallView {
         
         var body: some View {
             ZStack(alignment: .bottomLeading) {
-                if viewModel.index == 0 && (viewModel.pinned?.id).orEmpty() == participant.id {
-                    if viewModel.pinned == nil && viewModel.screenShareUser.isEmpty {
+                if viewModel.index == 0 && ((viewModel.pinned?.id).orEmpty() == participant.id || (viewModel.host?.id).orEmpty() == participant.id || (viewModel.lastActive?.id).orEmpty() == participant.id) {
+                    if viewModel.pinned == nil && viewModel.screenShareUser.isEmpty && viewModel.host == nil && viewModel.lastActive == nil {
                         if participant.fetchVideoEnabled() {
                             if let video = participant.getVideoView() {
                                 UIVideoView(videoView: video, width: 175, height: 270)
@@ -1142,14 +1280,30 @@ fileprivate extension GroupVideoCallView {
                             }
                             
                         } else {
-                            RoundedRectangle(cornerRadius: 10)
-                                .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
-                                .frame(width: 175, height: 270)
-                                .overlay(
-                                    ImageLoader(url: participant.picture.orEmpty(), width: 136, height: 136)
-                                        .frame(width: 136, height: 136)
-                                        .clipShape(Circle())
-                                )
+                            if participant.picture == nil {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
+                                    .frame(width: 175, height: 270)
+                                    .overlay(
+                                        Text(viewModel.createInitial(participant.name))
+                                            .font(.robotoRegular(size: 20))
+                                            .foregroundColor(.white)
+                                            .background(
+                                                Circle()
+                                                    .frame(width: 120, height: 120)
+                                                    .foregroundColor(.DinotisDefault.primary)
+                                            )
+                                    )
+                            } else {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
+                                    .frame(width: 175, height: 270)
+                                    .overlay(
+                                        ImageLoader(url: participant.picture.orEmpty(), width: 120, height: 120)
+                                            .frame(width: 120, height: 120)
+                                            .clipShape(Circle())
+                                    )
+                            }
                         }
                     } else {
                         RoundedRectangle(cornerRadius: 10)
@@ -1166,12 +1320,208 @@ fileprivate extension GroupVideoCallView {
                         }
                         
                     } else {
+                        if participant.picture == nil {
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
+                                .frame(width: 175, height: 270)
+                                .overlay(
+                                    Text(viewModel.createInitial(participant.name))
+                                        .font(.robotoRegular(size: 20))
+                                        .foregroundColor(.white)
+                                        .background(
+                                            Circle()
+                                                .frame(width: 120, height: 120)
+                                                .foregroundColor(.DinotisDefault.primary)
+                                        )
+                                )
+                        } else {
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
+                                .frame(width: 175, height: 270)
+                                .overlay(
+                                    ImageLoader(url: participant.picture.orEmpty(), width: 120, height: 120)
+                                        .frame(width: 120, height: 120)
+                                        .clipShape(Circle())
+                                )
+                        }
+                    }
+                }
+                
+                HStack(spacing: 0) {
+                    (
+                        participant.fetchAudioEnabled() ?
+                        Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon
+                    )
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 12)
+                    
+                    if participant.isPinned {
+                        Text(" \(participant.name) \(viewModel.userType(preset: participant.presetName)) \(Image(systemName: "pin"))")
+                            .font(.robotoMedium(size: 10))
+                            .foregroundColor(.white)
+                    } else {
+                        Text(" \(participant.name) \(viewModel.userType(preset: participant.presetName))")
+                            .font(.robotoMedium(size: 10))
+                            .foregroundColor(.white)
+                    }
+                }
+                .padding(5)
+                .background(
+                    Capsule()
+                        .foregroundColor(.gray.opacity(0.5))
+                )
+                .padding(10)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+        }
+    }
+    
+    struct RemoteUserJoinedPrimaryVideoContainerView: View {
+        
+        @ObservedObject var viewModel: GroupVideoCallViewModel
+        @Binding var participant: DyteJoinedMeetingParticipant?
+        
+        var body: some View {
+            ZStack(alignment: .bottomLeading) {
+                if viewModel.index == 1 && (viewModel.localUser?.id == participant?.id || viewModel.pinned?.id == participant?.id || viewModel.host?.id == participant?.id || viewModel.lastActive?.id == participant?.id) {
+                    RoundedRectangle(cornerRadius: 10)
+                        .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
+                } else {
+                    if participant?.fetchVideoEnabled() ?? false {
+                        if let video = participant?.getVideoView() {
+                            UIVideoView(videoView: video, width: .infinity, height: .infinity)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                        }
+                        
+                    } else {
+                        if participant?.picture == nil {
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
+                                .overlay(
+                                    Text(viewModel.createInitial((participant?.name).orEmpty()))
+                                        .font(.robotoRegular(size: 20))
+                                        .foregroundColor(.white)
+                                        .background(
+                                            Circle()
+                                                .frame(width: 120, height: 120)
+                                                .foregroundColor(.DinotisDefault.primary)
+                                        )
+                                )
+                        } else {
+                            if participant?.picture == nil {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
+                                    .overlay(
+                                        Text(viewModel.createInitial((participant?.name).orEmpty()))
+                                            .font(.robotoRegular(size: 20))
+                                            .foregroundColor(.white)
+                                            .background(
+                                                Circle()
+                                                    .frame(width: 120, height: 120)
+                                                    .foregroundColor(.DinotisDefault.primary)
+                                            )
+                                    )
+                            } else {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
+                                    .overlay(
+                                        ImageLoader(url: (participant?.picture).orEmpty(), width: 120, height: 120)
+                                            .frame(width: 120, height: 120)
+                                            .clipShape(Circle())
+                                    )
+                            }
+                        }
+                    }
+                }
+                
+                HStack(spacing: 0) {
+                    (
+                        (participant?.fetchAudioEnabled() ?? false) ?
+                        Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon
+                    )
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 12)
+                    
+                    if participant?.isPinned ?? false {
+                        Text(" \((participant?.name).orEmpty()) \(viewModel.userType(preset: (participant?.presetName).orEmpty())) \(Image(systemName: "pin"))")
+                            .font(.robotoMedium(size: 10))
+                            .foregroundColor(.white)
+                    } else {
+                        Text(" \((participant?.name).orEmpty()) \(viewModel.userType(preset: (participant?.presetName).orEmpty()))")
+                            .font(.robotoMedium(size: 10))
+                            .foregroundColor(.white)
+                    }
+                }
+                .padding(5)
+                .background(
+                    Capsule()
+                        .foregroundColor(.gray.opacity(0.5))
+                )
+                .padding(10)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+        }
+    }
+    
+    struct RemoteUserJoinedFlexibleVideoContainerView: View {
+        
+        @ObservedObject var viewModel: GroupVideoCallViewModel
+        @Binding var participant: DyteJoinedMeetingParticipant
+        
+        var body: some View {
+            ZStack(alignment: .bottomLeading) {
+                if viewModel.index == 0 && ((viewModel.pinned?.id).orEmpty() == participant.id || (viewModel.host?.id).orEmpty() == participant.id || (viewModel.lastActive?.id).orEmpty() == participant.id) {
+                    if viewModel.pinned == nil && viewModel.screenShareUser.isEmpty && viewModel.host == nil && viewModel.lastActive == nil {
+                        if participant.fetchVideoEnabled() {
+                            if let video = participant.getVideoView() {
+                                UIVideoView(videoView: video, width: .infinity, height: .infinity)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                            }
+                            
+                        } else {
+                            if participant.picture == nil {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
+                                    .overlay(
+                                        Text(viewModel.createInitial(participant.name))
+                                            .font(.robotoRegular(size: 20))
+                                            .foregroundColor(.white)
+                                            .background(
+                                                Circle()
+                                                    .frame(width: 120, height: 120)
+                                                    .foregroundColor(.DinotisDefault.primary)
+                                            )
+                                    )
+                            } else {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
+                                    .overlay(
+                                        ImageLoader(url: participant.picture.orEmpty(), width: 120, height: 120)
+                                            .frame(width: 120, height: 120)
+                                            .clipShape(Circle())
+                                    )
+                            }
+                        }
+                    } else {
                         RoundedRectangle(cornerRadius: 10)
                             .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
-                            .frame(width: 175, height: 270)
+                    }
+                    
+                } else {
+                    if participant.fetchVideoEnabled() {
+                        if let video = participant.getVideoView() {
+                            UIVideoView(videoView: video, width: .infinity, height: .infinity)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                        }
+                        
+                    } else {
+                        RoundedRectangle(cornerRadius: 10)
+                            .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
                             .overlay(
-                                ImageLoader(url: participant.picture.orEmpty(), width: 136, height: 136)
-                                    .frame(width: 136, height: 136)
+                                ImageLoader(url: participant.picture.orEmpty(), width: 120, height: 120)
+                                    .frame(width: 120, height: 120)
                                     .clipShape(Circle())
                             )
                     }
@@ -1203,66 +1553,7 @@ fileprivate extension GroupVideoCallView {
                 )
                 .padding(10)
             }
-        }
-    }
-    
-    struct RemoteUserJoinedPrimaryVideoContainerView: View {
-        
-        @ObservedObject var viewModel: GroupVideoCallViewModel
-        @Binding var participant: DyteJoinedMeetingParticipant?
-        
-        var body: some View {
-            ZStack(alignment: .bottomLeading) {
-                if viewModel.index == 1 && (viewModel.localUser?.id == participant?.id || viewModel.pinned?.id == participant?.id) {
-                    RoundedRectangle(cornerRadius: 10)
-                        .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
-                        .frame(width: .infinity, height: .infinity)
-                } else {
-                    if participant?.fetchVideoEnabled() ?? false {
-                        if let video = participant?.getVideoView() {
-                            UIVideoView(videoView: video, width: .infinity, height: .infinity)
-                                .frame(width: .infinity, height: .infinity)
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                        }
-                        
-                    } else {
-                        RoundedRectangle(cornerRadius: 10)
-                            .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
-                            .frame(width: .infinity, height: .infinity)
-                            .overlay(
-                                ImageLoader(url: (participant?.picture).orEmpty(), width: 136, height: 136)
-                                    .frame(width: 136, height: 136)
-                                    .clipShape(Circle())
-                            )
-                    }
-                }
-                
-                HStack(spacing: 0) {
-                    (
-                        (participant?.fetchAudioEnabled() ?? false) ?
-                        Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon
-                    )
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 12)
-                    
-                    if participant?.isPinned ?? false {
-                        Text(" \((participant?.name).orEmpty()) \(viewModel.userType(preset: (participant?.presetName).orEmpty())) \(Image(systemName: "pin"))")
-                            .font(.robotoMedium(size: 10))
-                            .foregroundColor(.white)
-                    } else {
-                        Text(" \((participant?.name).orEmpty()) \(viewModel.userType(preset: (participant?.presetName).orEmpty()))")
-                            .font(.robotoMedium(size: 10))
-                            .foregroundColor(.white)
-                    }
-                }
-                .padding(5)
-                .background(
-                    Capsule()
-                        .foregroundColor(.gray.opacity(0.5))
-                )
-                .padding(10)
-            }
+            .clipShape(RoundedRectangle(cornerRadius: 10))
         }
     }
     
@@ -1312,6 +1603,7 @@ fileprivate extension GroupVideoCallView {
                 )
                 .padding(10)
             }
+            .clipShape(RoundedRectangle(cornerRadius: 10))
         }
     }
     
@@ -1831,9 +2123,21 @@ fileprivate extension GroupVideoCallView {
                             ) {
                                 ForEach(viewModel.meeting.stage.accessRequests, id: \.id) { participant in
                                     HStack(spacing: 16) {
-                                        ImageLoader(url: participant.picture.orEmpty(), width: 42, height: 42)
-                                            .frame(width: 42, height: 42)
-                                            .clipShape(Circle())
+                                        if participant.picture == nil {
+                                            Text(viewModel.createInitial(participant.name))
+                                                .font(.robotoRegular(size: 14))
+                                                .foregroundColor(.white)
+                                                .background(
+                                                    Circle()
+                                                        .frame(width: 42, height: 42)
+                                                        .foregroundColor(.DinotisDefault.primary)
+                                                )
+                                                .padding(.horizontal)
+                                        } else {
+                                            ImageLoader(url: participant.picture.orEmpty(), width: 42, height: 42)
+                                                .frame(width: 42, height: 42)
+                                                .clipShape(Circle())
+                                        }
                                         
                                         Text(participant.name)
                                             .font(.robotoBold(size: 16))
@@ -1892,9 +2196,20 @@ fileprivate extension GroupVideoCallView {
                             ) {
                                 ForEach(viewModel.meeting.participants.waitlisted, id: \.id) { participant in
                                     HStack(spacing: 16) {
-                                        ImageLoader(url: participant.picture.orEmpty(), width: 42, height: 42)
-                                            .frame(width: 42, height: 42)
-                                            .clipShape(Circle())
+                                        if participant.picture == nil {
+                                            Text(viewModel.createInitial(participant.name))
+                                                .font(.robotoRegular(size: 14))
+                                                .foregroundColor(.white)
+                                                .background(
+                                                    Circle()
+                                                        .frame(width: 42, height: 42)
+                                                        .foregroundColor(.DinotisDefault.primary)
+                                                )
+                                        } else {
+                                            ImageLoader(url: participant.picture.orEmpty(), width: 42, height: 42)
+                                                .frame(width: 42, height: 42)
+                                                .clipShape(Circle())
+                                        }
                                         
                                         Text(participant.name)
                                             .font(.robotoBold(size: 16))
@@ -1940,9 +2255,22 @@ fileprivate extension GroupVideoCallView {
                         ) {
                             ForEach(viewModel.meeting.stage.onStage, id: \.id) { participant in
                                 HStack(spacing: 16) {
-                                    ImageLoader(url: participant.picture.orEmpty(), width: 42, height: 42)
-                                        .frame(width: 42, height: 42)
-                                        .clipShape(Circle())
+                                    if participant.picture == nil {
+                                        Text(viewModel.createInitial(participant.name))
+                                            .font(.robotoRegular(size: 14))
+                                            .foregroundColor(.white)
+                                            .background(
+                                                Circle()
+                                                    .frame(width: 42, height: 42)
+                                                    .foregroundColor(.DinotisDefault.primary)
+                                            )
+                                            .padding(.leading, 12)
+                                            .padding(.trailing, 10)
+                                    } else {
+                                        ImageLoader(url: participant.picture.orEmpty(), width: 42, height: 42)
+                                            .frame(width: 42, height: 42)
+                                            .clipShape(Circle())
+                                    }
                                     
                                     if participant.isPinned {
                                         Text("\(participant.name) \(viewModel.userType(preset: participant.presetName)) \(Image(systemName: "pin"))")
@@ -2066,9 +2394,20 @@ fileprivate extension GroupVideoCallView {
                         ) {
                             ForEach(viewModel.meeting.stage.viewers, id: \.id) { participant in
                                 HStack(spacing: 16) {
-                                    ImageLoader(url: participant.picture.orEmpty(), width: 42, height: 42)
-                                        .frame(width: 42, height: 42)
-                                        .clipShape(Circle())
+                                    if participant.picture == nil {
+                                        Text(viewModel.createInitial(participant.name))
+                                            .font(.robotoRegular(size: 14))
+                                            .foregroundColor(.white)
+                                            .background(
+                                                Circle()
+                                                    .frame(width: 42, height: 42)
+                                                    .foregroundColor(.DinotisDefault.primary)
+                                            )
+                                    } else {
+                                        ImageLoader(url: participant.picture.orEmpty(), width: 42, height: 42)
+                                            .frame(width: 42, height: 42)
+                                            .clipShape(Circle())
+                                    }
                                     
                                     Text(participant.name)
                                         .font(.robotoBold(size: 16))
