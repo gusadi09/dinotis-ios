@@ -12,6 +12,7 @@ public extension Image {
     static let generalQuestionIcon = Image("ic-question-general", bundle: Bundle.module)
     static let logoWithText = Image("logo-with-text", bundle: Bundle.module)
     static let logoWhiteText = Image("logo-white-text", bundle: .module)
+    static let logoFullWhite = Image("logo-full-white", bundle: .module)
     
     static let talentProfileGmailIcon = Image("ic-gmail-talent-profile", bundle: Bundle.module)
     static let talentProfileInstagramIcon = Image("ic-instagram-talent-profile", bundle: Bundle.module)
@@ -140,4 +141,9 @@ public extension Image {
     static let videoCallPutToSpeaker = Image("ic-put-speaker", bundle: .module)
     static let videoCallNeutralRaiseHand = Image("ic-neutral-raise-hand", bundle: .module)
     static let videoCallHelpCircle = Image("help-circle-icon", bundle: .module)
+    static let feedBackRateIcon = Image("logout", bundle: .module)
+    static let thanksForFeedbackIcon = Image("thanks", bundle: .module)
+    
+    static let feedbackStarYellow = Image("ic-star-yellow", bundle: .module)
+    static let feedbackStarGray = Image("ic-star-gray", bundle: .module)
 }

@@ -397,7 +397,8 @@ final class ScheduleDetailViewModel: ObservableObject {
             meetingUrls: meet.meetingUrls,
             meetingUploads: meet.meetingUploads,
             roomSid: meet.roomSid,
-            dyteMeetingId: meet.dyteMeetingId
+            dyteMeetingId: meet.dyteMeetingId,
+            isInspected: meet.isInspected
         )
 
         return meet

@@ -457,3 +457,17 @@
 "video_call_raise_hand" = "Angkat Tangan";
 "video_call_viewer_mode" = "Mode Viewer";
 "video_call_to_main" = "ke tab utama";
+
+"tooltip_agenda" = "Cek jadwal sesi yang telah kamu booking disini!";
+"video_call_disconnected" = "Kamu telah terputus dari meeting.";
+"video_call_raise_hand" = "Angkat Tangan";
+"video_call_viewer_mode" = "Mode Viewer";
+"vide_call_rate_us" = "Nilai Kami";
+"video_call_rate_text" = "Bagaimana pengalaman Anda dengan DINOTIS sejauh ini?";
+"video_call_send_feedback" = "Kirim";
+
+"feedback_very_bad" = "Very Bad";
+"feedback_very_good" = "Very Good";
+"feedback_weakness_title" = "Beritahu kami apa yang kurang";
+"feedback_problem_title" = "Ceritakan apa yang kamu alami";
+"feedback_success_title" = "Ulasanmu sangat berarti, terima kasih";

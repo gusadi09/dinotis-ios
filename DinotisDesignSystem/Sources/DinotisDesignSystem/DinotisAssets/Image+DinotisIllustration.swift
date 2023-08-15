@@ -39,4 +39,6 @@ public extension Image {
     static let videoCallBackgroundPattern = Image("video-call-pattern", bundle: .module)
     
     static let versionUpdateImage = Image("img-update-version", bundle: .module)
+    
+    static let feedbackSuccessImage = Image("img-success-feedback", bundle: .module)
 }

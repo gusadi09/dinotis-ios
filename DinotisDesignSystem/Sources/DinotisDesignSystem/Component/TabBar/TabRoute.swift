@@ -8,6 +8,13 @@
 import Foundation
 import SwiftUI
 
+public enum TabBounce: String {
+    case explore = "EXPLORE"
+    case search = "SEARCH"
+    case agenda = "AGENDA"
+    case profile = "PROFILE"
+}
+
 public enum TabRoute: Hashable {
 	case explore
 	case search

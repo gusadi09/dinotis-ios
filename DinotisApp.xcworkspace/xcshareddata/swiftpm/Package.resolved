@@ -55,15 +55,6 @@
       }
     },
     {
-      "identity" : "dytemobilecoreios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/dyte-in/DyteMobileCoreiOS.git",
-      "state" : {
-        "revision" : "4243f6d9f76f6905c43e8c660e495fec624419c6",
-        "version" : "0.7.9"
-      }
-    },
-    {
       "identity" : "firebase-ios-sdk",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/firebase-ios-sdk.git",

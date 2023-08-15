@@ -458,3 +458,17 @@
 "video_call_raise_hand" = "Raise Hand";
 "video_call_viewer_mode" = "Viewer Mode";
 "video_call_to_main" = "to main";
+
+"tooltip_agenda" = "Check the schedule of sessions you have booked here!";
+"video_call_disconnected" = "You are disconnected from meeting.";
+"video_call_raise_hand" = "Raise Hand";
+"video_call_viewer_mode" = "Viewer Mode";
+"vide_call_rate_us" = "Rate Us";
+"video_call_rate_text" = "How would you rate your experience with DINOTIS so far?";
+"video_call_send_feedback" = "Send";
+
+"feedback_very_bad" = "Very Bad";
+"feedback_very_good" = "Very Good";
+"feedback_weakness_title" = "Tell us what's missing";
+"feedback_problem_title" = "Tell us your experience";
+"feedback_success_title" = "Thanks for your review";

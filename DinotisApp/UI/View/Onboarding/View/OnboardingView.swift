@@ -12,6 +12,8 @@ import SwiftUINavigation
 struct OnboardingView: View {
 
 	@ObservedObject var viewModel = OnboardingViewModel()
+    
+    @AppStorage("isShowTooltip") var isShowTooltip = false
 
 	var body: some View {
 		ZStack {

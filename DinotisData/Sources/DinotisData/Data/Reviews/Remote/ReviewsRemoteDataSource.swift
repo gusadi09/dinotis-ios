@@ -10,4 +10,5 @@ import Foundation
 public protocol ReviewsRemoteDataSource {
 	func getReviews(with talentId: String, for params: GeneralParameterRequest) async throws -> ReviewsResponse
     func giveReview(with body: ReviewRequestBody) async throws -> ReviewSuccessResponse
+    func getReasons(rating: Int?) async throws -> ReviewReasons
 }
