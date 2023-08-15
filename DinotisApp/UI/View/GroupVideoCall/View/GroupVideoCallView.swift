@@ -402,24 +402,25 @@ fileprivate extension GroupVideoCallView {
                                         .scaledToFit()
                                         .frame(height: 32)
                                 }
-                            } else {
-                                HStack(spacing: 4) {
-                                    Image.videoCallHelpCircle
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(height: 24)
-                                    
-                                    Text(LocalizableText.videoCallViewerMode)
-                                        .font(.robotoMedium(size: 12))
-                                        .foregroundColor(.white)
-                                }
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 8)
-                                .background(
-                                    Capsule()
-                                        .foregroundColor(Color(red: 0.28, green: 0.12, blue: 0.45))
-                                )
                             }
+//                            else {
+//                                HStack(spacing: 4) {
+//                                    Image.videoCallHelpCircle
+//                                        .resizable()
+//                                        .scaledToFit()
+//                                        .frame(height: 24)
+//                                    
+//                                    Text(LocalizableText.videoCallViewerMode)
+//                                        .font(.robotoMedium(size: 12))
+//                                        .foregroundColor(.white)
+//                                }
+//                                .padding(.horizontal, 12)
+//                                .padding(.vertical, 8)
+//                                .background(
+//                                    Capsule()
+//                                        .foregroundColor(Color(red: 0.28, green: 0.12, blue: 0.45))
+//                                )
+//                            }
 //                            else {
 //                                HStack(spacing: 4) {
 //                                    Image.videoCallHelpCircle
