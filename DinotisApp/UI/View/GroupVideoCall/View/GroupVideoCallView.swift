@@ -409,6 +409,24 @@ fileprivate extension GroupVideoCallView {
 //                                        .resizable()
 //                                        .scaledToFit()
 //                                        .frame(height: 24)
+//                                    
+//                                    Text(LocalizableText.videoCallViewerMode)
+//                                        .font(.robotoMedium(size: 12))
+//                                        .foregroundColor(.white)
+//                                }
+//                                .padding(.horizontal, 12)
+//                                .padding(.vertical, 8)
+//                                .background(
+//                                    Capsule()
+//                                        .foregroundColor(Color(red: 0.28, green: 0.12, blue: 0.45))
+//                                )
+//                            }
+//                            else {
+//                                HStack(spacing: 4) {
+//                                    Image.videoCallHelpCircle
+//                                        .resizable()
+//                                        .scaledToFit()
+//                                        .frame(height: 24)
 //
 //                                    Text(LocalizableText.videoCallViewerMode)
 //                                        .font(.robotoMedium(size: 12))
@@ -2167,6 +2185,7 @@ fileprivate extension GroupVideoCallView {
                                                         .font(.robotoRegular(size: 14))
                                                         .foregroundColor(.white)
                                                 )
+                                                .padding(.horizontal)
                                         } else {
                                             ImageLoader(url: participant.picture.orEmpty(), width: 42, height: 42)
                                                 .frame(width: 42, height: 42)
@@ -2298,6 +2317,8 @@ fileprivate extension GroupVideoCallView {
                                                     .font(.robotoRegular(size: 14))
                                                     .foregroundColor(.white)
                                             )
+                                            .padding(.leading, 12)
+                                            .padding(.trailing, 10)
                                     } else {
                                         ImageLoader(url: participant.picture.orEmpty(), width: 42, height: 42)
                                             .frame(width: 42, height: 42)
