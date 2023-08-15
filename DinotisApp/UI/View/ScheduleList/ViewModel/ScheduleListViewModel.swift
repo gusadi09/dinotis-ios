@@ -277,7 +277,7 @@ final class ScheduleListViewModel: ObservableObject {
         DispatchQueue.main.async {[weak self] in
             withAnimation(.spring()) {
                 self?.bookingData = []
-                self?.takeItem = 15
+                self?.takeItem = 8
                 self?.nextCursor = 0
             }
         }
