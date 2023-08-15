@@ -8,10 +8,11 @@
 import DinotisDesignSystem
 import Introspect
 import SwiftUI
+import OneSignal
 
 struct PreviewTalentView: View {
 
-	@ObservedObject var viewModel: PreviewTalentViewModel
+ 	@ObservedObject var viewModel: PreviewTalentViewModel
 
 	var body: some View {
 		GeometryReader { geo in
@@ -22,7 +23,13 @@ struct PreviewTalentView: View {
 							title: Text(LocaleText.attention),
 							message: Text(LocaleText.sessionExpireText),
 							dismissButton: .default(Text(LocaleText.returnText), action: {
-								viewModel.backToRoot()
+                                NavigationUtil.popToRootView()
+                                self.viewModel.stateObservable.userType = 0
+                                self.viewModel.stateObservable.isVerified = ""
+                                self.viewModel.stateObservable.refreshToken = ""
+                                self.viewModel.stateObservable.accessToken = ""
+                                self.viewModel.stateObservable.isAnnounceShow = false
+                                OneSignal.setExternalUserId("")
 							})
 						)
 					}
@@ -87,6 +94,6 @@ struct PreviewTalentView: View {
 
 struct PreviewTalentView_Previews: PreviewProvider {
 	static var previews: some View {
-		PreviewTalentView(viewModel: PreviewTalentViewModel(backToRoot: {}))
+		PreviewTalentView(viewModel: PreviewTalentViewModel())
 	}
 }

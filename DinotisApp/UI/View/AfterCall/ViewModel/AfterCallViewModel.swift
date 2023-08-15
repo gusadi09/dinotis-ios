@@ -10,7 +10,6 @@ import DinotisData
 
 final class AfterCallViewModel: ObservableObject {
 	
-	var backToRoot: () -> Void
 	var backToHome: () -> Void
 	
 	private var stateObservable = StateObservable.shared
@@ -24,8 +23,7 @@ final class AfterCallViewModel: ObservableObject {
 	
 	@Published var isRefreshFailed = false
 	
-	init(backToRoot: @escaping (() -> Void), backToHome: @escaping (() -> Void)) {
-		self.backToRoot = backToRoot
+	init(backToHome: @escaping (() -> Void)) {
 		self.backToHome = backToHome
 		
 	}

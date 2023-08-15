@@ -472,6 +472,6 @@ private extension NotificationView {
 
 struct NotificationView_Previews: PreviewProvider {
     static var previews: some View {
-		NotificationView(viewModel: NotificationViewModel(backToRoot: {}, backToHome: {}))
+		NotificationView(viewModel: NotificationViewModel(backToHome: {}))
     }
 }

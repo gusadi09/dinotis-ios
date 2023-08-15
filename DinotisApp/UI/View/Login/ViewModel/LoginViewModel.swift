@@ -343,18 +343,17 @@ final class LoginViewModel: ObservableObject {
 			if self?.stateObservable.userType == 3 {
 				let vm = TabViewContainerViewModel(
                     isFromUserType: true,
-                    userHomeVM: UserHomeViewModel(backToRoot: self?.backToRoot ?? {}),
-					profileVM: ProfileViewModel(backToRoot: self?.backToRoot ?? {}, backToHome: {}),
-					searchVM: SearchTalentViewModel(backToRoot: self?.backToRoot ?? {}, backToHome: {}),
-                    scheduleVM: ScheduleListViewModel(backToRoot: {self?.route = nil}, backToHome: {}, currentUserId: ""),
-					backToRoot: self?.backToRoot ?? {}
+                    userHomeVM: UserHomeViewModel(),
+					profileVM: ProfileViewModel(backToHome: {}),
+					searchVM: SearchTalentViewModel(backToHome: {}),
+                    scheduleVM: ScheduleListViewModel(backToHome: {}, currentUserId: "")
 				)
 
 				DispatchQueue.main.async { [weak self] in
 					self?.route = .tabContainer(viewModel: vm)
 				}
 			} else if self?.stateObservable.userType == 2 {
-                let viewModel = TalentHomeViewModel(isFromUserType: true, backToRoot: self?.backToRoot ?? {})
+                let viewModel = TalentHomeViewModel(isFromUserType: true)
 				
 				self?.route = .homeTalent(viewModel: viewModel)
 			}

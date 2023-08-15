@@ -121,13 +121,13 @@ struct UserScheduleDetail: View {
 								title: Text(LocaleText.attention),
 								message: Text(LocaleText.sessionExpireText),
 								dismissButton: .default(Text(LocaleText.returnText), action: {
-									viewModel.backToRoot()
-									stateObservable.userType = 0
-									stateObservable.isVerified = ""
-									stateObservable.refreshToken = ""
-									stateObservable.accessToken = ""
-									stateObservable.isAnnounceShow = false
-									OneSignal.setExternalUserId("")
+                                    NavigationUtil.popToRootView()
+                                    self.stateObservable.userType = 0
+                                    self.stateObservable.isVerified = ""
+                                    self.stateObservable.refreshToken = ""
+                                    self.stateObservable.accessToken = ""
+                                    self.stateObservable.isAnnounceShow = false
+                                    OneSignal.setExternalUserId("")
 								})
 							)
 						}

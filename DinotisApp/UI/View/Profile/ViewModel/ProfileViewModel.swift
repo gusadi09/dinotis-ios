@@ -18,7 +18,6 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
     private let deleteUserUseCase: DeleteAccountUseCase
 	private let coinVerificationUseCase: CoinVerificationUseCase
 
-	var backToRoot: () -> Void
 	var backToHome: () -> Void
 
 	@Published var urlLinked = Configuration.shared.environment.usernameURL
@@ -73,14 +72,12 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 	@Published var statusCode = 0
 
 	init(
-		backToRoot: @escaping (() -> Void),
 		backToHome: @escaping (() -> Void),
 		getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
 		deleteUserUseCase: DeleteAccountUseCase = DeleteAccountDefaultUseCase(),
 		coinVerificationUseCase: CoinVerificationUseCase = CoinVerificationDefaultUseCase()
 	) {
 		self.backToHome = backToHome
-		self.backToRoot = backToRoot
 		self.getUserUseCase = getUserUseCase
 		self.deleteUserUseCase = deleteUserUseCase
 		self.coinVerificationUseCase = coinVerificationUseCase
@@ -150,7 +147,7 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 	}
 
 	func routeToChangePass() {
-		let viewModel = ChangesPasswordViewModel(backToRoot: self.backToRoot)
+		let viewModel = ChangesPasswordViewModel()
 
 		DispatchQueue.main.async { [weak self] in
 			self?.route = .changePassword(viewModel: viewModel)
@@ -158,7 +155,7 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 	}
 
 	func routeToPreviewProfile() {
-		let viewModel = PreviewTalentViewModel(backToRoot: self.backToRoot)
+		let viewModel = PreviewTalentViewModel()
 
 		DispatchQueue.main.async { [weak self] in
 			self?.route = .previewTalent(viewModel: viewModel)
@@ -225,7 +222,7 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 	}
 
 	func routeBackLogout() {
-		backToRoot()
+        NavigationUtil.popToRootView()
 		stateObservable.userType = 0
 		stateObservable.isVerified = ""
 		stateObservable.refreshToken = ""
@@ -243,7 +240,7 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 
 	func routeToEditProfile() {
 
-		let viewModel = EditProfileViewModel(backToRoot: self.backToRoot, backToHome: self.stateObservable.userType == 2 ? self.backToHome : {self.route = nil})
+		let viewModel = EditProfileViewModel(backToHome: self.stateObservable.userType == 2 ? self.backToHome : {self.route = nil})
 
 		DispatchQueue.main.async { [weak self] in
 			if self?.stateObservable.userType == 2 {
@@ -255,7 +252,7 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 	}
 
 	func routeToWallet() {
-		let viewModel = TalentWalletViewModel(backToRoot: self.backToRoot, backToHome: self.backToHome)
+		let viewModel = TalentWalletViewModel(backToHome: self.backToHome)
 
 		DispatchQueue.main.async { [weak self] in
 			self?.route = .talentWallet(viewModel: viewModel)
@@ -425,7 +422,7 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 	}
 
 	func routeToCoinHistory() {
-		let viewModel = CoinHistoryViewModel(backToHome: { self.route = nil }, backToRoot: self.backToRoot)
+		let viewModel = CoinHistoryViewModel(backToHome: { self.route = nil })
 
 		DispatchQueue.main.async { [weak self] in
 			self?.route = .coinHistory(viewModel: viewModel)
@@ -433,7 +430,7 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 	}
 
 	func routeToCreatorChoose() {
-		let viewModel = FollowedCreatorViewModel(backToRoot: self.backToRoot, backToHome: { self.route = nil })
+		let viewModel = FollowedCreatorViewModel(backToHome: { self.route = nil })
 
 		DispatchQueue.main.async { [weak self] in
 			self?.route = .followedCreator(viewModel: viewModel)

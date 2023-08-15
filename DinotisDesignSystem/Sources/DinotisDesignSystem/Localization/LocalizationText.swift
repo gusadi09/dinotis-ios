@@ -2091,6 +2091,11 @@ public enum LocalizableText {
         bundle: .module,
         comment: "viewer mode text"
     )
+    public static let videoCallToMain = NSLocalizedString(
+        "video_call_to_main",
+        bundle: .module,
+        comment: "to main text"
+    )
 }
 
 

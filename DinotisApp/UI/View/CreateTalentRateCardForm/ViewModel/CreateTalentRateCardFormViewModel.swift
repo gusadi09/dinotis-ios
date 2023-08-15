@@ -43,7 +43,6 @@ final class CreateTalentRateCardFormViewModel: ObservableObject {
 
 	@Published var createdData: RateCardResponse?
     
-    var backToRoot: () -> Void
     var backToHome: () -> Void
     
     @Published var route: HomeRouting?
@@ -51,7 +50,6 @@ final class CreateTalentRateCardFormViewModel: ObservableObject {
     init(
 		isEdit: Bool,
 		rateCardId: String,
-		backToRoot: @escaping (() -> Void),
 		backToHome: @escaping (() -> Void),
 		createRateCardUseCase: CreateRateCardUseCase = CreateRateCardDefaultUseCase(),
 		editRateCardUseCase: EditRateCardUseCase = EditRateCardDefaultUseCase(),
@@ -60,7 +58,6 @@ final class CreateTalentRateCardFormViewModel: ObservableObject {
 	) {
 		self.isEdit = isEdit
 		self.rateCardId = rateCardId
-        self.backToRoot = backToRoot
         self.backToHome = backToHome
 		self.createRateCardUseCase = createRateCardUseCase
 		self.editRateCardUseCase = editRateCardUseCase
@@ -73,13 +70,13 @@ final class CreateTalentRateCardFormViewModel: ObservableObject {
     }
 
 	func routeToRoot() {
-		stateObservable.userType = 0
-		stateObservable.isVerified = ""
-		stateObservable.refreshToken = ""
-		stateObservable.accessToken = ""
-		stateObservable.isAnnounceShow = false
-		OneSignal.setExternalUserId("")
-		backToRoot()
+        NavigationUtil.popToRootView()
+        self.stateObservable.userType = 0
+        self.stateObservable.isVerified = ""
+        self.stateObservable.refreshToken = ""
+        self.stateObservable.accessToken = ""
+        self.stateObservable.isAnnounceShow = false
+        OneSignal.setExternalUserId("")
 	}
 
 	func headerTitle() -> String {

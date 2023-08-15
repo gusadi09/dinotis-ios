@@ -22,7 +22,6 @@ final class CoinHistoryViewModel: ObservableObject {
 	private var stateObservable = StateObservable.shared
 
 	var backToHome: (() -> Void)
-	var backToRoot: (() -> Void)
 
 	@Published var error: String?
 	@Published var isLoading = false
@@ -44,24 +43,22 @@ final class CoinHistoryViewModel: ObservableObject {
 	init(
 		coinHistoryUseCase: CoinHistoryUseCase = CoinHistoryDefaultUseCase(),
 		authRepository: AuthenticationRepository = AuthenticationDefaultRepository(),
-		backToHome: @escaping (() -> Void),
-		backToRoot: @escaping (() -> Void)
+		backToHome: @escaping (() -> Void)
 	) {
 		self.coinHistoryUseCase = coinHistoryUseCase
 		self.authRepository = authRepository
 		self.backToHome = backToHome
-		self.backToRoot = backToRoot
 	}
 
 	func routeBack() {
 		if error.orEmpty().contains("401") {
-			backToRoot()
-			stateObservable.userType = 0
-			stateObservable.isVerified = ""
-			stateObservable.refreshToken = ""
-			stateObservable.accessToken = ""
-			stateObservable.isAnnounceShow = false
-			OneSignal.setExternalUserId("")
+            NavigationUtil.popToRootView()
+            self.stateObservable.userType = 0
+            self.stateObservable.isVerified = ""
+            self.stateObservable.refreshToken = ""
+            self.stateObservable.accessToken = ""
+            self.stateObservable.isAnnounceShow = false
+            OneSignal.setExternalUserId("")
 		}
 	}
 
@@ -127,7 +124,14 @@ final class CoinHistoryViewModel: ObservableObject {
           self?.alert.message = LocalizableText.alertSessionExpired
           self?.alert.primaryButton = .init(
             text: LocalizableText.okText,
-            action: { self?.backToRoot() }
+            action: {
+                NavigationUtil.popToRootView()
+                self?.stateObservable.userType = 0
+                self?.stateObservable.isVerified = ""
+                self?.stateObservable.refreshToken = ""
+                self?.stateObservable.accessToken = ""
+                self?.stateObservable.isAnnounceShow = false
+                OneSignal.setExternalUserId("") }
           )
           self?.isShowAlert = true
 				} else {

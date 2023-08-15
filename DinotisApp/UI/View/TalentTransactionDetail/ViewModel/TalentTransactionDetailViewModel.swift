@@ -19,7 +19,6 @@ final class TalentTransactionDetailViewModel: ObservableObject {
 	private var stateObservable = StateObservable.shared
 	private var onValueChanged: ((_ refreshControl: UIRefreshControl) -> Void)?
 
-	var backToRoot: () -> Void
 	var backToHome: () -> Void
 
 	@Published var colorTab = Color.clear
@@ -39,14 +38,12 @@ final class TalentTransactionDetailViewModel: ObservableObject {
 
 	init(
 		withdrawID: String,
-		backToRoot: @escaping (() -> Void),
 		backToHome: @escaping (() -> Void),
 		userRepository: UsersRepository = UsersDefaultRepository(),
 		authRepository: AuthenticationRepository = AuthenticationDefaultRepository(),
         getTransactionDetailUseCase: WithdrawalTransactionDetailUseCase = WithdrawalTransactionDetailDefaultUseCase()
 	) {
 		self.withdrawID = withdrawID
-		self.backToRoot = backToRoot
 		self.backToHome = backToHome
 		self.userRepository = userRepository
 		self.authRepository = authRepository
@@ -54,13 +51,13 @@ final class TalentTransactionDetailViewModel: ObservableObject {
 	}
 
 	func routeToRoot() {
-		stateObservable.userType = 0
-		stateObservable.isVerified = ""
-		stateObservable.refreshToken = ""
-		stateObservable.accessToken = ""
-		stateObservable.isAnnounceShow = false
-		OneSignal.setExternalUserId("")
-		backToRoot()
+        NavigationUtil.popToRootView()
+        self.stateObservable.userType = 0
+        self.stateObservable.isVerified = ""
+        self.stateObservable.refreshToken = ""
+        self.stateObservable.accessToken = ""
+        self.stateObservable.isAnnounceShow = false
+        OneSignal.setExternalUserId("")
 	}
 
 	func use(for scrollView: UIScrollView, onValueChanged: @escaping ((UIRefreshControl) -> Void)) {

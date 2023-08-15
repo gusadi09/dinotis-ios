@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import DinotisData
 import DinotisDesignSystem
+import OneSignal
 
 enum EditRateCardType: Identifiable {
 	var id: UUID {
@@ -22,7 +23,6 @@ enum EditRateCardType: Identifiable {
 
 final class TalentEditRateCardScheduleViewModel: ObservableObject {
     
-    var backToRoot: () -> Void
     var backToHome: () -> Void
 
     private var stateObservable = StateObservable.shared
@@ -50,14 +50,12 @@ final class TalentEditRateCardScheduleViewModel: ObservableObject {
 
     init(
         meetingID: String,
-        backToRoot: @escaping (() -> Void),
         backToHome: @escaping (() -> Void),
         authRepository: AuthenticationRepository = AuthenticationDefaultRepository(),
         meetingRepository: MeetingsRepository = MeetingsDefaultRepository(),
         editRateCardUseCase: EditRequestedSessionUseCase = EditRequestedSessionDefaultUseCase()
     ) {
         self.meetingID = meetingID
-        self.backToRoot = backToRoot
         self.backToHome = backToHome
         self.authRepository = authRepository
         self.meetingRepository = meetingRepository
@@ -108,7 +106,13 @@ final class TalentEditRateCardScheduleViewModel: ObservableObject {
           self?.alert.primaryButton = .init(
             text: LocalizableText.okText,
             action: {
-              self?.backToRoot()
+                NavigationUtil.popToRootView()
+                self?.stateObservable.userType = 0
+                self?.stateObservable.isVerified = ""
+                self?.stateObservable.refreshToken = ""
+                self?.stateObservable.accessToken = ""
+                self?.stateObservable.isAnnounceShow = false
+                OneSignal.setExternalUserId("")
             }
           )
           self?.isShowAlert = true
@@ -179,7 +183,13 @@ final class TalentEditRateCardScheduleViewModel: ObservableObject {
                           self?.alert.primaryButton = .init(
                             text: LocalizableText.okText,
                             action: {
-                              self?.backToRoot()
+                                NavigationUtil.popToRootView()
+                                self?.stateObservable.userType = 0
+                                self?.stateObservable.isVerified = ""
+                                self?.stateObservable.refreshToken = ""
+                                self?.stateObservable.accessToken = ""
+                                self?.stateObservable.isAnnounceShow = false
+                                OneSignal.setExternalUserId("")
                             }
                           )
                           self?.isShowAlert = true
@@ -242,7 +252,13 @@ final class TalentEditRateCardScheduleViewModel: ObservableObject {
                           self?.alert.primaryButton = .init(
                             text: LocalizableText.okText,
                             action: {
-                              self?.backToRoot()
+                                NavigationUtil.popToRootView()
+                                self?.stateObservable.userType = 0
+                                self?.stateObservable.isVerified = ""
+                                self?.stateObservable.refreshToken = ""
+                                self?.stateObservable.accessToken = ""
+                                self?.stateObservable.isAnnounceShow = false
+                                OneSignal.setExternalUserId("")
                             }
                           )
                           self?.isShowAlert = true

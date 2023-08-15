@@ -425,6 +425,6 @@ extension CoinHistoryView {
 
 struct CoinHistoryView_Previews: PreviewProvider {
 	static var previews: some View {
-		CoinHistoryView(viewModel: CoinHistoryViewModel(backToHome: {}, backToRoot: {}))
+		CoinHistoryView(viewModel: CoinHistoryViewModel(backToHome: {}))
 	}
 }

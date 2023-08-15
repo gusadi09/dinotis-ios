@@ -55,7 +55,7 @@ final class UserTypeViewModel: ObservableObject {
 				((stateObservable.isVerified == "Verified") &&
 				 stateObservable.userType != 0) {
 			if stateObservable.userType == 2 {
-                let homeViewModel = TalentHomeViewModel(isFromUserType: true, backToRoot: { self.route = nil })
+                let homeViewModel = TalentHomeViewModel(isFromUserType: true)
 				
 				DispatchQueue.main.async { [weak self] in
 					self?.route = .homeTalent(viewModel: homeViewModel)
@@ -64,11 +64,10 @@ final class UserTypeViewModel: ObservableObject {
 			} else if stateObservable.userType == 3 {
 				let vm = TabViewContainerViewModel(
                     isFromUserType: true,
-                    userHomeVM: UserHomeViewModel(backToRoot: {self.route = nil}),
-					profileVM: ProfileViewModel(backToRoot: {self.route = nil}, backToHome: {}),
-					searchVM: SearchTalentViewModel(backToRoot: {self.route = nil}, backToHome: {}),
-                    scheduleVM: ScheduleListViewModel(backToRoot: {self.route = nil}, backToHome: {}, currentUserId: ""),
-					backToRoot: {self.route = nil}
+                    userHomeVM: UserHomeViewModel(),
+					profileVM: ProfileViewModel(backToHome: {}),
+					searchVM: SearchTalentViewModel(backToHome: {}),
+                    scheduleVM: ScheduleListViewModel(backToHome: {}, currentUserId: "")
 				)
 				
 				DispatchQueue.main.async { [weak self] in
@@ -80,7 +79,7 @@ final class UserTypeViewModel: ObservableObject {
 		} else if !isTokenEmpty &&
 					((stateObservable.isVerified == "VerifiedNoName") &&
 					 stateObservable.userType != 0) {
-            let viewModel = BiodataViewModel(backToRoot: { self.route = nil })
+            let viewModel = BiodataViewModel()
 
 			DispatchQueue.main.async { [weak self] in
 				self?.route = .biodataUser(viewModel: viewModel)

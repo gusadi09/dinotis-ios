@@ -86,6 +86,6 @@ struct UserHomeView: View {
 
 struct UserHomeView_Previews: PreviewProvider {
     static var previews: some View {
-        UserHomeView(homeVM: UserHomeViewModel(backToRoot: {}), tabValue: .constant(.agenda))
+        UserHomeView(homeVM: UserHomeViewModel(), tabValue: .constant(.agenda))
     }
 }

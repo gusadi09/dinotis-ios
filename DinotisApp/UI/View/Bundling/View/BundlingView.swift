@@ -272,7 +272,7 @@ struct BundlingView: View {
 
 struct BundlingView_Previews: PreviewProvider {
     static var previews: some View {
-        BundlingView(viewModel: BundlingViewModel(backToRoot: {}, backToHome: {}))
+        BundlingView(viewModel: BundlingViewModel(backToHome: {}))
     }
 }
 

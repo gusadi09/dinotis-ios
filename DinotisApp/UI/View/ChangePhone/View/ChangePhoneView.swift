@@ -180,6 +180,6 @@ struct ChangePhoneView: View {
 
 struct ChangeEmailView_Previews: PreviewProvider {
 	static var previews: some View {
-        ChangePhoneView(viewModel: ChangePhoneViewModel(backToRoot: {}, backToHome: {}, backToEditProfile: {}, phone: ""))
+        ChangePhoneView(viewModel: ChangePhoneViewModel(backToHome: {}, backToEditProfile: {}, phone: ""))
 	}
 }

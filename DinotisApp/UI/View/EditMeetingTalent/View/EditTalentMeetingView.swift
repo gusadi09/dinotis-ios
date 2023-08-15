@@ -161,7 +161,7 @@ struct EditTalentMeetingView: View {
 struct EditTalentMeetingView_Previews: PreviewProvider {
 	static var previews: some View {
 		EditTalentMeetingView(
-			viewModel: EditTalentMeetingViewModel(meetingID: "", backToRoot: {}, backToHome: {})
+			viewModel: EditTalentMeetingViewModel(meetingID: "", backToHome: {})
 		)
 	}
 }

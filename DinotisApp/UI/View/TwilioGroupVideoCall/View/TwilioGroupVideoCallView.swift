@@ -661,7 +661,6 @@ struct TwilioGroupVideoCallView_Previews: PreviewProvider {
     static var previews: some View {
         TwilioGroupVideoCallView(
             viewModel: TwilioLiveStreamViewModel(
-                backToRoot: {},
                 backToHome: {},
                 meeting: UserMeetingData(
                     id: "",

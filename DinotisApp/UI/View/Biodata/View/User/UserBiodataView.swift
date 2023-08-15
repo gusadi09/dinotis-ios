@@ -418,12 +418,12 @@ struct UserBiodataView: View {
             isError: true,
             message: LocaleText.sessionExpireText,
             primaryButton: .init(text: LocalizableText.closeLabel, action: {
-                viewModel.backToRoot()
-                stateObservable.userType = 0
-                stateObservable.isVerified = ""
-                stateObservable.refreshToken = ""
-                stateObservable.accessToken = ""
-                stateObservable.isAnnounceShow = false
+                NavigationUtil.popToRootView()
+                self.stateObservable.userType = 0
+                self.stateObservable.isVerified = ""
+                self.stateObservable.refreshToken = ""
+                self.stateObservable.accessToken = ""
+                self.stateObservable.isAnnounceShow = false
                 OneSignal.setExternalUserId("")
             })
         )
@@ -432,6 +432,6 @@ struct UserBiodataView: View {
 
 struct UserBiodataView_Previews: PreviewProvider {
     static var previews: some View {
-        UserBiodataView(viewModel: BiodataViewModel(backToRoot: {}))
+        UserBiodataView(viewModel: BiodataViewModel())
     }
 }

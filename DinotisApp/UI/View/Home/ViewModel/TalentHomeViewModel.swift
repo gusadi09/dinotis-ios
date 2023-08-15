@@ -13,8 +13,6 @@ import OneSignal
 
 final class TalentHomeViewModel: ObservableObject {
     
-    var backToRoot: () -> Void
-    
     private var cancellables = Set<AnyCancellable>()
 
 	private let rateCardRepository: RateCardRepository
@@ -88,7 +86,6 @@ final class TalentHomeViewModel: ObservableObject {
     
     init(
         isFromUserType: Bool,
-        backToRoot: @escaping (() -> Void),
         getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
         currentBalanceUseCase: CurrentBalanceUseCase = CurrentBalanceDefaultUseCase(),
         getAnnouncementUseCase: GetAnnouncementUseCase = GetAnnouncementDefaultUseCase(),
@@ -99,7 +96,6 @@ final class TalentHomeViewModel: ObservableObject {
         counterUseCase: GetCounterUseCase = GetCounterDefaultUseCase()
     ) {
         self.isFromUserType = isFromUserType
-        self.backToRoot = backToRoot
         self.getUserUseCase = getUserUseCase
         self.currentBalanceUseCase = currentBalanceUseCase
         self.getAnnouncementUseCase = getAnnouncementUseCase
@@ -128,7 +124,7 @@ final class TalentHomeViewModel: ObservableObject {
     }
     
     func routeToProfile() {
-        let viewModel = ProfileViewModel(backToRoot: backToRoot, backToHome: { self.route = nil })
+        let viewModel = ProfileViewModel(backToHome: { self.route = nil })
         
         DispatchQueue.main.async { [weak self] in
             if self?.stateObservable.userType == 2 {
@@ -140,7 +136,7 @@ final class TalentHomeViewModel: ObservableObject {
     }
     
     func routeToTalentFormSchedule() {
-        let viewModel = ScheculedFormViewModel(backToRoot: self.backToRoot, backToHome: {self.route = nil})
+        let viewModel = ScheculedFormViewModel(backToHome: {self.route = nil})
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .talentFormSchedule(viewModel: viewModel)
@@ -148,7 +144,7 @@ final class TalentHomeViewModel: ObservableObject {
     }
     
     func routeToNotification() {
-        let viewModel = NotificationViewModel(backToRoot: self.backToRoot, backToHome: { self.route = nil })
+        let viewModel = NotificationViewModel(backToHome: { self.route = nil })
 
         DispatchQueue.main.async { [weak self] in
             self?.route = .notification(viewModel: viewModel)
@@ -156,7 +152,7 @@ final class TalentHomeViewModel: ObservableObject {
     }
     
 	func routeToTalentDetailSchedule(meetingId: String) {
-        let viewModel = ScheduleDetailViewModel(isActiveBooking: true, bookingId: meetingId, backToRoot: self.backToRoot, backToHome: {self.route = nil}, isDirectToHome: false)
+        let viewModel = ScheduleDetailViewModel(isActiveBooking: true, bookingId: meetingId, backToHome: {self.route = nil}, isDirectToHome: false)
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .talentScheduleDetail(viewModel: viewModel)
@@ -164,7 +160,7 @@ final class TalentHomeViewModel: ObservableObject {
     }
 
 	func routeToEditSchedule(id: String) {
-		let viewModel = EditTalentMeetingViewModel(meetingID: id, backToRoot: self.backToRoot, backToHome: { self.route = nil })
+		let viewModel = EditTalentMeetingViewModel(meetingID: id, backToHome: { self.route = nil })
 
 		DispatchQueue.main.async {[weak self] in
 			self?.route = .editScheduleMeeting(viewModel: viewModel)
@@ -172,7 +168,7 @@ final class TalentHomeViewModel: ObservableObject {
 	}
 
     func routeToWallet() {
-        let viewModel = TalentWalletViewModel(backToRoot: self.backToRoot, backToHome: {self.route = nil})
+        let viewModel = TalentWalletViewModel(backToHome: {self.route = nil})
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .talentWallet(viewModel: viewModel)
@@ -180,7 +176,7 @@ final class TalentHomeViewModel: ObservableObject {
     }
     
     func routeToBundling() {
-        let viewModel = BundlingViewModel(backToRoot: self.backToRoot, backToHome: {self.route = nil})
+        let viewModel = BundlingViewModel(backToHome: {self.route = nil})
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .bundlingMenu(viewModel: viewModel)
@@ -188,7 +184,7 @@ final class TalentHomeViewModel: ObservableObject {
     }
     
     func routeToTalentRateCardList() {
-        let viewModel = TalentCardListViewModel(backToRoot: self.backToRoot, backToHome: {self.route = nil})
+        let viewModel = TalentCardListViewModel(backToHome: {self.route = nil})
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .talentRateCardList(viewModel: viewModel)
@@ -196,12 +192,12 @@ final class TalentHomeViewModel: ObservableObject {
     }
 
     func routeBack() {
-        self.backToRoot()
-        stateObservable.userType = 0
-        stateObservable.isVerified = ""
-        stateObservable.refreshToken = ""
-        stateObservable.accessToken = ""
-        stateObservable.isAnnounceShow = false
+        NavigationUtil.popToRootView()
+        self.stateObservable.userType = 0
+        self.stateObservable.isVerified = ""
+        self.stateObservable.refreshToken = ""
+        self.stateObservable.accessToken = ""
+        self.stateObservable.isAnnounceShow = false
         OneSignal.setExternalUserId("")
     }
 

@@ -648,7 +648,6 @@ struct InvoiceView_Previews: PreviewProvider {
 	static var previews: some View {
 		DetailPaymentView(
 			viewModel: DetailPaymentViewModel(
-				backToRoot: {},
 				backToHome: {},
 				backToChoosePayment: {},
 				bookingId: "",

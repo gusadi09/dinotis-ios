@@ -22,7 +22,6 @@ enum LoadMoreType {
 
 final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProductsRequestDelegate, SKPaymentTransactionObserver {
 
-    var backToRoot: () -> Void
     var backToHome: () -> Void
     
     private var stateObservable = StateObservable.shared
@@ -190,7 +189,6 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     @Published var imageIndex = 0
 
     init(
-        backToRoot: @escaping (() -> Void),
         backToHome: @escaping (() -> Void),
         username: String,
         getTalentDetailUseCase: GetDetailTalentUseCase = GetDetailTalentDefaultUseCase(),
@@ -211,7 +209,6 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
 		coinVerificationUseCase: CoinVerificationUseCase = CoinVerificationDefaultUseCase()
     ) {
         self.username = username
-        self.backToRoot = backToRoot
         self.backToHome = backToHome
         self.getTalentDetailUseCase = getTalentDetailUseCase
         self.sendScheduleRequestUseCase = sendScheduleRequestUseCase
@@ -233,7 +230,6 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     
     func routeToInvoice(id: String) {
         let viewModel = DetailPaymentViewModel(
-            backToRoot: self.backToRoot,
             backToHome: self.backToHome,
             backToChoosePayment: {},
             bookingId: id,
@@ -360,7 +356,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
 				self?.isTransactionSucceed = false
 				self?.isLoadingCoinPay = false
 
-				let viewModel = InvoicesBookingViewModel(bookingId: (success.bookingPayment?.bookingID).orEmpty(), backToRoot: self?.backToRoot ?? {}, backToHome: self?.backToHome ?? {}, backToChoosePayment: {self?.route = nil})
+				let viewModel = InvoicesBookingViewModel(bookingId: (success.bookingPayment?.bookingID).orEmpty(), backToHome: self?.backToHome ?? {}, backToChoosePayment: {self?.route = nil})
         self?.alert.title = LocalizableText.alertSuccessBookingTitle
         self?.alert.message = LocalizableText.alertSuccessBookingMessage
         self?.alert.primaryButton = .init(
@@ -396,7 +392,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
           self?.alert.primaryButton = .init(
             text: LocalizableText.okText,
             action: {
-              self?.routeToRoot()
+                self?.routeToRoot()
             }
           )
           self?.isShowAlert = true
@@ -724,12 +720,12 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     }
 
     func routeToRoot() {
-        self.backToRoot()
-        stateObservable.userType = 0
-        stateObservable.isVerified = ""
-        stateObservable.refreshToken = ""
-        stateObservable.accessToken = ""
-        stateObservable.isAnnounceShow = false
+        NavigationUtil.popToRootView()
+        self.stateObservable.userType = 0
+        self.stateObservable.isVerified = ""
+        self.stateObservable.refreshToken = ""
+        self.stateObservable.accessToken = ""
+        self.stateObservable.isAnnounceShow = false
         OneSignal.setExternalUserId("")
     }
 
@@ -1147,7 +1143,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
 //  }
 
     func routeToPaymentMethod(price: String, meetingId: String) {
-        let viewModel = PaymentMethodsViewModel(price: price, meetingId: meetingId, rateCardMessage: "", isRateCard: false, backToRoot: self.backToRoot, backToHome: self.backToHome)
+        let viewModel = PaymentMethodsViewModel(price: price, meetingId: meetingId, rateCardMessage: "", isRateCard: false, backToHome: self.backToHome)
 
         DispatchQueue.main.async { [weak self] in
             self?.route = .paymentMethod(viewModel: viewModel)
@@ -1155,7 +1151,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     }
     
     func routeToScheduleList() {
-        let viewModel = ScheduleListViewModel(backToRoot: self.backToRoot, backToHome: {self.route = nil}, currentUserId: (userData?.id).orEmpty())
+        let viewModel = ScheduleListViewModel(backToHome: {self.route = nil}, currentUserId: (userData?.id).orEmpty())
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .scheduleList(viewModel: viewModel)
@@ -1163,7 +1159,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     }
 
     func routeToUserScheduleDetail() {
-        let viewModel = ScheduleDetailViewModel(isActiveBooking: true, bookingId: bookingId, backToRoot: self.backToRoot, backToHome: self.backToHome, isDirectToHome: false)
+        let viewModel = ScheduleDetailViewModel(isActiveBooking: true, bookingId: bookingId, backToHome: self.backToHome, isDirectToHome: false)
 
         DispatchQueue.main.async { [weak self] in
             self?.route = .userScheduleDetail(viewModel: viewModel)
@@ -1171,7 +1167,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     }
     
 	func routeToBundlingDetail(bundleId: String, meetingArray: [Meeting], isActive: Bool) {
-		let viewModel = BundlingDetailViewModel(bundleId: bundleId, profileDetailBundle: meetingArray, meetingIdArray: [], backToRoot: self.backToRoot, backToHome: self.backToHome, isTalent: false, isActive: isActive)
+		let viewModel = BundlingDetailViewModel(bundleId: bundleId, profileDetailBundle: meetingArray, meetingIdArray: [], backToHome: self.backToHome, isTalent: false, isActive: isActive)
 
         DispatchQueue.main.async { [weak self] in
             self?.route = .bundlingDetail(viewModel: viewModel)
@@ -1179,7 +1175,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     }
     
     func routeToRateCardForm(rateCardId: String, title: String, description: String, price: String, duration: Int, isPrivate: Bool) {
-        let viewModel = RateCardServiceBookingFormViewModel(backToRoot: self.backToRoot, backToHome: self.backToHome, talentName: self.talentName.orEmpty(), talentPhoto: self.talentPhoto.orEmpty(), rateCard: RateCardResponse(id: rateCardId, title: title, description: description, price: price, duration: duration, isPrivate: isPrivate))
+        let viewModel = RateCardServiceBookingFormViewModel(backToHome: self.backToHome, talentName: self.talentName.orEmpty(), talentPhoto: self.talentPhoto.orEmpty(), rateCard: RateCardResponse(id: rateCardId, title: title, description: description, price: price, duration: duration, isPrivate: isPrivate))
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .rateCardServiceBookingForm(viewModel: viewModel)
@@ -1187,7 +1183,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     }
 
 	func routeToManagement(username: String) {
-		let viewModel = TalentProfileDetailViewModel(backToRoot: self.backToRoot, backToHome: self.backToHome, username: username)
+		let viewModel = TalentProfileDetailViewModel(backToHome: self.backToHome, username: username)
 		
 		DispatchQueue.main.async { [weak self] in
 			self?.route = .talentProfileDetail(viewModel: viewModel)
@@ -1195,7 +1191,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
 	}
 
     func routeToMyTalent(talent: String) {
-            let viewModel = TalentProfileDetailViewModel(backToRoot: self.backToRoot, backToHome: self.backToHome, username: talent)
+            let viewModel = TalentProfileDetailViewModel(backToHome: self.backToHome, username: talent)
 
             DispatchQueue.main.async { [weak self] in
                 self?.route = .talentProfileDetail(viewModel: viewModel)

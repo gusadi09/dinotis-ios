@@ -12,12 +12,14 @@ import Combine
 import CountryPicker
 import DinotisData
 import DinotisDesignSystem
+import OneSignal
 
 final class ForgotPasswordViewModel: ObservableObject {
 	
 	private let forgotPasswordUseCase: ForgotPasswordUseCase
 	private var cancellables = Set<AnyCancellable>()
-
+    private var stateObservable = StateObservable.shared
+    
 	@Published var countrySelected: Country = Country(phoneCode: "62", isoCode: "ID")
 	@Published var isShowingCountryPicker = false
 	@Published var selectedChannel: DeliveryOTPVia = .whatsapp
@@ -115,7 +117,14 @@ final class ForgotPasswordViewModel: ObservableObject {
                   self?.alert.message = LocalizableText.alertSessionExpired
                   self?.alert.primaryButton = .init(
                     text: LocalizableText.okText,
-                    action: { self?.backToRoot() }
+                    action: {
+                        NavigationUtil.popToRootView()
+                        self?.stateObservable.userType = 0
+                        self?.stateObservable.isVerified = ""
+                        self?.stateObservable.refreshToken = ""
+                        self?.stateObservable.accessToken = ""
+                        self?.stateObservable.isAnnounceShow = false
+                        OneSignal.setExternalUserId("") }
                   )
                   self?.isShowAlert = true
                 } else if error.statusCode.orZero() == 422 {

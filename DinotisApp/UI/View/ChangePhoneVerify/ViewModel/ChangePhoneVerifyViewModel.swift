@@ -11,6 +11,7 @@ import DinotisDesignSystem
 import DinotisData
 import UIKit
 import SwiftUI
+import OneSignal
 
 final class ChangePhoneVerifyViewModel: ObservableObject {
 	
@@ -46,18 +47,15 @@ final class ChangePhoneVerifyViewModel: ObservableObject {
     
     @Published var isResendVerification = false
 	
-	var onBackToRoot: () -> Void
 	var backToEditProfile: () -> Void
 	
 	init(
 		phoneNumber: String,
-		onBackToRoot: @escaping (() -> Void),
 		backToEditProfile: @escaping (() -> Void),
         changePhoneVerificationUseCase: ChangePhoneVerificationUseCase = ChangePhoneVerificationDefaultUseCase(),
 		resendOtpUseCase: ResendOTPUseCase = ResendOTPDefaultUseCase()
 	) {
 		self.phoneNumber = phoneNumber
-		self.onBackToRoot = onBackToRoot
 		self.backToEditProfile = backToEditProfile
 		self.changePhoneVerificationUseCase = changePhoneVerificationUseCase
         self.resendOtpUseCase = resendOtpUseCase
@@ -135,7 +133,14 @@ final class ChangePhoneVerifyViewModel: ObservableObject {
                   self?.alert.message = LocalizableText.alertSessionExpired
                   self?.alert.primaryButton = .init(
                     text: LocalizableText.okText,
-                    action: { self?.onBackToRoot() }
+                    action: {
+                        NavigationUtil.popToRootView()
+                        self?.stateObservable.userType = 0
+                        self?.stateObservable.isVerified = ""
+                        self?.stateObservable.refreshToken = ""
+                        self?.stateObservable.accessToken = ""
+                        self?.stateObservable.isAnnounceShow = false
+                        OneSignal.setExternalUserId("") }
                   )
                   self?.isShowAlert = true
                 } else {

@@ -15,7 +15,6 @@ import UIKit
 
 final class EditProfileViewModel: ObservableObject {
 
-	var backToRoot: () -> Void
 	var backToHome: () -> Void
 
 	private var cancellables = Set<AnyCancellable>()
@@ -80,7 +79,6 @@ final class EditProfileViewModel: ObservableObject {
     @Published var isShowAlert = false
 
 	init(
-		backToRoot: @escaping (() -> Void),
 		backToHome: @escaping (() -> Void),
 		getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
         usernameAvailabilityCheckingUseCase: UsernameAvailabilityCheckingUseCase = UsernameAvailabilityCheckingDefaultUseCase(),
@@ -91,7 +89,6 @@ final class EditProfileViewModel: ObservableObject {
         multiplePhotoUseCase: MultiplePhotoUseCase = MultiplePhotoDefaultUseCase()
 	) {
 		self.backToHome = backToHome
-		self.backToRoot = backToRoot
 		self.getUserUseCase = getUserUseCase
         self.usernameAvailabilityCheckingUseCase = usernameAvailabilityCheckingUseCase
         self.editUserUseCase = editUserUseCase
@@ -162,13 +159,13 @@ final class EditProfileViewModel: ObservableObject {
                   self?.alert.primaryButton = .init(
                     text: LocalizableText.okText,
                     action: {
-                      self?.backToRoot()
-                      self?.stateObservable.userType = 0
-                      self?.stateObservable.isVerified = ""
-                      self?.stateObservable.refreshToken = ""
-                      self?.stateObservable.accessToken = ""
-                      self?.stateObservable.isAnnounceShow = false
-                      OneSignal.setExternalUserId("")
+                        NavigationUtil.popToRootView()
+                        self?.stateObservable.userType = 0
+                        self?.stateObservable.isVerified = ""
+                        self?.stateObservable.refreshToken = ""
+                        self?.stateObservable.accessToken = ""
+                        self?.stateObservable.isAnnounceShow = false
+                        OneSignal.setExternalUserId("")
                     }
                   )
                   self?.isShowAlert = true
@@ -437,13 +434,13 @@ final class EditProfileViewModel: ObservableObject {
                   self?.alert.primaryButton = .init(
                     text: LocalizableText.okText,
                     action: {
-                      self?.backToRoot()
-                      self?.stateObservable.userType = 0
-                      self?.stateObservable.isVerified = ""
-                      self?.stateObservable.refreshToken = ""
-                      self?.stateObservable.accessToken = ""
-                      self?.stateObservable.isAnnounceShow = false
-                      OneSignal.setExternalUserId("")
+                        NavigationUtil.popToRootView()
+                        self?.stateObservable.userType = 0
+                        self?.stateObservable.isVerified = ""
+                        self?.stateObservable.refreshToken = ""
+                        self?.stateObservable.accessToken = ""
+                        self?.stateObservable.isAnnounceShow = false
+                        OneSignal.setExternalUserId("")
                     }
                   )
                   self?.isShowAlert = true
@@ -592,7 +589,7 @@ final class EditProfileViewModel: ObservableObject {
     }
 
 	func routeToChangePhone() {
-        let viewModel = ChangePhoneViewModel(backToRoot: self.backToRoot, backToHome: self.backToHome, backToEditProfile: {self.route = nil}, phone: phoneTrimming())
+        let viewModel = ChangePhoneViewModel(backToHome: self.backToHome, backToEditProfile: {self.route = nil}, phone: phoneTrimming())
 
 		DispatchQueue.main.async {[weak self] in
 			self?.route = .changePhone(viewModel: viewModel)
@@ -600,12 +597,12 @@ final class EditProfileViewModel: ObservableObject {
 	}
 
 	func autoLogout() {
-		self.backToRoot()
-		stateObservable.userType = 0
-		stateObservable.isVerified = ""
-		stateObservable.refreshToken = ""
-		stateObservable.accessToken = ""
-		stateObservable.isAnnounceShow = false
-		OneSignal.setExternalUserId("")
+        NavigationUtil.popToRootView()
+        self.stateObservable.userType = 0
+        self.stateObservable.isVerified = ""
+        self.stateObservable.refreshToken = ""
+        self.stateObservable.accessToken = ""
+        self.stateObservable.isAnnounceShow = false
+        OneSignal.setExternalUserId("")
 	}
 }

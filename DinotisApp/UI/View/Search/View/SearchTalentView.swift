@@ -1450,6 +1450,6 @@ private extension SearchTalentView {
 
 struct SearchTalentView_Previews: PreviewProvider {
 	static var previews: some View {
-        SearchTalentView(viewModel: SearchTalentViewModel(backToRoot: {}, backToHome: {}), tabValue: .constant(.agenda))
+        SearchTalentView(viewModel: SearchTalentViewModel(backToHome: {}), tabValue: .constant(.agenda))
 	}
 }

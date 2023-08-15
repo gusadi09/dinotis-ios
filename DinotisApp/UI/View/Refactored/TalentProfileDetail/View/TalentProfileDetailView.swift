@@ -622,7 +622,7 @@ struct TalentProfileDetailView: View {
 
 struct TalentProfileDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        TalentProfileDetailView(viewModel: TalentProfileDetailViewModel(backToRoot: {}, backToHome: {}, username: "ramzramzz"), tabValue: .constant(.agenda))
+        TalentProfileDetailView(viewModel: TalentProfileDetailViewModel(backToHome: {}, username: "ramzramzz"), tabValue: .constant(.agenda))
     }
 }
 

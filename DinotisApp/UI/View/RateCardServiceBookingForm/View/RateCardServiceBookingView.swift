@@ -1008,6 +1008,6 @@ extension RateCardServiceBookingView {
 
 struct RateCardServiceBookingView_Previews: PreviewProvider {
     static var previews: some View {
-        RateCardServiceBookingView(viewModel: RateCardServiceBookingFormViewModel(backToRoot: {}, backToHome: {}), mainTabValue: .constant(.agenda))
+        RateCardServiceBookingView(viewModel: RateCardServiceBookingFormViewModel(backToHome: {}), mainTabValue: .constant(.agenda))
     }
 }

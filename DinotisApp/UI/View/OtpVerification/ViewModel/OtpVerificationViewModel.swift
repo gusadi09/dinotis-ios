@@ -208,7 +208,7 @@ final class OtpVerificationViewModel: ObservableObject {
 		DispatchQueue.main.async { [weak self] in
 			switch self?.otpType {
 			case .register:
-				let viewModel = BiodataViewModel(backToRoot: self?.onBackToRoot ?? {})
+				let viewModel = BiodataViewModel()
 				self?.route = .biodataUser(viewModel: viewModel)
 			case .forgetPassword:
 				let viewModel = ResetPasswordViewModel(
@@ -227,11 +227,10 @@ final class OtpVerificationViewModel: ObservableObject {
                             self?.stateObservable.isVerified = "Verified"
 							let vm = TabViewContainerViewModel(
                                 isFromUserType: true,
-                                userHomeVM: UserHomeViewModel(backToRoot: {self?.route = nil}),
-								profileVM: ProfileViewModel(backToRoot: {self?.route = nil}, backToHome: {}),
-								searchVM: SearchTalentViewModel(backToRoot: {self?.route = nil}, backToHome: {}),
-                                scheduleVM: ScheduleListViewModel(backToRoot: {self?.route = nil}, backToHome: {}, currentUserId: (data?.id).orEmpty()),
-								backToRoot: self?.backToLogin ?? {}
+                                userHomeVM: UserHomeViewModel(),
+								profileVM: ProfileViewModel(backToHome: {}),
+								searchVM: SearchTalentViewModel(backToHome: {}),
+                                scheduleVM: ScheduleListViewModel(backToHome: {}, currentUserId: (data?.id).orEmpty())
 							)
 
 							DispatchQueue.main.async { [weak self] in
@@ -242,12 +241,12 @@ final class OtpVerificationViewModel: ObservableObject {
                             
                             if data?.username != nil {
                                 self?.stateObservable.isVerified = "Verified"
-                                let viewModel = TalentHomeViewModel(isFromUserType: true, backToRoot: self?.onBackToRoot ?? {})
+                                let viewModel = TalentHomeViewModel(isFromUserType: true)
                                 self?.route = .homeTalent(viewModel: viewModel)
                                 
                             } else {
                                 self?.stateObservable.isVerified = VerifiedCondition.verifiedNoName
-                                let viewModel = BiodataViewModel(backToRoot: self?.onBackToRoot ?? {})
+                                let viewModel = BiodataViewModel()
                                 self?.route = .biodataTalent(viewModel: viewModel)
                                 
                             }
@@ -258,11 +257,11 @@ final class OtpVerificationViewModel: ObservableObject {
                         self?.stateObservable.isVerified = VerifiedCondition.verifiedNoName
                         
                         if self?.stateObservable.userType == 3 {
-                            let viewModel = BiodataViewModel(backToRoot: self?.onBackToRoot ?? {})
+                            let viewModel = BiodataViewModel()
                             self?.route = .biodataUser(viewModel: viewModel)
                             
                         } else if self?.stateObservable.userType == 2 {
-                            let viewModel = BiodataViewModel(backToRoot: self?.onBackToRoot ?? {})
+                            let viewModel = BiodataViewModel()
                             self?.route = .biodataTalent(viewModel: viewModel)
                             
                         }

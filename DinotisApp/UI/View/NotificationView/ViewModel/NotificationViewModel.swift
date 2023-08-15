@@ -22,7 +22,6 @@ final class NotificationViewModel: ObservableObject {
     @Published var stateObservable = StateObservable.shared
     private var cancellables = Set<AnyCancellable>()
     
-    var backToRoot: () -> Void
     var backToHome: () -> Void
     
     @Published var route: HomeRouting?
@@ -55,7 +54,7 @@ final class NotificationViewModel: ObservableObject {
         notificationListsUseCase: NotificationListsUseCase = NotificationListsDefaultUseCase(),
         approveInvitationUseCase: ApproveCollaborationInvitationUseCase = ApproveCollaborationInvitationDefaultUseCase(),
         getCollaborationDetailUseCase: GetCollaborationMeetingUseCase = GetCollaborationMeetingDefaultUseCase(),
-        backToRoot: @escaping () -> Void, backToHome: @escaping () -> Void,
+        backToHome: @escaping () -> Void,
         readAllUseCase: ReadAllUseCase = ReadAllDefaultUseCase(),
         readByIdUseCase: ReadByIdUseCase = ReadByIdDefaultUseCase()
     ) {
@@ -63,7 +62,6 @@ final class NotificationViewModel: ObservableObject {
         self.approveInvitationUseCase = approveInvitationUseCase
         self.getCollaborationDetailUseCase = getCollaborationDetailUseCase
         self.backToHome = backToHome
-        self.backToRoot = backToRoot
         self.readAllUseCase = readAllUseCase
         self.readByIdUseCase = readByIdUseCase
     }
@@ -145,7 +143,13 @@ final class NotificationViewModel: ObservableObject {
                     self.alert.primaryButton = .init(
                         text: LocalizableText.okText,
                         action: {
-                            self.backToRoot()
+                            NavigationUtil.popToRootView()
+                            self.stateObservable.userType = 0
+                            self.stateObservable.isVerified = ""
+                            self.stateObservable.refreshToken = ""
+                            self.stateObservable.accessToken = ""
+                            self.stateObservable.isAnnounceShow = false
+                            OneSignal.setExternalUserId("")
                         }
                     )
                 } else {
@@ -212,7 +216,13 @@ final class NotificationViewModel: ObservableObject {
                     self.alert.primaryButton = .init(
                         text: LocalizableText.okText,
                         action: {
-                            self.backToRoot()
+                            NavigationUtil.popToRootView()
+                            self.stateObservable.userType = 0
+                            self.stateObservable.isVerified = ""
+                            self.stateObservable.refreshToken = ""
+                            self.stateObservable.accessToken = ""
+                            self.stateObservable.isAnnounceShow = false
+                            OneSignal.setExternalUserId("")
                         }
                     )
                 } else {
@@ -285,7 +295,13 @@ final class NotificationViewModel: ObservableObject {
                     self?.alert.primaryButton = .init(
                         text: LocalizableText.okText,
                         action: {
-                            self?.backToRoot()
+                            NavigationUtil.popToRootView()
+                            self?.stateObservable.userType = 0
+                            self?.stateObservable.isVerified = ""
+                            self?.stateObservable.refreshToken = ""
+                            self?.stateObservable.accessToken = ""
+                            self?.stateObservable.isAnnounceShow = false
+                            OneSignal.setExternalUserId("")
                         }
                     )
                     self?.isShowAlert = true
@@ -383,13 +399,13 @@ final class NotificationViewModel: ObservableObject {
     }
     
     func routeToRoot() {
-        stateObservable.userType = 0
-        stateObservable.isVerified = ""
-        stateObservable.refreshToken = ""
-        stateObservable.accessToken = ""
-        stateObservable.isAnnounceShow = false
+        NavigationUtil.popToRootView()
+        self.stateObservable.userType = 0
+        self.stateObservable.isVerified = ""
+        self.stateObservable.refreshToken = ""
+        self.stateObservable.accessToken = ""
+        self.stateObservable.isAnnounceShow = false
         OneSignal.setExternalUserId("")
-        backToRoot()
     }
     
     func readAll() async {

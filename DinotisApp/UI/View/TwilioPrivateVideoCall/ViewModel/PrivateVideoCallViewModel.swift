@@ -13,7 +13,6 @@ import DinotisData
 
 final class PrivateVideoCallViewModel: ObservableObject {
 	
-	var backToRoot: () -> Void
 	var backToHome: () -> Void
 	
 	private var stateObservable = StateObservable.shared
@@ -94,7 +93,6 @@ final class PrivateVideoCallViewModel: ObservableObject {
 	
 	init(
 		meeting: UserMeetingData,
-		backToRoot: @escaping (() -> Void),
 		backToHome: @escaping (() -> Void),
 		meetRepository: MeetingsRepository = MeetingsDefaultRepository(),
 		getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
@@ -106,7 +104,6 @@ final class PrivateVideoCallViewModel: ObservableObject {
         getReasonUseCase: ReportReasonListUseCase = ReportReasonListDefaultUseCase()
 	) {
 		self.meeting = meeting
-		self.backToRoot = backToRoot
 		self.backToHome = backToHome
 		self.meetRepository = meetRepository
 		self.getUserUseCase = getUserUseCase
@@ -445,7 +442,7 @@ final class PrivateVideoCallViewModel: ObservableObject {
 	}
 	
 	func routeToAfterCall() {
-		let viewModel = AfterCallViewModel(backToRoot: self.backToRoot, backToHome: self.backToHome)
+		let viewModel = AfterCallViewModel(backToHome: self.backToHome)
 		
 		DispatchQueue.main.async {[weak self] in
 			self?.route = .afterCall(viewModel: viewModel)

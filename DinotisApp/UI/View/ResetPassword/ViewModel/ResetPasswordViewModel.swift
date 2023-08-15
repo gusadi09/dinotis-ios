@@ -11,11 +11,13 @@ import SwiftUI
 import UIKit
 import DinotisData
 import DinotisDesignSystem
+import OneSignal
 
 final class ResetPasswordViewModel: ObservableObject {
 	private let resetPasswordUseCase: ResetPasswordUseCase
 	private var cancellables = Set<AnyCancellable>()
-	
+    private var stateObservable = StateObservable.shared
+    
 	@Published var password = ResetPasswordRequest(phone: "", password: "", passwordConfirm: "", token: "")
 	@Published var isLoading = false
 	@Published var isError = false
@@ -116,7 +118,14 @@ final class ResetPasswordViewModel: ObservableObject {
                   self?.alert.message = LocalizableText.alertSessionExpired
                   self?.alert.primaryButton = .init(
                     text: LocalizableText.okText,
-                    action: { self?.backToRoot() }
+                    action: {
+                        NavigationUtil.popToRootView()
+                        self?.stateObservable.userType = 0
+                        self?.stateObservable.isVerified = ""
+                        self?.stateObservable.refreshToken = ""
+                        self?.stateObservable.accessToken = ""
+                        self?.stateObservable.isAnnounceShow = false
+                        OneSignal.setExternalUserId("") }
                   )
                   self?.isShowAlert = true
                 } else if error.statusCode.orZero() == 422 {

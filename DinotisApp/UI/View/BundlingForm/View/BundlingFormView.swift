@@ -178,7 +178,7 @@ struct BundlingFormView: View {
 
 struct BundlingFormView_Previews: PreviewProvider {
     static var previews: some View {
-		BundlingFormView(viewModel: BundlingFormViewModel(meetingIdArray: ["",""], isEdit: false, backToRoot: {}, backToHome: {}, backToBundlingList: {}))
+		BundlingFormView(viewModel: BundlingFormViewModel(meetingIdArray: ["",""], isEdit: false, backToHome: {}, backToBundlingList: {}))
     }
 }
 

@@ -152,12 +152,12 @@ struct TalentScheduleDetailView: View {
                                         title: Text(LocaleText.attention),
                                         message: Text(LocaleText.sessionExpireText),
                                         dismissButton: .default(Text(LocaleText.returnText), action: {
-                                            viewModel.backToRoot()
-                                            stateObservable.userType = 0
-                                            stateObservable.isVerified = ""
-                                            stateObservable.refreshToken = ""
-                                            stateObservable.accessToken = ""
-                                            stateObservable.isAnnounceShow = false
+                                            NavigationUtil.popToRootView()
+                                            self.stateObservable.userType = 0
+                                            self.stateObservable.isVerified = ""
+                                            self.stateObservable.refreshToken = ""
+                                            self.stateObservable.accessToken = ""
+                                            self.stateObservable.isAnnounceShow = false
                                             OneSignal.setExternalUserId("")
                                         }))
                                 }
@@ -900,7 +900,7 @@ struct TalentScheduleDetailView: View {
 
 struct TalentScheduleDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        TalentScheduleDetailView(viewModel: ScheduleDetailViewModel(isActiveBooking: true, bookingId: "", backToRoot: {}, backToHome: {}, isDirectToHome: false))
+        TalentScheduleDetailView(viewModel: ScheduleDetailViewModel(isActiveBooking: true, bookingId: "", backToHome: {}, isDirectToHome: false))
     }
 }
 

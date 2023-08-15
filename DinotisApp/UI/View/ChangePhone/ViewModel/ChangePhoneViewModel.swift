@@ -16,7 +16,6 @@ import OneSignal
 
 final class ChangePhoneViewModel: ObservableObject {
 	
-	var backToRoot: () -> Void
 	var backToHome: () -> Void
 	var backToEditProfile: () -> Void
 	
@@ -51,14 +50,12 @@ final class ChangePhoneViewModel: ObservableObject {
 	@Published var phoneNumberError: [String]?
 	
 	init(
-		backToRoot: @escaping (() -> Void),
 		backToHome: @escaping (() -> Void),
 		backToEditProfile: @escaping (() -> Void),
         phone: String,
         changePhoneUseCase: ChangePhoneUseCase = ChangePhoneDefaultUseCase()
 	) {
 		self.backToHome = backToHome
-		self.backToRoot = backToRoot
         self.phone = phone
 		self.backToEditProfile = backToEditProfile
 		self.changePhoneUseCase = changePhoneUseCase
@@ -115,13 +112,13 @@ final class ChangePhoneViewModel: ObservableObject {
                   self?.alert.primaryButton = .init(
                     text: LocalizableText.okText,
                     action: {
-                      self?.stateObservable.userType = 0
-                      self?.stateObservable.isVerified = ""
-                      self?.stateObservable.refreshToken = ""
-                      self?.stateObservable.accessToken = ""
-                      self?.stateObservable.isAnnounceShow = false
-                      OneSignal.setExternalUserId("")
-                      self?.backToRoot()
+                        self?.stateObservable.userType = 0
+                        self?.stateObservable.isVerified = ""
+                        self?.stateObservable.refreshToken = ""
+                        self?.stateObservable.accessToken = ""
+                        self?.stateObservable.isAnnounceShow = false
+                        OneSignal.setExternalUserId("")
+                        NavigationUtil.popToRootView()
                     }
                   )
                   self?.isShowAlert = true
@@ -219,7 +216,7 @@ final class ChangePhoneViewModel: ObservableObject {
 		
 		let phones = "+\(countrySelected.phoneCode)" + tempPhone
 		
-		let viewModel = ChangePhoneVerifyViewModel(phoneNumber: phones, onBackToRoot: self.backToRoot, backToEditProfile: self.backToEditProfile)
+		let viewModel = ChangePhoneVerifyViewModel(phoneNumber: phones, backToEditProfile: self.backToEditProfile)
 		
 		DispatchQueue.main.async {[weak self] in
 			self?.route = .changePhoneOtp(viewModel: viewModel)

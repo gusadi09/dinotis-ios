@@ -10,6 +10,7 @@ import DinotisData
 import DinotisDesignSystem
 import StoreKit
 import SwiftUI
+import OneSignal
 
 enum RateCardBookingSheetState: Identifiable {
 	var id: UUID {
@@ -30,7 +31,6 @@ final class RateCardServiceBookingFormViewModel: NSObject, ObservableObject, SKP
     private var cancellables = Set<AnyCancellable>()
     private var stateObservable = StateObservable.shared
     
-    var backToRoot: () -> Void
     var backToHome: () -> Void
     
     @Published var route: HomeRouting?
@@ -93,7 +93,6 @@ final class RateCardServiceBookingFormViewModel: NSObject, ObservableObject, SKP
     @Published var talentPhoto: String
     
     init(
-        backToRoot: @escaping (() -> Void),
         backToHome: @escaping (() -> Void),
 		rateCardPaymentUseCase: RateCardPaymentUseCase = RateCardPaymentDefaultUseCase(),
         extraFeeUseCase: GetExtraFeeUseCase = GetExtraFeeDefaultUseCase(),
@@ -104,7 +103,6 @@ final class RateCardServiceBookingFormViewModel: NSObject, ObservableObject, SKP
         talentPhoto: String = "",
         rateCard: RateCardResponse = RateCardResponse(id: "", title: "", description: "", price: "", duration: 0, isPrivate: nil)
     ) {
-        self.backToRoot = backToRoot
         self.backToHome = backToHome
 		self.rateCardPaymentUseCase = rateCardPaymentUseCase
         self.extraFeeUseCase = extraFeeUseCase
@@ -199,7 +197,13 @@ final class RateCardServiceBookingFormViewModel: NSObject, ObservableObject, SKP
           self?.alert.primaryButton = .init(
             text: LocalizableText.okText,
             action: {
-              self?.backToRoot()
+                NavigationUtil.popToRootView()
+                self?.stateObservable.userType = 0
+                self?.stateObservable.isVerified = ""
+                self?.stateObservable.refreshToken = ""
+                self?.stateObservable.accessToken = ""
+                self?.stateObservable.isAnnounceShow = false
+                OneSignal.setExternalUserId("")
             }
           )
           self?.isShowAlert = true
@@ -267,7 +271,13 @@ final class RateCardServiceBookingFormViewModel: NSObject, ObservableObject, SKP
           self?.alert.primaryButton = .init(
             text: LocalizableText.okText,
             action: {
-              self?.backToRoot()
+                NavigationUtil.popToRootView()
+                self?.stateObservable.userType = 0
+                self?.stateObservable.isVerified = ""
+                self?.stateObservable.refreshToken = ""
+                self?.stateObservable.accessToken = ""
+                self?.stateObservable.isAnnounceShow = false
+                OneSignal.setExternalUserId("")
             }
           )
           self?.isShowAlert = true
@@ -331,7 +341,13 @@ final class RateCardServiceBookingFormViewModel: NSObject, ObservableObject, SKP
           self?.alert.primaryButton = .init(
             text: LocalizableText.okText,
             action: {
-              self?.backToRoot()
+                NavigationUtil.popToRootView()
+                self?.stateObservable.userType = 0
+                self?.stateObservable.isVerified = ""
+                self?.stateObservable.refreshToken = ""
+                self?.stateObservable.accessToken = ""
+                self?.stateObservable.isAnnounceShow = false
+                OneSignal.setExternalUserId("")
             }
           )
           self?.isShowAlert = true
@@ -375,7 +391,7 @@ final class RateCardServiceBookingFormViewModel: NSObject, ObservableObject, SKP
                 self?.isTransactionSucceed = false
                 self?.isLoadingCoinPay = false
                 
-                let viewModel = InvoicesBookingViewModel(bookingId: (success.bookingPayment?.bookingID).orEmpty(), backToRoot: self?.backToRoot ?? {}, backToHome: self?.backToHome ?? {}, backToChoosePayment: {self?.route = nil})
+                let viewModel = InvoicesBookingViewModel(bookingId: (success.bookingPayment?.bookingID).orEmpty(), backToHome: self?.backToHome ?? {}, backToChoosePayment: {self?.route = nil})
                 
                 self?.alert.title = LocalizableText.alertSuccessRequestSessionTitle
                 self?.alert.message = LocalizableText.alertSuccessRequestSessionMessage
@@ -437,7 +453,13 @@ final class RateCardServiceBookingFormViewModel: NSObject, ObservableObject, SKP
           self?.alert.primaryButton = .init(
             text: LocalizableText.okText,
             action: {
-              self?.backToRoot()
+                NavigationUtil.popToRootView()
+                self?.stateObservable.userType = 0
+                self?.stateObservable.isVerified = ""
+                self?.stateObservable.refreshToken = ""
+                self?.stateObservable.accessToken = ""
+                self?.stateObservable.isAnnounceShow = false
+                OneSignal.setExternalUserId("")
             }
           )
           self?.isShowAlert = true
@@ -608,7 +630,7 @@ final class RateCardServiceBookingFormViewModel: NSObject, ObservableObject, SKP
     }
     
     func routeToPaymentMethod(price: String, rateCardId: String) {
-        let viewModel = PaymentMethodsViewModel(price: price, meetingId: rateCardId, rateCardMessage: noteText, isRateCard: true, backToRoot: self.backToRoot, backToHome: self.backToHome)
+        let viewModel = PaymentMethodsViewModel(price: price, meetingId: rateCardId, rateCardMessage: noteText, isRateCard: true, backToHome: self.backToHome)
 
         DispatchQueue.main.async { [weak self] in
             self?.route = .paymentMethod(viewModel: viewModel)

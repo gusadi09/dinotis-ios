@@ -12,12 +12,10 @@ import DinotisData
 
 final class PreviewTalentViewModel: ObservableObject {
 
-	var backToRoot: () -> Void
-
 	private var cancellables = Set<AnyCancellable>()
 	private var onValueChanged: ((_ refreshControl: UIRefreshControl) -> Void)?
 
-	private var stateObservable = StateObservable.shared
+	var stateObservable = StateObservable.shared
 	private let getUserUseCase: GetUserUseCase
 
 	@Published var photoProfile: String?
@@ -42,10 +40,8 @@ final class PreviewTalentViewModel: ObservableObject {
 	@Published var isLoading = false
 
 	init(
-		backToRoot: @escaping (() -> Void),
 		getUserUseCase: GetUserUseCase = GetUserDefaultUseCase()
 	) {
-		self.backToRoot = backToRoot
 		self.getUserUseCase = getUserUseCase
 	}
 
