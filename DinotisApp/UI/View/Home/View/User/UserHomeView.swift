@@ -18,6 +18,9 @@ struct UserHomeView: View {
     
     @Environment(\.viewController) private var viewControllerHolder: ViewControllerHolder
     
+    @AppStorage("isFirstLaunch") var isFirstLaunch: Bool = true
+    @AppStorage("isShowTooltip") var isShowTooltip = false
+    
     private var viewController: UIViewController? {
         self.viewControllerHolder.value
     }
@@ -60,7 +63,6 @@ struct UserHomeView: View {
                             }
                         )
                     }
-                    
                 }
                 .dinotisAlert(
                     isPresent: $homeVM.isShowAlert,
@@ -72,12 +74,24 @@ struct UserHomeView: View {
                 )
                 .navigationBarTitle(Text(""))
                 .navigationBarHidden(true)
-                .onAppear {
-                    if homeVM.homeContent.isEmpty {
-                        homeVM.onScreenAppear(geo: geo)
+                
+                if isShowTooltip {
+                    Color.black.opacity(0.5)
+                        .ignoresSafeArea()
+                }
+            }
+            .onAppear {
+                if homeVM.homeContent.isEmpty {
+                    homeVM.onScreenAppear(geo: geo)
+                }
+                
+                AppDelegate.orientationLock = .portrait
+                
+                if isFirstLaunch {
+                    withAnimation {
+                        self.isShowTooltip = true
+                        self.isFirstLaunch = false
                     }
-                    
-                    AppDelegate.orientationLock = .portrait
                 }
             }
         }

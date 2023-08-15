@@ -33,6 +33,8 @@ struct TabViewContainer: View {
         @ObservedObject var viewModel: TabViewContainerViewModel
         @ObservedObject var state: StateObservable
         
+        @AppStorage("isShowTooltip") var isShowTooltip = false
+        
         var body: some View {
             ZStack {
                 
@@ -102,6 +104,9 @@ struct TabViewContainer: View {
                         .tag(TabRoute.search)
                     
                     ScheduleListView(viewModel: viewModel.scheduleVM, mainTabSelection: $viewModel.tab)
+                        .onAppear {
+                            self.isShowTooltip = false
+                        }
                         .tag(TabRoute.agenda)
                     
                     if viewModel.state.userType == 2 {
@@ -116,7 +121,7 @@ struct TabViewContainer: View {
                     }
                     
                 }
-                .dinotisTabStyle($viewModel.tab, isNewAgenda: $viewModel.hasNewAgenda)
+                .dinotisTabStyle($viewModel.tab, isNewAgenda: $viewModel.hasNewAgenda, isShowTooltip: $isShowTooltip)
             }
             .navigationBarTitle(Text(""))
             .navigationBarHidden(true)

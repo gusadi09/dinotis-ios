@@ -64,4 +64,5 @@ enum HomeRouting {
 	case notification(viewModel: NotificationViewModel)
 	case followedCreator(viewModel: FollowedCreatorViewModel)
     case dyteGroupVideoCall(viewModel: GroupVideoCallViewModel)
+    case feedbackAfterCall(viewModel: FeedbackViewModel)
 }

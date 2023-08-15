@@ -118,13 +118,14 @@ struct DetailMeeting: Codable {
     let maxEditAt: Date?
     let roomSid: String?
     let dyteMeetingId: String?
+    let isInspected: Bool?
 	
 	enum CodingKeys: String, CodingKey {
 		case id, title, roomSid, dyteMeetingId
 		case description = "description"
 		case price, startAt, endAt, isPrivate, slots, isLiveStreaming, participantDetails
 		case userID = "userId"
-		case startedAt, endedAt, createdAt, updatedAt, deletedAt, bookings, participants, meetingBundleId, meetingRequestId, meetingRequest, status, cancelOptions, user, meetingCollaborations, meetingUrls, meetingUploads, managementId, isCollaborationAlreadyConfirmed, maxEditAt
+		case startedAt, endedAt, createdAt, updatedAt, deletedAt, bookings, participants, meetingBundleId, meetingRequestId, meetingRequest, status, cancelOptions, user, meetingCollaborations, meetingUrls, meetingUploads, managementId, isCollaborationAlreadyConfirmed, maxEditAt, isInspected
 	}
 }
 
