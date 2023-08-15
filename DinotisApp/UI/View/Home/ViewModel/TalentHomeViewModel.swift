@@ -86,7 +86,6 @@ final class TalentHomeViewModel: ObservableObject {
     
     init(
         isFromUserType: Bool,
-        backToRoot: @escaping (() -> Void),
         getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
         currentBalanceUseCase: CurrentBalanceUseCase = CurrentBalanceDefaultUseCase(),
         getAnnouncementUseCase: GetAnnouncementUseCase = GetAnnouncementDefaultUseCase(),
@@ -97,7 +96,6 @@ final class TalentHomeViewModel: ObservableObject {
         counterUseCase: GetCounterUseCase = GetCounterDefaultUseCase()
     ) {
         self.isFromUserType = isFromUserType
-        self.backToRoot = backToRoot
         self.getUserUseCase = getUserUseCase
         self.currentBalanceUseCase = currentBalanceUseCase
         self.getAnnouncementUseCase = getAnnouncementUseCase
