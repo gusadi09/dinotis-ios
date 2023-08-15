@@ -12,6 +12,7 @@ import Foundation
 import UIKit
 import StoreKit
 import SwiftUI
+import OneSignal
 
 enum TabFilter {
     case all
@@ -21,7 +22,6 @@ enum TabFilter {
 
 final class SearchTalentViewModel: NSObject, ObservableObject, SKProductsRequestDelegate, SKPaymentTransactionObserver {
     
-	var backToRoot: () -> Void
 	var backToHome: () -> Void
 	
 	private var stateObservable = StateObservable.shared
@@ -119,7 +119,6 @@ final class SearchTalentViewModel: NSObject, ObservableObject, SKProductsRequest
     @Published var transactionState: SKPaymentTransactionState?
 	
 	init(
-		backToRoot: @escaping (() -> Void),
 		backToHome: @escaping (() -> Void),
 		authRepository: AuthenticationRepository = AuthenticationDefaultRepository(),
         getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
@@ -134,7 +133,6 @@ final class SearchTalentViewModel: NSObject, ObservableObject, SKProductsRequest
         extraFeeUseCase: GetExtraFeeUseCase = GetExtraFeeDefaultUseCase(),
 		coinVerificationUseCase: CoinVerificationUseCase = CoinVerificationDefaultUseCase()
 	) {
-		self.backToRoot = backToRoot
 		self.backToHome = backToHome
 		self.authRepository = authRepository
         self.getUserUseCase = getUserUseCase
@@ -150,7 +148,7 @@ final class SearchTalentViewModel: NSObject, ObservableObject, SKProductsRequest
 	}
 	
     func routeToTalentProfile(username: String?) {
-		let viewModel = TalentProfileDetailViewModel(backToRoot: self.backToRoot, backToHome: {self.route = nil}, username: username.orEmpty())
+		let viewModel = TalentProfileDetailViewModel(backToHome: {self.route = nil}, username: username.orEmpty())
 		
 		DispatchQueue.main.async { [weak self] in
 			self?.route = .talentProfileDetail(viewModel: viewModel)
@@ -158,7 +156,7 @@ final class SearchTalentViewModel: NSObject, ObservableObject, SKProductsRequest
 	}
     
     func routeToPaymentMethod() {
-		let viewModel = PaymentMethodsViewModel(price: sessionCard.price.orEmpty(), meetingId: sessionCard.id.orEmpty(), rateCardMessage: "", isRateCard: false, backToRoot: self.backToRoot, backToHome: {self.route = nil})
+		let viewModel = PaymentMethodsViewModel(price: sessionCard.price.orEmpty(), meetingId: sessionCard.id.orEmpty(), rateCardMessage: "", isRateCard: false, backToHome: {self.route = nil})
 
         DispatchQueue.main.async { [weak self] in
             self?.route = .paymentMethod(viewModel: viewModel)
@@ -514,7 +512,14 @@ final class SearchTalentViewModel: NSObject, ObservableObject, SKProductsRequest
           self?.alert.message = LocalizableText.alertSessionExpired
           self?.alert.primaryButton = .init(
             text: LocalizableText.okText,
-            action: { self?.backToRoot() }
+            action: {
+                NavigationUtil.popToRootView()
+                self?.stateObservable.userType = 0
+                self?.stateObservable.isVerified = ""
+                self?.stateObservable.refreshToken = ""
+                self?.stateObservable.accessToken = ""
+                self?.stateObservable.isAnnounceShow = false
+                OneSignal.setExternalUserId("") }
           )
           self?.isShowAlert = true
 				} else {
@@ -550,7 +555,14 @@ final class SearchTalentViewModel: NSObject, ObservableObject, SKProductsRequest
           self?.alert.message = LocalizableText.alertSessionExpired
           self?.alert.primaryButton = .init(
             text: LocalizableText.okText,
-            action: { self?.backToRoot() }
+            action: {
+                NavigationUtil.popToRootView()
+                self?.stateObservable.userType = 0
+                self?.stateObservable.isVerified = ""
+                self?.stateObservable.refreshToken = ""
+                self?.stateObservable.accessToken = ""
+                self?.stateObservable.isAnnounceShow = false
+                OneSignal.setExternalUserId("") }
           )
           self?.isShowAlert = true
 				} else {
@@ -586,7 +598,14 @@ final class SearchTalentViewModel: NSObject, ObservableObject, SKProductsRequest
           self?.alert.message = LocalizableText.alertSessionExpired
           self?.alert.primaryButton = .init(
             text: LocalizableText.okText,
-            action: { self?.backToRoot() }
+            action: {
+                NavigationUtil.popToRootView()
+                self?.stateObservable.userType = 0
+                self?.stateObservable.isVerified = ""
+                self?.stateObservable.refreshToken = ""
+                self?.stateObservable.accessToken = ""
+                self?.stateObservable.isAnnounceShow = false
+                OneSignal.setExternalUserId("") }
           )
           self?.isShowAlert = true
 				} else {
@@ -646,7 +665,7 @@ final class SearchTalentViewModel: NSObject, ObservableObject, SKProductsRequest
 				self?.isTransactionSucceed = false
 				self?.isLoadingCoinPay = false
 
-				let viewModel = InvoicesBookingViewModel(bookingId: (success.bookingPayment?.bookingID).orEmpty(), backToRoot: self?.backToRoot ?? {}, backToHome: {self?.route = nil}, backToChoosePayment: {self?.route = nil})
+				let viewModel = InvoicesBookingViewModel(bookingId: (success.bookingPayment?.bookingID).orEmpty(), backToHome: {self?.route = nil}, backToChoosePayment: {self?.route = nil})
         DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
           self?.route = .bookingInvoice(viewModel: viewModel)
         }
@@ -770,7 +789,14 @@ final class SearchTalentViewModel: NSObject, ObservableObject, SKProductsRequest
           self?.alert.message = LocalizableText.alertSessionExpired
           self?.alert.primaryButton = .init(
             text: LocalizableText.okText,
-            action: { self?.backToRoot() }
+            action: {
+                NavigationUtil.popToRootView()
+                self?.stateObservable.userType = 0
+                self?.stateObservable.isVerified = ""
+                self?.stateObservable.refreshToken = ""
+                self?.stateObservable.accessToken = ""
+                self?.stateObservable.isAnnounceShow = false
+                OneSignal.setExternalUserId("") }
           )
           self?.isShowAlert = true
 				} else {
@@ -831,7 +857,15 @@ final class SearchTalentViewModel: NSObject, ObservableObject, SKProductsRequest
           self?.alert.message = LocalizableText.alertSessionExpired
           self?.alert.primaryButton = .init(
             text: LocalizableText.okText,
-            action: { self?.backToRoot() }
+            action: {
+                NavigationUtil.popToRootView()
+                self?.stateObservable.userType = 0
+                self?.stateObservable.isVerified = ""
+                self?.stateObservable.refreshToken = ""
+                self?.stateObservable.accessToken = ""
+                self?.stateObservable.isAnnounceShow = false
+                OneSignal.setExternalUserId("")
+            }
           )
           self?.isShowAlert = true
 				} else {
@@ -876,7 +910,7 @@ final class SearchTalentViewModel: NSObject, ObservableObject, SKProductsRequest
 					self?.isShowSessionDetail = false
 					self?.isFreeBookingSucceed = true
           
-          let viewModel = InvoicesBookingViewModel(bookingId: (success.bookingPayment?.bookingID).orEmpty(), backToRoot: self?.backToRoot ?? {}, backToHome: {self?.route = nil}, backToChoosePayment: {self?.route = nil})
+          let viewModel = InvoicesBookingViewModel(bookingId: (success.bookingPayment?.bookingID).orEmpty(), backToHome: {self?.route = nil}, backToChoosePayment: {self?.route = nil})
           
           DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
             self?.route = .bookingInvoice(viewModel: viewModel)

@@ -166,7 +166,7 @@ struct TalentCreateBundlingView: View {
 
 struct TalentCreateBundlingView_Previews: PreviewProvider {
     static var previews: some View {
-		TalentCreateBundlingView(viewModel: TalentCreateBundlingViewModel(isEdit: false, backToRoot: {}, backToHome: {}, backToBundlingList: {}), meetingArray: .constant([]))
+		TalentCreateBundlingView(viewModel: TalentCreateBundlingViewModel(isEdit: false, backToHome: {}, backToBundlingList: {}), meetingArray: .constant([]))
     }
 }
 

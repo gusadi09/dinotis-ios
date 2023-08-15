@@ -188,6 +188,6 @@ struct UserInvoiceBookingView: View {
 
 struct UserInvoiceBookingView_Previews: PreviewProvider {
 	static var previews: some View {
-        UserInvoiceBookingView(viewModel: InvoicesBookingViewModel(bookingId: "", backToRoot: {}, backToHome: {}, backToChoosePayment: {}), mainTabValue: .constant(.agenda))
+        UserInvoiceBookingView(viewModel: InvoicesBookingViewModel(bookingId: "", backToHome: {}, backToChoosePayment: {}), mainTabValue: .constant(.agenda))
 	}
 }

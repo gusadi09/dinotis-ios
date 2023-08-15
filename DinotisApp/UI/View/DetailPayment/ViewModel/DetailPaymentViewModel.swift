@@ -13,7 +13,6 @@ import DinotisData
 
 final class DetailPaymentViewModel: ObservableObject {
 	
-	var backToRoot: () -> Void
 	var backToHome: () -> Void
 	var backToChoosePayment: () -> Void
 	
@@ -56,7 +55,6 @@ final class DetailPaymentViewModel: ObservableObject {
 	@Published var instruction: PaymentInstructionData?
 	
 	init(
-		backToRoot: @escaping (() -> Void),
 		backToHome: @escaping (() -> Void),
 		backToChoosePayment: @escaping () -> Void,
 		bookingId: String,
@@ -69,7 +67,6 @@ final class DetailPaymentViewModel: ObservableObject {
         getInvoiceUseCase: GetInvoiceUseCase = GetInvoiceDefaultUseCase(),
 		deleteBookingsUseCase: DeleteBookingsUseCase = DeleteBookingsDefaultUseCase()
 	) {
-		self.backToRoot = backToRoot
 		self.backToHome = backToHome
 		self.backToChoosePayment = backToChoosePayment
 		self.bookingId = bookingId
@@ -84,7 +81,7 @@ final class DetailPaymentViewModel: ObservableObject {
 	}
 	
 	func routeToFinishInvoice(id: String) {
-		let viewModel = InvoicesBookingViewModel(bookingId: id, backToRoot: self.backToRoot, backToHome: self.backToHome, backToChoosePayment: self.backToChoosePayment)
+		let viewModel = InvoicesBookingViewModel(bookingId: id, backToHome: self.backToHome, backToChoosePayment: self.backToChoosePayment)
 		
 		DispatchQueue.main.async {[weak self] in
 			self?.route = .bookingInvoice(viewModel: viewModel)
@@ -213,13 +210,13 @@ final class DetailPaymentViewModel: ObservableObject {
 	}
 
 	func routeToRoot() {
-		stateObservable.userType = 0
-		stateObservable.isVerified = ""
-		stateObservable.refreshToken = ""
-		stateObservable.accessToken = ""
-		stateObservable.isAnnounceShow = false
-		OneSignal.setExternalUserId("")
-		backToRoot()
+        NavigationUtil.popToRootView()
+        self.stateObservable.userType = 0
+        self.stateObservable.isVerified = ""
+        self.stateObservable.refreshToken = ""
+        self.stateObservable.accessToken = ""
+        self.stateObservable.isAnnounceShow = false
+        OneSignal.setExternalUserId("")
 	}
 
 	func use(for scrollView: UIScrollView, onValueChanged: @escaping ((UIRefreshControl) -> Void)) {

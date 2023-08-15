@@ -141,6 +141,6 @@ struct PaymentMethodView: View {
 
 struct PaymentMethodView_Previews: PreviewProvider {
 	static var previews: some View {
-        PaymentMethodView(viewModel: PaymentMethodsViewModel(price: "", meetingId: "", rateCardMessage: "", isRateCard: false, backToRoot: {}, backToHome: {}), mainTabValue: .constant(.agenda))
+        PaymentMethodView(viewModel: PaymentMethodsViewModel(price: "", meetingId: "", rateCardMessage: "", isRateCard: false, backToHome: {}), mainTabValue: .constant(.agenda))
 	}
 }

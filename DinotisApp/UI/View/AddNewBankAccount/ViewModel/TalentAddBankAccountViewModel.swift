@@ -23,7 +23,6 @@ final class TalentAddBankAccountViewModel: ObservableObject {
 
 	private let isEdit: Bool
 
-	var backToRoot: () -> Void
 	var backToHome: () -> Void
 
 	@Published var accountNumber = ""
@@ -50,7 +49,6 @@ final class TalentAddBankAccountViewModel: ObservableObject {
 
 	init(
 		isEdit: Bool,
-		backToRoot: @escaping (() -> Void),
 		backToHome: @escaping (() -> Void),
 		userRepository: UsersRepository = UsersDefaultRepository(),
 		authRepository: AuthenticationRepository = AuthenticationDefaultRepository(),
@@ -60,7 +58,6 @@ final class TalentAddBankAccountViewModel: ObservableObject {
         editBankAccountUseCase: EditBankAccountUseCase = EditBankAccountDefaultUseCase()
 	) {
 		self.isEdit = isEdit
-		self.backToRoot = backToRoot
 		self.backToHome = backToHome
 		self.userRepository = userRepository
 		self.authRepository = authRepository
@@ -71,13 +68,13 @@ final class TalentAddBankAccountViewModel: ObservableObject {
 	}
 
 	func routeToRoot() {
-		stateObservable.userType = 0
-		stateObservable.isVerified = ""
-		stateObservable.refreshToken = ""
-		stateObservable.accessToken = ""
-		stateObservable.isAnnounceShow = false
-		OneSignal.setExternalUserId("")
-		backToRoot()
+        NavigationUtil.popToRootView()
+        self.stateObservable.userType = 0
+        self.stateObservable.isVerified = ""
+        self.stateObservable.refreshToken = ""
+        self.stateObservable.accessToken = ""
+        self.stateObservable.isAnnounceShow = false
+        OneSignal.setExternalUserId("")
 	}
 
 	func onStartRequest() {

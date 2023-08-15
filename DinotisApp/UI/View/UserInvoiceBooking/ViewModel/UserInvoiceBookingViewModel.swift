@@ -12,7 +12,6 @@ import DinotisData
 
 final class InvoicesBookingViewModel: ObservableObject {
 	
-	var backToRoot: () -> Void
 	var backToHome: () -> Void
 	var backToChoosePayment: () -> Void
 	
@@ -38,14 +37,12 @@ final class InvoicesBookingViewModel: ObservableObject {
 	
 	init(
 		bookingId: String,
-		backToRoot: @escaping (() -> Void),
 		backToHome: @escaping (() -> Void),
 		backToChoosePayment: @escaping () -> Void,
 		getBookingDetailUseCase: GetBookingDetailUseCase = GetBookingDetailDefaultUseCase(),
 		authRepository: AuthenticationRepository = AuthenticationDefaultRepository()
 	) {
 		self.bookingId = bookingId
-		self.backToRoot = backToRoot
 		self.backToHome = backToHome
 		self.backToChoosePayment = backToChoosePayment
 		self.getBookingDetailUseCase = getBookingDetailUseCase
@@ -126,7 +123,7 @@ final class InvoicesBookingViewModel: ObservableObject {
 	}
     
     func routeToDetailSchedule() {
-        let viewModel = ScheduleDetailViewModel(isActiveBooking: true, bookingId: (bookingData?.id).orEmpty(), backToRoot: self.backToRoot, backToHome: self.backToHome, isDirectToHome: true)
+        let viewModel = ScheduleDetailViewModel(isActiveBooking: true, bookingId: (bookingData?.id).orEmpty(), backToHome: self.backToHome, isDirectToHome: true)
         
         DispatchQueue.main.async {[weak self] in
             self?.route = .userScheduleDetail(viewModel: viewModel)

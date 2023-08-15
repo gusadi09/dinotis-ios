@@ -152,6 +152,6 @@ extension ScheduleNegotiationChatView {
 
 struct ScheduleNegotiationChatView_Previews: PreviewProvider {
 	static var previews: some View {
-		ScheduleNegotiationChatView(viewModel: ScheduleNegotiationChatViewModel(token: "", expireDate: Date(), backToRoot: {}, backToHome: {}))
+		ScheduleNegotiationChatView(viewModel: ScheduleNegotiationChatViewModel(token: "", expireDate: Date(), backToHome: {}))
 	}
 }

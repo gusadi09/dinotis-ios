@@ -242,6 +242,6 @@ extension TalentCardListView {
 
 struct TalentCardListView_Previews: PreviewProvider {
     static var previews: some View {
-        TalentCardListView(viewModel: TalentCardListViewModel(backToRoot: {}, backToHome: {}))
+        TalentCardListView(viewModel: TalentCardListViewModel(backToHome: {}))
     }
 }

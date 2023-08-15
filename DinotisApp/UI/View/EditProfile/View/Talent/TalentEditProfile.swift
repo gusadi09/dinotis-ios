@@ -404,6 +404,6 @@ struct TalentEditProfile_Previews: PreviewProvider {
 
 		TalentEditProfile(
 			profesionSelect: .constant([]),
-			viewModel: EditProfileViewModel(backToRoot: {}, backToHome: {}))
+			viewModel: EditProfileViewModel(backToHome: {}))
 	}
 }

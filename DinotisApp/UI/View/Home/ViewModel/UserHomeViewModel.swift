@@ -26,8 +26,6 @@ enum AudienceHomeLoadType {
 }
 
 final class UserHomeViewModel: NSObject, ObservableObject {
-
-    var backToRoot: () -> Void
     
     private lazy var stateObservable = StateObservable.shared
     private var onValueChanged: ((_ refreshControl: UIRefreshControl) -> Void)?
@@ -123,7 +121,6 @@ final class UserHomeViewModel: NSObject, ObservableObject {
     @Published var hasNewNotif = false
     
     init(
-        backToRoot: @escaping (() -> Void),
         getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
         professionListUseCase: ProfessionListUseCase = ProfessionListDefaultUseCase(),
         categoryListUseCase: CategoryListUseCase = CategoryListDefaultUseCase(),
@@ -140,7 +137,6 @@ final class UserHomeViewModel: NSObject, ObservableObject {
         getFirstBannerUseCase: GetFirstBannerUseCase = GetFirstBannerDefaultUseCase(),
         getSecondBannerUseCase: GetSecondBannerUseCase = GetSecondBannerDefaultUseCase()
     ) {
-        self.backToRoot = backToRoot
         self.getUserUseCase = getUserUseCase
         self.professionListUseCase = professionListUseCase
         self.categoryListUseCase = categoryListUseCase
@@ -292,18 +288,18 @@ final class UserHomeViewModel: NSObject, ObservableObject {
     
     func routeBack() {
         if statusCode == 401 {
-            backToRoot()
-            stateObservable.userType = 0
-            stateObservable.isVerified = ""
-            stateObservable.refreshToken = ""
-            stateObservable.accessToken = ""
-            stateObservable.isAnnounceShow = false
+            NavigationUtil.popToRootView()
+            self.stateObservable.userType = 0
+            self.stateObservable.isVerified = ""
+            self.stateObservable.refreshToken = ""
+            self.stateObservable.accessToken = ""
+            self.stateObservable.isAnnounceShow = false
             OneSignal.setExternalUserId("")
         }
     }
     
     func routeToProfile() {
-        let viewModel = ProfileViewModel(backToRoot: backToRoot, backToHome: { self.route = nil })
+        let viewModel = ProfileViewModel(backToHome: { self.route = nil })
         
         DispatchQueue.main.async { [weak self] in
             if self?.stateObservable.userType == 2 {
@@ -315,7 +311,7 @@ final class UserHomeViewModel: NSObject, ObservableObject {
     }
     
     func routeToTalentProfile() {
-        let viewModel = TalentProfileDetailViewModel(backToRoot: self.backToRoot, backToHome: {self.route = nil}, username: self.username.orEmpty())
+        let viewModel = TalentProfileDetailViewModel(backToHome: {self.route = nil}, username: self.username.orEmpty())
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .talentProfileDetail(viewModel: viewModel)
@@ -323,7 +319,7 @@ final class UserHomeViewModel: NSObject, ObservableObject {
     }
     
     func routeToScheduleList() {
-        let viewModel = ScheduleDetailViewModel(isActiveBooking: true, bookingId: stateObservable.bookId, backToRoot: self.backToRoot, backToHome: {self.route = nil}, isDirectToHome: false)
+        let viewModel = ScheduleDetailViewModel(isActiveBooking: true, bookingId: stateObservable.bookId, backToHome: {self.route = nil}, isDirectToHome: false)
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .userScheduleDetail(viewModel: viewModel)
@@ -393,7 +389,14 @@ final class UserHomeViewModel: NSObject, ObservableObject {
                     self?.alert.message = LocalizableText.alertSessionExpired
                     self?.alert.primaryButton = .init(
                         text: LocalizableText.okText,
-                        action: { self?.backToRoot() }
+                        action: {
+                            NavigationUtil.popToRootView()
+                            self?.stateObservable.userType = 0
+                            self?.stateObservable.isVerified = ""
+                            self?.stateObservable.refreshToken = ""
+                            self?.stateObservable.accessToken = ""
+                            self?.stateObservable.isAnnounceShow = false
+                            OneSignal.setExternalUserId("") }
                     )
                     self?.isShowAlert = true
                 } else {
@@ -688,7 +691,14 @@ final class UserHomeViewModel: NSObject, ObservableObject {
                   self?.alert.message = LocalizableText.alertSessionExpired
                   self?.alert.primaryButton = .init(
                     text: LocalizableText.okText,
-                    action: { self?.backToRoot() }
+                    action: {
+                        NavigationUtil.popToRootView()
+                        self?.stateObservable.userType = 0
+                        self?.stateObservable.isVerified = ""
+                        self?.stateObservable.refreshToken = ""
+                        self?.stateObservable.accessToken = ""
+                        self?.stateObservable.isAnnounceShow = false
+                        OneSignal.setExternalUserId("") }
                   )
                   self?.isShowAlert = true
                 } else {
@@ -801,7 +811,6 @@ final class UserHomeViewModel: NSObject, ObservableObject {
     
     func routeToSearch() {
         let viewModel = SearchTalentViewModel(
-            backToRoot: self.backToRoot,
             backToHome: {self.route = nil}
         )
         
@@ -811,7 +820,7 @@ final class UserHomeViewModel: NSObject, ObservableObject {
     }
 
 	func routeToNotification() {
-		let viewModel = NotificationViewModel(backToRoot: self.backToRoot, backToHome: { self.route = nil })
+		let viewModel = NotificationViewModel(backToHome: { self.route = nil })
 
 		DispatchQueue.main.async { [weak self] in
 			self?.route = .notification(viewModel: viewModel)

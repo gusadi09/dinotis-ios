@@ -93,6 +93,6 @@ struct AfterCallView: View {
 
 struct AfterCallView_Previews: PreviewProvider {
 	static var previews: some View {
-		AfterCallView(viewModel: AfterCallViewModel(backToRoot: {}, backToHome: {}))
+		AfterCallView(viewModel: AfterCallViewModel(backToHome: {}))
 	}
 }

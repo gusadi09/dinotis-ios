@@ -146,6 +146,6 @@ struct ChangePhoneVerifyView: View {
 
 struct ChangePhoneVerifyView_Previews: PreviewProvider {
 	static var previews: some View {
-		ChangePhoneVerifyView(viewModel: ChangePhoneVerifyViewModel(phoneNumber: "", onBackToRoot: {}, backToEditProfile: {}))
+		ChangePhoneVerifyView(viewModel: ChangePhoneVerifyViewModel(phoneNumber: "", backToEditProfile: {}))
 	}
 }

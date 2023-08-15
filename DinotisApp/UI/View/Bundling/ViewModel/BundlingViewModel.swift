@@ -20,7 +20,6 @@ final class BundlingViewModel: ObservableObject {
 	private var stateObservable = StateObservable.shared
 	private var onValueChanged: ((_ refreshControl: UIRefreshControl) -> Void)?
     
-    var backToRoot: () -> Void
     var backToHome: () -> Void
 
 	@Published var query = BundlingListFilter()
@@ -41,12 +40,10 @@ final class BundlingViewModel: ObservableObject {
     @Published var filterSelection = ""
     
     init(
-		backToRoot: @escaping (() -> Void),
 		backToHome: @escaping (() -> Void),
 		bundlingRepository: BundlingRepository = BundlingDefaultRepository(),
 		authRepository: AuthenticationRepository = AuthenticationDefaultRepository()
 	) {
-        self.backToRoot = backToRoot
         self.backToHome = backToHome
 		self.bundlingRepository = bundlingRepository
 		self.authRepository = authRepository
@@ -168,7 +165,7 @@ final class BundlingViewModel: ObservableObject {
     }
     
     func routeToCreateBundling() {
-		let viewModel = TalentCreateBundlingViewModel(isEdit: false, backToRoot: self.backToRoot, backToHome: self.backToHome, backToBundlingList: {self.route = nil})
+		let viewModel = TalentCreateBundlingViewModel(isEdit: false, backToHome: self.backToHome, backToBundlingList: {self.route = nil})
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .createBundling(viewModel: viewModel)
@@ -176,7 +173,7 @@ final class BundlingViewModel: ObservableObject {
     }
     
 	func talentRouteToBundlingDetail(bundleId: String) {
-		let viewModel = BundlingDetailViewModel(bundleId: bundleId, meetingIdArray: [], backToRoot: self.backToRoot, backToHome: {self.route = nil}, isTalent: true, isActive: false)
+		let viewModel = BundlingDetailViewModel(bundleId: bundleId, meetingIdArray: [], backToHome: {self.route = nil}, isTalent: true, isActive: false)
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .bundlingDetail(viewModel: viewModel)
@@ -204,7 +201,7 @@ final class BundlingViewModel: ObservableObject {
 	}
 
 	func routeToBundlingForm(bundleId: String) {
-		let viewModel = BundlingFormViewModel(bundleId: bundleId, meetingIdArray: [], isEdit: true, backToRoot: self.backToRoot, backToHome: self.backToHome, backToBundlingList: { self.route = nil })
+		let viewModel = BundlingFormViewModel(bundleId: bundleId, meetingIdArray: [], isEdit: true, backToHome: self.backToHome, backToBundlingList: { self.route = nil })
 
 		DispatchQueue.main.async { [weak self] in
 			self?.route = .bundlingForm(viewModel: viewModel)

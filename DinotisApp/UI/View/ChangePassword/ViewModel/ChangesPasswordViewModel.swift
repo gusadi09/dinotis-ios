@@ -56,13 +56,9 @@ final class ChangesPasswordViewModel: ObservableObject {
     @Published var isShowAlert = false
     @Published var alert = AlertAttribute()
     
-    var backToRoot: () -> Void
-    
     init(
-        changePasswordUseCase: ChangePasswordUseCase = ChangePasswordDefaultUseCase(),
-        backToRoot: @escaping (() -> Void)
+        changePasswordUseCase: ChangePasswordUseCase = ChangePasswordDefaultUseCase()
     ) {
-        self.backToRoot = backToRoot
         self.changePasswordUseCase = changePasswordUseCase
     }
     
@@ -119,7 +115,14 @@ final class ChangesPasswordViewModel: ObservableObject {
                     self?.alert.message = LocalizableText.alertSessionExpired
                     self?.alert.primaryButton = .init(
                         text: LocalizableText.okText,
-                        action: { self?.backToRoot() }
+                        action: {
+                            NavigationUtil.popToRootView()
+                            self?.stateObservable.userType = 0
+                            self?.stateObservable.isVerified = ""
+                            self?.stateObservable.refreshToken = ""
+                            self?.stateObservable.accessToken = ""
+                            self?.stateObservable.isAnnounceShow = false
+                            OneSignal.setExternalUserId("") }
                     )
                     self?.isShowAlert = true
                 } else if error.statusCode.orZero() == 422 {

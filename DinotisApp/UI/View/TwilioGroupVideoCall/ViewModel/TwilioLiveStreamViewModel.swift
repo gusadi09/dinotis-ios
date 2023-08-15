@@ -25,7 +25,6 @@ final class TwilioLiveStreamViewModel: ObservableObject {
     private let putQuestionUseCase: PutQuestionUseCase
     private let sendQuestionUseCase: SendQuestionUseCase
 	
-	var backToRoot: (() -> Void)
 	var backToHome: (() -> Void)
     
     @Published var questionData = [QuestionData]()
@@ -89,7 +88,6 @@ final class TwilioLiveStreamViewModel: ObservableObject {
 	let state = StateObservable.shared
 	
 	init(
-		backToRoot: @escaping (() -> Void),
 		backToHome: @escaping (() -> Void),
 		authRepository: AuthenticationRepository = AuthenticationDefaultRepository(),
 		getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
@@ -101,7 +99,6 @@ final class TwilioLiveStreamViewModel: ObservableObject {
         sendQuestionUseCase: SendQuestionUseCase = SendQuestionDefaultUseCase()
 	) {
 		self.backToHome = backToHome
-		self.backToRoot = backToRoot
 		self.authRepository = authRepository
 		self.getUserUseCase = getUserUseCase
 		self.twilioRepo = twilioRepo
@@ -120,7 +117,7 @@ final class TwilioLiveStreamViewModel: ObservableObject {
     }
 	
 	func routeToAfterCall() {
-		let viewModel = AfterCallViewModel(backToRoot: self.backToRoot, backToHome: self.backToHome)
+		let viewModel = AfterCallViewModel(backToHome: self.backToHome)
 		
 		DispatchQueue.main.async {[weak self] in
 			self?.route = .afterCall(viewModel: viewModel)

@@ -1001,6 +1001,6 @@ struct UserProfileView: View {
 
 struct UserProfilePage_Previews: PreviewProvider {
 	static var previews: some View {
-        UserProfileView(viewModel: ProfileViewModel(backToRoot: {}, backToHome: {}), tabValue: .constant(.agenda))
+        UserProfileView(viewModel: ProfileViewModel(backToHome: {}), tabValue: .constant(.agenda))
 	}
 }

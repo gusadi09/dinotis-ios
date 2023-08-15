@@ -20,7 +20,6 @@ final class TalentCardListViewModel: ObservableObject {
 	private var stateObservable = StateObservable.shared
 	private var onValueChanged: ((_ refreshControl: UIRefreshControl) -> Void)?
     
-    var backToRoot: () -> Void
     var backToHome: () -> Void
 
 	@Published var isLoading = false
@@ -41,13 +40,11 @@ final class TalentCardListViewModel: ObservableObject {
     @Published var route: HomeRouting?
     
 	init(
-		backToRoot: @escaping (() -> Void),
 		backToHome: @escaping (() -> Void),
 		deleteRateCardUseCase: DeleteRateCardUseCase = DeleteRateCardDefaultUseCase(),
 		getRateCardUseCase: GetRateCardUseCase = GetRateCardDefaultUseCase(),
 		authRepository: AuthenticationRepository = AuthenticationDefaultRepository()
 	) {
-		self.backToRoot = backToRoot
 		self.backToHome = backToHome
 		self.deleteRateCardUseCase = deleteRateCardUseCase
 		self.getRateCardUseCase = getRateCardUseCase
@@ -55,7 +52,7 @@ final class TalentCardListViewModel: ObservableObject {
 	}
     
 	func routeToCreateRateCardForm(isEdit: Bool, id: String) {
-		let viewModel = CreateTalentRateCardFormViewModel(isEdit: isEdit, rateCardId: id, backToRoot: self.backToRoot, backToHome: self.backToHome)
+		let viewModel = CreateTalentRateCardFormViewModel(isEdit: isEdit, rateCardId: id, backToHome: self.backToHome)
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .talentCreateRateCardForm(viewModel: viewModel)
@@ -63,13 +60,13 @@ final class TalentCardListViewModel: ObservableObject {
     }
 
 	func routeToRoot() {
-		stateObservable.userType = 0
-		stateObservable.isVerified = ""
-		stateObservable.refreshToken = ""
-		stateObservable.accessToken = ""
-		stateObservable.isAnnounceShow = false
-		OneSignal.setExternalUserId("")
-		backToRoot()
+        NavigationUtil.popToRootView()
+        self.stateObservable.userType = 0
+        self.stateObservable.isVerified = ""
+        self.stateObservable.refreshToken = ""
+        self.stateObservable.accessToken = ""
+        self.stateObservable.isAnnounceShow = false
+        OneSignal.setExternalUserId("")
 	}
 
 	func onStartRequest(isDelete: Bool) {

@@ -306,6 +306,6 @@ struct TalentWalletView: View {
 
 struct TalentWalletView_Previews: PreviewProvider {
 	static var previews: some View {
-		TalentWalletView(viewModel: TalentWalletViewModel(backToRoot: {}, backToHome: {}))
+		TalentWalletView(viewModel: TalentWalletViewModel(backToHome: {}))
 	}
 }

@@ -11,7 +11,6 @@ final class ScheduleNegotiationChatViewModel: ObservableObject {
 	@Published var endChat: Date
     @Published var textMessage = ""
     
-    var backToRoot: () -> Void
     var backToHome: () -> Void
     
     @Published var route: HomeRouting?
@@ -23,12 +22,10 @@ final class ScheduleNegotiationChatViewModel: ObservableObject {
     init(
 		token: String,
 		expireDate: Date,
-        backToRoot: @escaping (() -> Void),
         backToHome: @escaping (() -> Void)
     ) {
 		self.token = token
 		self.endChat = expireDate
-        self.backToRoot = backToRoot
         self.backToHome = backToHome
     }
 }

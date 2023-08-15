@@ -14,7 +14,6 @@ import DinotisDesignSystem
 
 final class EditTalentMeetingViewModel: ObservableObject {
 
-	var backToRoot: () -> Void
 	var backToHome: () -> Void
 
 	private lazy var stateObservable = StateObservable.shared
@@ -44,14 +43,12 @@ final class EditTalentMeetingViewModel: ObservableObject {
 
 	init(
 		meetingID: String,
-		backToRoot: @escaping (() -> Void),
 		backToHome: @escaping (() -> Void),
 		authRepository: AuthenticationRepository = AuthenticationDefaultRepository(),
 		meetingRepository: MeetingsRepository = MeetingsDefaultRepository(),
         userUseCase: GetUserUseCase = GetUserDefaultUseCase()
 	) {
 		self.meetingID = meetingID
-		self.backToRoot = backToRoot
 		self.backToHome = backToHome
 		self.authRepository = authRepository
 		self.meetingRepository = meetingRepository
@@ -59,13 +56,13 @@ final class EditTalentMeetingViewModel: ObservableObject {
 	}
 
 	func routeToRoot() {
-		stateObservable.userType = 0
-		stateObservable.isVerified = ""
-		stateObservable.refreshToken = ""
-		stateObservable.accessToken = ""
-		stateObservable.isAnnounceShow = false
-		OneSignal.setExternalUserId("")
-		backToRoot()
+        NavigationUtil.popToRootView()
+        self.stateObservable.userType = 0
+        self.stateObservable.isVerified = ""
+        self.stateObservable.refreshToken = ""
+        self.stateObservable.accessToken = ""
+        self.stateObservable.isAnnounceShow = false
+        OneSignal.setExternalUserId("")
 	}
 
 	func onStartRequest() {

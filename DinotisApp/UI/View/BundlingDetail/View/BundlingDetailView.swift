@@ -984,6 +984,6 @@ private extension BundlingDetailView {
 
 struct BundlingDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        BundlingDetailView(viewModel: BundlingDetailViewModel(bundleId: "", meetingIdArray: ["",""], backToRoot: {}, backToHome: {}, isTalent: true, isActive: false), isPreview: false, tabValue: .constant(.agenda))
+        BundlingDetailView(viewModel: BundlingDetailViewModel(bundleId: "", meetingIdArray: ["",""], backToHome: {}, isTalent: true, isActive: false), isPreview: false, tabValue: .constant(.agenda))
     }
 }

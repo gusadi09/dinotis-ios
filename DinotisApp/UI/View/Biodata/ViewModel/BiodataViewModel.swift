@@ -26,8 +26,6 @@ final class BiodataViewModel: ObservableObject {
 
 	private var cancellables = Set<AnyCancellable>()
 
-	var backToRoot: () -> Void
-
 	@Published var name = ""
 	@Published var bio = ""
     @Published var password = ""
@@ -71,14 +69,12 @@ final class BiodataViewModel: ObservableObject {
     @Published var isRepeatPassShow = false
 
 	init(
-		backToRoot: @escaping (() -> Void),
 		getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
         editUserUseCase: EditUserUseCase = EditUserDefaultUseCase(),
         usernameSuggestionUseCase: UsernameSuggestionUseCase = UsernameSuggestionDefaultUseCase(),
         usernameAvailabilityCheckingUseCase: UsernameAvailabilityCheckingUseCase = UsernameAvailabilityCheckingDefaultUseCase(),
         professionListUseCase: ProfessionListUseCase = ProfessionListDefaultUseCase()
 	) {
-		self.backToRoot = backToRoot
 		self.getUserUseCase = getUserUseCase
         self.editUserUseCase = editUserUseCase
         self.usernameSuggestionUseCase = usernameSuggestionUseCase
@@ -383,16 +379,15 @@ final class BiodataViewModel: ObservableObject {
 		DispatchQueue.main.async { [weak self] in
 
 			if self?.stateObservable.userType == 2 {
-                let viewModel = TalentHomeViewModel(isFromUserType: true, backToRoot: self?.backToRoot ?? {})
+                let viewModel = TalentHomeViewModel(isFromUserType: true)
 				self?.route = .homeTalent(viewModel: viewModel)
 			} else {
 				let vm = TabViewContainerViewModel(
                     isFromUserType: true,
-                    userHomeVM: UserHomeViewModel(backToRoot: {self?.backToRoot()}),
-                    profileVM: ProfileViewModel(backToRoot: {self?.backToRoot()}, backToHome: {}),
-					searchVM: SearchTalentViewModel(backToRoot: {self?.backToRoot()}, backToHome: {}),
-                    scheduleVM: ScheduleListViewModel(backToRoot: {self?.backToRoot()}, backToHome: {}, currentUserId: (self?.userData?.id).orEmpty()),
-					backToRoot: self?.backToRoot ?? {}
+                    userHomeVM: UserHomeViewModel(),
+                    profileVM: ProfileViewModel(backToHome: {}),
+					searchVM: SearchTalentViewModel(backToHome: {}),
+                    scheduleVM: ScheduleListViewModel(backToHome: {}, currentUserId: (self?.userData?.id).orEmpty())
 				)
 
 				DispatchQueue.main.async { [weak self] in

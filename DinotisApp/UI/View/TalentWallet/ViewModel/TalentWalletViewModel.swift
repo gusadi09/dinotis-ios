@@ -22,7 +22,6 @@ final class TalentWalletViewModel: ObservableObject {
 	private lazy var stateObservable = StateObservable.shared
 	private var onValueChanged: ((_ refreshControl: UIRefreshControl) -> Void)?
 	
-	var backToRoot: () -> Void
 	var backToHome: () -> Void
 
     @Published var alert = AlertAttribute()
@@ -45,14 +44,12 @@ final class TalentWalletViewModel: ObservableObject {
 	@Published var isRefreshFailed = false
 	
 	init(
-		backToRoot: @escaping (() -> Void),
 		backToHome: @escaping (() -> Void),
 		currentBalanceUseCase: CurrentBalanceUseCase = CurrentBalanceDefaultUseCase(),
 		authRepository: AuthenticationRepository = AuthenticationDefaultRepository(),
         getHistoryTransactionUseCase: GetTransactionHistoryUseCase = GetTransactionHistoryDefaultUseCase(),
         getBankAccountUseCase: GetBankAccountUseCase = GetBankAccountDefaultUseCase()
 	) {
-		self.backToRoot = backToRoot
 		self.backToHome = backToHome
 		self.currentBalanceUseCase = currentBalanceUseCase
 		self.authRepository = authRepository
@@ -61,13 +58,13 @@ final class TalentWalletViewModel: ObservableObject {
 	}
 
 	func routeToRoot() {
-		stateObservable.userType = 0
-		stateObservable.isVerified = ""
-		stateObservable.refreshToken = ""
-		stateObservable.accessToken = ""
-		stateObservable.isAnnounceShow = false
-		OneSignal.setExternalUserId("")
-		backToRoot()
+        NavigationUtil.popToRootView()
+        self.stateObservable.userType = 0
+        self.stateObservable.isVerified = ""
+        self.stateObservable.refreshToken = ""
+        self.stateObservable.accessToken = ""
+        self.stateObservable.isAnnounceShow = false
+        OneSignal.setExternalUserId("")
 	}
     
     func balanceDetailFilter() -> [BalanceDetailData] {
@@ -195,7 +192,7 @@ final class TalentWalletViewModel: ObservableObject {
 	}
 
 	func routeToAddBankAccount() {
-		let viewModel = TalentAddBankAccountViewModel(isEdit: bankData.first != nil, backToRoot: self.backToRoot, backToHome: self.backToHome)
+		let viewModel = TalentAddBankAccountViewModel(isEdit: bankData.first != nil, backToHome: self.backToHome)
 
 		DispatchQueue.main.async { [weak self] in
 			self?.route = .addBankAccount(viewModel: viewModel)
@@ -203,7 +200,7 @@ final class TalentWalletViewModel: ObservableObject {
 	}
 
 	func routeToWithdrawDetail(id: String) {
-		let viewModel = TalentTransactionDetailViewModel(withdrawID: id, backToRoot: self.backToRoot, backToHome: self.backToHome)
+		let viewModel = TalentTransactionDetailViewModel(withdrawID: id, backToHome: self.backToHome)
 
 		DispatchQueue.main.async { [weak self] in
 			self?.route = .withdrawTransactionDetail(viewModel: viewModel)
@@ -211,7 +208,7 @@ final class TalentWalletViewModel: ObservableObject {
 	}
 
 	func routeToWithdrawal() {
-		let viewModel = TalentWithdrawalViewModel(backToRoot: self.backToRoot, backToHome: self.backToHome)
+		let viewModel = TalentWithdrawalViewModel(backToHome: self.backToHome)
 
 		DispatchQueue.main.async { [weak self] in
 			self?.route = .withdrawBalance(viewModel: viewModel)

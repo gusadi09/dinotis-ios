@@ -82,7 +82,7 @@ struct TalentEditRateCardScheduleView: View {
 
 struct TalentEditRateCardScheduleView_Previews: PreviewProvider {
     static var previews: some View {
-        TalentEditRateCardScheduleView(viewModel: TalentEditRateCardScheduleViewModel(meetingID: "", backToRoot: {}, backToHome: {}))
+        TalentEditRateCardScheduleView(viewModel: TalentEditRateCardScheduleViewModel(meetingID: "", backToHome: {}))
     }
 }
 

@@ -159,11 +159,10 @@ struct TabViewContainer_Previews: PreviewProvider {
 		TabViewContainer(
 			viewModel: TabViewContainerViewModel(
                 isFromUserType: false,
-                userHomeVM: UserHomeViewModel(backToRoot: {}),
-				profileVM: ProfileViewModel(backToRoot: {}, backToHome: {}),
-                searchVM: SearchTalentViewModel(backToRoot: {}, backToHome: {}),
-                scheduleVM: ScheduleListViewModel(backToRoot: {}, backToHome: {}, currentUserId: ""),
-				backToRoot: {}
+                userHomeVM: UserHomeViewModel(),
+				profileVM: ProfileViewModel(backToHome: {}),
+                searchVM: SearchTalentViewModel(backToHome: {}),
+                scheduleVM: ScheduleListViewModel(backToHome: {}, currentUserId: "")
 			)
 		)
 	}

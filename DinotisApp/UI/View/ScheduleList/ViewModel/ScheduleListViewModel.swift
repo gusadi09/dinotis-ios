@@ -11,6 +11,7 @@ import DinotisDesignSystem
 import Foundation
 import UIKit
 import SwiftUI
+import OneSignal
 
 enum ScheduleTab {
     case all
@@ -31,7 +32,6 @@ enum SessionStatus: String {
 
 final class ScheduleListViewModel: ObservableObject {
 	
-	var backToRoot: () -> Void
 	var backToHome: () -> Void
 
 	private var onValueChanged: ((_ refreshControl: UIRefreshControl) -> Void)?
@@ -106,7 +106,6 @@ final class ScheduleListViewModel: ObservableObject {
     @Published var hasNewNotif = false
 	
 	init(
-		backToRoot: @escaping (() -> Void),
 		backToHome: @escaping (() -> Void),
 		currentUserId: String,
 		getUserBookingsUseCase: GetUserBookingsUseCase = GetUserBookingsDefaultUseCase(),
@@ -114,7 +113,6 @@ final class ScheduleListViewModel: ObservableObject {
         giveReviewUseCase: GiveReviewUseCase = GiveReviewDefaultUseCase(),
         counterUseCase: GetCounterUseCase = GetCounterDefaultUseCase()
 	) {
-		self.backToRoot = backToRoot
 		self.backToHome = backToHome
 		self.currentUserId = currentUserId
 		self.getUserBookingsUseCase = getUserBookingsUseCase
@@ -184,7 +182,7 @@ final class ScheduleListViewModel: ObservableObject {
     }
 	
 	func routeToSearch() {
-		let viewModel = SearchTalentViewModel(backToRoot: self.backToRoot, backToHome: {self.route = nil})
+		let viewModel = SearchTalentViewModel(backToHome: {self.route = nil})
 		
 		DispatchQueue.main.async {[weak self] in
 			self?.route = .searchTalent(viewModel: viewModel)
@@ -192,7 +190,7 @@ final class ScheduleListViewModel: ObservableObject {
 	}
 	
 	func routeToInvoiceBooking(id: String) {
-        let viewModel = InvoicesBookingViewModel(bookingId: id, backToRoot: self.backToRoot, backToHome: {self.route = nil}, backToChoosePayment: {self.route = nil})
+        let viewModel = InvoicesBookingViewModel(bookingId: id, backToHome: {self.route = nil}, backToChoosePayment: {self.route = nil})
 		
 		DispatchQueue.main.async {[weak self] in
 			self?.route = .bookingInvoice(viewModel: viewModel)
@@ -200,7 +198,7 @@ final class ScheduleListViewModel: ObservableObject {
 	}
 	
 	func routeToTalentProfile(username: String) {
-		let viewModel = TalentProfileDetailViewModel(backToRoot: self.backToRoot, backToHome: {self.route = nil}, username: username)
+		let viewModel = TalentProfileDetailViewModel(backToHome: {self.route = nil}, username: username)
 		
 		DispatchQueue.main.async { [weak self] in
 			self?.route = .talentProfileDetail(viewModel: viewModel)
@@ -208,7 +206,7 @@ final class ScheduleListViewModel: ObservableObject {
 	}
 	
     func routeToUsertDetailSchedule(bookingId: String, talentName: String, talentPhoto: String) {
-        let viewModel = ScheduleDetailViewModel(isActiveBooking: true, bookingId: bookingId, backToRoot: self.backToRoot, backToHome: {self.route = nil}, talentName: talentName, talentPhoto: talentPhoto, isDirectToHome: false)
+        let viewModel = ScheduleDetailViewModel(isActiveBooking: true, bookingId: bookingId, backToHome: {self.route = nil}, talentName: talentName, talentPhoto: talentPhoto, isDirectToHome: false)
 		
 		DispatchQueue.main.async { [weak self] in
 			self?.route = .userScheduleDetail(viewModel: viewModel)
@@ -217,7 +215,6 @@ final class ScheduleListViewModel: ObservableObject {
 	
     func routeToInvoice(id: String) {
 		let viewModel = DetailPaymentViewModel(
-			backToRoot: self.backToRoot,
             backToHome: {self.route = nil},
 			backToChoosePayment: {},
 			bookingId: id,
@@ -232,7 +229,7 @@ final class ScheduleListViewModel: ObservableObject {
 	}
 	
 	func routeToPayment(price: String) {
-        let viewModel = PaymentMethodsViewModel(price: price, meetingId: meetingId, rateCardMessage: "", isRateCard: false, backToRoot: self.backToRoot, backToHome: {self.route = nil})
+        let viewModel = PaymentMethodsViewModel(price: price, meetingId: meetingId, rateCardMessage: "", isRateCard: false, backToHome: {self.route = nil})
 		
 		DispatchQueue.main.async { [weak self] in
 			self?.route = .paymentMethod(viewModel: viewModel)
@@ -240,7 +237,7 @@ final class ScheduleListViewModel: ObservableObject {
 	}
     
     func routeToNotification() {
-        let viewModel = NotificationViewModel(backToRoot: self.backToRoot, backToHome: { self.route = nil })
+        let viewModel = NotificationViewModel(backToHome: { self.route = nil })
 
         DispatchQueue.main.async { [weak self] in
             self?.route = .notification(viewModel: viewModel)
@@ -300,7 +297,14 @@ final class ScheduleListViewModel: ObservableObject {
           self?.alert.message = LocalizableText.alertSessionExpired
           self?.alert.primaryButton = .init(
             text: LocalizableText.okText,
-            action: { self?.backToRoot() }
+            action: {
+                NavigationUtil.popToRootView()
+                self?.stateObservable.userType = 0
+                self?.stateObservable.isVerified = ""
+                self?.stateObservable.refreshToken = ""
+                self?.stateObservable.accessToken = ""
+                self?.stateObservable.isAnnounceShow = false
+                OneSignal.setExternalUserId("") }
           )
           self?.isShowAlert = true
 				} else {

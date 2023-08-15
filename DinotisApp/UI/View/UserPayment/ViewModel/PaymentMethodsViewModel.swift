@@ -15,7 +15,6 @@ import DinotisDesignSystem
 
 final class PaymentMethodsViewModel: ObservableObject {
 	
-	var backToRoot: () -> Void
 	var backToHome: () -> Void
 	
 	private var stateObservable = StateObservable.shared
@@ -91,7 +90,6 @@ final class PaymentMethodsViewModel: ObservableObject {
 		meetingId: String,
         rateCardMessage: String,
         isRateCard: Bool,
-		backToRoot: @escaping (() -> Void),
 		backToHome: @escaping (() -> Void),
 		coinPaymentUseCase: CoinPaymentUseCase = CoinPaymentDefaultUseCase(),
 		promoCodeCheckingUseCase: PromoCodeCheckingUseCase = PromoCodeCheckingDefaultUseCase(),
@@ -104,7 +102,6 @@ final class PaymentMethodsViewModel: ObservableObject {
 		self.price = price
 		self.meetingId = meetingId
         self.isRateCard = isRateCard
-		self.backToRoot = backToRoot
 		self.backToHome = backToHome
 		self.paymentMethodUseCase = paymentMethodUseCase
 		self.coinPaymentUseCase = coinPaymentUseCase
@@ -119,7 +116,6 @@ final class PaymentMethodsViewModel: ObservableObject {
 	func routeToInvoice() {
 		let viewModel = InvoicesBookingViewModel(
 			bookingId: stateObservable.bookId,
-			backToRoot: self.backToRoot,
 			backToHome: self.backToHome,
 			backToChoosePayment: {self.route = nil}
 		)
@@ -173,7 +169,14 @@ final class PaymentMethodsViewModel: ObservableObject {
           self?.alert.message = LocalizableText.alertSessionExpired
           self?.alert.primaryButton = .init(
             text: LocalizableText.okText,
-            action: { self?.backToRoot() }
+            action: {
+                NavigationUtil.popToRootView()
+                self?.stateObservable.userType = 0
+                self?.stateObservable.isVerified = ""
+                self?.stateObservable.refreshToken = ""
+                self?.stateObservable.accessToken = ""
+                self?.stateObservable.isAnnounceShow = false
+                OneSignal.setExternalUserId("") }
           )
           self?.isShowAlert = true
 				} else {
@@ -257,13 +260,13 @@ final class PaymentMethodsViewModel: ObservableObject {
 	}
 
 	func expireTokenAction() {
-		self.backToRoot()
-		self.stateObservable.userType = 0
-		self.stateObservable.isVerified = ""
-		self.stateObservable.refreshToken = ""
-		self.stateObservable.accessToken = ""
-		stateObservable.isAnnounceShow = false
-		OneSignal.setExternalUserId("")
+        NavigationUtil.popToRootView()
+        self.stateObservable.userType = 0
+        self.stateObservable.isVerified = ""
+        self.stateObservable.refreshToken = ""
+        self.stateObservable.accessToken = ""
+        self.stateObservable.isAnnounceShow = false
+        OneSignal.setExternalUserId("")
 	}
 
 	func qrData() -> [PaymentMethodData] {
@@ -278,7 +281,6 @@ final class PaymentMethodsViewModel: ObservableObject {
 	
 	func routeToInvoice(id: String) {
 		let viewModel = DetailPaymentViewModel(
-			backToRoot: self.backToRoot,
 			backToHome: self.backToHome,
 			backToChoosePayment: {self.route = nil},
 			bookingId: id,
@@ -326,7 +328,14 @@ final class PaymentMethodsViewModel: ObservableObject {
           self?.alert.message = LocalizableText.alertSessionExpired
           self?.alert.primaryButton = .init(
             text: LocalizableText.okText,
-            action: { self?.backToRoot() }
+            action: {
+                NavigationUtil.popToRootView()
+                self?.stateObservable.userType = 0
+                self?.stateObservable.isVerified = ""
+                self?.stateObservable.refreshToken = ""
+                self?.stateObservable.accessToken = ""
+                self?.stateObservable.isAnnounceShow = false
+                OneSignal.setExternalUserId("") }
           )
           self?.isShowAlert = true
 				} else {
@@ -411,7 +420,6 @@ final class PaymentMethodsViewModel: ObservableObject {
     func routeToSuccess(id: String) {
         let viewModel = InvoicesBookingViewModel(
             bookingId: id,
-            backToRoot: self.backToRoot,
             backToHome: self.backToHome,
             backToChoosePayment: { self.route = nil })
         

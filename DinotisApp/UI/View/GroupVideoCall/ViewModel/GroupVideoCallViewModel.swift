@@ -65,8 +65,6 @@ enum ErrorAlert {
 
 final class GroupVideoCallViewModel: ObservableObject {
     private var timer: Timer?
-    
-    var backToRoot: () -> Void
     var backToHome: () -> Void
     
     private let meetRepository: MeetingsRepository
@@ -81,6 +79,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     
     @Published var meeting = DyteiOSClientBuilder().build()
     @Published var localUserId = ""
+    @Published var isLastPage = false
     
     var meetingInfo = DyteMeetingInfoV2(
         authToken: "",
@@ -122,7 +121,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var isShowQuestionBox = false
     @Published var isShowSessionInfo = false
     
-    @Published var index = 1
+    @Published var index = 0
     
     @Published var messageText = ""
     @Published var questionText = ""
@@ -172,7 +171,6 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var isLeaving = false
     
     init(
-        backToRoot: @escaping () -> Void,
         backToHome: @escaping () -> Void,
         meetRepository: MeetingsRepository = MeetingsDefaultRepository(),
         userMeeting: UserMeetingData,
@@ -182,7 +180,6 @@ final class GroupVideoCallViewModel: ObservableObject {
         sendQuestionUseCase: SendQuestionUseCase = SendQuestionDefaultUseCase()
     ) {
         self.backToHome = backToHome
-        self.backToRoot = backToRoot
         self.meetRepository = meetRepository
         self.userMeeting = userMeeting
         self.futureDate = userMeeting.endAt.orCurrentDate()
@@ -502,7 +499,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     }
     
     func routeToAfterCall() {
-        let viewModel = AfterCallViewModel(backToRoot: self.backToRoot, backToHome: self.backToHome)
+        let viewModel = AfterCallViewModel(backToHome: self.backToHome)
         
         DispatchQueue.main.async {[weak self] in
             self?.route = .afterCall(viewModel: viewModel)

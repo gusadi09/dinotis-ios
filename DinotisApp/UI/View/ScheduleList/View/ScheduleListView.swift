@@ -895,6 +895,6 @@ private extension ScheduleListView {
 
 struct ScheduleListView_Previews: PreviewProvider {
 	static var previews: some View {
-        ScheduleListView(viewModel: ScheduleListViewModel(backToRoot: {}, backToHome: {}, currentUserId: ""), mainTabSelection: .constant(.agenda))
+        ScheduleListView(viewModel: ScheduleListViewModel(backToHome: {}, currentUserId: ""), mainTabSelection: .constant(.agenda))
 	}
 }

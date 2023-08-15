@@ -20,7 +20,6 @@ final class ScheculedFormViewModel: ObservableObject {
 	private var cancellables = Set<AnyCancellable>()
     private let userUseCase: GetUserUseCase
 	
-	var backToRoot: () -> Void
 	var backToHome: () -> Void
 
 	@Published var colorTab = Color.clear
@@ -40,13 +39,11 @@ final class ScheculedFormViewModel: ObservableObject {
 	@Published private var scrollViewContentOffset = CGFloat(0)
 	
 	init(
-		backToRoot: @escaping (() -> Void),
 		backToHome: @escaping (() -> Void),
 		meetingRepository: MeetingsRepository = MeetingsDefaultRepository(),
 		authRepository: AuthenticationRepository = AuthenticationDefaultRepository(),
         userUseCase: GetUserUseCase = GetUserDefaultUseCase()
 	) {
-		self.backToRoot = backToRoot
 		self.backToHome = backToHome
 		self.meetingRepository = meetingRepository
 		self.authRepository = authRepository
@@ -54,13 +51,13 @@ final class ScheculedFormViewModel: ObservableObject {
 	}
 
 	func routeToRoot() {
-		backToRoot()
-		stateObservable.userType = 0
-		stateObservable.isVerified = ""
-		stateObservable.refreshToken = ""
-		stateObservable.accessToken = ""
-		stateObservable.isAnnounceShow = false
-		OneSignal.setExternalUserId("")
+        NavigationUtil.popToRootView()
+        self.stateObservable.userType = 0
+        self.stateObservable.isVerified = ""
+        self.stateObservable.refreshToken = ""
+        self.stateObservable.accessToken = ""
+        self.stateObservable.isAnnounceShow = false
+        OneSignal.setExternalUserId("")
 	}
     
     func handleDefaultError(error: Error) {

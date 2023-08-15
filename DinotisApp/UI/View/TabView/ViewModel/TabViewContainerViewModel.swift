@@ -10,8 +10,6 @@ import DinotisDesignSystem
 import DinotisData
 
 final class TabViewContainerViewModel: ObservableObject {
-
-	var backToRoot: () -> Void
     
     private let counterUseCase: GetCounterUseCase
 
@@ -33,14 +31,12 @@ final class TabViewContainerViewModel: ObservableObject {
         profileVM: ProfileViewModel,
         searchVM: SearchTalentViewModel,
         scheduleVM: ScheduleListViewModel,
-        backToRoot: @escaping () -> Void,
         counterUseCase: GetCounterUseCase = GetCounterDefaultUseCase()
     ) {
         self.isFromUserType = isFromUserType
 		self.userHomeVM = userHomeVM
 		self.profileVM = profileVM
 		self.searchVM = searchVM
-		self.backToRoot = backToRoot
         self.scheduleVM = scheduleVM
         self.counterUseCase = counterUseCase
 	}
@@ -60,7 +56,6 @@ final class TabViewContainerViewModel: ObservableObject {
     
     func routeToInvoice(id: String) {
         let viewModel = DetailPaymentViewModel(
-            backToRoot: self.backToRoot,
             backToHome: {self.route = nil},
             backToChoosePayment: {self.route = nil},
             bookingId: id,
@@ -75,7 +70,7 @@ final class TabViewContainerViewModel: ObservableObject {
     }
     
     func routeToTalentDetail(username: String) {
-        let viewModel = TalentProfileDetailViewModel(backToRoot: self.backToRoot, backToHome: { self.route = nil }, username: username)
+        let viewModel = TalentProfileDetailViewModel(backToHome: { self.route = nil }, username: username)
 
         DispatchQueue.main.async { [weak self] in
             self?.route = .talentProfileDetail(viewModel: viewModel)
@@ -83,7 +78,7 @@ final class TabViewContainerViewModel: ObservableObject {
     }
     
     func routeToScheduleDetail() {
-        let viewModel = ScheduleDetailViewModel(isActiveBooking: true, bookingId: state.bookId, backToRoot: self.backToRoot, backToHome: { self.route = nil }, isDirectToHome: true)
+        let viewModel = ScheduleDetailViewModel(isActiveBooking: true, bookingId: state.bookId, backToHome: { self.route = nil }, isDirectToHome: true)
 
         DispatchQueue.main.async { [weak self] in
             self?.route = .userScheduleDetail(viewModel: viewModel)
@@ -91,7 +86,7 @@ final class TabViewContainerViewModel: ObservableObject {
     }
     
     func routeToInvoiceBooking(id: String) {
-        let viewModel = InvoicesBookingViewModel(bookingId: id, backToRoot: self.backToRoot, backToHome: {self.route = nil}, backToChoosePayment: {self.route = nil})
+        let viewModel = InvoicesBookingViewModel(bookingId: id, backToHome: {self.route = nil}, backToChoosePayment: {self.route = nil})
         
         DispatchQueue.main.async {[weak self] in
             self?.route = .bookingInvoice(viewModel: viewModel)

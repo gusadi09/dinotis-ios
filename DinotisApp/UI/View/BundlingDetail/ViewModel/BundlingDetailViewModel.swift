@@ -11,6 +11,7 @@ import UIKit
 import DinotisData
 import StoreKit
 import DinotisDesignSystem
+import OneSignal
 
 final class BundlingDetailViewModel: NSObject, ObservableObject, SKProductsRequestDelegate, SKPaymentTransactionObserver {
 
@@ -28,7 +29,6 @@ final class BundlingDetailViewModel: NSObject, ObservableObject, SKProductsReque
 	private var stateObservable = StateObservable.shared
 	private var onValueChanged: ((_ refreshControl: UIRefreshControl) -> Void)?
     
-    var backToRoot: () -> Void
     var backToHome: () -> Void
     
     @Published var route: HomeRouting?
@@ -120,7 +120,6 @@ final class BundlingDetailViewModel: NSObject, ObservableObject, SKProductsReque
 		bundleId: String,
 		profileDetailBundle: [Meeting] = [],
         meetingIdArray: [String],
-        backToRoot: @escaping (() -> Void),
         backToHome: @escaping (() -> Void),
         isTalent: Bool,
 		isActive: Bool
@@ -130,7 +129,6 @@ final class BundlingDetailViewModel: NSObject, ObservableObject, SKProductsReque
 		self.authRepository = authRepository
 		self.bundleId = bundleId
         self.meetingIdArray = meetingIdArray
-        self.backToRoot = backToRoot
         self.backToHome = backToHome
         self.isTalent = isTalent
 		self.talentName = talentName
@@ -158,7 +156,15 @@ final class BundlingDetailViewModel: NSObject, ObservableObject, SKProductsReque
                   self?.alert.message = LocalizableText.alertSessionExpired
                   self?.alert.primaryButton = .init(
                     text: LocalizableText.okText,
-                    action: { self?.backToRoot() }
+                    action: {
+                        NavigationUtil.popToRootView()
+                        self?.stateObservable.userType = 0
+                        self?.stateObservable.isVerified = ""
+                        self?.stateObservable.refreshToken = ""
+                        self?.stateObservable.accessToken = ""
+                        self?.stateObservable.isAnnounceShow = false
+                        OneSignal.setExternalUserId("")
+                    }
                   )
                   self?.isShowAlert = true
                 } else {
@@ -236,7 +242,15 @@ final class BundlingDetailViewModel: NSObject, ObservableObject, SKProductsReque
           self?.alert.message = LocalizableText.alertSessionExpired
           self?.alert.primaryButton = .init(
             text: LocalizableText.okText,
-            action: { self?.backToRoot() }
+            action: {
+                NavigationUtil.popToRootView()
+                self?.stateObservable.userType = 0
+                self?.stateObservable.isVerified = ""
+                self?.stateObservable.refreshToken = ""
+                self?.stateObservable.accessToken = ""
+                self?.stateObservable.isAnnounceShow = false
+                OneSignal.setExternalUserId("")
+            }
           )
           self?.isShowAlert = true
 				} else {
@@ -321,7 +335,15 @@ final class BundlingDetailViewModel: NSObject, ObservableObject, SKProductsReque
           self?.alert.message = LocalizableText.alertSessionExpired
           self?.alert.primaryButton = .init(
             text: LocalizableText.okText,
-            action: { self?.backToRoot() }
+            action: {
+                NavigationUtil.popToRootView()
+                self?.stateObservable.userType = 0
+                self?.stateObservable.isVerified = ""
+                self?.stateObservable.refreshToken = ""
+                self?.stateObservable.accessToken = ""
+                self?.stateObservable.isAnnounceShow = false
+                OneSignal.setExternalUserId("")
+            }
           )
           self?.isShowAlert = true
 				} else {
@@ -600,7 +622,7 @@ final class BundlingDetailViewModel: NSObject, ObservableObject, SKProductsReque
 	}
     
     func routeToTalentDetailSchedule() {
-        let viewModel = ScheduleDetailViewModel(isActiveBooking: true, bookingId: meetingId, backToRoot: self.backToRoot, backToHome: self.backToHome, isDirectToHome: false)
+        let viewModel = ScheduleDetailViewModel(isActiveBooking: true, bookingId: meetingId, backToHome: self.backToHome, isDirectToHome: false)
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .talentScheduleDetail(viewModel: viewModel)
@@ -608,7 +630,7 @@ final class BundlingDetailViewModel: NSObject, ObservableObject, SKProductsReque
     }
 
 	func routeToUserScheduleDetail() {
-        let viewModel = ScheduleDetailViewModel(isActiveBooking: true, bookingId: meetingId, backToRoot: self.backToRoot, backToHome: self.backToHome, isDirectToHome: false)
+        let viewModel = ScheduleDetailViewModel(isActiveBooking: true, bookingId: meetingId, backToHome: self.backToHome, isDirectToHome: false)
 
 		DispatchQueue.main.async { [weak self] in
 			self?.route = .userScheduleDetail(viewModel: viewModel)
@@ -616,7 +638,7 @@ final class BundlingDetailViewModel: NSObject, ObservableObject, SKProductsReque
 	}
 
 	func routeToEditSchedule() {
-		let viewModel = EditTalentMeetingViewModel(meetingID: meetingId, backToRoot: self.backToRoot, backToHome: self.backToHome)
+		let viewModel = EditTalentMeetingViewModel(meetingID: meetingId, backToHome: self.backToHome)
 
 		DispatchQueue.main.async {[weak self] in
 			self?.route = .editScheduleMeeting(viewModel: viewModel)
@@ -654,7 +676,14 @@ final class BundlingDetailViewModel: NSObject, ObservableObject, SKProductsReque
           self?.alert.message = LocalizableText.alertSessionExpired
           self?.alert.primaryButton = .init(
             text: LocalizableText.okText,
-            action: { self?.backToRoot() }
+            action: {
+                NavigationUtil.popToRootView()
+                self?.stateObservable.userType = 0
+                self?.stateObservable.isVerified = ""
+                self?.stateObservable.refreshToken = ""
+                self?.stateObservable.accessToken = ""
+                self?.stateObservable.isAnnounceShow = false
+                OneSignal.setExternalUserId("")}
           )
           self?.isShowAlert = true
 				} else {
@@ -774,7 +803,14 @@ final class BundlingDetailViewModel: NSObject, ObservableObject, SKProductsReque
           self?.alert.message = LocalizableText.alertSessionExpired
           self?.alert.primaryButton = .init(
             text: LocalizableText.okText,
-            action: { self?.backToRoot() }
+            action: {
+                NavigationUtil.popToRootView()
+                self?.stateObservable.userType = 0
+                self?.stateObservable.isVerified = ""
+                self?.stateObservable.refreshToken = ""
+                self?.stateObservable.accessToken = ""
+                self?.stateObservable.isAnnounceShow = false
+                OneSignal.setExternalUserId("") }
           )
           self?.isShowAlert = true
 				} else {

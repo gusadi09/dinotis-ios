@@ -11,6 +11,7 @@ import SwiftUI
 import DinotisDesignSystem
 import Combine
 import DinotisData
+import OneSignal
 
 final class FollowedCreatorViewModel: ObservableObject {
 
@@ -19,7 +20,6 @@ final class FollowedCreatorViewModel: ObservableObject {
 	private var onValueChanged: ((_ refreshControl: UIRefreshControl) -> Void)?
 	private var cancellables = Set<AnyCancellable>()
 
-	var backToRoot: () -> Void
 	var backToHome: () -> Void
 
 	@Published var isLoading = false
@@ -40,11 +40,9 @@ final class FollowedCreatorViewModel: ObservableObject {
 
 	init(
 		followedCreatorUseCase: FollowedCreatorUseCase = FollowedCreatorDefaultUseCase(),
-		backToRoot: @escaping (() -> Void),
 		backToHome: @escaping () -> Void
 	) {
 		self.followedCreatorUseCase = followedCreatorUseCase
-		self.backToRoot = backToRoot
 		self.backToHome = backToHome
 	}
 
@@ -102,7 +100,13 @@ final class FollowedCreatorViewModel: ObservableObject {
           self?.alert.primaryButton = .init(
             text: LocalizableText.okText,
             action: {
-              self?.backToRoot()
+                NavigationUtil.popToRootView()
+                self?.stateObservable.userType = 0
+                self?.stateObservable.isVerified = ""
+                self?.stateObservable.refreshToken = ""
+                self?.stateObservable.accessToken = ""
+                self?.stateObservable.isAnnounceShow = false
+                OneSignal.setExternalUserId("")
             }
           )
           self?.isShowAlert = true
@@ -170,11 +174,13 @@ final class FollowedCreatorViewModel: ObservableObject {
 	}
 
 	func routeToRoot() {
-		stateObservable.userType = 0
-		stateObservable.isVerified = ""
-		stateObservable.refreshToken = ""
-		stateObservable.accessToken = ""
-		backToRoot()
+        NavigationUtil.popToRootView()
+        self.stateObservable.userType = 0
+        self.stateObservable.isVerified = ""
+        self.stateObservable.refreshToken = ""
+        self.stateObservable.accessToken = ""
+        self.stateObservable.isAnnounceShow = false
+        OneSignal.setExternalUserId("")
 	}
 
 	func onRefresh() async {
@@ -182,7 +188,7 @@ final class FollowedCreatorViewModel: ObservableObject {
 	}
 
 	func routeToTalentDetail(username: String) {
-		let viewModel = TalentProfileDetailViewModel(backToRoot: self.backToRoot, backToHome: self.backToHome, username: username)
+		let viewModel = TalentProfileDetailViewModel(backToHome: self.backToHome, username: username)
 
 		DispatchQueue.main.async { [weak self] in
 			self?.route = .talentProfileDetail(viewModel: viewModel)

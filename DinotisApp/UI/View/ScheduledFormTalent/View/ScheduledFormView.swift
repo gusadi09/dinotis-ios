@@ -196,6 +196,6 @@ struct ScheduledFormView: View {
 
 struct ScheduledFormView_Previews: PreviewProvider {
 	static var previews: some View {
-		ScheduledFormView(viewModel: ScheculedFormViewModel(backToRoot: {}, backToHome: {}))
+		ScheduledFormView(viewModel: ScheculedFormViewModel(backToHome: {}))
 	}
 }

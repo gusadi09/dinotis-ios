@@ -18,7 +18,6 @@ final class BundlingFormViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private var stateObservable = StateObservable.shared
     
-    var backToRoot: () -> Void
     var backToHome: () -> Void
     var backToBundlingList: () -> Void
     
@@ -50,7 +49,6 @@ final class BundlingFormViewModel: ObservableObject {
 		bundleId: String = "",
         meetingIdArray: [String],
 		isEdit: Bool,
-        backToRoot: @escaping (() -> Void),
         backToHome: @escaping (() -> Void),
         backToBundlingList: @escaping (() -> Void),
         bundlingRepository: BundlingRepository = BundlingDefaultRepository(),
@@ -59,7 +57,6 @@ final class BundlingFormViewModel: ObservableObject {
 		self.bundleId = bundleId
         self.meetingIdArray = meetingIdArray
 		self.isEdit = isEdit
-        self.backToRoot = backToRoot
         self.backToHome = backToHome
         self.backToBundlingList = backToBundlingList
         self.bundlingRepository = bundlingRepository
@@ -183,7 +180,7 @@ final class BundlingFormViewModel: ObservableObject {
 	}
     
     func routeToBundlingDetail() {
-		let viewModel = BundlingDetailViewModel(bundleId: "", meetingIdArray: self.meetingIdArray, backToRoot: self.backToRoot, backToHome: self.backToHome, isTalent: true, isActive: false)
+		let viewModel = BundlingDetailViewModel(bundleId: "", meetingIdArray: self.meetingIdArray, backToHome: self.backToHome, isTalent: true, isActive: false)
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .bundlingDetail(viewModel: viewModel)
@@ -244,7 +241,7 @@ final class BundlingFormViewModel: ObservableObject {
 	}
 
 	func routeToCreateBundling() {
-		let viewModel = TalentCreateBundlingViewModel(bundleId: self.bundleId, isEdit: true, backToRoot: self.backToRoot, backToHome: self.backToHome, backToBundlingList: {})
+		let viewModel = TalentCreateBundlingViewModel(bundleId: self.bundleId, isEdit: true, backToHome: self.backToHome, backToBundlingList: {})
 
 		DispatchQueue.main.async { [weak self] in
 			self?.route = .createBundling(viewModel: viewModel)

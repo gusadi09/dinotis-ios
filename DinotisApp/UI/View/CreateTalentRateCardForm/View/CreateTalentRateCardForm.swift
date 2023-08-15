@@ -287,6 +287,6 @@ extension CreateTalentRateCardForm {
 
 struct CreateTalentRateCardForm_Previews: PreviewProvider {
     static var previews: some View {
-		CreateTalentRateCardForm(viewModel: CreateTalentRateCardFormViewModel(isEdit: false, rateCardId: "", backToRoot: {}, backToHome: {}))
+		CreateTalentRateCardForm(viewModel: CreateTalentRateCardFormViewModel(isEdit: false, rateCardId: "", backToHome: {}))
     }
 }

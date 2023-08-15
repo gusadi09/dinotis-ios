@@ -147,6 +147,6 @@ struct FollowedCreatorView: View {
 
 struct FollowedCreatorView_Previews: PreviewProvider {
 	static var previews: some View {
-        FollowedCreatorView(viewModel: FollowedCreatorViewModel(backToRoot: {}, backToHome: {}), tabValue: .constant(.agenda))
+        FollowedCreatorView(viewModel: FollowedCreatorViewModel(backToHome: {}), tabValue: .constant(.agenda))
 	}
 }

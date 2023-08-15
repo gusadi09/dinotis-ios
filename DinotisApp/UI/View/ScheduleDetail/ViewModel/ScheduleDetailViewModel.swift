@@ -76,7 +76,6 @@ final class ScheduleDetailViewModel: ObservableObject {
     @Published var isTextComplete = false
     @Published var attachmentURL = ""
     
-    var backToRoot: () -> Void
     var backToHome: () -> Void
     
     @Published var route: HomeRouting?
@@ -105,7 +104,6 @@ final class ScheduleDetailViewModel: ObservableObject {
 		confirmationUseCase: RequestConfirmationUseCase = RequestConfirmationDefaultUseCase(),
 		conversationTokenUseCase: ConversationTokenUseCase = ConversationTokenDefaultUseCase(),
         bookingId: String,
-        backToRoot: @escaping (() -> Void),
         backToHome: @escaping (() -> Void),
         talentName: String = "",
         talentPhoto: String = "",
@@ -117,7 +115,6 @@ final class ScheduleDetailViewModel: ObservableObject {
         self.getUserUseCase = getUserUseCase
         self.authRepo = authRepo
         self.bookingId = bookingId
-        self.backToRoot = backToRoot
         self.backToHome = backToHome
 		self.confirmationUseCase = confirmationUseCase
 		self.conversationTokenUseCase = conversationTokenUseCase
@@ -407,7 +404,7 @@ final class ScheduleDetailViewModel: ObservableObject {
     }
     
     func routeToVideoCall(meeting: UserMeetingData) {
-        let viewModel = PrivateVideoCallViewModel(meeting: meeting, backToRoot: self.backToRoot, backToHome: self.backToHome)
+        let viewModel = PrivateVideoCallViewModel(meeting: meeting, backToHome: self.backToHome)
         
         DispatchQueue.main.async {[weak self] in
             self?.route = .videoCall(viewModel: viewModel)
@@ -415,7 +412,7 @@ final class ScheduleDetailViewModel: ObservableObject {
     }
 
 	func routeToEditSchedule() {
-		let viewModel = EditTalentMeetingViewModel(meetingID: bookingId, backToRoot: self.backToRoot, backToHome: self.backToHome)
+		let viewModel = EditTalentMeetingViewModel(meetingID: bookingId, backToHome: self.backToHome)
 
 		DispatchQueue.main.async {[weak self] in
 			self?.route = .editScheduleMeeting(viewModel: viewModel)
@@ -423,7 +420,7 @@ final class ScheduleDetailViewModel: ObservableObject {
 	}
     
     func routeToEditRateCardSchedule() {
-        let viewModel = TalentEditRateCardScheduleViewModel(meetingID: bookingId, backToRoot: self.backToRoot, backToHome: self.backToHome)
+        let viewModel = TalentEditRateCardScheduleViewModel(meetingID: bookingId, backToHome: self.backToHome)
 
         DispatchQueue.main.async {[weak self] in
             self?.route = .editRateCardSchedule(viewModel: viewModel)
@@ -431,7 +428,7 @@ final class ScheduleDetailViewModel: ObservableObject {
     }
     
     func routeToScheduleNegotiationChat() {
-		let viewModel = ScheduleNegotiationChatViewModel(token: tokenConversation, expireDate: expiredData, backToRoot: self.backToRoot, backToHome: {self.route = nil})
+		let viewModel = ScheduleNegotiationChatViewModel(token: tokenConversation, expireDate: expiredData, backToHome: {self.route = nil})
         
         DispatchQueue.main.async {[weak self] in
             self?.route = .scheduleNegotiationChat(viewModel: viewModel)
@@ -440,7 +437,6 @@ final class ScheduleDetailViewModel: ObservableObject {
     
     func routeToGroupCall(meeting: UserMeetingData) {
         let viewModel = GroupVideoCallViewModel(
-            backToRoot: self.backToRoot,
             backToHome: self.backToHome,
             userMeeting: meeting
         )
@@ -452,7 +448,6 @@ final class ScheduleDetailViewModel: ObservableObject {
     
     func routeToTwilioLiveStream(meeting: UserMeetingData) {
         let viewModel = TwilioLiveStreamViewModel(
-            backToRoot: self.backToRoot,
             backToHome: self.backToHome,
             meeting: meeting
         )
@@ -464,7 +459,7 @@ final class ScheduleDetailViewModel: ObservableObject {
 
   
     func routeToTalentProfile(username: String?) {
-        let viewModel = TalentProfileDetailViewModel(backToRoot: self.backToRoot, backToHome: {self.route = nil}, username: username.orEmpty())
+        let viewModel = TalentProfileDetailViewModel(backToHome: {self.route = nil}, username: username.orEmpty())
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .talentProfileDetail(viewModel: viewModel)

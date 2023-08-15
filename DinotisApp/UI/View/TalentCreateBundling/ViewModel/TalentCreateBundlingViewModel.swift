@@ -12,7 +12,6 @@ import DinotisData
 
 final class TalentCreateBundlingViewModel: ObservableObject {
     
-    var backToRoot: () -> Void
     var backToHome: () -> Void
     var backToBundlingList: () -> Void
     
@@ -42,7 +41,6 @@ final class TalentCreateBundlingViewModel: ObservableObject {
     init(
 		bundleId: String = "",
 		isEdit: Bool,
-        backToRoot: @escaping (() -> Void),
         backToHome: @escaping (() -> Void),
         backToBundlingList: @escaping (() -> Void),
         bundlingRepository: BundlingRepository = BundlingDefaultRepository(),
@@ -50,7 +48,6 @@ final class TalentCreateBundlingViewModel: ObservableObject {
     ) {
 		self.bundleId = bundleId
 		self.isEdit = isEdit
-        self.backToRoot = backToRoot
         self.backToHome = backToHome
         self.backToBundlingList = backToBundlingList
         self.bundlingRepository = bundlingRepository
@@ -151,7 +148,7 @@ final class TalentCreateBundlingViewModel: ObservableObject {
     }
     
     func routeToBundlingForm() {
-		let viewModel = BundlingFormViewModel(meetingIdArray: self.meetingIdArray, isEdit: false, backToRoot: self.backToRoot, backToHome: self.backToHome, backToBundlingList: self.backToBundlingList)
+		let viewModel = BundlingFormViewModel(meetingIdArray: self.meetingIdArray, isEdit: false, backToHome: self.backToHome, backToBundlingList: self.backToBundlingList)
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .bundlingForm(viewModel: viewModel)

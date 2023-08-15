@@ -632,7 +632,6 @@ struct PrivateVideoCallView_Previews : PreviewProvider {
                     roomSid: nil,
                     dyteMeetingId: nil
 				),
-				backToRoot: {},
 				backToHome: {}
 			)
 		)

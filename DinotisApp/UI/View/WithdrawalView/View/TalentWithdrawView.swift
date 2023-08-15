@@ -452,6 +452,6 @@ struct TalentWithdrawView: View {
 
 struct TalentWithdrawView_Previews: PreviewProvider {
 	static var previews: some View {
-		TalentWithdrawView(viewModel: TalentWithdrawalViewModel(backToRoot: {}, backToHome: {}))
+		TalentWithdrawView(viewModel: TalentWithdrawalViewModel(backToHome: {}))
 	}
 }
