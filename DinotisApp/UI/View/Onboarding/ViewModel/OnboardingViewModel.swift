@@ -15,6 +15,13 @@ final class OnboardingViewModel: ObservableObject {
     @Published var selectedContent = 0
     
     @Published var route: PrimaryRouting?
+    private let repository: AuthenticationRepository
+    
+    init(
+        repository: AuthenticationRepository = AuthenticationDefaultRepository()
+    ) {
+        self.repository = repository
+    }
     
     func routeToUserType() {
         DispatchQueue.main.async { [weak self] in
@@ -23,8 +30,49 @@ final class OnboardingViewModel: ObservableObject {
     }
     
     func checkingSession() {
-        if !stateObservable.accessToken.isEmpty {
-            routeToUserType()
+        Task {
+            if !stateObservable.accessToken.isEmpty {
+                await loginSessionChecking()
+            }
+        }
+    }
+    
+    func loginSessionChecking() async {
+        let isTokenEmpty = await repository.loadFromKeychain(forKey: KeychainKey.accessToken).isEmpty
+        
+        if !isTokenEmpty &&
+                ((stateObservable.isVerified == "Verified") &&
+                 stateObservable.userType != 0) {
+            if stateObservable.userType == 2 {
+                let homeViewModel = TalentHomeViewModel(isFromUserType: true)
+                
+                DispatchQueue.main.async { [weak self] in
+                    self?.route = .homeTalent(viewModel: homeViewModel)
+                }
+                
+            } else if stateObservable.userType == 3 {
+                let vm = TabViewContainerViewModel(
+                    isFromUserType: true,
+                    userHomeVM: UserHomeViewModel(),
+                    profileVM: ProfileViewModel(backToHome: {}),
+                    searchVM: SearchTalentViewModel(backToHome: {}),
+                    scheduleVM: ScheduleListViewModel(backToHome: {}, currentUserId: "")
+                )
+                
+                DispatchQueue.main.async { [weak self] in
+                    self?.route = .tabContainer(viewModel: vm)
+                }
+                
+            }
+            
+        } else if !isTokenEmpty &&
+                    ((stateObservable.isVerified == "VerifiedNoName") &&
+                     stateObservable.userType != 0) {
+            let viewModel = BiodataViewModel()
+
+            DispatchQueue.main.async { [weak self] in
+                self?.route = .biodataUser(viewModel: viewModel)
+            }
         }
     }
 }
