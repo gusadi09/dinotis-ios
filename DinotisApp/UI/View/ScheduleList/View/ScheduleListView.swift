@@ -11,7 +11,7 @@ import SwiftUINavigation
 
 struct ScheduleListView: View {
 	
-	@ObservedObject var viewModel: ScheduleListViewModel
+	@EnvironmentObject var viewModel: ScheduleListViewModel
 	
 	@Environment(\.presentationMode) var presentationMode
     
@@ -178,11 +178,7 @@ struct ScheduleListView: View {
             )
 		}
 		.onAppear {
-			Task {
-                await viewModel.getCounter()
-				await viewModel.getTodayAgendaList()
-				await viewModel.getBookingsList(isMore: false)
-			}
+            viewModel.onAppear()
 		}
         .onDisappear {
             viewModel.onDisappear()
@@ -895,6 +891,7 @@ private extension ScheduleListView {
 
 struct ScheduleListView_Previews: PreviewProvider {
 	static var previews: some View {
-        ScheduleListView(viewModel: ScheduleListViewModel(backToHome: {}, currentUserId: ""), mainTabSelection: .constant(.agenda))
+        ScheduleListView(mainTabSelection: .constant(.agenda))
+            .environmentObject(ScheduleListViewModel(backToHome: {}, currentUserId: ""))
 	}
 }

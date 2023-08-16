@@ -16,7 +16,7 @@ import StoreKit
 
 struct UserProfileView: View {
 
-	@ObservedObject var viewModel: ProfileViewModel
+	@EnvironmentObject var viewModel: ProfileViewModel
 
 	@Environment(\.presentationMode) var presentationMode
 
@@ -400,8 +400,9 @@ struct UserProfileView: View {
         )
         .onAppear(perform: {
             Task {
-                await viewModel.getUsers()
                 viewModel.getProductOnAppear()
+                guard viewModel.data == nil else { return }
+                await viewModel.getUsers()
             }
         })
 		.onDisappear {
@@ -1001,6 +1002,7 @@ struct UserProfileView: View {
 
 struct UserProfilePage_Previews: PreviewProvider {
 	static var previews: some View {
-        UserProfileView(viewModel: ProfileViewModel(backToHome: {}), tabValue: .constant(.agenda))
+        UserProfileView(tabValue: .constant(.agenda))
+            .environmentObject(ProfileViewModel(backToHome: {}))
 	}
 }

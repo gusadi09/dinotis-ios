@@ -189,7 +189,8 @@ struct LoginViewUser: View {
 								unwrapping: $loginVM.route,
 								case: /PrimaryRouting.tabContainer
 							) { viewModel in
-								TabViewContainer(viewModel: viewModel.wrappedValue)
+								TabViewContainer()
+                                    .environmentObject(viewModel.wrappedValue)
 							} onNavigate: { _ in } label: {
 								EmptyView()
 							}
@@ -198,7 +199,8 @@ struct LoginViewUser: View {
 								unwrapping: $loginVM.route,
 								case: /PrimaryRouting.homeTalent
 							) { viewModel in
-								TalentHomeView(homeVM: viewModel.wrappedValue)
+								TalentHomeView()
+                                    .environmentObject(viewModel.wrappedValue)
 							} onNavigate: { _ in } label: {
 								EmptyView()
 							}

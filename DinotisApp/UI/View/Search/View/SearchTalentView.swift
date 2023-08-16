@@ -15,7 +15,7 @@ import Shimmer
 
 struct SearchTalentView: View {
 	
-	@ObservedObject var viewModel: SearchTalentViewModel
+	@EnvironmentObject var viewModel: SearchTalentViewModel
     @Binding var tabValue: TabRoute
 	
 	var body: some View {
@@ -1450,6 +1450,6 @@ private extension SearchTalentView {
 
 struct SearchTalentView_Previews: PreviewProvider {
 	static var previews: some View {
-        SearchTalentView(viewModel: SearchTalentViewModel(backToHome: {}), tabValue: .constant(.agenda))
+        SearchTalentView(tabValue: .constant(.agenda))
 	}
 }

@@ -631,7 +631,8 @@ struct PrivateVideoCallView_Previews : PreviewProvider {
                     meetingUploads: nil,
                     roomSid: nil,
                     dyteMeetingId: nil,
-                    isInspected: nil
+                    isInspected: nil,
+                    reviews: []
 				),
 				backToHome: {}
 			)

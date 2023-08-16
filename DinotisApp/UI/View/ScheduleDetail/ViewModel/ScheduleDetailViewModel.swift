@@ -9,6 +9,20 @@ import Foundation
 import Combine
 import SwiftUI
 import DinotisData
+import DinotisDesignSystem
+
+enum ScheduleDetailTooltip {
+    case review
+}
+
+extension ScheduleDetailTooltip {
+    var value: String {
+        switch self {
+        case .review:
+            return "review"
+        }
+    }
+}
 
 final class ScheduleDetailViewModel: ObservableObject {
 
@@ -18,10 +32,12 @@ final class ScheduleDetailViewModel: ObservableObject {
     private let authRepo: AuthenticationRepository
 	private let confirmationUseCase: RequestConfirmationUseCase
 	private let conversationTokenUseCase: ConversationTokenUseCase
+    private let giveReviewUseCase: GiveReviewUseCase
     private let stateObservable = StateObservable.shared
     private var cancellables = Set<AnyCancellable>()
 	private let isActiveBooking: Bool
 
+    @Published var currentTooltip: ScheduleDetailTooltip?
 	@Published var confirmationSheet = false
 
     @Published var goToEdit = false
@@ -56,6 +72,7 @@ final class ScheduleDetailViewModel: ObservableObject {
 	@Published var isLoadingStart = false
 
     @Published var isLoading = false
+    @Published var isLoadingReview = false
     @Published var isError = false
     @Published var success = false
     @Published var error: String?
@@ -75,6 +92,11 @@ final class ScheduleDetailViewModel: ObservableObject {
     @Published var isShowWebView = false
     @Published var isTextComplete = false
     @Published var attachmentURL = ""
+    
+    @Published var showAlreadyReview = false
+    @Published var showReviewSheet = false
+    @Published var reviewRating = 0
+    @Published var reviewMessage = ""
     
     var backToHome: () -> Void
     
@@ -103,6 +125,7 @@ final class ScheduleDetailViewModel: ObservableObject {
         authRepo: AuthenticationRepository = AuthenticationDefaultRepository(),
 		confirmationUseCase: RequestConfirmationUseCase = RequestConfirmationDefaultUseCase(),
 		conversationTokenUseCase: ConversationTokenUseCase = ConversationTokenDefaultUseCase(),
+        giveReviewUseCase: GiveReviewUseCase = GiveReviewDefaultUseCase(),
         bookingId: String,
         backToHome: @escaping (() -> Void),
         talentName: String = "",
@@ -121,6 +144,60 @@ final class ScheduleDetailViewModel: ObservableObject {
         self.talentName = talentName
         self.talentPhoto = talentPhoto
         self.isDirectToHome = isDirectToHome
+        self.giveReviewUseCase = giveReviewUseCase
+    }
+    
+    func onStartRequestReview() {
+        DispatchQueue.main.async {[weak self] in
+            withAnimation(.spring()) {
+                self?.isError = false
+                self?.isLoadingReview = true
+                self?.error = nil
+                self?.isRefreshFailed = false
+            }
+        }
+    }
+    
+    func giveReview() async {
+        onStartRequestReview()
+        
+        let body = ReviewRequestBody(rating: self.reviewRating, review: self.reviewMessage, meetingId: (self.dataBooking?.meeting?.id).orEmpty())
+        let result = await giveReviewUseCase.execute(with: body)
+        
+        switch result {
+        case .success(_):
+            DispatchQueue.main.async { [weak self] in
+                withAnimation(.spring()) {
+                    self?.isError = false
+                    self?.isLoadingReview = false
+                    self?.error = nil
+                    self?.showReviewSheet = false
+                }
+            }
+            
+            await getDetailBookingUser()
+            
+        case .failure(let failure):
+            if let failure = failure as? ErrorResponse {
+                DispatchQueue.main.async { [weak self] in
+                    withAnimation(.spring()) {
+                        self?.isError = true
+                        self?.isLoadingReview = false
+                        self?.error = failure.message.orEmpty()
+                        self?.showReviewSheet = false
+                    }
+                }
+            } else {
+                DispatchQueue.main.async { [weak self] in
+                    withAnimation(.spring()) {
+                        self?.isError = true
+                        self?.isLoadingReview = false
+                        self?.error = failure.localizedDescription
+                        self?.showReviewSheet = false
+                    }
+                }
+            }
+        }
     }
 
     func onAppearView() {
@@ -144,6 +221,22 @@ final class ScheduleDetailViewModel: ObservableObject {
     
     func disableStartButton() -> Bool {
         return (dataBooking?.meeting?.startAt).orCurrentDate().addingTimeInterval(-280) > Date()
+    }
+    
+    func reviewStars() -> Int {
+        guard let rating = self.dataBooking?.meeting?.reviews?.first(where: { item in
+            item.userId == user?.id
+        })?.rating else { return 0 }
+        
+        return rating
+    }
+    
+    func isShowRating() -> Bool {
+        (self.dataBooking?.status).orEmpty() == SessionStatus.notReviewed.rawValue || (self.dataBooking?.status).orEmpty() == SessionStatus.done.rawValue
+    }
+    
+    func isDone() -> Bool {
+        (self.dataBooking?.status).orEmpty() == SessionStatus.done.rawValue
     }
 
     func onStartFetchDetail() {
@@ -202,7 +295,7 @@ final class ScheduleDetailViewModel: ObservableObject {
 			DispatchQueue.main.async { [weak self] in
 				self?.successDetail = true
 				self?.isLoadingDetail = false
-
+                self?.currentTooltip = .review
 				self?.dataBooking = success
 				self?.expiredData = (success.meeting?.meetingRequest?.expiredAt).orCurrentDate()
 				self?.participantDetail = success.meeting?.participantDetails ?? []
@@ -398,7 +491,8 @@ final class ScheduleDetailViewModel: ObservableObject {
             meetingUploads: meet.meetingUploads,
             roomSid: meet.roomSid,
             dyteMeetingId: meet.dyteMeetingId,
-            isInspected: meet.isInspected
+            isInspected: meet.isInspected,
+            reviews: meet.reviews
         )
 
         return meet

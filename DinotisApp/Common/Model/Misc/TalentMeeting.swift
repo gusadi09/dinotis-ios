@@ -119,13 +119,14 @@ struct DetailMeeting: Codable {
     let roomSid: String?
     let dyteMeetingId: String?
     let isInspected: Bool?
+    let reviews: [ReviewSuccessResponse]?
 	
 	enum CodingKeys: String, CodingKey {
 		case id, title, roomSid, dyteMeetingId
 		case description = "description"
 		case price, startAt, endAt, isPrivate, slots, isLiveStreaming, participantDetails
 		case userID = "userId"
-		case startedAt, endedAt, createdAt, updatedAt, deletedAt, bookings, participants, meetingBundleId, meetingRequestId, meetingRequest, status, cancelOptions, user, meetingCollaborations, meetingUrls, meetingUploads, managementId, isCollaborationAlreadyConfirmed, maxEditAt, isInspected
+		case startedAt, endedAt, createdAt, updatedAt, deletedAt, bookings, participants, meetingBundleId, meetingRequestId, meetingRequest, status, cancelOptions, user, meetingCollaborations, meetingUrls, meetingUploads, managementId, isCollaborationAlreadyConfirmed, maxEditAt, isInspected, reviews
 	}
 }
 

@@ -31,7 +31,8 @@ struct UserBiodataView: View {
 				unwrapping: $viewModel.route,
 				case: /PrimaryRouting.homeTalent,
 				destination: { viewModel in
-					TalentHomeView(homeVM: viewModel.wrappedValue)
+					TalentHomeView()
+                        .environmentObject(viewModel.wrappedValue)
 				},
 				onNavigate: {_ in },
 				label: {
@@ -43,7 +44,8 @@ struct UserBiodataView: View {
                 unwrapping: $viewModel.route,
                 case: /PrimaryRouting.tabContainer,
                 destination: { viewModel in
-                    TabViewContainer(viewModel: viewModel.wrappedValue)
+                    TabViewContainer()
+                        .environmentObject(viewModel.wrappedValue)
                 },
                 onNavigate: {_ in },
                 label: {

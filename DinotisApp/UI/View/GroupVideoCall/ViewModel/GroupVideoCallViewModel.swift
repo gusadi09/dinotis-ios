@@ -158,7 +158,6 @@ final class GroupVideoCallViewModel: ObservableObject {
     ]
     
     @Published var participants = [DyteJoinedMeetingParticipant]()
-    @Published var localUser: DyteSelfParticipant? = nil
     @Published var screenShareUser = [DyteScreenShareMeetingParticipant]()
     @Published var screenShareId: DyteScreenShareMeetingParticipant?
     @Published var pinned: DyteJoinedMeetingParticipant?
@@ -499,10 +498,18 @@ final class GroupVideoCallViewModel: ObservableObject {
     }
     
     func routeToAfterCall() {
-        let viewModel = AfterCallViewModel(backToHome: self.backToHome)
-        
-        DispatchQueue.main.async {[weak self] in
-            self?.route = .afterCall(viewModel: viewModel)
+        if userMeeting.isInspected ?? true {
+            let viewModel = AfterCallViewModel(backToHome: self.backToHome)
+            
+            DispatchQueue.main.async {[weak self] in
+                self?.route = .afterCall(viewModel: viewModel)
+            }
+        } else {
+            let viewModel = FeedbackViewModel(meetingId: userMeeting.id.orEmpty(), backToHome: self.backToHome)
+            
+            DispatchQueue.main.async {[weak self] in
+                self?.route = .feedbackAfterCall(viewModel: viewModel)
+            }
         }
     }
     
@@ -638,7 +645,6 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     }
     
     func onMeetingInitCompleted() {
-        self.localUser = meeting.localUser
         if !meeting.localUser.permissions.media.canPublishAudio {
             joinMeeting()
         }
@@ -886,7 +892,7 @@ extension GroupVideoCallViewModel: DyteSelfEventsListener {
     }
     
     func onUpdate(participant_ participant: DyteSelfParticipant) {
-        self.localUser = self.meeting.localUser
+        
     }
     
     func onVideoUpdate(videoEnabled: Bool) {
@@ -967,7 +973,6 @@ extension GroupVideoCallViewModel: DyteStageEventListener {
     }
     
     func onAddedToStage() {
-        self.localUser = self.meeting.localUser
         self.isReceivedStageInvite = false
     }
     
@@ -984,9 +989,8 @@ extension GroupVideoCallViewModel: DyteStageEventListener {
     }
     
     func onPresentRequestReceived() {
-        self.localUser = self.meeting.localUser
-        self.localUser?.enableVideo()
-        self.localUser?.enableAudio()
+        self.meeting.localUser.enableVideo()
+        self.meeting.localUser.enableAudio()
         self.isReceivedStageInvite = true
     }
     
@@ -999,7 +1003,7 @@ extension GroupVideoCallViewModel: DyteStageEventListener {
     }
     
     func onRemovedFromStage() {
-        self.localUser = self.meeting.localUser
+        
     }
     
     func onStageRequestsUpdated(accessRequests: [DyteJoinedMeetingParticipant]) {

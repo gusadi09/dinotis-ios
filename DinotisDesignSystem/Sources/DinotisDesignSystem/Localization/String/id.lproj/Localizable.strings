@@ -471,3 +471,5 @@
 "feedback_weakness_title" = "Beritahu kami apa yang kurang";
 "feedback_problem_title" = "Ceritakan apa yang kamu alami";
 "feedback_success_title" = "Ulasanmu sangat berarti, terima kasih";
+
+"session_detail_rate_for_creator" = "Rating untuk Kreator";

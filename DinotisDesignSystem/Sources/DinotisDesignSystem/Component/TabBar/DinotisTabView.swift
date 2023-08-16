@@ -96,6 +96,9 @@ public struct DinotisTabView: ViewModifier {
 					.padding(.vertical, 10)
                     .overlay {
                         Capsule()
+                            .onTapGesture {
+                                isShowTooltip = false
+                            }
                             .foregroundColor(.black.opacity(0.5))
                             .isHidden(!isShowTooltip, remove: !isShowTooltip)
                     }
@@ -113,7 +116,7 @@ public struct DinotisTabView: ViewModifier {
         .overlayPreferenceValue(BoundsPreference.self, alignment: .top, { value in
             if let preference = value.first(where: { item in
                 item.key == TabBounce.agenda.rawValue
-            }) {
+            }), isShowTooltip {
                 GeometryReader { proxy in
                     let rect = proxy[preference.value]
                     

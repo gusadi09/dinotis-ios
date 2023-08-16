@@ -13,7 +13,7 @@ import SwiftUI
 
 struct UserHomeView: View {
     
-    @ObservedObject var homeVM: UserHomeViewModel
+    @EnvironmentObject var homeVM: UserHomeViewModel
     @ObservedObject var state = StateObservable.shared
     
     @Environment(\.viewController) private var viewControllerHolder: ViewControllerHolder
@@ -31,7 +31,8 @@ struct UserHomeView: View {
         GeometryReader { geo in
             ZStack {
                 
-                NavigationHelper(homeVM: homeVM, tabValue: $tabValue)
+                NavigationHelper(tabValue: $tabValue)
+                    .environmentObject(homeVM)
                 
                 ZStack(alignment: .center) {
                     
@@ -40,14 +41,16 @@ struct UserHomeView: View {
                     
                     VStack(spacing: 0) {
                         
-                        HeaderView(homeVM: homeVM)
+                        HeaderView()
+                            .environmentObject(homeVM)
                             .onChange(of: state.isGoToDetailSchedule) { value in
                                 if value {
                                     homeVM.routeToScheduleList()
                                 }
                             }
                         
-                        ScrolledContent(homeVM: homeVM, geo: geo)
+                        ScrolledContent(geo: geo)
+                            .environmentObject(homeVM)
                         
                     }
                     
@@ -75,11 +78,21 @@ struct UserHomeView: View {
                 .navigationBarTitle(Text(""))
                 .navigationBarHidden(true)
                 
-                if isShowTooltip {
+                if state.isShowTooltip {
                     Color.black.opacity(0.5)
-                        .ignoresSafeArea()
+                        .edgesIgnoringSafeArea(.all)
+                        .onTapGesture {
+                            withAnimation {
+                                state.isShowTooltip = false
+                                isShowTooltip = false
+                            }
+                            
+                        }
                 }
+                    
             }
+            .navigationBarTitle(Text(""))
+            .navigationBarHidden(true)
             .onAppear {
                 if homeVM.homeContent.isEmpty {
                     homeVM.onScreenAppear(geo: geo)
@@ -89,6 +102,7 @@ struct UserHomeView: View {
                 
                 if isFirstLaunch {
                     withAnimation {
+                        self.state.isShowTooltip = true
                         self.isShowTooltip = true
                         self.isFirstLaunch = false
                     }
@@ -100,6 +114,7 @@ struct UserHomeView: View {
 
 struct UserHomeView_Previews: PreviewProvider {
     static var previews: some View {
-        UserHomeView(homeVM: UserHomeViewModel(), tabValue: .constant(.agenda))
+        UserHomeView(tabValue: .constant(.agenda))
+            .environmentObject(UserHomeViewModel())
     }
 }

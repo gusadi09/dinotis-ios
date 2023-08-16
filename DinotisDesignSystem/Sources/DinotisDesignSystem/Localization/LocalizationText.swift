@@ -2154,6 +2154,11 @@ public enum LocalizableText {
         comment: "feedback success title"
     )
     
+    public static let sessionDetailrateForCreator = NSLocalizedString(
+        "session_detail_rate_for_creator",
+        bundle: .module,
+        comment: "rate for creator"
+    )
 }
 
 

@@ -16,7 +16,7 @@ extension UserHomeView {
 
 	struct NavigationHelper: View {
 
-		@ObservedObject var homeVM: UserHomeViewModel
+		@EnvironmentObject var homeVM: UserHomeViewModel
         
         @Binding var tabValue: TabRoute
 
@@ -49,7 +49,8 @@ extension UserHomeView {
 				unwrapping: $homeVM.route,
 				case: /HomeRouting.scheduleList,
 				destination: {viewModel in
-                    ScheduleListView(viewModel: viewModel.wrappedValue, mainTabSelection: .constant(.search))
+                    ScheduleListView(mainTabSelection: .constant(.search))
+                        .environmentObject(viewModel.wrappedValue)
 				},
 				onNavigate: {_ in},
 				label: {
@@ -61,7 +62,7 @@ extension UserHomeView {
 
 	struct HeaderView: View {
 
-		@ObservedObject var homeVM: UserHomeViewModel
+		@EnvironmentObject var homeVM: UserHomeViewModel
 
 		var body: some View {
 			VStack(spacing: 25) {
@@ -275,7 +276,7 @@ extension UserHomeView {
 
 	struct ScrolledContent: View {
 
-		@ObservedObject var homeVM: UserHomeViewModel
+		@EnvironmentObject var homeVM: UserHomeViewModel
 		let geo: GeometryProxy
 
 		var body: some View {
