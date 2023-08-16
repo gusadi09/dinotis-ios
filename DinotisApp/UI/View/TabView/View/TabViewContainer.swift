@@ -105,6 +105,9 @@ struct TabViewContainer: View {
                         .tag(TabRoute.search)
                     
                     ScheduleListView(mainTabSelection: $viewModel.tab)
+                        .onAppear {
+                            self.isShowTooltip = false
+                        }
                         .environmentObject(viewModel.scheduleVM)
                         .tag(TabRoute.agenda)
                     
@@ -123,7 +126,7 @@ struct TabViewContainer: View {
                     }
                     
                 }
-                .dinotisTabStyle($viewModel.tab, isNewAgenda: $viewModel.hasNewAgenda)
+                .dinotisTabStyle($viewModel.tab, isNewAgenda: $viewModel.hasNewAgenda, isShowTooltip: $isShowTooltip)
             }
             .navigationBarTitle(Text(""))
             .navigationBarHidden(true)

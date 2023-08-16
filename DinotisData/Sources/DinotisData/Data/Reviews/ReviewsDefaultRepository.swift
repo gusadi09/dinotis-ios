@@ -22,4 +22,8 @@ public final class ReviewsDefaultRepository: ReviewsRepository {
     public func provideGiveReview(with body: ReviewRequestBody) async throws -> ReviewSuccessResponse {
         try await self.remote.giveReview(with: body)
     }
+    
+    public func provideGetReasons(rating: Int?) async throws -> ReviewReasons {
+        try await self.remote.getReasons(rating: rating)
+    }
 }

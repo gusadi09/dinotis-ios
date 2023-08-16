@@ -71,6 +71,18 @@ struct UserScheduleDetail: View {
                             EmptyView()
                         }
                     )
+                    
+                    NavigationLink(
+                        unwrapping: $viewModel.route,
+                        case: /HomeRouting.feedbackAfterCall,
+                        destination: { viewModel in
+                            AftercallFeedbackView(viewModel: viewModel.wrappedValue)
+                        },
+                        onNavigate: {_ in},
+                        label: {
+                            EmptyView()
+                        }
+                    )
 
                     NavigationLink(
                         unwrapping: $viewModel.route,

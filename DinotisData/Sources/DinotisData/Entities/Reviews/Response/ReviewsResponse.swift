@@ -189,3 +189,11 @@ public extension UserReviewData {
 		UserReviewData(id: "unittestid", name: "Unit Test", profilePhoto: "https://www.unittest.com/abcde.png").toJSONData()
 	}
 }
+
+public struct ReviewReasons: Codable {
+    public let data: [String]?
+    
+    public init(data: [String]?) {
+        self.data = data
+    }
+}

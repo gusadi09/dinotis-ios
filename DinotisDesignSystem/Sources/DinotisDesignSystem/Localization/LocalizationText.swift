@@ -2076,26 +2076,84 @@ public enum LocalizableText {
         bundle: .module,
         comment: "rejoin"
     )
+    
+    public static let tooltipAgenda = NSLocalizedString(
+        "tooltip_agenda",
+        bundle: .module,
+        comment: "tooltip agenda"
+    )
+    
     public static let videoCallDisconnected = NSLocalizedString(
         "video_call_disconnected",
         bundle: .module,
         comment: "disconnected text"
     )
+    
     public static let videoCallRaiseHand = NSLocalizedString(
         "video_call_raise_hand",
         bundle: .module,
         comment: "raise hand text"
     )
+    
     public static let videoCallViewerMode = NSLocalizedString(
         "video_call_viewer_mode",
         bundle: .module,
         comment: "viewer mode text"
+    )
+    
+    public static let videoCallRateUs = NSLocalizedString(
+        "vide_call_rate_us",
+        bundle: .module,
+        comment: "rate us"
+    )
+    
+    public static let videoCallRateText = NSLocalizedString(
+        "video_call_rate_text",
+        bundle: .module,
+        comment: "rate text"
+    )
+    
+    public static let videoCallSendFeedback = NSLocalizedString(
+        "video_call_send_feedback",
+        bundle: .module,
+        comment: "send feedback"
     )
     public static let videoCallToMain = NSLocalizedString(
         "video_call_to_main",
         bundle: .module,
         comment: "to main text"
     )
+    
+    public static let feedbackVeryBad = NSLocalizedString(
+        "feedback_very_bad",
+        bundle: .module,
+        comment: "feedback very bad"
+    )
+    
+    public static let feedbackVeryGood = NSLocalizedString(
+        "feedback_very_good",
+        bundle: .module,
+        comment: "feedback very good"
+    )
+    
+    public static let feedbackWeaknessTitle = NSLocalizedString(
+        "feedback_weakness_title",
+        bundle: .module,
+        comment: "feedback weakness title"
+    )
+    
+    public static let feedbackProblemTitle = NSLocalizedString(
+        "feedback_problem_title",
+        bundle: .module,
+        comment: "feedback problem title"
+    )
+    
+    public static let feedbackSuccessTitle = NSLocalizedString(
+        "feedback_success_title",
+        bundle: .module,
+        comment: "feedback success title"
+    )
+    
 }
 
 

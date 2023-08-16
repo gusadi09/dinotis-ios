@@ -9,7 +9,7 @@ import Foundation
 import Moya
 
 public final class ReviewsDefaultRemoteDataSource: ReviewsRemoteDataSource {
-
+    
 	private let provider: MoyaProvider<ReviewsTargetType>
 
 	public init(provider: MoyaProvider<ReviewsTargetType> = .defaultProvider()) {
@@ -22,5 +22,9 @@ public final class ReviewsDefaultRemoteDataSource: ReviewsRemoteDataSource {
     
     public func giveReview(with body: ReviewRequestBody) async throws -> ReviewSuccessResponse {
         try await self.provider.request(.giveReview(body), model: ReviewSuccessResponse.self)
+    }
+    
+    public func getReasons(rating: Int?) async throws -> ReviewReasons {
+        try await self.provider.request(.getReasons(rating), model: ReviewReasons.self)
     }
 }
