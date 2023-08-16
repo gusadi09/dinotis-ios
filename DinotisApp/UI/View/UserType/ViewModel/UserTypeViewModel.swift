@@ -10,18 +10,10 @@ import DinotisData
 
 final class UserTypeViewModel: ObservableObject {
 	
-	private let repository: AuthenticationRepository
-	
 	private let stateObservable = StateObservable.shared
 	
 	@Published var route: PrimaryRouting?
-	
-	init(
-		repository: AuthenticationRepository = AuthenticationDefaultRepository()
-	) {
-		self.repository = repository
-	}
-	
+    
 	func goToUserLogin() {
 		let viewModel = LoginViewModel(backToRoot: { self.route = nil })
 		stateObservable.userType = 3
@@ -37,53 +29,6 @@ final class UserTypeViewModel: ObservableObject {
 		
 		DispatchQueue.main.async { [weak self] in
 			self?.route = .userLogin(viewModel: viewModel)
-		}
-	}
-	
-	func checkingSession() {
-        Task {
-            if !stateObservable.accessToken.isEmpty {
-                await loginSessionChecking()
-            }
-        }
-	}
-	
-	func loginSessionChecking() async {
-		let isTokenEmpty = await repository.loadFromKeychain(forKey: KeychainKey.accessToken).isEmpty
-		
-		if !isTokenEmpty &&
-				((stateObservable.isVerified == "Verified") &&
-				 stateObservable.userType != 0) {
-			if stateObservable.userType == 2 {
-                let homeViewModel = TalentHomeViewModel(isFromUserType: true)
-				
-				DispatchQueue.main.async { [weak self] in
-					self?.route = .homeTalent(viewModel: homeViewModel)
-				}
-				
-			} else if stateObservable.userType == 3 {
-				let vm = TabViewContainerViewModel(
-                    isFromUserType: true,
-                    userHomeVM: UserHomeViewModel(),
-					profileVM: ProfileViewModel(backToHome: {}),
-					searchVM: SearchTalentViewModel(backToHome: {}),
-                    scheduleVM: ScheduleListViewModel(backToHome: {}, currentUserId: "")
-				)
-				
-				DispatchQueue.main.async { [weak self] in
-					self?.route = .tabContainer(viewModel: vm)
-				}
-				
-			}
-			
-		} else if !isTokenEmpty &&
-					((stateObservable.isVerified == "VerifiedNoName") &&
-					 stateObservable.userType != 0) {
-            let viewModel = BiodataViewModel()
-
-			DispatchQueue.main.async { [weak self] in
-				self?.route = .biodataUser(viewModel: viewModel)
-			}
 		}
 	}
 	

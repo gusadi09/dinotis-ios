@@ -24,6 +24,35 @@ struct OnboardingView: View {
 			} onNavigate: { _ in } label: {
 				EmptyView()
 			}
+            
+            NavigationLink(
+                unwrapping: $viewModel.route,
+                case: /PrimaryRouting.biodataUser
+            ) { viewModel in
+                UserBiodataView(viewModel: viewModel.wrappedValue)
+            } onNavigate: { _ in } label: {
+                EmptyView()
+            }
+
+            NavigationLink(
+                unwrapping: $viewModel.route,
+                case: /PrimaryRouting.tabContainer
+            ) { viewModel in
+                TabViewContainer()
+                    .environmentObject(viewModel.wrappedValue)
+            } onNavigate: { _ in } label: {
+                EmptyView()
+            }
+
+            NavigationLink(
+                unwrapping: $viewModel.route,
+                case: /PrimaryRouting.homeTalent
+            ) { viewModel in
+                TalentHomeView()
+                    .environmentObject(viewModel.wrappedValue)
+            } onNavigate: { _ in } label: {
+                EmptyView()
+            }
 
 			Color.DinotisDefault.baseBackground
 				.edgesIgnoringSafeArea(.all)

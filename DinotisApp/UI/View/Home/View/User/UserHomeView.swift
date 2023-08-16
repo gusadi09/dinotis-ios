@@ -13,7 +13,7 @@ import SwiftUI
 
 struct UserHomeView: View {
     
-    @ObservedObject var homeVM: UserHomeViewModel
+    @EnvironmentObject var homeVM: UserHomeViewModel
     @ObservedObject var state = StateObservable.shared
     
     @Environment(\.viewController) private var viewControllerHolder: ViewControllerHolder
@@ -28,7 +28,8 @@ struct UserHomeView: View {
         GeometryReader { geo in
             ZStack {
                 
-                NavigationHelper(homeVM: homeVM, tabValue: $tabValue)
+                NavigationHelper(tabValue: $tabValue)
+                    .environmentObject(homeVM)
                 
                 ZStack(alignment: .center) {
                     
@@ -37,14 +38,16 @@ struct UserHomeView: View {
                     
                     VStack(spacing: 0) {
                         
-                        HeaderView(homeVM: homeVM)
+                        HeaderView()
+                            .environmentObject(homeVM)
                             .onChange(of: state.isGoToDetailSchedule) { value in
                                 if value {
                                     homeVM.routeToScheduleList()
                                 }
                             }
                         
-                        ScrolledContent(homeVM: homeVM, geo: geo)
+                        ScrolledContent(geo: geo)
+                            .environmentObject(homeVM)
                         
                     }
                     
@@ -86,6 +89,7 @@ struct UserHomeView: View {
 
 struct UserHomeView_Previews: PreviewProvider {
     static var previews: some View {
-        UserHomeView(homeVM: UserHomeViewModel(), tabValue: .constant(.agenda))
+        UserHomeView(tabValue: .constant(.agenda))
+            .environmentObject(UserHomeViewModel())
     }
 }

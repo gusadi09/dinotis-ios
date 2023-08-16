@@ -12,7 +12,7 @@ import DinotisData
 
 struct TabViewContainer: View {
 
-	@ObservedObject var viewModel: TabViewContainerViewModel
+	@EnvironmentObject var viewModel: TabViewContainerViewModel
 	@ObservedObject var state = StateObservable.shared
 
 	var body: some View {
@@ -91,27 +91,34 @@ struct TabViewContainer: View {
                 
                 TabView(selection: $viewModel.tab) {
                     if viewModel.state.userType == 3 {
-                        UserHomeView(homeVM: viewModel.userHomeVM, tabValue: $viewModel.tab)
+                        UserHomeView(tabValue: $viewModel.tab)
+                            .environmentObject(viewModel.userHomeVM)
                             .tag(TabRoute.explore)
                     } else {
-                        UserHomeView(homeVM: viewModel.userHomeVM, tabValue: $viewModel.tab)
+                        UserHomeView(tabValue: $viewModel.tab)
+                            .environmentObject(viewModel.userHomeVM)
                             .tag(TabRoute.explore)
                     }
                     
-                    SearchTalentView(viewModel: viewModel.searchVM, tabValue: $viewModel.tab)
+                    SearchTalentView(tabValue: $viewModel.tab)
+                        .environmentObject(viewModel.searchVM)
                         .tag(TabRoute.search)
                     
-                    ScheduleListView(viewModel: viewModel.scheduleVM, mainTabSelection: $viewModel.tab)
+                    ScheduleListView(mainTabSelection: $viewModel.tab)
+                        .environmentObject(viewModel.scheduleVM)
                         .tag(TabRoute.agenda)
                     
                     if viewModel.state.userType == 2 {
-                        TalentProfileView(viewModel: viewModel.profileVM)
+                        TalentProfileView()
+                            .environmentObject(viewModel.profileVM)
                             .tag(TabRoute.profile)
                     } else if viewModel.state.userType == 3 {
-                        UserProfileView(viewModel: viewModel.profileVM, tabValue: $viewModel.tab)
+                        UserProfileView(tabValue: $viewModel.tab)
+                            .environmentObject(viewModel.profileVM)
                             .tag(TabRoute.profile)
                     } else {
-                        UserProfileView(viewModel: viewModel.profileVM, tabValue: $viewModel.tab)
+                        UserProfileView(tabValue: $viewModel.tab)
+                            .environmentObject(viewModel.profileVM)
                             .tag(TabRoute.profile)
                     }
                     
@@ -156,14 +163,7 @@ struct TabViewContainer: View {
 
 struct TabViewContainer_Previews: PreviewProvider {
 	static var previews: some View {
-		TabViewContainer(
-			viewModel: TabViewContainerViewModel(
-                isFromUserType: false,
-                userHomeVM: UserHomeViewModel(),
-				profileVM: ProfileViewModel(backToHome: {}),
-                searchVM: SearchTalentViewModel(backToHome: {}),
-                scheduleVM: ScheduleListViewModel(backToHome: {}, currentUserId: "")
-			)
-		)
+		TabViewContainer()
+            .environmentObject(TabViewContainerViewModel(isFromUserType: false, userHomeVM: UserHomeViewModel(), profileVM: ProfileViewModel(backToHome: {}), searchVM: SearchTalentViewModel(backToHome: {}), scheduleVM: ScheduleListViewModel(backToHome: {}, currentUserId: "")))
 	}
 }

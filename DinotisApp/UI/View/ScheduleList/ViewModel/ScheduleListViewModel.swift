@@ -340,6 +340,34 @@ final class ScheduleListViewModel: ObservableObject {
             handleDefaultError(error: failure)
         }
     }
+    
+    func onAppear() {
+        onGetCounter()
+        
+        guard todaysAgenda.isEmpty else { return }
+        onGetTodaysAgenda()
+        
+        guard bookingData.isEmpty else { return }
+        onGetBooking()
+    }
+    
+    func onGetCounter() {
+        Task {
+            await getCounter()
+        }
+    }
+    
+    func onGetTodaysAgenda() {
+        Task {
+            await getTodayAgendaList()
+        }
+    }
+    
+    func onGetBooking() {
+        Task {
+            await getBookingsList(isMore: false)
+        }
+    }
 
     func getBookingsList(isMore: Bool) async {
 		onStartRequest()

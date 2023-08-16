@@ -15,7 +15,7 @@ import SwiftUITrackableScrollView
 
 struct TalentHomeView: View {
     
-    @ObservedObject var homeVM: TalentHomeViewModel
+    @EnvironmentObject var homeVM: TalentHomeViewModel
     @ObservedObject var state = StateObservable.shared
     
     var body: some View {
@@ -133,7 +133,8 @@ struct TalentHomeView: View {
                                 NavigationLink(
                                     unwrapping: $homeVM.route,
                                     case: /HomeRouting.talentProfile) { viewModel in
-                                        TalentProfileView(viewModel: viewModel.wrappedValue)
+                                        TalentProfileView()
+                                            .environmentObject(viewModel.wrappedValue)
                                     } onNavigate: { _ in
                                         
                                     } label: {

@@ -107,7 +107,8 @@ struct OtpVerificationView: View {
 				NavigationLink(
 					unwrapping: $viewModel.route,
 					case: /PrimaryRouting.tabContainer) { viewModel in
-						TabViewContainer(viewModel: viewModel.wrappedValue)
+						TabViewContainer()
+                            .environmentObject(viewModel.wrappedValue)
 					} onNavigate: { _ in
 
 					} label: {
@@ -117,7 +118,8 @@ struct OtpVerificationView: View {
 				NavigationLink(
 					unwrapping: $viewModel.route,
 					case: /PrimaryRouting.homeTalent) { viewModel in
-						TalentHomeView(homeVM: viewModel.wrappedValue)
+						TalentHomeView()
+                            .environmentObject(viewModel.wrappedValue)
 					} onNavigate: { _ in
 
 					} label: {

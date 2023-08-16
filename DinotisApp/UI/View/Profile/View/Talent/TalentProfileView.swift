@@ -37,7 +37,7 @@ struct NavigationUtil {
 
 struct TalentProfileView: View {
 
-	@ObservedObject var viewModel: ProfileViewModel
+	@EnvironmentObject var viewModel: ProfileViewModel
 
 	@ObservedObject var stateObservable = StateObservable.shared
 
@@ -816,6 +816,7 @@ struct TalentProfileView: View {
 
 struct TalentProfilePage_Previews: PreviewProvider {
 	static var previews: some View {
-		TalentProfileView(viewModel: ProfileViewModel(backToHome: {}))
+		TalentProfileView()
+            .environmentObject(ProfileViewModel(backToHome: {}))
 	}
 }

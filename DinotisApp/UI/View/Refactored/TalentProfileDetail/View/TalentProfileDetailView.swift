@@ -53,7 +53,8 @@ struct TalentProfileDetailView: View {
                     unwrapping: $viewModel.route,
                     case: /HomeRouting.scheduleList,
                     destination: {viewModel in
-                        ScheduleListView(viewModel: viewModel.wrappedValue, mainTabSelection: $tabValue)
+                        ScheduleListView(mainTabSelection: $tabValue)
+                            .environmentObject(viewModel.wrappedValue)
                     },
                     onNavigate: {_ in},
                     label: {

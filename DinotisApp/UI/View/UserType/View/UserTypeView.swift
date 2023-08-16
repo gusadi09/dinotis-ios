@@ -12,98 +12,78 @@ import DinotisData
 
 struct UserTypeView: View {
 	
-	@ObservedObject var viewModel = UserTypeViewModel()
-	@ObservedObject var stateObservable = StateObservable.shared
-	
-	var body: some View {
-		GeometryReader { geo in
-			ZStack(alignment: .top) {
-				Color.DinotisDefault.baseBackground
-					.edgesIgnoringSafeArea(.all)
+    @ObservedObject var viewModel = UserTypeViewModel()
+    @StateObject var stateObservable = StateObservable.shared
+    
+    var body: some View {
+        MainUserType()
+            .environmentObject(viewModel)
+    }
+    
+    struct MainUserType: View {
+        @EnvironmentObject var viewModel: UserTypeViewModel
+        @ObservedObject var stateObservable = StateObservable.shared
+        
+        var body: some View {
+            GeometryReader { geo in
+                ZStack(alignment: .top) {
+                    Color.DinotisDefault.baseBackground
+                        .edgesIgnoringSafeArea(.all)
 
-				VStack(alignment: .leading) {
+                    VStack(alignment: .leading) {
 
-					Spacer()
+                        Spacer()
 
-					Image.loginRunningTextImage
-						.resizable()
-						.scaledToFit()
-						.frame(width: geo.size.width)
-						.edgesIgnoringSafeArea(.horizontal)
+                        Image.loginRunningTextImage
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: geo.size.width)
+                            .edgesIgnoringSafeArea(.horizontal)
 
-					Spacer()
+                        Spacer()
 
-					Text(LocalizableText.titleRoleType)
-						.font(.robotoBold(size: 34))
-						.minimumScaleFactor(0.7)
-						.foregroundColor(.DinotisDefault.black1)
-						.multilineTextAlignment(.leading)
-						.padding(.horizontal)
+                        Text(LocalizableText.titleRoleType)
+                            .font(.robotoBold(size: 34))
+                            .minimumScaleFactor(0.7)
+                            .foregroundColor(.DinotisDefault.black1)
+                            .multilineTextAlignment(.leading)
+                            .padding(.horizontal)
 
-					Spacer()
+                        Spacer()
 
-					VStack(alignment: .leading, spacing: 15) {
-						Text(LocalizableText.descriptionRoleType)
-							.font(.robotoMedium(size: 16))
-							.minimumScaleFactor(0.8)
-							.foregroundColor(.DinotisDefault.black1)
-							.multilineTextAlignment(.leading)
+                        VStack(alignment: .leading, spacing: 15) {
+                            Text(LocalizableText.descriptionRoleType)
+                                .font(.robotoMedium(size: 16))
+                                .minimumScaleFactor(0.8)
+                                .foregroundColor(.DinotisDefault.black1)
+                                .multilineTextAlignment(.leading)
 
-						UserSelectionView(viewModel: viewModel, geo: geo)
-					}
-					.padding(.horizontal)
+                            UserSelectionView(viewModel: viewModel, geo: geo)
+                        }
+                        .padding(.horizontal)
 
-					Spacer()
-				}
+                        Spacer()
+                    }
 
-				NavigationLink(
-					unwrapping: $viewModel.route,
-					case: /PrimaryRouting.userLogin
-				) { viewModel in
-					LoginViewUser(loginVM: viewModel.wrappedValue)
-				} onNavigate: { _ in } label: {
-					EmptyView()
-				}
-
-				NavigationLink(
-					unwrapping: $viewModel.route,
-					case: /PrimaryRouting.biodataUser
-				) { viewModel in
-					UserBiodataView(viewModel: viewModel.wrappedValue)
-				} onNavigate: { _ in } label: {
-					EmptyView()
-				}
-
-				NavigationLink(
-					unwrapping: $viewModel.route,
-					case: /PrimaryRouting.tabContainer
-				) { viewModel in
-					TabViewContainer(viewModel: viewModel.wrappedValue)
-				} onNavigate: { _ in } label: {
-					EmptyView()
-				}
-
-				NavigationLink(
-					unwrapping: $viewModel.route,
-					case: /PrimaryRouting.homeTalent
-				) { viewModel in
-					TalentHomeView(homeVM: viewModel.wrappedValue)
-				} onNavigate: { _ in } label: {
-					EmptyView()
-				}
-			}
-		}
-		.navigationBarTitle(Text(""))
-		.navigationBarHidden(true)
-		.onAppear(perform: {
-			viewModel.checkingSession()
-
-			if stateObservable.accessToken.isEmpty {
-				stateObservable.isAnnounceShow = false
-			}
-		})
-		
-	}
+                    NavigationLink(
+                        unwrapping: $viewModel.route,
+                        case: /PrimaryRouting.userLogin
+                    ) { viewModel in
+                        LoginViewUser(loginVM: viewModel.wrappedValue)
+                    } onNavigate: { _ in } label: {
+                        EmptyView()
+                    }
+                }
+            }
+            .navigationBarTitle(Text(""))
+            .navigationBarHidden(true)
+            .onAppear(perform: {
+                if stateObservable.accessToken.isEmpty {
+                    stateObservable.isAnnounceShow = false
+                }
+            })
+        }
+    }
 }
 
 private extension UserTypeView {
