@@ -332,12 +332,13 @@ struct UserScheduleDetail: View {
                         .dinotisTooltip(
                             $isShowTooltip,
                             id: ScheduleDetailTooltip.review.value,
-                            width: 241,
-                            height: 65
+                            width: 245,
+                            height: 90
                         ) {
-                            Text("Jangan lupa berikan ulasan untuk sesi yang telah kamu ikuti ya!")
+                            Text(LocalizableText.sessionDetailRatingTooltip)
                                 .font(.robotoRegular(size: 14))
                                 .foregroundColor(.white)
+                                .multilineTextAlignment(.center)
                         }
                         .frame(width: rect.width, height: rect.height)
                         .offset(x: rect.minX, y: rect.minY)
@@ -1468,11 +1469,12 @@ private extension UserScheduleDetail {
                                 $isShowTooltip,
                                 id: ScheduleDetailTooltip.review.value,
                                 width: 241,
-                                height: 65
+                                height: 90
                             ) {
-                                Text("Jangan lupa berikan ulasan untuk sesi yang telah kamu ikuti ya!")
+                                Text(LocalizableText.sessionDetailRatingTooltip)
                                     .font(.robotoRegular(size: 14))
                                     .foregroundColor(.white)
+                                    .multilineTextAlignment(.center)
                             }
                             .id(ScheduleDetailTooltip.review.value)
                             .padding(.horizontal)

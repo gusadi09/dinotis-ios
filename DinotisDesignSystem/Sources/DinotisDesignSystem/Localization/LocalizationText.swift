@@ -2159,6 +2159,11 @@ public enum LocalizableText {
         bundle: .module,
         comment: "rate for creator"
     )
+    public static let sessionDetailRatingTooltip = NSLocalizedString(
+        "session_detail_rating_tooltip",
+        bundle: .module,
+        comment: "rating tooltip text"
+    )
 }
 
 

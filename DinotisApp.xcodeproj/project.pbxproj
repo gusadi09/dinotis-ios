@@ -10,7 +10,6 @@
 		0A0664CF280F0669009EC7C0 /* TalentProfileDetailView+Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0664CE280F0669009EC7C0 /* TalentProfileDetailView+Component.swift */; };
 		0A0664D1280F4939009EC7C0 /* EmptySchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0664D0280F4939009EC7C0 /* EmptySchedule.swift */; };
 		0AE145A22812801E00108948 /* TalentEditProfile+Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE145A12812801E00108948 /* TalentEditProfile+Component.swift */; };
-		37B4DBC92A89E59200D3EAA1 /* VideoCallViewFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B4DBC82A89E59200D3EAA1 /* VideoCallViewFeedback.swift */; };
 		37B4DBCF2A8A963B00D3EAA1 /* AfterFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B4DBCE2A8A963B00D3EAA1 /* AfterFeedback.swift */; };
 		EC01F1E326BFD7C600CA878F /* UserBiodataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC01F1E226BFD7C600CA878F /* UserBiodataView.swift */; };
 		EC0279F227C5E40B00B8C392 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0279F127C5E40A00B8C392 /* RoundedCorner.swift */; };
@@ -377,7 +376,6 @@
 		0A0664CE280F0669009EC7C0 /* TalentProfileDetailView+Component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TalentProfileDetailView+Component.swift"; sourceTree = "<group>"; };
 		0A0664D0280F4939009EC7C0 /* EmptySchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptySchedule.swift; sourceTree = "<group>"; };
 		0AE145A12812801E00108948 /* TalentEditProfile+Component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TalentEditProfile+Component.swift"; sourceTree = "<group>"; };
-		37B4DBC82A89E59200D3EAA1 /* VideoCallViewFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCallViewFeedback.swift; sourceTree = "<group>"; };
 		37B4DBCE2A8A963B00D3EAA1 /* AfterFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfterFeedback.swift; sourceTree = "<group>"; };
 		EC01F1E226BFD7C600CA878F /* UserBiodataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserBiodataView.swift; sourceTree = "<group>"; };
 		EC0279F127C5E40A00B8C392 /* RoundedCorner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
@@ -3209,7 +3207,6 @@
 				EC6A758B291957650030BC41 /* TalentAddBankAccountViewModel.swift in Sources */,
 				ECB0A26F28FEF23C0050EC71 /* SpeakersRealtimeResponse.swift in Sources */,
 				EC11CB76270F09CF003A622A /* UserBookings.swift in Sources */,
-				37B4DBC92A89E59200D3EAA1 /* VideoCallViewFeedback.swift in Sources */,
 				F665C44228C9CD2800D669A8 /* PrivateRemoteParticipantManager.swift in Sources */,
 				ECA51E6227D09A9F0096E22D /* SearchTalentViewModel.swift in Sources */,
 				EC722265295014E000C05A1B /* FollowedCreatorViewModel.swift in Sources */,

@@ -474,3 +474,4 @@
 "feedback_success_title" = "Thanks for your review";
 
 "session_detail_rate_for_creator" = "Rate for Creator";
+"session_detail_rating_tooltip" = "Don't forget to provide a review for the session you have attended, okay!";
