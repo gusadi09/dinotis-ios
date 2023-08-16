@@ -10,7 +10,6 @@
 		0A0664CF280F0669009EC7C0 /* TalentProfileDetailView+Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0664CE280F0669009EC7C0 /* TalentProfileDetailView+Component.swift */; };
 		0A0664D1280F4939009EC7C0 /* EmptySchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0664D0280F4939009EC7C0 /* EmptySchedule.swift */; };
 		0AE145A22812801E00108948 /* TalentEditProfile+Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE145A12812801E00108948 /* TalentEditProfile+Component.swift */; };
-		37B4DBC92A89E59200D3EAA1 /* VideoCallViewFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B4DBC82A89E59200D3EAA1 /* VideoCallViewFeedback.swift */; };
 		37B4DBCF2A8A963B00D3EAA1 /* AfterFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B4DBCE2A8A963B00D3EAA1 /* AfterFeedback.swift */; };
 		EC01F1E326BFD7C600CA878F /* UserBiodataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC01F1E226BFD7C600CA878F /* UserBiodataView.swift */; };
 		EC0279F227C5E40B00B8C392 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0279F127C5E40A00B8C392 /* RoundedCorner.swift */; };
@@ -20,6 +19,8 @@
 		EC04ED3C26C8D83E00E0D473 /* UserHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC04ED3B26C8D83E00E0D473 /* UserHomeView.swift */; };
 		EC04ED4426C8FF3B00E0D473 /* UserScheduleCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC04ED4326C8FF3B00E0D473 /* UserScheduleCardView.swift */; };
 		EC04ED4926C923B900E0D473 /* SuggestCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC04ED4826C923B900E0D473 /* SuggestCardView.swift */; };
+		EC0D4C222A8C706A0028B87C /* AftercallFeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0D4C212A8C706A0028B87C /* AftercallFeedbackView.swift */; };
+		EC0D4C252A8C70820028B87C /* FeedbackViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0D4C242A8C70820028B87C /* FeedbackViewModel.swift */; };
 		EC0FE33127152953006CABA8 /* TalentMeeting.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0FE33027152953006CABA8 /* TalentMeeting.swift */; };
 		EC11CB76270F09CF003A622A /* UserBookings.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC11CB75270F09CF003A622A /* UserBookings.swift */; };
 		EC1256722849299400A82DB7 /* QGrid in Frameworks */ = {isa = PBXBuildFile; productRef = EC1256712849299400A82DB7 /* QGrid */; };
@@ -375,7 +376,6 @@
 		0A0664CE280F0669009EC7C0 /* TalentProfileDetailView+Component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TalentProfileDetailView+Component.swift"; sourceTree = "<group>"; };
 		0A0664D0280F4939009EC7C0 /* EmptySchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptySchedule.swift; sourceTree = "<group>"; };
 		0AE145A12812801E00108948 /* TalentEditProfile+Component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TalentEditProfile+Component.swift"; sourceTree = "<group>"; };
-		37B4DBC82A89E59200D3EAA1 /* VideoCallViewFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCallViewFeedback.swift; sourceTree = "<group>"; };
 		37B4DBCE2A8A963B00D3EAA1 /* AfterFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfterFeedback.swift; sourceTree = "<group>"; };
 		EC01F1E226BFD7C600CA878F /* UserBiodataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserBiodataView.swift; sourceTree = "<group>"; };
 		EC0279F127C5E40A00B8C392 /* RoundedCorner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
@@ -385,6 +385,8 @@
 		EC04ED3B26C8D83E00E0D473 /* UserHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHomeView.swift; sourceTree = "<group>"; };
 		EC04ED4326C8FF3B00E0D473 /* UserScheduleCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserScheduleCardView.swift; sourceTree = "<group>"; };
 		EC04ED4826C923B900E0D473 /* SuggestCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestCardView.swift; sourceTree = "<group>"; };
+		EC0D4C212A8C706A0028B87C /* AftercallFeedbackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AftercallFeedbackView.swift; sourceTree = "<group>"; };
+		EC0D4C242A8C70820028B87C /* FeedbackViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackViewModel.swift; sourceTree = "<group>"; };
 		EC0FE33027152953006CABA8 /* TalentMeeting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalentMeeting.swift; sourceTree = "<group>"; };
 		EC11CB75270F09CF003A622A /* UserBookings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserBookings.swift; sourceTree = "<group>"; };
 		EC1C144B26D893EB00EC66E0 /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
@@ -742,6 +744,7 @@
 		37B4DBC62A89E56200D3EAA1 /* Feedback */ = {
 			isa = PBXGroup;
 			children = (
+				EC0D4C232A8C70820028B87C /* ViewModel */,
 				37B4DBC72A89E57700D3EAA1 /* View */,
 			);
 			path = Feedback;
@@ -750,7 +753,7 @@
 		37B4DBC72A89E57700D3EAA1 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				37B4DBC82A89E59200D3EAA1 /* VideoCallViewFeedback.swift */,
+				EC0D4C212A8C706A0028B87C /* AftercallFeedbackView.swift */,
 				37B4DBCE2A8A963B00D3EAA1 /* AfterFeedback.swift */,
 			);
 			path = View;
@@ -873,6 +876,14 @@
 				ECBCA2A4286192DD00EB1656 /* CoinHistoryCard.swift */,
 			);
 			path = Card;
+			sourceTree = "<group>";
+		};
+		EC0D4C232A8C70820028B87C /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EC0D4C242A8C70820028B87C /* FeedbackViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		EC1C145326DD10C700EC66E0 /* AddNewBankAccount */ = {
@@ -3117,6 +3128,7 @@
 				EC6A96E127CDDAF900282253 /* ScheduleListViewModel.swift in Sources */,
 				EC9C4E3D281694EA00837469 /* AnnouncementView.swift in Sources */,
 				EC4763712833E2F3009EE2FB /* MeetingsRemoteDataSource.swift in Sources */,
+				EC0D4C222A8C706A0028B87C /* AftercallFeedbackView.swift in Sources */,
 				EC3B977D2A41B4F1006D7B1B /* GroupVideoCallViewModel.swift in Sources */,
 				ECED4DD829F9297C00E79663 /* SelectedCollabCreatorView.swift in Sources */,
 				F686669E28A4D6620067345C /* Question.swift in Sources */,
@@ -3195,7 +3207,6 @@
 				EC6A758B291957650030BC41 /* TalentAddBankAccountViewModel.swift in Sources */,
 				ECB0A26F28FEF23C0050EC71 /* SpeakersRealtimeResponse.swift in Sources */,
 				EC11CB76270F09CF003A622A /* UserBookings.swift in Sources */,
-				37B4DBC92A89E59200D3EAA1 /* VideoCallViewFeedback.swift in Sources */,
 				F665C44228C9CD2800D669A8 /* PrivateRemoteParticipantManager.swift in Sources */,
 				ECA51E6227D09A9F0096E22D /* SearchTalentViewModel.swift in Sources */,
 				EC722265295014E000C05A1B /* FollowedCreatorViewModel.swift in Sources */,
@@ -3304,6 +3315,7 @@
 				EC4C4E0E27DD987000582AC4 /* UIImage+Ext.swift in Sources */,
 				F67334D02908EE0C006C1ADF /* BundlingDetailView.swift in Sources */,
 				EC1C145526DD10E400EC66E0 /* TalentAddBankAccountView.swift in Sources */,
+				EC0D4C252A8C70820028B87C /* FeedbackViewModel.swift in Sources */,
 				EC47636F2833E1D4009EE2FB /* MeetingsTargetType.swift in Sources */,
 				EC28759E27D1CB600093E9C9 /* UserInvoiceBookingViewModel.swift in Sources */,
 				ECD51FD728A20CBC000B1F6C /* TwilioRemoteDataSource.swift in Sources */,

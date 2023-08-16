@@ -33,6 +33,8 @@ struct TabViewContainer: View {
         @ObservedObject var viewModel: TabViewContainerViewModel
         @ObservedObject var state: StateObservable
         
+        @AppStorage("isShowTooltip") var isShowTooltip = false
+        
         var body: some View {
             ZStack {
                 
