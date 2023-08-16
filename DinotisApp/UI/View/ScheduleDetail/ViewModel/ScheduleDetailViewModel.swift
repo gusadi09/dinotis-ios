@@ -533,6 +533,7 @@ final class ScheduleDetailViewModel: ObservableObject {
     func routeToGroupCall(meeting: UserMeetingData) {
         let viewModel = GroupVideoCallViewModel(
             backToHome: self.backToHome,
+            backToScheduleDetail: {self.route = nil},
             userMeeting: meeting
         )
         

@@ -179,7 +179,9 @@ struct UserScheduleDetail: View {
                         ScrollableContent(viewModel: viewModel, action: refreshList, participantCount: participantCount(data: viewModel.dataBooking))
                             .environmentObject(customerChatManager)
                         
-                        BottomView(viewModel: viewModel)
+                        if viewModel.dataBooking?.meeting?.endedAt == nil {
+                            BottomView(viewModel: viewModel)
+                        }
                     }
                     .onChange(of: viewModel.successDetail) { _ in
                         

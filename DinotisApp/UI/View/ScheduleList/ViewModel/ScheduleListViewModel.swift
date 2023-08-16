@@ -272,16 +272,6 @@ final class ScheduleListViewModel: ObservableObject {
       }
     }
   }
-    
-    func onDisappear() {
-        DispatchQueue.main.async {[weak self] in
-            withAnimation(.spring()) {
-                self?.bookingData = []
-                self?.takeItem = 8
-                self?.nextCursor = 0
-            }
-        }
-    }
 
 	func handleDefaultError(error: Error) {
 		DispatchQueue.main.async { [weak self] in

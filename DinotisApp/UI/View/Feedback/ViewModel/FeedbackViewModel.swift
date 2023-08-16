@@ -17,17 +17,20 @@ final class FeedbackViewModel: ObservableObject {
     private let giveReviewUseCase: GiveReviewUseCase
     
     var backToHome: () -> Void
+    var backToScheduleDetail: () -> Void
     
     init(
         meetingId: String,
         getReasonsUseCase: GetReasonsUseCase = GetReasonsDefaultUseCase(),
         giveReviewUseCase: GiveReviewUseCase = GiveReviewDefaultUseCase(),
-        backToHome: @escaping (() -> Void)
+        backToHome: @escaping (() -> Void),
+        backToScheduleDetail: @escaping () -> Void
     ) {
         self.meetingId = meetingId
         self.getReasonsUseCase = getReasonsUseCase
         self.giveReviewUseCase = giveReviewUseCase
         self.backToHome = backToHome
+        self.backToScheduleDetail = backToScheduleDetail
     }
     
     @Published var rating: Int = 0

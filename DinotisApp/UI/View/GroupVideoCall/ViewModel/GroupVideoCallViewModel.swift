@@ -66,6 +66,7 @@ enum ErrorAlert {
 final class GroupVideoCallViewModel: ObservableObject {
     private var timer: Timer?
     var backToHome: () -> Void
+    var backToScheduleDetail: () -> Void
     
     private let meetRepository: MeetingsRepository
     
@@ -171,6 +172,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     
     init(
         backToHome: @escaping () -> Void,
+        backToScheduleDetail: @escaping () -> Void,
         meetRepository: MeetingsRepository = MeetingsDefaultRepository(),
         userMeeting: UserMeetingData,
         addDyteParticipantUseCase: AddDyteParticipantUseCase = AddDyteParticipantDefaultUseCase(),
@@ -179,6 +181,7 @@ final class GroupVideoCallViewModel: ObservableObject {
         sendQuestionUseCase: SendQuestionUseCase = SendQuestionDefaultUseCase()
     ) {
         self.backToHome = backToHome
+        self.backToScheduleDetail = backToScheduleDetail
         self.meetRepository = meetRepository
         self.userMeeting = userMeeting
         self.futureDate = userMeeting.endAt.orCurrentDate()
@@ -505,7 +508,7 @@ final class GroupVideoCallViewModel: ObservableObject {
                 self?.route = .afterCall(viewModel: viewModel)
             }
         } else {
-            let viewModel = FeedbackViewModel(meetingId: userMeeting.id.orEmpty(), backToHome: self.backToHome)
+            let viewModel = FeedbackViewModel(meetingId: userMeeting.id.orEmpty(), backToHome: self.backToHome, backToScheduleDetail: self.backToScheduleDetail)
             
             DispatchQueue.main.async {[weak self] in
                 self?.route = .feedbackAfterCall(viewModel: viewModel)

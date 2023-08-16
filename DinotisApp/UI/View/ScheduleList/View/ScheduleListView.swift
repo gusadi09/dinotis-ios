@@ -180,9 +180,6 @@ struct ScheduleListView: View {
 		.onAppear {
             viewModel.onAppear()
 		}
-        .onDisappear {
-            viewModel.onDisappear()
-        }
 		.navigationBarTitle(Text(""))
 		.navigationBarHidden(true)
         .sheet(

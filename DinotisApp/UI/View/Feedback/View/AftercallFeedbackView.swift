@@ -176,7 +176,7 @@ struct AftercallFeedbackView: View {
             }
         }
         .fullScreenCover(isPresented: $viewModel.isSuccess) {
-            self.presentationMode.wrappedValue.dismiss()
+            self.viewModel.backToScheduleDetail()
         } content: {
             ZStack(alignment: .bottom) {
                 Color.DinotisDefault.primary
@@ -220,7 +220,7 @@ struct AftercallFeedbackView: View {
 
 struct VideoCallViewFeedback_Previews: PreviewProvider {
     static var previews: some View {
-        AftercallFeedbackView(viewModel: FeedbackViewModel(meetingId: "", backToHome: {}))
+        AftercallFeedbackView(viewModel: FeedbackViewModel(meetingId: "", backToHome: {}, backToScheduleDetail: {}))
             .onAppear {
                 FontInjector.registerFonts()
             }
