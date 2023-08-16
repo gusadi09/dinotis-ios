@@ -472,3 +472,5 @@
 "feedback_weakness_title" = "Tell us what's missing";
 "feedback_problem_title" = "Tell us your experience";
 "feedback_success_title" = "Thanks for your review";
+
+"session_detail_rate_for_creator" = "Rate for Creator";

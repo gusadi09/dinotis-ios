@@ -89,6 +89,8 @@ public extension Image {
     static let filterFireIcon = Image("ic-fire-filter", bundle: Bundle.module)
     static let filterGiftIcon = Image("ic-gift-filter", bundle: Bundle.module)
     
+    static let sessionDetailMiniStarOutline = Image("ic-mini-star-outline", bundle: .module)
+    static let sessionDetailMiniStarFilled = Image("ic-mini-star-filled", bundle: .module)
     static let sessionDetailChevronIcon = Image("ic-chevron-session-detail", bundle: Bundle.module)
     static let sessionDetailActiveCheckmarkIcon = Image("ic-active-checkmark-session-detail", bundle: Bundle.module)
     static let sessionDetailInactiveCheckmarkIcon = Image("ic-inactive-checkmark-session-detail", bundle: Bundle.module)

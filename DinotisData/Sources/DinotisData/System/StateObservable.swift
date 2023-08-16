@@ -20,6 +20,8 @@ public final class StateObservable: ObservableObject {
 		}
 	}
     
+    @Published public var isShowTooltip = UserDefaults().bool(forKey: "isShowTooltip")
+    
     @Published public var userId: String {
         didSet {
             keychain.set(userId, forKey: KeychainKey.userId)

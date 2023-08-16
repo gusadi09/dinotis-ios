@@ -27,9 +27,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func checkingVersion(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) async {
-        
-        print("TOKENZZ: \(state.accessToken)")
-        
         let result = await versionCheckingUseCase.execute()
         
         switch result {

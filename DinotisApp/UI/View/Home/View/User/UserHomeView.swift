@@ -75,14 +75,22 @@ struct UserHomeView: View {
                     primaryButton: homeVM.alert.primaryButton,
                     secondaryButton: homeVM.alert.secondaryButton
                 )
-                .navigationBarTitle(Text(""))
-                .navigationBarHidden(true)
                 
-                if isShowTooltip {
+                if state.isShowTooltip {
                     Color.black.opacity(0.5)
-                        .ignoresSafeArea()
+                        .edgesIgnoringSafeArea(.all)
+                        .onTapGesture {
+                            withAnimation {
+                                state.isShowTooltip = false
+                                isShowTooltip = false
+                            }
+                            
+                        }
                 }
+                    
             }
+            .navigationBarTitle(Text(""))
+            .navigationBarHidden(true)
             .onAppear {
                 if homeVM.homeContent.isEmpty {
                     homeVM.onScreenAppear(geo: geo)
@@ -92,6 +100,7 @@ struct UserHomeView: View {
                 
                 if isFirstLaunch {
                     withAnimation {
+                        self.state.isShowTooltip = true
                         self.isShowTooltip = true
                         self.isFirstLaunch = false
                     }

@@ -129,6 +129,9 @@ struct TabViewContainer: View {
                     
                 }
                 .dinotisTabStyle($viewModel.tab, isNewAgenda: $viewModel.hasNewAgenda, isShowTooltip: $isShowTooltip)
+                .onChange(of: isShowTooltip) { newValue in
+                    state.isShowTooltip = newValue
+                }
             }
             .navigationBarTitle(Text(""))
             .navigationBarHidden(true)

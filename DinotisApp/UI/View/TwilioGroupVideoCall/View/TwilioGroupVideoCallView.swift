@@ -693,7 +693,8 @@ struct TwilioGroupVideoCallView_Previews: PreviewProvider {
                     meetingUploads: nil,
                     roomSid: nil,
                     dyteMeetingId: nil,
-                    isInspected: nil
+                    isInspected: nil,
+                    reviews: []
                 )
             ),
             meetingId: .constant(""), speaker: SpeakerVideoViewModel()

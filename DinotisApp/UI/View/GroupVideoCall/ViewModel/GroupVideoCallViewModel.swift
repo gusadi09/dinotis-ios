@@ -498,10 +498,18 @@ final class GroupVideoCallViewModel: ObservableObject {
     }
     
     func routeToAfterCall() {
-        let viewModel = AfterCallViewModel(backToHome: self.backToHome)
-        
-        DispatchQueue.main.async {[weak self] in
-            self?.route = .afterCall(viewModel: viewModel)
+        if userMeeting.isInspected ?? true {
+            let viewModel = AfterCallViewModel(backToHome: self.backToHome)
+            
+            DispatchQueue.main.async {[weak self] in
+                self?.route = .afterCall(viewModel: viewModel)
+            }
+        } else {
+            let viewModel = FeedbackViewModel(meetingId: userMeeting.id.orEmpty(), backToHome: self.backToHome)
+            
+            DispatchQueue.main.async {[weak self] in
+                self?.route = .feedbackAfterCall(viewModel: viewModel)
+            }
         }
     }
     
