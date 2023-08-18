@@ -1056,6 +1056,7 @@ extension TalentProfileDetailView {
     struct SlideOverCardView: View {
         
         @ObservedObject var viewModel: TalentProfileDetailViewModel
+        @Binding var tab: TabRoute
         
         var body: some View {
             VStack {
@@ -1280,13 +1281,13 @@ extension TalentProfileDetailView {
                         bgColor: .DinotisDefault.primary) {
                             
                             if viewModel.freeTrans {
-                                viewModel.onSendFreePayment()
+                                viewModel.onSendFreePayment(tabValue: self._tab)
                             } else {
                                 viewModel.isPresent = false
                                 DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
                                     withAnimation {
                                         if (viewModel.selectedMeeting?.price).orEmpty() == "0" {
-                                            viewModel.onSendFreePayment()
+                                            viewModel.onSendFreePayment(tabValue: self._tab)
                                         } else {
                                             viewModel.showPaymentMenu = true
                                         }

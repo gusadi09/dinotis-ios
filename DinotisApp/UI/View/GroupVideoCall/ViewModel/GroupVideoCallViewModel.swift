@@ -5,6 +5,7 @@
 //  Created by Gus Adi on 20/06/23.
 //
 
+import AVFoundation
 import Combine
 import DyteiOSCore
 import UIKit
@@ -81,6 +82,8 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var meeting = DyteiOSClientBuilder().build()
     @Published var localUserId = ""
     @Published var isLastPage = false
+    @Published var isShowRaisedToast = false
+    @Published var toastText = ""
     
     var meetingInfo = DyteMeetingInfoV2(
         authToken: "",
@@ -520,9 +523,18 @@ final class GroupVideoCallViewModel: ObservableObject {
         enableIdleTimer()
     }
     
+    func forceAudioWhenMutedBySystem() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback)
+        } catch(let error) {
+            print(error.localizedDescription)
+        }
+    }
+    
     func onAppear() {
         disableIdleTimer()
         getRealTime()
+        forceAudioWhenMutedBySystem()
         Task {
             await addParticipant()
             meeting.addMeetingRoomEventsListener(meetingRoomEventsListener: self)

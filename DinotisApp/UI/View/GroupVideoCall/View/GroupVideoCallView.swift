@@ -5,6 +5,7 @@
 //  Created by Gus Adi on 20/06/23.
 //
 
+import AlertToast
 import DinotisDesignSystem
 import DinotisData
 import DyteiOSCore
@@ -76,6 +77,14 @@ struct GroupVideoCallView: View {
         .navigationTitle("")
         .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)
+        .toast(isPresenting: $viewModel.isShowRaisedToast, alert: {
+            AlertToast(
+                displayMode: .hud,
+                type: .regular,
+                maxWidth: UIScreen.main.bounds.width/1.2,
+                subTitle: viewModel.toastText
+            )
+        })
         .onAppear {
             viewModel.onAppear()
             AppDelegate.orientationLock = .all
@@ -1113,10 +1122,13 @@ fileprivate extension GroupVideoCallView {
                         } else {
                             if viewModel.isRaised {
                                 viewModel.meeting.stage.cancelRequestAccess()
+                                viewModel.toastText = LocalizableText.videoCallUnraisedToast
                             } else {
                                 viewModel.meeting.stage.requestAccess()
+                                viewModel.toastText = LocalizableText.videoCallRaisedToast
                             }
                             
+                            viewModel.isShowRaisedToast = true
                             viewModel.isRaised = !viewModel.isRaised
                         }
                     }
@@ -1141,7 +1153,7 @@ fileprivate extension GroupVideoCallView {
                     }
                 }
                 .padding(.horizontal, 6)
-                .disabled(false) // Add logic when audio is locked
+                .isHidden(viewModel.meeting.stage.onStage.isEmpty, remove: viewModel.meeting.stage.onStage.isEmpty)
                 
                 Button {
                     withAnimation(.spring()) {

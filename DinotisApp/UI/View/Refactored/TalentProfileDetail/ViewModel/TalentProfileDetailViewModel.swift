@@ -265,9 +265,9 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
 		}
 	}
 
-	func onSendFreePayment() {
+    func onSendFreePayment(tabValue: Binding<TabRoute>) {
 		Task {
-			await sendFreePayment()
+            await sendFreePayment(tabValue: tabValue)
 		}
 	}
 
@@ -311,7 +311,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
 		}
 	}
 
-    func sendFreePayment() async {
+    func sendFreePayment(tabValue: Binding<TabRoute>) async {
 		onStartedFetch(noLoad: false)
         let params = BookingPaymentRequest(paymentMethod: 99, meetingId: self.meetingId.isEmpty ? nil : self.meetingId, meetingBundleId: bundlingId.isEmpty ? nil : bundlingId)
 
@@ -329,6 +329,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
           text: LocalizableText.okText,
           action: {
               self?.backToHome()
+              tabValue.wrappedValue = .agenda
           }
         )
         self?.isShowAlert = true

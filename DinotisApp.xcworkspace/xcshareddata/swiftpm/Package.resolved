@@ -19,6 +19,15 @@
       }
     },
     {
+      "identity" : "alerttoast",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/gusadi09/AlertToast.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "8ab11cfb0e2047a64719ef20f62403bfcc99b387"
+      }
+    },
+    {
       "identity" : "boringssl-swiftpm",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/boringssl-SwiftPM.git",
@@ -59,8 +68,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/dyte-in/DyteMobileCoreiOS.git",
       "state" : {
-        "revision" : "4243f6d9f76f6905c43e8c660e495fec624419c6",
-        "version" : "0.7.9"
+        "revision" : "5cb05e85c317886c15aee856687f146e9437d0db",
+        "version" : "0.8.2"
       }
     },
     {
@@ -167,8 +176,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/OneSignal/OneSignal-XCFramework",
       "state" : {
-        "revision" : "091f9c572b4a522f93cd1d4f2f524e3818a253f2",
-        "version" : "3.12.5"
+        "revision" : "b466a821e03008ecae885ebf79f52e4b88269b06",
+        "version" : "3.12.6"
       }
     },
     {

@@ -466,6 +466,8 @@
 "vide_call_rate_us" = "Rate Us";
 "video_call_rate_text" = "How would you rate your experience with DINOTIS so far?";
 "video_call_send_feedback" = "Send";
+"video_call_raised_toast" = "You've been request to Speaker mode. Keep it raised🙌";
+"video_call_unraised_toast" = "You've been turn down your hand😊";
 
 "feedback_very_bad" = "Very Bad";
 "feedback_very_good" = "Very Good";

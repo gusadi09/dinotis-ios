@@ -2164,6 +2164,16 @@ public enum LocalizableText {
         bundle: .module,
         comment: "rating tooltip text"
     )
+    public static let videoCallRaisedToast = NSLocalizedString(
+        "video_call_raised_toast",
+        bundle: .module,
+        comment: "raised toast text"
+    )
+    public static let videoCallUnraisedToast = NSLocalizedString(
+        "video_call_unraised_toast",
+        bundle: .module,
+        comment: "raised toast text"
+    )
 }
 
 

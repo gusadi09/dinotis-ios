@@ -32,6 +32,7 @@
 		EC246D38270581D00084846F /* ProfileImageContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC246D37270581D00084846F /* ProfileImageContainer.swift */; };
 		EC246D3C270588B90084846F /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = EC246D3B270588B90084846F /* .swiftlint.yml */; };
 		EC246D402705AFB90084846F /* SearchTalent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC246D3F2705AFB90084846F /* SearchTalent.swift */; };
+		EC2551FB2A8FE28B001CE6C5 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = EC2551FA2A8FE28B001CE6C5 /* AlertToast */; };
 		EC25CF2E280D7725000E3D9A /* ChangesPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC25CF2D280D7725000E3D9A /* ChangesPasswordViewModel.swift */; };
 		EC25CF32280D77AB000E3D9A /* ForgotPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC25CF31280D77AB000E3D9A /* ForgotPasswordViewModel.swift */; };
 		EC25CF34280DABC7000E3D9A /* OTPType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC25CF33280DABC7000E3D9A /* OTPType.swift */; };
@@ -717,6 +718,7 @@
 				ECCEFEAA277E9DD100E9B0AD /* ReactiveMoya in Frameworks */,
 				ECCEFEAC277E9DD100E9B0AD /* RxMoya in Frameworks */,
 				EC7292112A4375D800C9AAD5 /* TwilioConversationsClient in Frameworks */,
+				EC2551FB2A8FE28B001CE6C5 /* AlertToast in Frameworks */,
 				EC62576027B79F010079AA10 /* SwiftUINavigation in Frameworks */,
 				EC38FEF1287BD8A00007CFC6 /* OneSignalExtension in Frameworks */,
 				EC91B40526CEA64C00C5358C /* SwiftUITrackableScrollView in Frameworks */,
@@ -2980,6 +2982,7 @@
 				ECC1EE7C29EA61C400C9B402 /* Shimmer */,
 				EC72920B2A4374E400C9AAD5 /* DyteiOSCore */,
 				EC7292102A4375D800C9AAD5 /* TwilioConversationsClient */,
+				EC2551FA2A8FE28B001CE6C5 /* AlertToast */,
 			);
 			productName = DinotisApp;
 			productReference = ECBA13E226B78F77004D452C /* DinotisDev.app */;
@@ -3034,6 +3037,7 @@
 				ECC1EE7B29EA61C400C9B402 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
 				EC7292092A430BA700C9AAD5 /* XCRemoteSwiftPackageReference "DyteMobileCoreiOS" */,
 				EC72920F2A4375D800C9AAD5 /* XCRemoteSwiftPackageReference "conversations-ios" */,
+				EC2551F92A8FE28B001CE6C5 /* XCRemoteSwiftPackageReference "AlertToast" */,
 			);
 			productRefGroup = ECBA13E326B78F77004D452C /* Products */;
 			projectDirPath = "";
@@ -4003,6 +4007,14 @@
 				minimumVersion = 0.1.4;
 			};
 		};
+		EC2551F92A8FE28B001CE6C5 /* XCRemoteSwiftPackageReference "AlertToast" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/gusadi09/AlertToast.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		EC38FEED287BD8A00007CFC6 /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/OneSignal/OneSignal-XCFramework";
@@ -4040,7 +4052,7 @@
 			repositoryURL = "https://github.com/dyte-in/DyteMobileCoreiOS.git";
 			requirement = {
 				kind = upToNextMinorVersion;
-				minimumVersion = 0.7.0;
+				minimumVersion = 0.8.0;
 			};
 		};
 		EC72920F2A4375D800C9AAD5 /* XCRemoteSwiftPackageReference "conversations-ios" */ = {
@@ -4170,6 +4182,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EC1256702849299300A82DB7 /* XCRemoteSwiftPackageReference "QGrid" */;
 			productName = QGrid;
+		};
+		EC2551FA2A8FE28B001CE6C5 /* AlertToast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EC2551F92A8FE28B001CE6C5 /* XCRemoteSwiftPackageReference "AlertToast" */;
+			productName = AlertToast;
 		};
 		EC38FEEE287BD8A00007CFC6 /* OneSignal */ = {
 			isa = XCSwiftPackageProductDependency;

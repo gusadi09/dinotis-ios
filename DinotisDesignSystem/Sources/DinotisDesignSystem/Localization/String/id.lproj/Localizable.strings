@@ -465,6 +465,8 @@
 "vide_call_rate_us" = "Nilai Kami";
 "video_call_rate_text" = "Bagaimana pengalaman Anda dengan DINOTIS sejauh ini?";
 "video_call_send_feedback" = "Kirim";
+"video_call_raised_toast" = "Kamu telah meminta menjadi mode speaker. Biarkan terangkat🙌";
+"video_call_unraised_toast" = "Kamu telah menurunkan tanganmu😊";
 
 "feedback_very_bad" = "Very Bad";
 "feedback_very_good" = "Very Good";

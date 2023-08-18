@@ -459,13 +459,13 @@ struct TalentProfileDetailView: View {
                 isPresented: $viewModel.isPresent,
                 content: {
                     if #available(iOS 16.0, *) {
-                        SlideOverCardView(viewModel: viewModel)
+                        SlideOverCardView(viewModel: viewModel, tab: $tabValue)
                             .padding()
                             .padding(.vertical)
                             .padding(.top)
                             .presentationDetents([.fraction(0.8), .large])
                     } else {
-                        SlideOverCardView(viewModel: viewModel)
+                        SlideOverCardView(viewModel: viewModel, tab: $tabValue)
                             .padding()
                             .padding(.vertical)
                             .padding(.top)
