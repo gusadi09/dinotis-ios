@@ -525,7 +525,8 @@ final class GroupVideoCallViewModel: ObservableObject {
     
     func forceAudioWhenMutedBySystem() {
         do {
-            try AVAudioSession.sharedInstance().setCategory(.playback)
+            try AVAudioSession.sharedInstance().setCategory(.playAndRecord, mode: .videoChat, options: [.allowAirPlay, .allowBluetooth, .allowBluetoothA2DP, .defaultToSpeaker])
+            try AVAudioSession.sharedInstance().setActive(true)
         } catch(let error) {
             print(error.localizedDescription)
         }
@@ -706,9 +707,6 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
         self.isPreview = false
         self.pinned = meeting.participants.pinned
         self.localUserId = meeting.localUser.userId
-        
-        guard let audio = meeting.localUser.getAudioDevices().first(where: {$0.id.contains("speaker")}) else { return }
-        self.meeting.localUser.setAudioDevice(dyteAndroidDevice: audio)
     }
     
     func onMeetingRoomJoinFailed(exception: KotlinException) {
