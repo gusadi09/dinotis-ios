@@ -523,10 +523,23 @@ final class GroupVideoCallViewModel: ObservableObject {
         enableIdleTimer()
     }
     
+    func madeToSpeaker() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .videoChat, options: [.allowAirPlay, .allowBluetooth, .allowBluetoothA2DP, .defaultToSpeaker])
+            try AVAudioSession.sharedInstance().setActive(true)
+            try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
+            try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
+        } catch(let error) {
+            print(error.localizedDescription)
+        }
+    }
+    
     func forceAudioWhenMutedBySystem() {
         do {
             try AVAudioSession.sharedInstance().setCategory(.playAndRecord, mode: .videoChat, options: [.allowAirPlay, .allowBluetooth, .allowBluetoothA2DP, .defaultToSpeaker])
             try AVAudioSession.sharedInstance().setActive(true)
+            try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
+            try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
         } catch(let error) {
             print(error.localizedDescription)
         }
@@ -881,6 +894,9 @@ extension GroupVideoCallViewModel: DyteSelfEventsListener {
     
     func onAudioUpdate(audioEnabled: Bool) {
         isAudioOn = audioEnabled
+        
+        forceAudioWhenMutedBySystem()
+        madeToSpeaker()
     }
     
     func onMeetingRoomJoinedWithoutCameraPermission() {
