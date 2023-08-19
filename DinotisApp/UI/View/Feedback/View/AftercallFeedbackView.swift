@@ -31,7 +31,7 @@ struct AftercallFeedbackView: View {
                         .foregroundColor(.DinotisDefault.black3)
                         .frame(maxWidth: .infinity)
                     
-                    Image.profileLogoutImage
+                    Image.feedbackSmileImage
                         .resizable()
                         .scaledToFit()
                         .frame(maxWidth: 260)

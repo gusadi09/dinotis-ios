@@ -41,4 +41,5 @@ public extension Image {
     static let versionUpdateImage = Image("img-update-version", bundle: .module)
     
     static let feedbackSuccessImage = Image("img-success-feedback", bundle: .module)
+    static let feedbackSmileImage = Image("smile-feedback-illustration", bundle: .module)
 }
