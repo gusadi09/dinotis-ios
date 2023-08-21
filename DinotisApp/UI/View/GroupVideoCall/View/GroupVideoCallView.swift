@@ -19,24 +19,6 @@ enum SizeClass {
     case regularRegular
 }
 
-struct InnerHeightPreferenceKey: PreferenceKey {
-    static var defaultValue: CGFloat = .zero
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = nextValue() }
-}
-
-extension View {
-    func fixedInnerHeight(_ sheetHeight: Binding<CGFloat>) -> some View {
-        padding()
-            .background {
-                GeometryReader { proxy in
-                    Color.clear.preference(key: InnerHeightPreferenceKey.self, value: proxy.size.height)
-                }
-            }
-            .onPreferenceChange(InnerHeightPreferenceKey.self) { newHeight in sheetHeight.wrappedValue = newHeight }
-            .presentationDetents([.height(sheetHeight.wrappedValue)])
-    }
-}
-
 struct GroupVideoCallView: View {
     
     @ObservedObject var viewModel: GroupVideoCallViewModel
@@ -128,7 +110,7 @@ struct GroupVideoCallView: View {
         .sheet(isPresented: $viewModel.isShowQuestionBox) {
             if #available(iOS 16.0, *) {
                 QuestionBoxBottomSheet(viewModel: viewModel)
-                    .presentationDetents([.height(320), .medium])
+                    .presentationDetents([.height(350)])
                     .presentationDragIndicator(.hidden)
             } else {
                 QuestionBoxBottomSheet(viewModel: viewModel)
@@ -2082,25 +2064,18 @@ fileprivate extension GroupVideoCallView {
                 
                 ZStack(alignment: .top) {
                     VStack {
-                        MultilineTextField(LocalizableText.videoCallMessagePlaceholder, text: $viewModel.questionText)
+                        MultilineTextField(LocalizableText.videoCallMessagePlaceholder, text: $viewModel.questionText, initHeight: 300)
                             .padding(.horizontal, 14)
                             .padding(.vertical, 8)
                         
                         Spacer()
                     }
-                    .frame(height: 152)
                     
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(Color(red: 0.32, green: 0.34, blue: 0.36), lineWidth: 1)
-                        .frame(height: 152)
                 }
-                .frame(height: 152)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .padding(.horizontal)
-                
-                if #unavailable(iOS 16.0) {
-                    Spacer()
-                }
                 
                 Button {
                     Task {

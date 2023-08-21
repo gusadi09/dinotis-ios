@@ -538,8 +538,6 @@ final class GroupVideoCallViewModel: ObservableObject {
         do {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .videoChat, options: [.allowAirPlay, .allowBluetooth, .allowBluetoothA2DP, .defaultToSpeaker])
             try AVAudioSession.sharedInstance().setActive(true)
-            try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
-            try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
         } catch(let error) {
             print(error.localizedDescription)
         }
@@ -549,8 +547,6 @@ final class GroupVideoCallViewModel: ObservableObject {
         do {
             try AVAudioSession.sharedInstance().setCategory(.playAndRecord, mode: .videoChat, options: [.allowAirPlay, .allowBluetooth, .allowBluetoothA2DP, .defaultToSpeaker])
             try AVAudioSession.sharedInstance().setActive(true)
-            try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
-            try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
         } catch(let error) {
             print(error.localizedDescription)
         }
