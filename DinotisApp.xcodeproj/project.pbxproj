@@ -33,6 +33,7 @@
 		EC246D3C270588B90084846F /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = EC246D3B270588B90084846F /* .swiftlint.yml */; };
 		EC246D402705AFB90084846F /* SearchTalent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC246D3F2705AFB90084846F /* SearchTalent.swift */; };
 		EC2551FB2A8FE28B001CE6C5 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = EC2551FA2A8FE28B001CE6C5 /* AlertToast */; };
+		EC2551FF2A932624001CE6C5 /* waiting-talent.json in Resources */ = {isa = PBXBuildFile; fileRef = EC2551FE2A932624001CE6C5 /* waiting-talent.json */; };
 		EC25CF2E280D7725000E3D9A /* ChangesPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC25CF2D280D7725000E3D9A /* ChangesPasswordViewModel.swift */; };
 		EC25CF32280D77AB000E3D9A /* ForgotPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC25CF31280D77AB000E3D9A /* ForgotPasswordViewModel.swift */; };
 		EC25CF34280DABC7000E3D9A /* OTPType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC25CF33280DABC7000E3D9A /* OTPType.swift */; };
@@ -397,6 +398,7 @@
 		EC246D37270581D00084846F /* ProfileImageContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageContainer.swift; sourceTree = "<group>"; };
 		EC246D3B270588B90084846F /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		EC246D3F2705AFB90084846F /* SearchTalent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTalent.swift; sourceTree = "<group>"; };
+		EC2551FE2A932624001CE6C5 /* waiting-talent.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "waiting-talent.json"; sourceTree = "<group>"; };
 		EC25CF2D280D7725000E3D9A /* ChangesPasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangesPasswordViewModel.swift; sourceTree = "<group>"; };
 		EC25CF31280D77AB000E3D9A /* ForgotPasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordViewModel.swift; sourceTree = "<group>"; };
 		EC25CF33280DABC7000E3D9A /* OTPType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPType.swift; sourceTree = "<group>"; };
@@ -1231,6 +1233,7 @@
 		EC4E500327FC0B45009D66FF /* Lottie */ = {
 			isa = PBXGroup;
 			children = (
+				EC2551FE2A932624001CE6C5 /* waiting-talent.json */,
 				ECD4FC8629C4B93A00FBBC01 /* dinotis-white-lottie-loading.json */,
 				F61C58392982710000CCCDBD /* close-to-end.json */,
 			);
@@ -3081,6 +3084,7 @@
 				ECDAE38E26B7FD9300419194 /* Montserrat-ExtraBold.ttf in Resources */,
 				EC62578627B8B2140079AA10 /* Icon.xcassets in Resources */,
 				ECBA13EF26B78F78004D452C /* Image.xcassets in Resources */,
+				EC2551FF2A932624001CE6C5 /* waiting-talent.json in Resources */,
 				ECA0A386271148BC0000739E /* Color.xcassets in Resources */,
 				ECDAE39926B7FD9300419194 /* Montserrat-Italic.ttf in Resources */,
 				ECDAE39726B7FD9300419194 /* Montserrat-Medium.ttf in Resources */,
