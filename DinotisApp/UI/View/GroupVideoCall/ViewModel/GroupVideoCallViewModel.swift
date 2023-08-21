@@ -174,6 +174,8 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var isReceivedStageInvite = false
     @Published var isLeaving = false
     
+    @Published var qnaBoxContentHeight: CGFloat = 0
+    
     init(
         backToHome: @escaping () -> Void,
         backToScheduleDetail: @escaping () -> Void,

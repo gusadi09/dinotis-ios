@@ -19,6 +19,24 @@ enum SizeClass {
     case regularRegular
 }
 
+struct InnerHeightPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = .zero
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = nextValue() }
+}
+
+extension View {
+    func fixedInnerHeight(_ sheetHeight: Binding<CGFloat>) -> some View {
+        padding()
+            .background {
+                GeometryReader { proxy in
+                    Color.clear.preference(key: InnerHeightPreferenceKey.self, value: proxy.size.height)
+                }
+            }
+            .onPreferenceChange(InnerHeightPreferenceKey.self) { newHeight in sheetHeight.wrappedValue = newHeight }
+            .presentationDetents([.height(sheetHeight.wrappedValue)])
+    }
+}
+
 struct GroupVideoCallView: View {
     
     @ObservedObject var viewModel: GroupVideoCallViewModel
@@ -2080,7 +2098,9 @@ fileprivate extension GroupVideoCallView {
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .padding(.horizontal)
                 
-                Spacer()
+                if #unavailable(iOS 16.0) {
+                    Spacer()
+                }
                 
                 Button {
                     Task {

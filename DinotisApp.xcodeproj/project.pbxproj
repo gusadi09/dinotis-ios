@@ -75,7 +75,6 @@
 		EC4C4E0E27DD987000582AC4 /* UIImage+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4C4E0D27DD987000582AC4 /* UIImage+Ext.swift */; };
 		EC4E4FE727FB4D75009D66FF /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4E4FE627FB4D75009D66FF /* Message.swift */; };
 		EC4E500227FC0B34009D66FF /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = EC4E500127FC0B34009D66FF /* Lottie */; };
-		EC4E500527FC0B5A009D66FF /* waiting-talent.json in Resources */ = {isa = PBXBuildFile; fileRef = EC4E500427FC0B5A009D66FF /* waiting-talent.json */; };
 		EC4E500727FC0B76009D66FF /* LottieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4E500627FC0B76009D66FF /* LottieView.swift */; };
 		EC50A05626E5B57B00F45C2F /* PaymentMethodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC50A05526E5B57B00F45C2F /* PaymentMethodView.swift */; };
 		EC50A05826E5B58E00F45C2F /* DetailPaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC50A05726E5B58E00F45C2F /* DetailPaymentView.swift */; };
@@ -437,7 +436,6 @@
 		EC4C4E0927DC463D00582AC4 /* Sequence+Uniqued.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sequence+Uniqued.swift"; sourceTree = "<group>"; };
 		EC4C4E0D27DD987000582AC4 /* UIImage+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Ext.swift"; sourceTree = "<group>"; };
 		EC4E4FE627FB4D75009D66FF /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
-		EC4E500427FC0B5A009D66FF /* waiting-talent.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "waiting-talent.json"; sourceTree = "<group>"; };
 		EC4E500627FC0B76009D66FF /* LottieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LottieView.swift; sourceTree = "<group>"; };
 		EC50A05526E5B57B00F45C2F /* PaymentMethodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodView.swift; sourceTree = "<group>"; };
 		EC50A05726E5B58E00F45C2F /* DetailPaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPaymentView.swift; sourceTree = "<group>"; };
@@ -1235,7 +1233,6 @@
 			children = (
 				ECD4FC8629C4B93A00FBBC01 /* dinotis-white-lottie-loading.json */,
 				F61C58392982710000CCCDBD /* close-to-end.json */,
-				EC4E500427FC0B5A009D66FF /* waiting-talent.json */,
 			);
 			path = Lottie;
 			sourceTree = "<group>";
@@ -3088,7 +3085,6 @@
 				ECDAE39926B7FD9300419194 /* Montserrat-Italic.ttf in Resources */,
 				ECDAE39726B7FD9300419194 /* Montserrat-Medium.ttf in Resources */,
 				ECDAE39526B7FD9300419194 /* Montserrat-ExtraLightItalic.ttf in Resources */,
-				EC4E500527FC0B5A009D66FF /* waiting-talent.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
