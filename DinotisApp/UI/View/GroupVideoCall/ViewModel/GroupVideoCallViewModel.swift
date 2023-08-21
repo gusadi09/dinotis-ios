@@ -472,7 +472,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     
     func toggleMicrophone() {
         do {
-            if isAudioOn {
+            if meeting.localUser.audioEnabled {
                 try meeting.localUser.disableAudio()
             } else {
                 meeting.localUser.enableAudio()
@@ -895,8 +895,11 @@ extension GroupVideoCallViewModel: DyteSelfEventsListener {
     func onAudioUpdate(audioEnabled: Bool) {
         isAudioOn = audioEnabled
         
-        forceAudioWhenMutedBySystem()
-        madeToSpeaker()
+        if audioEnabled {
+            forceAudioWhenMutedBySystem()
+        } else {
+            madeToSpeaker()
+        }
     }
     
     func onMeetingRoomJoinedWithoutCameraPermission() {
@@ -1018,8 +1021,15 @@ extension GroupVideoCallViewModel: DyteStageEventListener {
     }
     
     func onPresentRequestReceived() {
+        
         self.meeting.localUser.enableVideo()
-        self.meeting.localUser.enableAudio()
+        do {
+            try self.meeting.localUser.disableAudio()
+            try self.meeting.localUser.disableVideo()
+        } catch {
+            print("error preview")
+        }
+        
         self.isReceivedStageInvite = true
     }
     
