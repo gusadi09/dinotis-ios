@@ -84,6 +84,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var isLastPage = false
     @Published var isShowRaisedToast = false
     @Published var toastText = ""
+    @Published var isShowLeavePopUp = false
     
     var meetingInfo = DyteMeetingInfoV2(
         authToken: "",
@@ -200,6 +201,14 @@ final class GroupVideoCallViewModel: ObservableObject {
         }) ?? [])
         self.hostNames = names.joined(separator: ", ")
         
+    }
+    
+    func leaveAlertTitle() -> String {
+        meeting.localUser.presetName.contains(PresetConstant.host.value) ? LocalizableText.videoCallEndSessionPopupTitle : LocalizableText.videoCallLeavePopupTitle
+    }
+    
+    func leaveAlertSubtitle() -> String {
+        meeting.localUser.presetName.contains(PresetConstant.host.value) ? LocalizableText.videoCallEndSessionPopupSubtitle : LocalizableText.videoCallLeavePopupSubtitle
     }
     
     func setPage(to value: Int32) {

@@ -73,6 +73,10 @@ struct GroupVideoCallView: View {
             }
             
             DinotisLoadingView(.fullscreen, hide: !viewModel.isConnecting)
+            
+            LeaveSessionAlert()
+                .environmentObject(viewModel)
+                .isHidden(!viewModel.isShowLeavePopUp, remove: !viewModel.isShowLeavePopUp)
         }
         .navigationTitle("")
         .navigationBarHidden(true)
@@ -1251,7 +1255,7 @@ fileprivate extension GroupVideoCallView {
                 
                 Button {
                     withAnimation(.spring()) {
-                        viewModel.leaveMeeting()
+                        viewModel.isShowLeavePopUp.toggle()
                     }
                 } label: {
                     ZStack {
@@ -2968,6 +2972,140 @@ fileprivate extension GroupVideoCallView {
             return geometry.size.width - 40
         }
         
+    }
+    
+    struct LeaveSessionAlert: View {
+        @EnvironmentObject var viewModel: GroupVideoCallViewModel
+        
+        var body: some View {
+            ZStack {
+                Color.black.opacity(0.5).edgesIgnoringSafeArea(.all)
+                
+                VStack(spacing: 0) {
+                    if viewModel.isJoined {
+                        Text(viewModel.leaveAlertTitle())
+                            .font(.robotoMedium(size: 16))
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.center)
+                            .padding(.bottom, 4)
+                        
+                        Text(viewModel.leaveAlertSubtitle())
+                            .font(.robotoRegular(size: 12))
+                            .foregroundColor(Color(red: 0.63, green: 0.64, blue: 0.66))
+                            .multilineTextAlignment(.center)
+                            .padding(.bottom, 9)
+                        
+                        if viewModel.meeting.localUser.presetName.contains(PresetConstant.host.value) {
+                            VStack(spacing: 8) {
+                                DinotisPrimaryButton(
+                                    text: LocalizableText.videoCallEndSessionButton,
+                                    type: .fixed(220),
+                                    height: 51,
+                                    textColor: .white,
+                                    bgColor: .DinotisDefault.primary
+                                ) {
+                                    viewModel.meeting.participants.kickAll()
+                                    viewModel.leaveMeeting()
+                                }
+                                
+                                DinotisPrimaryButton(
+                                    text: LocalizableText.videoCallLeaveRoom,
+                                    type: .fixed(220),
+                                    height: 51,
+                                    textColor: .white,
+                                    bgColor: Color(red: 0.32, green: 0.34, blue: 0.36)
+                                ) {
+                                    viewModel.leaveMeeting()
+                                }
+                                
+                                DinotisNudeButton(
+                                    text: LocalizableText.cancelLabel,
+                                    textColor: .DinotisDefault.primary,
+                                    fontSize: 14
+                                ) {
+                                    withAnimation(.spring()) {
+                                        viewModel.isShowLeavePopUp = false
+                                    }
+                                }
+                                .frame(height: 51)
+                            }
+                            .padding(.top, 8)
+                        } else {
+                            HStack(spacing: 8) {
+                                DinotisPrimaryButton(
+                                    text: LocalizableText.cancelLabel,
+                                    type: .fixed(113),
+                                    height: 51,
+                                    textColor: .white,
+                                    bgColor: Color(red: 0.32, green: 0.34, blue: 0.36)
+                                ) {
+                                    withAnimation(.spring()) {
+                                        viewModel.isShowLeavePopUp = false
+                                    }
+                                }
+                                
+                                DinotisPrimaryButton(
+                                    text: LocalizableText.videoCallLeaveRoom,
+                                    type: .fixed(113),
+                                    height: 51,
+                                    textColor: .white,
+                                    bgColor: .DinotisDefault.primary
+                                ) {
+                                    viewModel.leaveMeeting()
+                                }
+                            }
+                        }
+                    } else {
+                        Text(LocalizableText.videoCallLeavePopupTitle)
+                            .font(.robotoMedium(size: 16))
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.center)
+                            .padding(.bottom, 4)
+                        
+                        Text(LocalizableText.videoCallLeavePopupSubtitle)
+                            .font(.robotoRegular(size: 12))
+                            .foregroundColor(Color(red: 0.63, green: 0.64, blue: 0.66))
+                            .multilineTextAlignment(.center)
+                            .padding(.bottom, 9)
+                        
+                        HStack(spacing: 8) {
+                            DinotisPrimaryButton(
+                                text: LocalizableText.cancelLabel,
+                                type: .fixed(113),
+                                height: 51,
+                                textColor: .white,
+                                bgColor: Color(red: 0.32, green: 0.34, blue: 0.36)
+                            ) {
+                                withAnimation(.spring()) {
+                                    viewModel.isShowLeavePopUp = false
+                                }
+                            }
+                            
+                            DinotisPrimaryButton(
+                                text: LocalizableText.videoCallLeaveRoom,
+                                type: .fixed(113),
+                                height: 51,
+                                textColor: .white,
+                                bgColor: .DinotisDefault.primary
+                            ) {
+                                viewModel.leaveMeeting()
+                            }
+                        }
+                    }
+                }
+                .frame(maxWidth: 234)
+                .padding(20)
+                .background(
+                    RoundedRectangle(cornerRadius: 20)
+                        .foregroundColor(Color(red: 0.18, green: 0.19, blue: 0.2))
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .inset(by: 0.5)
+                        .stroke(Color(red: 0.32, green: 0.34, blue: 0.36), lineWidth: 1)
+                )
+            }
+        }
     }
 }
 
