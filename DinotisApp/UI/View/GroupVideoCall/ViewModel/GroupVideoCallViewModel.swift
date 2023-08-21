@@ -118,6 +118,9 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var dateTime = Date()
     @Published var isShowNearEndAlert = false
     
+    @Published var alert: AlertAttribute = .init()
+    @Published var isShowAlert = false
+    
     @Published var isShowingToolbar = true
     @Published var isShowAboutCallBottomSheet = false
     @Published var showingMoreMenu = false
@@ -315,10 +318,22 @@ final class GroupVideoCallViewModel: ObservableObject {
                 } else {
                     self?.isError = true
                 }
+                self?.alert = .init(
+                    title: LocalizableText.attentionText,
+                    message: (self?.error?.errorDescription).orEmpty(),
+                    primaryButton: .init(text: LocalizableText.videoCallLeaveRoom, action: {})
+                )
             } else {
                 self?.isError = true
                 self?.error = .api(error.localizedDescription)
+                self?.alert = .init(
+                    title: LocalizableText.attentionText,
+                    message: (self?.error?.errorDescription).orEmpty(),
+                    primaryButton: .init(text: LocalizableText.videoCallLeaveRoom, action: {})
+                )
             }
+            
+            self?.isShowAlert = true
         }
     }
 
@@ -389,6 +404,15 @@ final class GroupVideoCallViewModel: ObservableObject {
         
         if minutes == 5 && seconds == 0 && hours == 0 {
             self.isShowNearEndAlert = true
+            self.alert = .init(
+                title: LocalizableText.videoCallFiveMinutesLeftAlertTitle,
+                message: LocalizableText.videoCallFiveMinutesLeftAlertDesc,
+                primaryButton: .init(
+                    text: LocalizableText.understoodText,
+                    action: {}
+                )
+            )
+            self.isShowAlert = true
         }
         
         self.stringTime = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
@@ -435,6 +459,23 @@ final class GroupVideoCallViewModel: ObservableObject {
         self.isConnecting = false
         self.isError = true
         self.error = .connection(LocalizableText.videoCallConnectionFailed)
+        self.alert = .init(
+            title: LocalizableText.attentionText,
+            message: (self.error?.errorDescription).orEmpty(),
+            primaryButton: .init(
+                text: LocalizableText.videoCallLeaveRoom,
+                action: {
+                    self.leaveMeeting()
+                }
+            ),
+            secondaryButton: .init(
+                text: LocalizableText.videoCallRejoin,
+                action: {
+                    self.joinMeeting()
+                }
+            )
+        )
+        self.isShowAlert = true
     }
     
     func onJoinFailed() {
@@ -442,6 +483,23 @@ final class GroupVideoCallViewModel: ObservableObject {
         self.isConnecting = false
         self.isError = true
         self.error = .connection(LocalizableText.videoCallFailedJoin)
+        self.alert = .init(
+            title: LocalizableText.attentionText,
+            message: (self.error?.errorDescription).orEmpty(),
+            primaryButton: .init(
+                text: LocalizableText.videoCallLeaveRoom,
+                action: {
+                    self.leaveMeeting()
+                }
+            ),
+            secondaryButton: .init(
+                text: LocalizableText.videoCallRejoin,
+                action: {
+                    self.joinMeeting()
+                }
+            )
+        )
+        self.isShowAlert = true
     }
     
     func onStartFetch() {
@@ -585,7 +643,15 @@ final class GroupVideoCallViewModel: ObservableObject {
             print("Error in pinParticipant: \(error)")
             self.isError = true
             self.error = .defaultError(LocalizableText.videoCallFailedPinParticipant)
-            
+            self.alert = .init(
+                title: LocalizableText.attentionText,
+                message: (self.error?.errorDescription).orEmpty(),
+                primaryButton: .init(
+                    text: LocalizableText.okText,
+                    action: {}
+                )
+            )
+            self.isShowAlert = true
         }
     }
     
@@ -596,6 +662,15 @@ final class GroupVideoCallViewModel: ObservableObject {
             print("Error in forceDisableAudio: \(error)")
             self.isError = true
             self.error = .defaultError(LocalizableText.videoCallFailedDisableAudio)
+            self.alert = .init(
+                title: LocalizableText.attentionText,
+                message: (self.error?.errorDescription).orEmpty(),
+                primaryButton: .init(
+                    text: LocalizableText.okText,
+                    action: {}
+                )
+            )
+            self.isShowAlert = true
         }
     }
     
@@ -606,6 +681,15 @@ final class GroupVideoCallViewModel: ObservableObject {
             print("Error in forceDisableVideo: \(error)")
             self.isError = true
             self.error = .defaultError(LocalizableText.videoCallFailedDisableVideo)
+            self.alert = .init(
+                title: LocalizableText.attentionText,
+                message: (self.error?.errorDescription).orEmpty(),
+                primaryButton: .init(
+                    text: LocalizableText.okText,
+                    action: {}
+                )
+            )
+            self.isShowAlert = true
         }
     }
     
@@ -616,6 +700,15 @@ final class GroupVideoCallViewModel: ObservableObject {
             print("Error in kickParticipant: \(error)")
             self.isError = true
             self.error = .defaultError(LocalizableText.videoCallFaiedKickParticipant)
+            self.alert = .init(
+                title: LocalizableText.attentionText,
+                message: (self.error?.errorDescription).orEmpty(),
+                primaryButton: .init(
+                    text: LocalizableText.okText,
+                    action: {}
+                )
+            )
+            self.isShowAlert = true
         }
     }
     
@@ -626,6 +719,15 @@ final class GroupVideoCallViewModel: ObservableObject {
             print("Error in acceptWaitlisted: \(error)")
             self.isError = true
             self.error = .defaultError(LocalizableText.videoCallFailedAcceptWaitlistedRequest)
+            self.alert = .init(
+                title: LocalizableText.attentionText,
+                message: (self.error?.errorDescription).orEmpty(),
+                primaryButton: .init(
+                    text: LocalizableText.okText,
+                    action: {}
+                )
+            )
+            self.isShowAlert = true
         }
     }
     
@@ -637,6 +739,15 @@ final class GroupVideoCallViewModel: ObservableObject {
             print("Error to send message \(self.messageText): \(error)")
             self.isError = true
             self.error = .defaultError(LocalizableText.videoCallFailedSendMessage)
+            self.alert = .init(
+                title: LocalizableText.attentionText,
+                message: (self.error?.errorDescription).orEmpty(),
+                primaryButton: .init(
+                    text: LocalizableText.okText,
+                    action: {}
+                )
+            )
+            self.isShowAlert = true
         }
     }
     
@@ -647,6 +758,15 @@ final class GroupVideoCallViewModel: ObservableObject {
             print("Error in acceptAllWaitingRequest: \(error)")
             self.isError = true
             self.error = .defaultError(LocalizableText.videoCallFailedAcceptAllRequest)
+            self.alert = .init(
+                title: LocalizableText.attentionText,
+                message: (self.error?.errorDescription).orEmpty(),
+                primaryButton: .init(
+                    text: LocalizableText.okText,
+                    action: {}
+                )
+            )
+            self.isShowAlert = true
         }
     }
     
@@ -673,6 +793,17 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
         if !isLeaving {
             self.isError = true
             self.error = .disconnected
+            self.alert = .init(
+                title: LocalizableText.attentionText,
+                message: (self.error?.errorDescription).orEmpty(),
+                primaryButton: .init(
+                    text: LocalizableText.videoCallLeaveRoom,
+                    action: {
+                        self.routeToAfterCall()
+                    }
+                )
+            )
+            self.isShowAlert = true
         }
     }
     
@@ -692,6 +823,23 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
         self.isInit = false
         self.isError = true
         self.error = .connection(exception.description())
+        self.alert = .init(
+            title: LocalizableText.attentionText,
+            message: (self.error?.errorDescription).orEmpty(),
+            primaryButton: .init(
+                text: LocalizableText.videoCallLeaveRoom,
+                action: {
+                    self.leaveMeeting()
+                }
+            ),
+            secondaryButton: .init(
+                text: LocalizableText.videoCallRejoin,
+                action: {
+                    self.joinMeeting()
+                }
+            )
+        )
+        self.isShowAlert = true
     }
     
     func onMeetingInitStarted() {
@@ -702,6 +850,23 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
         self.isConnecting = false
         self.isError = true
         self.error = .connection(errorMessage)
+        self.alert = .init(
+            title: LocalizableText.attentionText,
+            message: (self.error?.errorDescription).orEmpty(),
+            primaryButton: .init(
+                text: LocalizableText.videoCallLeaveRoom,
+                action: {
+                    self.leaveMeeting()
+                }
+            ),
+            secondaryButton: .init(
+                text: LocalizableText.videoCallRejoin,
+                action: {
+                    self.joinMeeting()
+                }
+            )
+        )
+        self.isShowAlert = true
     }
     
     func onMeetingRoomDisconnected() {
@@ -922,8 +1087,23 @@ extension GroupVideoCallViewModel: DyteSelfEventsListener {
     }
     
     func onRemovedFromMeeting() {
-        isError = false
-        isKicked = true
+        self.isLeaving = true
+        self.error = nil
+        self.isError = false
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.alert = .init(
+                title: LocalizableText.videoCallKickedAlertTitle,
+                primaryButton: .init(
+                    text: LocalizableText.understoodText,
+                    action: {
+                        self.isConnecting = false
+                        self.routeToAfterCall()
+                    }
+                )
+            )
+            self.isShowAlert = true
+        }
     }
     
     func onStoppedPresenting() {
@@ -1008,7 +1188,17 @@ extension GroupVideoCallViewModel: DyteWaitlistEventsListener {
 
 extension GroupVideoCallViewModel: DyteStageEventListener {
     func onParticipantRemovedFromStage(participant: DyteJoinedMeetingParticipant) {
-        
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.alert = .init(
+                title: LocalizableText.videoCallMoveToViewerAlertTitle,
+                primaryButton: .init(
+                    text: LocalizableText.understoodText,
+                    action: { self.alert = .init() }
+                )
+            )
+            self.isShowAlert = true
+        }
     }
     
     func onAddedToStage() {

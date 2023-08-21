@@ -474,6 +474,9 @@
 "video_call_leave_popup_subtitle" = "If the session has not ended, you can rejoin to this session";
 "video_call_end_session_button" = "End Session";
 
+"video_call_kicked_alert_title" = "You have been removed from this session by the Host";
+"video_call_move_to_viewer_alert_title" = "You have been moved to Viewer by Host";
+
 "feedback_very_bad" = "Very Bad";
 "feedback_very_good" = "Very Good";
 "feedback_weakness_title" = "Tell us what's missing";

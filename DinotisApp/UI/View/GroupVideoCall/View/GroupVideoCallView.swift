@@ -134,59 +134,15 @@ struct GroupVideoCallView: View {
                 SessionInfoBottomSheet(viewModel: viewModel)
             }
         }
-        .alert(isPresented: $viewModel.isShowNearEndAlert) {
-            Alert(
-                title: Text(LocalizableText.videoCallFiveMinutesLeftAlertTitle),
-                message: Text(LocalizableText.videoCallFiveMinutesLeftAlertDesc),
-                dismissButton: .default(Text(LocalizableText.understoodText))
-            )
-        }
-        .alert(isPresented: $viewModel.isKicked) {
-            Alert(
-                title: Text(LocalizableText.attentionText),
-                message: Text(LocalizableText.videoCallRemovedFromRoomMessage),
-                dismissButton: .default(
-                    Text(LocalizableText.understoodText),
-                    action: {
-                        self.viewModel.isConnecting = false
-                        self.viewModel.routeToAfterCall()
-                    }
-                )
-            )
-        }
-        .alert(
-            LocalizableText.attentionText,
-            isPresented: $viewModel.isError,
-            presenting: viewModel.error
-        ) { action in
-            switch action {
-            case .api(_):
-                Button(LocalizableText.videoCallLeaveRoom, role: .destructive) {
-                    viewModel.leaveMeeting()
-                }
-            case .connection(_):
-                Button(LocalizableText.videoCallLeaveRoom, role: .destructive) {
-                    viewModel.leaveMeeting()
-                }
-                Button(LocalizableText.videoCallRejoin, role: .cancel) {
-                    viewModel.joinMeeting()
-                }
-            case .disconnected:
-                Button(LocalizableText.videoCallLeaveRoom, role: .destructive) {
-                    viewModel.routeToAfterCall()
-                }
-
-            default:
-                Button {
-                    print(action.errorDescription)
-                } label: {
-                    Text(LocalizableText.okText)
-                }
-
-            }
-        } message: { message in
-            Text(message.errorDescription)
-        }
+        .dinotisAlert(
+            isPresent: $viewModel.isShowAlert,
+            type: .videoCall,
+            title: viewModel.alert.title,
+            isError: false,
+            message: viewModel.alert.message,
+            primaryButton: viewModel.alert.primaryButton,
+            secondaryButton: viewModel.alert.secondaryButton
+        )
     }
 }
 
