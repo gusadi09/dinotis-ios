@@ -2199,7 +2199,17 @@ public enum LocalizableText {
         bundle: .module,
         comment: "end session"
     )
+    public static let videoCallKickedAlertTitle = NSLocalizedString(
+        "video_call_kicked_alert_title",
+        bundle: .module,
+        comment: "video call kicked alert title"
+    )
     
+    public static let videoCallMoveToViewerAlertTitle = NSLocalizedString(
+        "video_call_move_to_viewer_alert_title",
+        bundle: .module,
+        comment: "video call move to viewer alert title"
+    )
 }
 
 

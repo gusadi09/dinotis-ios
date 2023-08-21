@@ -409,7 +409,7 @@
 "video_call_create_poll_footer" = "Buat Polling Untuk Interaksi Lebih Menarik!";
 "video_call_five_minutes_left_alert_title" = "Waktu kamu sisa 5 menit";
 "video_call_five_minutes_left_alert_desc" = "Jangan lupa untuk beri salam perpisahan ya!";
-"understood_text" = "Understood";
+"understood_text" = "Mengerti";
 "video_call_screen_share_text" = "Berbagi Layar";
 "video_call_session_title" = "Sesi %@";
 "video_call_scheduled_text" = "Jadwal";
@@ -473,6 +473,9 @@
 "video_call_end_session_popup_subtitle" = "Apa kamu yakin ingin menyelesaikan sesi ini sekarang?";
 "video_call_leave_popup_subtitle" = "Selama sesi belum berakhir, kamu dapat bergabung kembali pada sesi ini";
 "video_call_end_session_button" = "Selesaikan Sesi";
+
+"video_call_kicked_alert_title" = "Anda telah dikeluarkan oleh Host dari sesi ini";
+"video_call_move_to_viewer_alert_title" = "Anda telah dipindahkan menjadi Viewer oleh Host";
 
 "feedback_very_bad" = "Sangat Buruk";
 "feedback_very_good" = "Sangat Baik";
