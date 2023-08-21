@@ -704,7 +704,7 @@ fileprivate extension GroupVideoCallView {
                             Button {
                                 viewModel.toggleCamera()
                             } label: {
-                                (viewModel.isCameraOn ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
+                                (viewModel.meeting.localUser.videoEnabled ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
                                     .resizable()
                                     .scaledToFit()
                                     .padding(12)
@@ -715,18 +715,20 @@ fileprivate extension GroupVideoCallView {
                                     .frame(width: 48, height: 48)
                             }
                             
-                            Button {
-                                viewModel.toggleMicrophone()
-                            } label: {
-                                (viewModel.isAudioOn ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .padding(12)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 12)
-                                            .foregroundColor(Color(red: 0.21, green: 0.22, blue: 0.22))
-                                    )
-                                    .frame(width: 48, height: 48)
+                            if !viewModel.isReceivedStageInvite {
+                                Button {
+                                    viewModel.toggleMicrophone()
+                                } label: {
+                                    (viewModel.meeting.localUser.audioEnabled ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .padding(12)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .foregroundColor(Color(red: 0.21, green: 0.22, blue: 0.22))
+                                        )
+                                        .frame(width: 48, height: 48)
+                                }
                             }
                         }
                         .padding(8)
@@ -765,7 +767,7 @@ fileprivate extension GroupVideoCallView {
                                     Button {
                                         viewModel.toggleCamera()
                                     } label: {
-                                        (viewModel.isCameraOn ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
+                                        (viewModel.meeting.localUser.videoEnabled ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
                                             .resizable()
                                             .scaledToFit()
                                             .padding(12)
@@ -776,18 +778,20 @@ fileprivate extension GroupVideoCallView {
                                             .frame(width: 48, height: 48)
                                     }
                                     
-                                    Button {
-                                        viewModel.toggleMicrophone()
-                                    } label: {
-                                        (viewModel.isAudioOn ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
-                                            .resizable()
-                                            .scaledToFit()
-                                            .padding(12)
-                                            .background(
-                                                RoundedRectangle(cornerRadius: 12)
-                                                    .foregroundColor(Color(red: 0.21, green: 0.22, blue: 0.22))
-                                            )
-                                            .frame(width: 48, height: 48)
+                                    if !viewModel.isReceivedStageInvite {
+                                        Button {
+                                            viewModel.toggleMicrophone()
+                                        } label: {
+                                            (viewModel.meeting.localUser.audioEnabled ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
+                                                .resizable()
+                                                .scaledToFit()
+                                                .padding(12)
+                                                .background(
+                                                    RoundedRectangle(cornerRadius: 12)
+                                                        .foregroundColor(Color(red: 0.21, green: 0.22, blue: 0.22))
+                                                )
+                                                .frame(width: 48, height: 48)
+                                        }
                                     }
                                 }
                                 .padding(8)
@@ -1134,7 +1138,7 @@ fileprivate extension GroupVideoCallView {
                     }
                 } label: {
                     if viewModel.meeting.localUser.stageStatus == .onStage {
-                        (viewModel.isAudioOn ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
+                        (viewModel.meeting.localUser.audioEnabled ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
                             .resizable()
                             .scaledToFit()
                             .frame(height: 32)
@@ -1166,7 +1170,7 @@ fileprivate extension GroupVideoCallView {
                     }
                 } label: {
                     if viewModel.meeting.localUser.stageStatus == .onStage {
-                        (viewModel.isCameraOn ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
+                        (viewModel.meeting.localUser.videoEnabled ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
                             .resizable()
                             .scaledToFit()
                             .frame(height: 32)
