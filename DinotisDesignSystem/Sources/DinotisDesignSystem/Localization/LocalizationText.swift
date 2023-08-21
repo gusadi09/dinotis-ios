@@ -2174,6 +2174,32 @@ public enum LocalizableText {
         bundle: .module,
         comment: "raised toast text"
     )
+    public static let videoCallEndSessionPopupTitle = NSLocalizedString(
+        "video_call_end_session_popup_title",
+        bundle: .module,
+        comment: "End this session?"
+    )
+    public static let videoCallLeavePopupTitle = NSLocalizedString(
+        "video_call_leave_popup_title",
+        bundle: .module,
+        comment: "Leave the session?"
+    )
+    public static let videoCallEndSessionPopupSubtitle = NSLocalizedString(
+        "video_call_end_session_popup_subtitle",
+        bundle: .module,
+        comment: "Are you sure want to end this session?"
+    )
+    public static let videoCallLeavePopupSubtitle = NSLocalizedString(
+        "video_call_leave_popup_subtitle",
+        bundle: .module,
+        comment: "If the session has not ended, you can rejoin to this session"
+    )
+    public static let videoCallEndSessionButton = NSLocalizedString(
+        "video_call_end_session_button",
+        bundle: .module,
+        comment: "end session"
+    )
+    
 }
 
 

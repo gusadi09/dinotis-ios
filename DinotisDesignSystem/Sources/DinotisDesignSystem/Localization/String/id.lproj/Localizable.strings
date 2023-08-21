@@ -468,8 +468,14 @@
 "video_call_raised_toast" = "Kamu telah meminta menjadi mode speaker. Biarkan terangkat🙌";
 "video_call_unraised_toast" = "Kamu telah menurunkan tanganmu😊";
 
-"feedback_very_bad" = "Very Bad";
-"feedback_very_good" = "Very Good";
+"video_call_end_session_popup_title" = "Selesaikan sesi ini?";
+"video_call_leave_popup_title" = "Tinggalkan sesi ini?";
+"video_call_end_session_popup_subtitle" = "Apa kamu yakin ingin menyelesaikan sesi ini sekarang?";
+"video_call_leave_popup_subtitle" = "Selama sesi belum berakhir, kamu dapat bergabung kembali pada sesi ini";
+"video_call_end_session_button" = "Selesaikan Sesi";
+
+"feedback_very_bad" = "Sangat Buruk";
+"feedback_very_good" = "Sangat Baik";
 "feedback_weakness_title" = "Beritahu kami apa yang kurang";
 "feedback_problem_title" = "Ceritakan apa yang kamu alami";
 "feedback_success_title" = "Ulasanmu sangat berarti, terima kasih";

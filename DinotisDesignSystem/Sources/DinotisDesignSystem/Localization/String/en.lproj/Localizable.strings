@@ -203,7 +203,7 @@
 "next_label" = "Next";
 "limited_quota_label" = "🔥 Limited quota";
 "cancel_label" = "Cancel";
-"pay_label" = "Bayar";
+"pay_label" = "Pay";
 "in_app_purchase_label" = "In-App Purchase";
 "other_payment_method_title" = "Other payment method";
 "other_payment_method_description" = "You can choose other payment method";
@@ -468,6 +468,11 @@
 "video_call_send_feedback" = "Send";
 "video_call_raised_toast" = "You've been request to Speaker mode. Keep it raised🙌";
 "video_call_unraised_toast" = "You've been turn down your hand😊";
+"video_call_end_session_popup_title" = "End this session?";
+"video_call_leave_popup_title" = "Leave the session?";
+"video_call_end_session_popup_subtitle" = "Are you sure want to end this session?";
+"video_call_leave_popup_subtitle" = "If the session has not ended, you can rejoin to this session";
+"video_call_end_session_button" = "End Session";
 
 "feedback_very_bad" = "Very Bad";
 "feedback_very_good" = "Very Good";
