@@ -1135,20 +1135,19 @@ fileprivate extension GroupVideoCallView {
                             .scaledToFit()
                             .frame(height: 32)
                     } else {
-                        Image.videoCallChatIcon
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 32)
-                            .foregroundColor(.white)
-                            .overlay(alignment: .trailing) {
-                                if viewModel.hasNewMessage {
-                                    Circle()
-                                        .foregroundColor(.red)
-                                        .frame(width: 10, height: 10)
-                                        .padding(.trailing, 10)
-                                        .padding(.bottom, 12)
-                                }
+                        ZStack(alignment: .topTrailing) {
+                            Image.videoCallChatIcon
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 32)
+                                .foregroundColor(.white)
+                            
+                            if viewModel.hasNewMessage {
+                                Circle()
+                                    .foregroundColor(.red)
+                                    .frame(width: 6, height: 6)
                             }
+                        }
                     }
                 }
                 .padding(.horizontal, 6)
@@ -2020,15 +2019,17 @@ fileprivate extension GroupVideoCallView {
                 
                 ZStack(alignment: .top) {
                     VStack {
-                        MultilineTextField(LocalizableText.videoCallMessagePlaceholder, text: $viewModel.questionText, initHeight: 300)
+                        MultilineTextField(LocalizableText.videoCallMessagePlaceholder, text: $viewModel.questionText)
                             .padding(.horizontal, 14)
                             .padding(.vertical, 8)
                         
                         Spacer()
                     }
+                    .frame(maxHeight: 185)
                     
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(Color(red: 0.32, green: 0.34, blue: 0.36), lineWidth: 1)
+                        .frame(maxHeight: 185)
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .padding(.horizontal)
@@ -2060,6 +2061,8 @@ fileprivate extension GroupVideoCallView {
                 }
                 .padding(.horizontal)
                 .padding(.bottom)
+                
+                Spacer()
             }
             .background(Color(red: 0.15, green: 0.16, blue: 0.17))
         }
@@ -3044,7 +3047,7 @@ fileprivate extension GroupVideoCallView {
                         }
                     }
                 }
-                .frame(maxWidth: 234)
+                .frame(maxWidth: 258)
                 .padding(20)
                 .background(
                     RoundedRectangle(cornerRadius: 20)
@@ -3055,6 +3058,7 @@ fileprivate extension GroupVideoCallView {
                         .inset(by: 0.5)
                         .stroke(Color(red: 0.32, green: 0.34, blue: 0.36), lineWidth: 1)
                 )
+                .scaleEffect(viewModel.isShowLeavePopUp ? 1 : 0)
             }
         }
     }

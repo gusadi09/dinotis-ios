@@ -123,7 +123,6 @@ struct MultilineTextField: View {
 	
 	private var onCommit: (() -> Void)?
 	private var placeholder: String
-    private let initHeight: CGFloat
 	
 	@Binding private var text: String
 	private var internalText: Binding<String> {
@@ -133,11 +132,9 @@ struct MultilineTextField: View {
 	@State private var dynamicHeight: CGFloat = 60
 	@State private var isShowingPlaceholder = true
 	
-    init (_ placeholder: String = "", text: Binding<String>, initHeight: CGFloat = 200, onCommit: (() -> Void)? = nil) {
+    init (_ placeholder: String = "", text: Binding<String>, onCommit: (() -> Void)? = nil) {
 		self.placeholder = placeholder
 		self.onCommit = onCommit
-        self.initHeight = initHeight
-        self.dynamicHeight = initHeight
 		self._text = text
 	}
 	
@@ -162,7 +159,7 @@ struct MultilineTextField: View {
 					isShowingPlaceholder = internalText.wrappedValue.isEmpty
 				}
 			)
-            .frame(minHeight: abs(dynamicHeight) >= initHeight ? abs(initHeight) : abs(initHeight), maxHeight: abs(dynamicHeight) >= initHeight ? abs(200) : abs(dynamicHeight))
+            .frame(minHeight: abs(dynamicHeight) >= 200 ? abs(200) : abs(dynamicHeight), maxHeight: abs(dynamicHeight) >= 200 ? abs(200) : abs(dynamicHeight))
             .font(.robotoRegular(size: 12))
             .contentShape(Rectangle())
 			.disableAutocorrection(true)

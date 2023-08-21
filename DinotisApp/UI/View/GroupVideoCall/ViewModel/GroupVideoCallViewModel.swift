@@ -1198,6 +1198,7 @@ extension GroupVideoCallViewModel: DyteStageEventListener {
                 )
             )
             self.isShowAlert = true
+            self.isRaised = false
         }
     }
     
