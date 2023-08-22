@@ -476,6 +476,13 @@
 
 "video_call_kicked_alert_title" = "You have been removed from this session by the Host";
 "video_call_move_to_viewer_alert_title" = "You have been moved to Viewer by Host";
+"video_call_viewer_mode_label" = "Viewer Mode";
+"video_call_viewer_mode_guide" = "Currently you are in **viewer mode**, want to interact with the host? 📷 🎤";
+"video_call_raise_hand_guide" = "Tap Raise Hand to join and interact in the session 🌟";
+"video_call_interaction_guide" = "Let's feel the exciting interactive experience! 🎤🌟";
+
+"okay_with_dot_label" = "Okay.";
+"show_me_label" = "Show me";
 
 "feedback_very_bad" = "Very Bad";
 "feedback_very_good" = "Very Good";

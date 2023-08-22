@@ -77,6 +77,51 @@ struct GroupVideoCallView: View {
             LeaveSessionAlert()
                 .environmentObject(viewModel)
                 .isHidden(!viewModel.isShowLeavePopUp, remove: !viewModel.isShowLeavePopUp)
+            
+            Color(red: 0.33, green: 0.33, blue: 0.33).opacity(0.75)
+                .ignoresSafeArea()
+                .isHidden(!viewModel.showGuide(), remove: !viewModel.showGuide())
+            
+            VStack(spacing: 16) {
+                Image.feedbackSuccessImage
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 200)
+                
+                Text(LocalizableText.videoCallInteractionGuide)
+                    .multilineTextAlignment(.center)
+                    .font(.robotoRegular(size: 12))
+                
+                HStack {
+                    Spacer()
+                    
+                    Button {
+                        withAnimation {
+                            viewModel.isShowInteractionGuide = false
+                        }
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text(LocalizableText.okText)
+                                .font(.robotoBold(size: 12))
+                            
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 12, weight: .bold))
+                        }
+                    }
+                }
+            }
+            .foregroundColor(.white)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 16)
+            .frame(maxWidth: 250)
+            .background(
+                Color.DinotisDefault.secondary
+                    .cornerRadius(12)
+            )
+            .padding()
+            .transition(.scale.animation(.spring(response: 0.4, dampingFraction: 0.6)))
+            .isHidden(!viewModel.isShowInteractionGuide, remove: !viewModel.isShowInteractionGuide)
+
         }
         .navigationTitle("")
         .navigationBarHidden(true)
@@ -143,6 +188,188 @@ struct GroupVideoCallView: View {
             primaryButton: viewModel.alert.primaryButton,
             secondaryButton: viewModel.alert.secondaryButton
         )
+        .overlayPreferenceValue(BoundsPreference.self) { value in
+            if let preference = value.first(where: { item in
+                item.key == viewModel.currentGuide?.rawValue
+            }), let guide = viewModel.currentGuide {
+                GeometryReader { proxy in
+                    let rect = proxy[preference.value]
+                    
+                    Group {
+                        switch guide {
+                        case .viewerMode:
+                            Button {
+                                withAnimation {
+                                    viewModel.isShowViewerModeGuide = true
+                                    viewModel.currentGuide = .viewerMode
+                                }
+                            } label: {
+                                HStack(spacing: 4) {
+                                    Image.videoCallHelpCircle
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 24)
+                                    
+                                    Text(LocalizableText.videoCallViewerMode)
+                                        .font(.robotoMedium(size: 12))
+                                        .foregroundColor(.white)
+                                }
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
+                                .background(
+                                    Capsule()
+                                        .foregroundColor(Color(red: 0.28, green: 0.12, blue: 0.45))
+                                )
+                            }
+                            .dinotisTooltip(
+                                $viewModel.isShowViewerModeGuide,
+                                alignment: .bottomTrailing,
+                                id: VideoCallGuide.viewerMode.rawValue,
+                                width: 180,
+                                height: 92
+                            ) {
+                                VStack(alignment: .leading, spacing: 8) {
+                                    
+                                    if let text = try? AttributedString(markdown: LocalizableText.videoCallViewerModeGuide()) {
+                                        Text(text)
+                                            .multilineTextAlignment(.leading)
+                                            .foregroundColor(.white)
+                                            .font(.robotoRegular(size: 12))
+                                    }
+                                    
+                                    HStack(spacing: 10) {
+                                        Spacer()
+                                        
+                                        Button {
+                                            withAnimation {
+                                                viewModel.isShowViewerModeGuide = false
+                                                viewModel.currentGuide = nil
+                                            }
+                                        } label: {
+                                            Text(LocalizableText.okayWithDotLabel)
+                                                .font(.robotoRegular(size: 12))
+                                        }
+
+                                        Button {
+                                            withAnimation {
+                                                if viewModel.meeting.stage.onStage.isEmpty {
+                                                    viewModel.isShowViewerModeGuide = false
+                                                    viewModel.currentGuide = nil
+                                                } else {
+                                                    viewModel.isShowViewerModeGuide = false
+                                                    viewModel.isShowRaiseHandGuide = true
+                                                    viewModel.currentGuide = .raiseHand
+                                                }
+                                            }
+                                        } label: {
+                                            HStack(spacing: 0) {
+                                                Text(LocalizableText.showMeLabel)
+                                                    .font(.robotoBold(size: 12))
+                                                
+                                                Image(systemName: "chevron.right")
+                                                    .font(.system(size: 12, weight: .bold))
+                                            }
+                                        }
+                                    }
+                                    .foregroundColor(.white)
+                                }
+                            }
+                        case .raiseHand:
+                            Button {
+                                withAnimation(.spring()) {
+                                    if viewModel.meeting.localUser.stageStatus == .onStage {
+                                        viewModel.toggleMicrophone()
+                                    } else {
+                                        if viewModel.isRaised {
+                                            viewModel.meeting.stage.cancelRequestAccess()
+                                            viewModel.toastText = LocalizableText.videoCallUnraisedToast
+                                        } else {
+                                            viewModel.meeting.stage.requestAccess()
+                                            viewModel.toastText = LocalizableText.videoCallRaisedToast
+                                        }
+                                        
+                                        viewModel.isShowRaisedToast = true
+                                        viewModel.isRaised = !viewModel.isRaised
+                                    }
+                                }
+                            } label: {
+                                if viewModel.meeting.localUser.stageStatus == .onStage {
+                                    (viewModel.meeting.localUser.audioEnabled ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 32)
+                                } else {
+                                    if viewModel.isRaised {
+                                        Image.videoCallRaiseHandInactive
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(height: 32)
+                                    } else {
+                                        Image.videoCallRaiseHandActive
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(height: 32)
+                                    }
+                                }
+                            }
+                            .padding(6)
+                            .background(
+                                Color.DinotisDefault.black1
+                                    .cornerRadius(16)
+                            )
+                            .dinotisTooltip(
+                                $viewModel.isShowRaiseHandGuide,
+                                alignment: .topLeading,
+                                id: VideoCallGuide.raiseHand.rawValue,
+                                width: 190,
+                                height: 92,
+                                context: {
+                                    VStack(alignment: .leading, spacing: 8) {
+                                        Text(LocalizableText.videoCallRaiseHandGuide)
+                                            .multilineTextAlignment(.leading)
+                                            .foregroundColor(.white)
+                                            .font(.robotoRegular(size: 12))
+                                        
+                                        HStack(spacing: 10) {
+                                            Spacer()
+                                            
+                                            Button {
+                                                withAnimation {
+                                                    viewModel.isShowRaiseHandGuide = false
+                                                    viewModel.currentGuide = nil
+                                                }
+                                            } label: {
+                                                Text(LocalizableText.okayWithDotLabel)
+                                                    .font(.robotoRegular(size: 12))
+                                            }
+
+                                            Button {
+                                                withAnimation {
+                                                    viewModel.currentGuide = nil
+                                                    viewModel.isShowRaiseHandGuide = false
+                                                    viewModel.isShowInteractionGuide = true
+                                                }
+                                            } label: {
+                                                HStack(spacing: 0) {
+                                                    Text(LocalizableText.showMeLabel)
+                                                        .font(.robotoBold(size: 12))
+                                                    
+                                                    Image(systemName: "chevron.right")
+                                                        .font(.system(size: 12, weight: .bold))
+                                                }
+                                            }
+                                        }
+                                        .foregroundColor(.white)
+                                    }
+                                }
+                            )
+                        }
+                    }
+                    .frame(width: rect.width, height: rect.height)
+                    .offset(x: rect.minX, y: rect.minY)
+                }
+            }
+        }
     }
 }
 
@@ -383,63 +610,72 @@ fileprivate extension GroupVideoCallView {
                                         .scaledToFit()
                                         .frame(height: 32)
                                 }
+                            } else {
+                                Button {
+                                    withAnimation {
+                                        viewModel.isShowViewerModeGuide = true
+                                        viewModel.currentGuide = .viewerMode
+                                    }
+                                } label: {
+                                    HStack(spacing: 4) {
+                                        Image.videoCallHelpCircle
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(height: 24)
+                                        
+                                        Text(LocalizableText.videoCallViewerMode)
+                                            .font(.robotoMedium(size: 12))
+                                            .foregroundColor(.white)
+                                    }
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 8)
+                                    .background(
+                                        Capsule()
+                                            .foregroundColor(Color(red: 0.28, green: 0.12, blue: 0.45))
+                                    )
+                                }
+                                .dinotisTooltip(
+                                    $viewModel.isShowViewerModeGuide,
+                                    alignment: .bottomTrailing,
+                                    id: VideoCallGuide.viewerMode.rawValue,
+                                    width: 180,
+                                    height: 92
+                                ) {
+                                    VStack(alignment: .leading, spacing: 8) {
+                                        if let text = try? AttributedString(markdown: LocalizableText.videoCallViewerModeGuide()) {
+                                            Text(text)
+                                                .multilineTextAlignment(.leading)
+                                                .foregroundColor(.white)
+                                                .font(.robotoRegular(size: 12))
+                                        }
+                                        
+                                        HStack(spacing: 10) {
+                                            Spacer()
+                                            
+                                            Button {
+                                                
+                                            } label: {
+                                                Text(LocalizableText.okayWithDotLabel)
+                                                    .font(.robotoRegular(size: 12))
+                                            }
+
+                                            Button {
+                                                
+                                            } label: {
+                                                HStack(spacing: 0) {
+                                                    Text(LocalizableText.showMeLabel)
+                                                        .font(.robotoBold(size: 12))
+                                                    
+                                                    Image(systemName: "chevron.right")
+                                                        .font(.system(size: 12, weight: .bold))
+                                                }
+                                            }
+                                        }
+                                        .foregroundColor(.white)
+                                    }
+                                }
                             }
-//                            else {
-//                                HStack(spacing: 4) {
-//                                    Image.videoCallHelpCircle
-//                                        .resizable()
-//                                        .scaledToFit()
-//                                        .frame(height: 24)
-//                                    
-//                                    Text(LocalizableText.videoCallViewerMode)
-//                                        .font(.robotoMedium(size: 12))
-//                                        .foregroundColor(.white)
-//                                }
-//                                .padding(.horizontal, 12)
-//                                .padding(.vertical, 8)
-//                                .background(
-//                                    Capsule()
-//                                        .foregroundColor(Color(red: 0.28, green: 0.12, blue: 0.45))
-//                                )
-//                            }
-//                            else {
-//                                HStack(spacing: 4) {
-//                                    Image.videoCallHelpCircle
-//                                        .resizable()
-//                                        .scaledToFit()
-//                                        .frame(height: 24)
-//
-//                                    Text(LocalizableText.videoCallViewerMode)
-//                                        .font(.robotoMedium(size: 12))
-//                                        .foregroundColor(.white)
-//                                }
-//                                .padding(.horizontal, 12)
-//                                .padding(.vertical, 8)
-//                                .background(
-//                                    Capsule()
-//                                        .foregroundColor(Color(red: 0.28, green: 0.12, blue: 0.45))
-//                                )
-//                            }
-                            
                         }
-//                        else {
-//                            HStack(spacing: 4) {
-//                                Image.videoCallHelpCircle
-//                                    .resizable()
-//                                    .scaledToFit()
-//                                    .frame(height: 24)
-//
-//                                Text(LocalizableText.videoCallViewerMode)
-//                                    .font(.robotoMedium(size: 12))
-//                                    .foregroundColor(.white)
-//                            }
-//                            .padding(.horizontal, 12)
-//                            .padding(.vertical, 8)
-//                            .background(
-//                                Capsule()
-//                                    .foregroundColor(Color(red: 0.28, green: 0.12, blue: 0.45))
-//                            )
-//                        }
                     }
                     .padding(.horizontal)
                     .padding(.top, 10)
@@ -1116,7 +1352,52 @@ fileprivate extension GroupVideoCallView {
                         }
                     }
                 }
-                .padding(.horizontal, 6)
+                .padding(6)
+                .dinotisTooltip(
+                    $viewModel.isShowRaiseHandGuide,
+                    alignment: .topLeading,
+                    id: VideoCallGuide.raiseHand.rawValue,
+                    width: 190,
+                    height: 92,
+                    context: {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(LocalizableText.videoCallRaiseHandGuide)
+                                .multilineTextAlignment(.leading)
+                                .foregroundColor(.white)
+                                .font(.robotoRegular(size: 12))
+                            
+                            HStack(spacing: 10) {
+                                Spacer()
+                                
+                                Button {
+                                    withAnimation {
+                                        viewModel.isShowRaiseHandGuide = false
+                                        viewModel.currentGuide = nil
+                                    }
+                                } label: {
+                                    Text(LocalizableText.okayWithDotLabel)
+                                        .font(.robotoRegular(size: 12))
+                                }
+
+                                Button {
+                                    withAnimation {
+                                        viewModel.isShowRaiseHandGuide = false
+                                        viewModel.isShowRaiseHandGuide = true
+                                    }
+                                } label: {
+                                    HStack(spacing: 0) {
+                                        Text(LocalizableText.showMeLabel)
+                                            .font(.robotoBold(size: 12))
+                                        
+                                        Image(systemName: "chevron.right")
+                                            .font(.system(size: 12, weight: .bold))
+                                    }
+                                }
+                            }
+                            .foregroundColor(.white)
+                        }
+                    }
+                )
                 .isHidden(viewModel.meeting.stage.onStage.isEmpty, remove: viewModel.meeting.stage.onStage.isEmpty)
                 
                 Button {

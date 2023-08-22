@@ -64,6 +64,11 @@ enum ErrorAlert {
     }
 }
 
+enum VideoCallGuide: String {
+    case viewerMode = "VIEWER_MODE"
+    case raiseHand = "RAISE_HAND"
+}
+
 final class GroupVideoCallViewModel: ObservableObject {
     private var timer: Timer?
     var backToHome: () -> Void
@@ -110,6 +115,11 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var success = false
     @Published var error: ErrorAlert? = nil
     @Published var hasNewMessage = false
+    
+    @Published var isShowViewerModeGuide = false
+    @Published var isShowRaiseHandGuide = false
+    @Published var isShowInteractionGuide = false
+    @Published var currentGuide: VideoCallGuide? = nil
     
     @Published var stringTime = "00:00:00"
     @Published var isNearbyEnd = false
@@ -222,6 +232,10 @@ final class GroupVideoCallViewModel: ObservableObject {
         } catch {
             
         }
+    }
+    
+    func showGuide() -> Bool {
+        return isShowInteractionGuide || isShowRaiseHandGuide || isShowViewerModeGuide
     }
     
     
