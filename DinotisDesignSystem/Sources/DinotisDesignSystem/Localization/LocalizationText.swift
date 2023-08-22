@@ -2210,6 +2210,43 @@ public enum LocalizableText {
         bundle: .module,
         comment: "video call move to viewer alert title"
     )
+    public static let videoCallViewerModeLabel = NSLocalizedString(
+        "video_call_viewer_mode_label",
+        bundle: .module,
+        comment: "video call viewer mode label"
+    )
+    
+    public static func videoCallViewerModeGuide() -> String {
+        String(
+            format: NSLocalizedString(
+                "video_call_viewer_mode_guide",
+                bundle: .module,
+                comment: "video call viewer mode guide"
+            )
+        )
+    }
+    
+    public static let videoCallRaiseHandGuide = NSLocalizedString(
+        "video_call_raise_hand_guide",
+        bundle: .module,
+        comment: "video call raise hand guide"
+    )
+    public static let videoCallInteractionGuide = NSLocalizedString(
+        "video_call_interaction_guide",
+        bundle: .module,
+        comment: "video call interaction guide"
+    )
+    public static let okayWithDotLabel = NSLocalizedString(
+        "okay_with_dot_label",
+        bundle: .module,
+        comment: "okay with dot label"
+    )
+    public static let showMeLabel = NSLocalizedString(
+        "show_me_label",
+        bundle: .module,
+        comment: "show me label"
+    )
+    
 }
 
 
