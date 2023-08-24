@@ -13,6 +13,10 @@
 "title_role_type" = "Various interesting sessions for you";
 "description_role_type" = "Please choose the type of account that suits for you!";
 
+"tab_explore" = "Explore";
+"tab_search" = "Search";
+"tab_agenda" = "Agenda";
+
 "label_skip" = "Skip";
 "label_continue" = "Next";
 "label_previous" = "Previous";

@@ -2246,7 +2246,21 @@ public enum LocalizableText {
         bundle: .module,
         comment: "show me label"
     )
-    
+    public static let tabExplore = NSLocalizedString(
+        "tab_explore",
+        bundle: .module,
+        comment: "tab explore in home"
+    )
+    public static let tabSearch = NSLocalizedString(
+        "tab_search",
+        bundle: .module,
+        comment: "tab search in home"
+    )
+    public static let tabAgenda = NSLocalizedString(
+        "tab_agenda",
+        bundle: .module,
+        comment: "tab agenda in home"
+    )
 }
 
 
