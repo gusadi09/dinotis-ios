@@ -13,6 +13,10 @@
 "title_role_type" = "Berbagai sesi menarik untukmu";
 "description_role_type" = "Silahkan pilih tipe akun yang sesuai untukmu!";
 
+"tab_explore" = "Eksplor";
+"tab_search" = "Cari";
+"tab_agenda" = "Agenda";
+
 "label_skip" = "Lewati";
 "label_continue" = "Selanjutnya";
 "label_previous" = "Sebelumnya";

@@ -42,7 +42,7 @@ public struct DinotisTabView: ViewModifier {
 						TabIcon(
 							tabIcon: TabIconModel(
 								icon: .bottomNavigationExploreWhiteIcon,
-								name: "Explore",
+                                name: LocalizableText.tabExplore,
 								assignedPage: .explore
 							),
 							selectedPage: $selected,
@@ -54,7 +54,7 @@ public struct DinotisTabView: ViewModifier {
 						TabIcon(
 							tabIcon: TabIconModel(
 								icon: .bottomNavigationSearchWhiteIcon,
-								name: "Search",
+                                name: LocalizableText.tabSearch,
 								assignedPage: .search
 							),
 							selectedPage: $selected,
@@ -66,7 +66,7 @@ public struct DinotisTabView: ViewModifier {
 						TabIcon(
 							tabIcon: TabIconModel(
 								icon: .bottomNavigationVideoWhiteIcon,
-								name: "Agenda",
+                                name: LocalizableText.tabAgenda,
 								assignedPage: .agenda
 							),
 							selectedPage: $selected,
@@ -85,7 +85,7 @@ public struct DinotisTabView: ViewModifier {
 						TabIcon(
 							tabIcon: TabIconModel(
 								icon: .bottomNavigationProfileWhiteIcon,
-								name: "Profile",
+                                name: LocalizableText.tabProfile,
 								assignedPage: .profile
 							),
 							selectedPage: $selected,
@@ -123,7 +123,7 @@ public struct DinotisTabView: ViewModifier {
                     TabIcon(
                         tabIcon: TabIconModel(
                             icon: .bottomNavigationVideoWhiteIcon,
-                            name: "Agenda",
+                            name: LocalizableText.tabAgenda,
                             assignedPage: .agenda
                         ),
                         selectedPage: $selected,
