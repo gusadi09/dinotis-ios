@@ -22,9 +22,9 @@ final class PrivateVideoCallViewModel: ObservableObject {
 	private let getParticipantsUseCase: GetParticipantsUseCase
 	private let sendReportUseCase: SendPanicReportUseCase
     private let getReasonUseCase: ReportReasonListUseCase
-	private let meetRepository: MeetingsRepository
 	private let twilioRepository: TwilioDataRepository
 	private let singlePhotoUseCase: SinglePhotoUseCase
+    private let checkMeetingEndUseCase: CheckEndedMeetingUseCase
 	private var cancellables = Set<AnyCancellable>()
 
 	@Published var isLocalInSession = false
@@ -94,18 +94,17 @@ final class PrivateVideoCallViewModel: ObservableObject {
 	init(
 		meeting: UserMeetingData,
 		backToHome: @escaping (() -> Void),
-		meetRepository: MeetingsRepository = MeetingsDefaultRepository(),
 		getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
         sendReportUseCase: SendPanicReportUseCase = SendPanicReportDefaultUseCase(),
 		authRepository: AuthenticationRepository = AuthenticationDefaultRepository(),
 		getParticipantsUseCase: GetParticipantsUseCase = GetParticipantsDefaultUseCase(),
         singlePhotoUseCase: SinglePhotoUseCase = SinglePhotoDefaultUseCase(),
 		twilioRepository: TwilioDataRepository = TwilioDataDefaultRepository(),
-        getReasonUseCase: ReportReasonListUseCase = ReportReasonListDefaultUseCase()
+        getReasonUseCase: ReportReasonListUseCase = ReportReasonListDefaultUseCase(),
+        checkMeetingEndUseCase: CheckEndedMeetingUseCase = CheckEndedMeetingDefaultUseCase()
 	) {
 		self.meeting = meeting
 		self.backToHome = backToHome
-		self.meetRepository = meetRepository
 		self.getUserUseCase = getUserUseCase
 		self.sendReportUseCase = sendReportUseCase
 		self.authRepository = authRepository
@@ -113,6 +112,7 @@ final class PrivateVideoCallViewModel: ObservableObject {
 		self.singlePhotoUseCase = singlePhotoUseCase
 		self.twilioRepository = twilioRepository
         self.getReasonUseCase = getReasonUseCase
+        self.checkMeetingEndUseCase = checkMeetingEndUseCase
 	}
 	
     func onStartFetch(sendReport: Bool) {
@@ -146,7 +146,9 @@ final class PrivateVideoCallViewModel: ObservableObject {
 		self.isNearbyEnd = Date() <= meeting.endAt.orCurrentDate().addingTimeInterval(-300)
 
 		if hours == 0 && minutes == 0 && seconds == 0 {
-			self.checkMeetingEnd()
+            Task {
+                await self.checkMeetingEnd()
+            }
 		}
 
 		withAnimation {
@@ -165,40 +167,27 @@ final class PrivateVideoCallViewModel: ObservableObject {
 		}
 	}
 
-	func checkMeetingEnd() {
+	func checkMeetingEnd() async {
         onStartFetch(sendReport: false)
 
 		self.stringTime = "00:00:00"
 
-		meetRepository
-			.providePostCheckMeetingEnd(meetingId: meeting.id.orEmpty())
-			.sink { result in
-				switch result {
-				case .failure(let error):
-					DispatchQueue.main.async {[weak self] in
-						if error.statusCode.orZero() == 401 {
-							
-						} else {
-							self?.isLoading = false
-							self?.isError = true
+        let result = await checkMeetingEndUseCase.execute(for: meeting.id.orEmpty())
+        
+        switch result {
+        case .success(let success):
+            DispatchQueue.main.async { [weak self] in
+                self?.success = true
+                self?.isLoading = false
 
-							self?.error = error.message.orEmpty()
-						}
-					}
-
-				case .finished:
-					DispatchQueue.main.async { [weak self] in
-						self?.success = true
-						self?.isLoading = false
-
-					}
-				}
-			} receiveValue: { value in
-				self.futureDate = value.endAt.orCurrentDate()
-				guard let isEnded = value.isEnd else { return }
-				self.isMeetingForceEnd = isEnded
-			}
-			.store(in: &cancellables)
+                self?.futureDate = success.endAt.orCurrentDate()
+                guard let isEnded = success.isEnd else { return }
+                self?.isMeetingForceEnd = isEnded
+                self?.getRealTime()
+            }
+        case .failure(let failure):
+            handleDefaultError(error: failure)
+        }
 	}
 
 	func handleDefaultError(error: Error) {

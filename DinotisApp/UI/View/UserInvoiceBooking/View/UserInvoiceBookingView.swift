@@ -12,7 +12,7 @@ import DinotisDesignSystem
 import SwiftUINavigation
 
 struct UserInvoiceBookingView: View {
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
 	
 	@ObservedObject var viewModel: InvoicesBookingViewModel
     

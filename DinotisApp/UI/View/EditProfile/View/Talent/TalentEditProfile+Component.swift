@@ -107,7 +107,7 @@ extension TalentEditProfile {
 	struct TitleHeader: View {
 
 		@ObservedObject var viewModel: EditProfileViewModel
-		@Environment(\.presentationMode) var presentationMode
+		@Environment(\.dismiss) var dismiss
 		
 		var body: some View {
 			HStack {

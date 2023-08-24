@@ -28,7 +28,7 @@ struct UserScheduleDetail: View {
     @StateObject private var privateSpeakerSettingsManager = PrivateSpeakerSettingsManager()
     @StateObject private var privateSpeakerViewModel = PrivateVideoSpeakerViewModel()
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
     @Environment(\.viewController) private var viewControllerHolder: ViewControllerHolder
     
@@ -168,7 +168,7 @@ struct UserScheduleDetail: View {
                                         if viewModel.isDirectToHome {
                                             self.viewModel.backToHome()
                                         } else {
-                                            self.presentationMode.wrappedValue.dismiss()
+                                            dismiss()
                                         }
                                     }
                                 )
@@ -179,7 +179,9 @@ struct UserScheduleDetail: View {
                         ScrollableContent(viewModel: viewModel, action: refreshList, participantCount: participantCount(data: viewModel.dataBooking))
                             .environmentObject(customerChatManager)
                         
-                        if viewModel.dataBooking?.meeting?.endedAt == nil {
+                        if ((viewModel.dataBooking?.status).orEmpty().contains(SessionStatus.upcoming.rawValue) || (viewModel.dataBooking?.status).orEmpty().contains(SessionStatus.paid.rawValue))  &&
+                            viewModel.dataBooking != nil
+                        {
                             BottomView(viewModel: viewModel)
                         }
                     }
@@ -1527,9 +1529,10 @@ private extension UserScheduleDetail {
                 }
                 .onChange(of: viewModel.dataBooking?.id, perform: { newValue in
                     if newValue != nil && viewModel.isShowRating() {
+                        scroll.scrollTo(ScheduleDetailTooltip.review.value)
+                        
                         if isFirstLaunch {
                             withAnimation {
-                                scroll.scrollTo(ScheduleDetailTooltip.review.value)
                                 self.isShowTooltip = true
                                 self.isFirstLaunch = false
                             }
@@ -1654,7 +1657,7 @@ private extension UserScheduleDetail {
         
         @ObservedObject var viewModel: ScheduleDetailViewModel
         
-        @Environment(\.presentationMode) var presentationMode
+        @Environment(\.dismiss) var dismiss
         
         var body: some View {
             HStack {

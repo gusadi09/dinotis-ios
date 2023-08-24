@@ -11,7 +11,7 @@ import DinotisDesignSystem
 
 struct BundlingView: View {
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
     @ObservedObject var viewModel: BundlingViewModel
     
@@ -279,12 +279,12 @@ struct BundlingView_Previews: PreviewProvider {
 extension BundlingView {
 	struct HeaderView: View {
 
-		@Environment(\.presentationMode) var presentationMode
+		@Environment(\.dismiss) var dismiss
 
 		var body: some View {
 			HStack {
 				Button(action: {
-					self.presentationMode.wrappedValue.dismiss()
+					dismiss()
 
 				}, label: {
 					Image.Dinotis.arrowBackIcon

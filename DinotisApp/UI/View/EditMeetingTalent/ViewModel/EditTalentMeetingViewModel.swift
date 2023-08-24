@@ -19,9 +19,11 @@ final class EditTalentMeetingViewModel: ObservableObject {
 	private lazy var stateObservable = StateObservable.shared
 
 	private var cancellables = Set<AnyCancellable>()
+    private let getDetailMeetingUseCase: GetMeetingDetailUseCase
 	private let authRepository: AuthenticationRepository
 	private let meetingRepository: MeetingsRepository
     private let userUseCase: GetUserUseCase
+    private let editMeetingUseCase: EditCreatorMeetingUseCase
 	private var onValueChanged: ((_ refreshControl: UIRefreshControl) -> Void)?
 
 	@Published var isLoading = false
@@ -31,28 +33,32 @@ final class EditTalentMeetingViewModel: ObservableObject {
     @Published var managements: [ManagementWrappedData]?
 
 	@Published var meetingID: String
-
-	@Published var isShowSuccess = false
+    
+    @Published var isShowSuccess = false
     @Published var isDisableEdit = false
     @Published var talent = [MeetingCollaborationData]()
     @Published var maxEdit = 0
-
-  @Published var meetingForm = MeetingForm(id: "", title: "", description: "", price: 0, startAt: "", endAt: "", isPrivate: false, slots: 0, managementId: nil, urls: [])
-
-	@Published var isRefreshFailed = false
-
-	init(
+    
+    @Published var meetingForm = AddMeetingRequest(id: "", title: "", description: "", price: 0, startAt: "", endAt: "", isPrivate: false, slots: 0, managementId: nil, urls: [])
+    
+    @Published var isRefreshFailed = false
+    
+    init(
 		meetingID: String,
 		backToHome: @escaping (() -> Void),
 		authRepository: AuthenticationRepository = AuthenticationDefaultRepository(),
 		meetingRepository: MeetingsRepository = MeetingsDefaultRepository(),
-        userUseCase: GetUserUseCase = GetUserDefaultUseCase()
+        userUseCase: GetUserUseCase = GetUserDefaultUseCase(),
+        getDetailMeetingUseCase: GetMeetingDetailUseCase = GetMeetingDetailDefaultUseCase(),
+        editMeetingUseCase: EditCreatorMeetingUseCase = EditCreatorMeetingDefaultUseCase()
 	) {
 		self.meetingID = meetingID
 		self.backToHome = backToHome
 		self.authRepository = authRepository
 		self.meetingRepository = meetingRepository
         self.userUseCase = userUseCase
+        self.getDetailMeetingUseCase = getDetailMeetingUseCase
+        self.editMeetingUseCase = editMeetingUseCase
 	}
 
 	func routeToRoot() {
@@ -81,13 +87,17 @@ final class EditTalentMeetingViewModel: ObservableObject {
             self?.isLoading = false
             
             if let error = error as? ErrorResponse {
-                self?.error = error.message.orEmpty()
-                
                 
                 if error.statusCode.orZero() == 401 {
                     self?.isRefreshFailed.toggle()
+                    self?.error = error.message.orEmpty()
+                } else if error.statusCode.orZero() == 422 {
+                    self?.isError = true
+
+                    self?.error = LocaleText.formFieldError
                 } else {
                     self?.isError = true
+                    self?.error = error.message.orEmpty()
                 }
             } else {
                 self?.isError = true
@@ -114,91 +124,77 @@ final class EditTalentMeetingViewModel: ObservableObject {
         }
     }
 
-	func getMeetingDetail() {
+    func onGetUser() {
+        Task {
+            await getUsers()
+        }
+    }
+    
+    func onGetMeetingDetail() {
+        Task {
+            await getMeetingDetail()
+        }
+    }
+    
+    func onAppear() {
+        onGetUser()
+        onGetMeetingDetail()
+    }
+    
+	func getMeetingDetail() async {
 		onStartRequest()
 
-		meetingRepository.provideGetDetailMeeting(meetingId: self.meetingID)
-			.sink { result in
-				switch result {
-				case .failure(let error):
-					DispatchQueue.main.async {[weak self] in
-						if error.statusCode.orZero() == 401 {
-							
-						} else {
-							self?.isLoading = false
-							self?.isError = true
-
-							self?.error = error.message.orEmpty()
-						}
-					}
-
-				case .finished:
-					DispatchQueue.main.async { [weak self] in
-						self?.isLoading = false
-					}
-				}
-			} receiveValue: { response in
-				self.meetingForm.id = response.id
-				self.meetingForm.description = response.description.orEmpty()
-                self.meetingForm.endAt = DateUtils.dateFormatter(response.endAt.orCurrentDate(), forFormat: .utcV2)
-				self.meetingForm.isPrivate = response.isPrivate ?? false
-				self.meetingForm.price = Int(response.price.orEmpty()).orZero()
-                self.meetingForm.slots = response.slots.orZero()
-                self.meetingForm.startAt = DateUtils.dateFormatter(response.startAt.orCurrentDate(), forFormat: .utcV2)
-                self.meetingForm.title = response.title.orEmpty()
-                self.meetingForm.managementId = response.managementId
+        let result = await getDetailMeetingUseCase.execute(for: self.meetingID)
+        
+        switch result {
+        case .success(let success):
+            DispatchQueue.main.async { [weak self] in
+                self?.isLoading = false
+                self?.meetingForm.id = success.id
+                self?.meetingForm.description = success.description.orEmpty()
+                self?.meetingForm.endAt = DateUtils.dateFormatter(success.endAt.orCurrentDate(), forFormat: .utcV2)
+                self?.meetingForm.isPrivate = success.isPrivate ?? false
+                self?.meetingForm.price = Int(success.price.orEmpty()).orZero()
+                self?.meetingForm.slots = success.slots.orZero()
+                self?.meetingForm.startAt = DateUtils.dateFormatter(success.startAt.orCurrentDate(), forFormat: .utcV2)
+                self?.meetingForm.title = success.title.orEmpty()
+                self?.meetingForm.managementId = success.managementId
                 
-                if let startAt = response.startAt, let maxEdit = response.maxEditAt {
-                    self.toggleDisableEdit(from: maxEdit)
-                    self.maxEdit = self.minuteDifferenceOfMaxEdit(with: maxEdit, from: startAt)
+                if let startAt = success.startAt, let maxEdit = success.maxEditAt {
+                    self?.toggleDisableEdit(from: maxEdit)
+                    self?.maxEdit = (self?.minuteDifferenceOfMaxEdit(with: maxEdit, from: startAt)).orZero()
                 }
                 
-                self.meetingForm.urls = response.meetingUrls?.compactMap({ value in
-                    MeetingURL(title: value.title.orEmpty(), url: value.url.orEmpty())
+                self?.meetingForm.urls = success.meetingUrls?.compactMap({ value in
+                    MeetingURLrequest(title: value.title.orEmpty(), url: value.url.orEmpty())
                 }) ?? []
                 
-                self.meetingForm.collaborations = response.meetingCollaborations?.compactMap({
+                self?.meetingForm.collaborations = success.meetingCollaborations?.compactMap({
                     $0.username
                 })
                 
-                self.talent = response.meetingCollaborations ?? []
+                self?.talent = success.meetingCollaborations ?? []
             }
-            .store(in: &cancellables)
+        case .failure(let failure):
+            handleDefaultError(error: failure)
+        }
     }
 
-	func editMeeting() {
+	func editMeeting() async {
 		onStartRequest()
+        
+        let result = await editMeetingUseCase.execute(for: meetingID, with: meetingForm)
+        
+        switch result {
+        case .success(let success):
+            DispatchQueue.main.async { [weak self] in
+                self?.isLoading = false
+                self?.isShowSuccess = true
+            }
+        case .failure(let failure):
+            handleDefaultError(error: failure)
+        }
 
-		meetingRepository.providePutEditMeeting(by: self.meetingID, contain: meetingForm)
-			.sink { result in
-				switch result {
-				case .failure(let error):
-					DispatchQueue.main.async {[weak self] in
-						if error.statusCode.orZero() == 401 {
-							
-						} else if error.statusCode.orZero() == 422 {
-							self?.isLoading = false
-							self?.isError = true
-
-							self?.error = LocaleText.formFieldError
-						} else {
-							self?.isLoading = false
-							self?.isError = true
-
-							self?.error = error.message.orEmpty()
-						}
-					}
-
-				case .finished:
-					DispatchQueue.main.async { [weak self] in
-						self?.isLoading = false
-						self?.isShowSuccess = true
-					}
-				}
-			} receiveValue: { _ in
-
-			}
-			.store(in: &cancellables)
 	}
     
     func toggleDisableEdit(from maxEdit: Date) {

@@ -14,7 +14,7 @@ struct TalentWalletView: View {
 	
 	@ObservedObject var viewModel: TalentWalletViewModel
 	
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
 	
 	@Environment(\.viewController) private var viewControllerHolder: ViewControllerHolder
 	
@@ -89,7 +89,7 @@ struct TalentWalletView: View {
 
 					HStack {
 						Button(action: {
-							presentationMode.wrappedValue.dismiss()
+							dismiss()
 						}, label: {
 							Image.Dinotis.arrowBackIcon
 								.padding()

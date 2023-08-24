@@ -20,8 +20,8 @@ public final class MeetingsDefaultRemoteDataSource: MeetingsRemoteDataSource {
         try await self.provider.request(.getRules, model: MeetingRulesResponse.self)
     }
     
-    public func addMeeting(with body: AddMeetingRequest) async throws -> MeetingDetailResponse {
-        try await self.provider.request(.addMeeting(body), model: MeetingDetailResponse.self)
+    public func addMeeting(with body: AddMeetingRequest) async throws -> StartCreatorMeetingResponse {
+        try await self.provider.request(.addMeeting(body), model: StartCreatorMeetingResponse.self)
     }
     
     public func getTalentMeeting(params: MeetingsPageRequest) async throws -> TalentMeetingResponse {
@@ -32,12 +32,12 @@ public final class MeetingsDefaultRemoteDataSource: MeetingsRemoteDataSource {
         try await self.provider.request(.TalentDetailMeeting(userID, params), model: TalentMeetingResponse.self)
     }
     
-    public func patchEndMeeting(meetingId: String) async throws -> MeetingDetailResponse {
-        try await self.provider.request(.endMeeting(meetingId), model: MeetingDetailResponse.self)
+    public func patchEndMeeting(meetingId: String) async throws -> StartCreatorMeetingResponse {
+        try await self.provider.request(.endMeeting(meetingId), model: StartCreatorMeetingResponse.self)
     }
     
-    public func putEditMeeting(meetingId: String, body: AddMeetingRequest) async throws -> MeetingDetailResponse {
-        try await self.provider.request(.editMeeting(meetingId, body), model: MeetingDetailResponse.self)
+    public func putEditMeeting(meetingId: String, body: AddMeetingRequest) async throws -> StartCreatorMeetingResponse {
+        try await self.provider.request(.editMeeting(meetingId, body), model: StartCreatorMeetingResponse.self)
     }
     
     public func deleteMeeting(meetingId: String) async throws -> SuccessResponse {
@@ -52,8 +52,8 @@ public final class MeetingsDefaultRemoteDataSource: MeetingsRemoteDataSource {
         try await self.provider.request(.detailMeetings(meetingId), model: MeetingDetailResponse.self)
     }
     
-    public func patchStartTalentMeeting(by meetingId: String) async throws -> MeetingDetailResponse {
-        try await self.provider.request(.startMeeting(meetingId), model: MeetingDetailResponse.self)
+    public func patchStartTalentMeeting(by meetingId: String) async throws -> StartCreatorMeetingResponse {
+        try await self.provider.request(.startMeeting(meetingId), model: StartCreatorMeetingResponse.self)
     }
     
     public func getCollabMeeting(by meetingId: String) async throws -> MeetingDetailResponse {

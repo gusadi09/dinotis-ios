@@ -31,35 +31,41 @@ final class TalentEditRateCardScheduleViewModel: ObservableObject {
     private let authRepository: AuthenticationRepository
     private let meetingRepository: MeetingsRepository
     private let editRateCardUseCase: EditRequestedSessionUseCase
+    private let getDetailMeetingUseCase: GetMeetingDetailUseCase
+    private let editMeetingUseCase: EditCreatorMeetingUseCase
     
     @Published var isLoading = false
     @Published var isError = false
     @Published var success = false
     @Published var error: String?
-  
-  @Published var isShowAlert = false
-  @Published var alert = AlertAttribute()
-
+    
+    @Published var isShowAlert = false
+    @Published var alert = AlertAttribute()
+    
     @Published var meetingID: String
-
+    
     @Published var isShowSuccess = false
-
-  @Published var meetingForm = MeetingForm(id: "", title: "", description: "", price: 0, startAt: "", endAt: "", isPrivate: false, slots: 0, urls: [])
-
+    
+    @Published var meetingForm = MeetingForm(id: "", title: "", description: "", price: 0, startAt: "", endAt: "", isPrivate: false, slots: 0, urls: [])
+    
     @Published var isRefreshFailed = false
-
+    
     init(
         meetingID: String,
         backToHome: @escaping (() -> Void),
         authRepository: AuthenticationRepository = AuthenticationDefaultRepository(),
         meetingRepository: MeetingsRepository = MeetingsDefaultRepository(),
-        editRateCardUseCase: EditRequestedSessionUseCase = EditRequestedSessionDefaultUseCase()
+        editRateCardUseCase: EditRequestedSessionUseCase = EditRequestedSessionDefaultUseCase(),
+        getDetailMeetingUseCase: GetMeetingDetailUseCase = GetMeetingDetailDefaultUseCase(),
+        editMeetingUseCase: EditCreatorMeetingUseCase = EditCreatorMeetingDefaultUseCase()
     ) {
         self.meetingID = meetingID
         self.backToHome = backToHome
         self.authRepository = authRepository
         self.meetingRepository = meetingRepository
         self.editRateCardUseCase = editRateCardUseCase
+        self.getDetailMeetingUseCase = getDetailMeetingUseCase
+        self.editMeetingUseCase = editMeetingUseCase
     }
     
 	@Published var title = ""
@@ -69,7 +75,7 @@ final class TalentEditRateCardScheduleViewModel: ObservableObject {
 
 	@Published var sheetType: EditRateCardType?
 
-	@Published var timeStart: Date = Date()
+    @Published var timeStart: Date = Date().addingTimeInterval(3600)
     @Published var timeEnd: Date = Date()
     
     func onStartRequest() {
@@ -91,51 +97,52 @@ final class TalentEditRateCardScheduleViewModel: ObservableObject {
 
     }
 
-	func handleDefaultError(error: Error) {
-		DispatchQueue.main.async { [weak self] in
-			self?.isLoading = false
-			self?.success = false
-
-			if let error = error as? ErrorResponse {
-
-				if error.statusCode.orZero() == 401 {
-					self?.error = error.message.orEmpty()
-					self?.isRefreshFailed.toggle()
-          self?.alert.isError = true
-          self?.alert.message = LocalizableText.alertSessionExpired
-          self?.alert.primaryButton = .init(
-            text: LocalizableText.okText,
-            action: {
-                NavigationUtil.popToRootView()
-                self?.stateObservable.userType = 0
-                self?.stateObservable.isVerified = ""
-                self?.stateObservable.refreshToken = ""
-                self?.stateObservable.accessToken = ""
-                self?.stateObservable.isAnnounceShow = false
-                OneSignal.setExternalUserId("")
+    func handleDefaultError(error: Error) {
+        DispatchQueue.main.async { [weak self] in
+            self?.isLoading = false
+            self?.success = false
+            
+            if let error = error as? ErrorResponse {
+                
+                if error.statusCode.orZero() == 401 {
+                    self?.error = error.message.orEmpty()
+                    self?.isRefreshFailed.toggle()
+                    self?.alert.isError = true
+                    self?.alert.message = LocalizableText.alertSessionExpired
+                    self?.alert.primaryButton = .init(
+                        text: LocalizableText.okText,
+                        action: {
+                            NavigationUtil.popToRootView()
+                            self?.stateObservable.userType = 0
+                            self?.stateObservable.isVerified = ""
+                            self?.stateObservable.refreshToken = ""
+                            self?.stateObservable.accessToken = ""
+                            self?.stateObservable.isAnnounceShow = false
+                            OneSignal.setExternalUserId("")
+                        }
+                    )
+                    self?.isShowAlert = true
+                }else if error.statusCode.orZero() == 422 {
+                    self?.isError = true
+                    self?.alert.isError = true
+                    self?.alert.message = LocaleText.formFieldError
+                    self?.isShowAlert = true
+                } else {
+                    self?.isError = true
+                    self?.error = error.message.orEmpty()
+                    self?.alert.message = error.message.orEmpty()
+                    self?.alert.isError = true
+                    self?.isShowAlert = true
+                }
+            } else {
+                self?.isError = true
+                self?.error = error.localizedDescription
+                self?.alert.message = error.localizedDescription
+                self?.alert.isError = true
+                self?.isShowAlert = true
             }
-          )
-          self?.isShowAlert = true
-				}else if error.statusCode.orZero() == 422 {
-					self?.isError = true
-
-					self?.error = LocaleText.formFieldError
-				} else {
-					self?.isError = true
-					self?.error = error.message.orEmpty()
-          self?.alert.message = error.message.orEmpty()
-          self?.alert.isError = true
-          self?.isShowAlert = true
-				}
-			} else {
-				self?.isError = true
-				self?.error = error.localizedDescription
-        self?.alert.message = error.localizedDescription
-        self?.alert.isError = true
-        self?.isShowAlert = true
-			}
-
-		}
+            
+        }
 	}
     
   func editRateCard(successAction: @escaping () -> Void) async {
@@ -169,68 +176,41 @@ final class TalentEditRateCardScheduleViewModel: ObservableObject {
 		}
     }
     
-    func getMeetingDetail() {
+    func getMeetingDetail() async {
         onStartRequest()
 
-        meetingRepository.provideGetDetailMeeting(meetingId: self.meetingID)
-            .sink { result in
-                switch result {
-                case .failure(let error):
-                    DispatchQueue.main.async {[weak self] in
-                        if error.statusCode.orZero() == 401 {
-                          self?.alert.isError = true
-                          self?.alert.message = LocalizableText.alertSessionExpired
-                          self?.alert.primaryButton = .init(
-                            text: LocalizableText.okText,
-                            action: {
-                                NavigationUtil.popToRootView()
-                                self?.stateObservable.userType = 0
-                                self?.stateObservable.isVerified = ""
-                                self?.stateObservable.refreshToken = ""
-                                self?.stateObservable.accessToken = ""
-                                self?.stateObservable.isAnnounceShow = false
-                                OneSignal.setExternalUserId("")
-                            }
-                          )
-                          self?.isShowAlert = true
-                        } else {
-                            self?.isLoading = false
-                            self?.isError = true
-
-                            self?.error = error.message.orEmpty()
-                        }
-                    }
-
-                case .finished:
-                    DispatchQueue.main.async { [weak self] in
-                        self?.isLoading = false
-                    }
-                }
-            } receiveValue: { response in
-                print(response)
-                self.meetingForm.id = response.id
-                self.meetingForm.description = response.description.orEmpty()
-                self.meetingForm.endAt = DateUtils.dateFormatter(response.endAt.orCurrentDate(), forFormat: .utcV2)
-                self.meetingForm.isPrivate = response.isPrivate ?? false
-                self.meetingForm.price = Int(response.price.orEmpty()).orZero()
-                self.meetingForm.slots = response.slots.orZero()
-                self.meetingForm.startAt = DateUtils.dateFormatter(response.startAt.orCurrentDate(), forFormat: .utcV2)
-                self.meetingForm.title = response.title.orEmpty()
+        let result = await getDetailMeetingUseCase.execute(for: meetingID)
+        
+        switch result {
+        case .success(let success):
+            DispatchQueue.main.async { [weak self] in
+                self?.isLoading = false
                 
-                self.title = response.title.orEmpty()
-                self.price = response.price.orEmpty()
-                self.duration = (response.meetingRequest?.rateCard?.duration).orZero()
-                self.timeStart = response.startAt.orCurrentDate()
-                self.timeEnd = response.startAt.orCurrentDate()
-                self.rateCardId = (response.meetingRequest?.rateCardId).orEmpty()
+                self?.meetingForm.id = success.id
+                self?.meetingForm.description = success.description.orEmpty()
+                self?.meetingForm.endAt = DateUtils.dateFormatter(success.endAt.orCurrentDate(), forFormat: .utcV2)
+                self?.meetingForm.isPrivate = success.isPrivate ?? false
+                self?.meetingForm.price = Int(success.price.orEmpty()).orZero()
+                self?.meetingForm.slots = success.slots.orZero()
+                self?.meetingForm.startAt = DateUtils.dateFormatter(success.startAt.orCurrentDate(), forFormat: .utcV2)
+                self?.meetingForm.title = success.title.orEmpty()
+                
+                self?.title = success.title.orEmpty()
+                self?.price = success.price.orEmpty()
+                self?.duration = (success.meetingRequest?.rateCard?.duration).orZero()
+                self?.timeStart = success.startAt ?? Date().addingTimeInterval(3600)
+                self?.timeEnd = success.startAt.orCurrentDate()
+                self?.rateCardId = (success.meetingRequest?.rateCardId).orEmpty()
             }
-            .store(in: &cancellables)
+        case .failure(let failure):
+            handleDefaultError(error: failure)
+        }
     }
 
-    func editMeeting(successAction: @escaping () -> Void) {
+    func editMeeting(successAction: @escaping () -> Void) async {
         onStartRequest()
 
-        let body = MeetingForm(
+        let body = AddMeetingRequest(
             title: meetingForm.title,
             description: meetingForm.description,
             price: Int(price).orZero(),
@@ -240,51 +220,19 @@ final class TalentEditRateCardScheduleViewModel: ObservableObject {
             slots: meetingForm.slots,
             urls: []
         )
-
-        meetingRepository.providePutEditMeeting(by: self.meetingID, contain: body)
-            .sink { result in
-                switch result {
-                case .failure(let error):
-                    DispatchQueue.main.async {[weak self] in
-                        if error.statusCode.orZero() == 401 {
-                          self?.alert.isError = true
-                          self?.alert.message = LocalizableText.alertSessionExpired
-                          self?.alert.primaryButton = .init(
-                            text: LocalizableText.okText,
-                            action: {
-                                NavigationUtil.popToRootView()
-                                self?.stateObservable.userType = 0
-                                self?.stateObservable.isVerified = ""
-                                self?.stateObservable.refreshToken = ""
-                                self?.stateObservable.accessToken = ""
-                                self?.stateObservable.isAnnounceShow = false
-                                OneSignal.setExternalUserId("")
-                            }
-                          )
-                          self?.isShowAlert = true
-                        } else if error.statusCode.orZero() == 422 {
-                            self?.isLoading = false
-                            self?.isError = true
-
-                            self?.error = LocaleText.formFieldError
-                        } else {
-                            self?.isLoading = false
-                            self?.isError = true
-
-                            self?.error = error.message.orEmpty()
-                        }
-                    }
-
-                case .finished:
-                    DispatchQueue.main.async { [weak self] in
-                        self?.isLoading = false
-                        self?.isShowSuccess = true
-                        successAction()
-                    }
-                }
-            } receiveValue: { _ in
-
+        
+        let result = await editMeetingUseCase.execute(for: meetingID, with: body)
+        
+        switch result {
+        case .success(let success):
+            DispatchQueue.main.async { [weak self] in
+                self?.isLoading = false
+                self?.isShowSuccess = true
+                successAction()
             }
-            .store(in: &cancellables)
+        case .failure(let failure):
+            handleDefaultError(error: failure)
+        }
+
     }
 }

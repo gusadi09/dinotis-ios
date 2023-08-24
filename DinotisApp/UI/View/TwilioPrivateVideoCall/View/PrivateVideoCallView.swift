@@ -22,7 +22,7 @@ struct PrivateVideoCallView : View {
 		self.viewControllerHolder.value
 	}
 	
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
 	
 	@Binding var randomId: UInt
 	@Binding var meetingId: String
@@ -541,7 +541,7 @@ struct PrivateVideoCallView : View {
 		}
     .onChange(of: streamViewModel.alertIdentifier, perform: { _ in
       streamViewModel.showAlertContent {
-        presentationMode.wrappedValue.dismiss()
+        dismiss()
       } routeToAfterCall: {
         viewModel.routeToAfterCall()
       }

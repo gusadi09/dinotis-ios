@@ -18,7 +18,7 @@ struct UserProfileView: View {
 
 	@EnvironmentObject var viewModel: ProfileViewModel
 
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
 
 	@Environment(\.viewController) private var viewControllerHolder: ViewControllerHolder
 

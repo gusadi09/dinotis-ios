@@ -20,10 +20,11 @@ final class TalentHomeViewModel: ObservableObject {
     private let getUserUseCase: GetUserUseCase
     private let currentBalanceUseCase: CurrentBalanceUseCase
     private let getAnnouncementUseCase: GetAnnouncementUseCase
-    private let meetRepository: MeetingsRepository
 	private let confirmationUseCase: RequestConfirmationUseCase
 	private let meetingRequestUseCase: MeetingRequestUseCase
     private let counterUseCase: GetCounterUseCase
+    private let getTalentMeetingUseCase: GetCreatorMeetingListUseCase
+    private let deleteMeetingUseCase: DeleteCreatorMeetingUseCase
 
     @Published var isFromUserType: Bool
     @Published var hasNewNotif = false
@@ -31,14 +32,14 @@ final class TalentHomeViewModel: ObservableObject {
     @Published var filterSelection = ""
 	@Published var filterSelectionRequest = ""
     private var onValueChanged: ((_ refreshControl: UIRefreshControl) -> Void)?
-    @Published var filterOption = [OptionQuery]()
-    @Published var meetingData = [Meeting]()
-    @Published var meetingParam = MeetingsParams(take: 15, skip: 0, isStarted: "", isEnded: "false", isAvailable: "true")
+    @Published var filterOption = [OptionQueryResponse]()
+    @Published var meetingData = [MeetingDetailResponse]()
+    @Published var meetingParam = MeetingsPageRequest(take: 15, skip: 0, isStarted: "", isEnded: "false", isAvailable: "true")
     
     @Published var photoProfile: String?
     @Published var isShowDelete = false
     @Published var isSuccessDelete = false
-  @Published var meetingForm = MeetingForm(id: String.random(), title: "", description: "", price: 10000, startAt: "", endAt: "", isPrivate: true, slots: 0, urls: [])
+    @Published var meetingForm = MeetingForm(id: String.random(), title: "", description: "", price: 10000, startAt: "", endAt: "", isPrivate: true, slots: 0, urls: [])
     @Published var isErrorAdditionalShow = false
     @Published var goToEdit = false
     @Published var talentMeetingError = false
@@ -73,6 +74,8 @@ final class TalentHomeViewModel: ObservableObject {
     
     @Published var contentOffset = CGFloat.zero
     @Published var isLoading = false
+    @Published var isLoadingMore = false
+    @Published var isLoadingMoreRequest = false
 
 	@Published var successConfirm: Bool = false
 	@Published var isLoadingConfirm = false
@@ -89,21 +92,23 @@ final class TalentHomeViewModel: ObservableObject {
         getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
         currentBalanceUseCase: CurrentBalanceUseCase = CurrentBalanceDefaultUseCase(),
         getAnnouncementUseCase: GetAnnouncementUseCase = GetAnnouncementDefaultUseCase(),
-        meetRepository: MeetingsRepository = MeetingsDefaultRepository(),
 		rateCardRepository: RateCardRepository = RateCardDefaultRepository(),
 		confirmationUseCase: RequestConfirmationUseCase = RequestConfirmationDefaultUseCase(),
         meetingRequestUseCase: MeetingRequestUseCase = MeetingRequestDefaultUseCase(),
-        counterUseCase: GetCounterUseCase = GetCounterDefaultUseCase()
+        counterUseCase: GetCounterUseCase = GetCounterDefaultUseCase(),
+        getTalentMeetingUseCase: GetCreatorMeetingListUseCase = GetCreatorMeetingListDefaultUseCase(),
+        deleteMeetingUseCase: DeleteCreatorMeetingUseCase = DeleteCreatorMeetingDefaultUseCase()
     ) {
         self.isFromUserType = isFromUserType
         self.getUserUseCase = getUserUseCase
         self.currentBalanceUseCase = currentBalanceUseCase
         self.getAnnouncementUseCase = getAnnouncementUseCase
-        self.meetRepository = meetRepository
 		self.rateCardRepository = rateCardRepository
 		self.confirmationUseCase = confirmationUseCase
 		self.meetingRequestUseCase = meetingRequestUseCase
         self.counterUseCase = counterUseCase
+        self.getTalentMeetingUseCase = getTalentMeetingUseCase
+        self.deleteMeetingUseCase = deleteMeetingUseCase
     }
     
     func getCounter() async {
@@ -201,21 +206,50 @@ final class TalentHomeViewModel: ObservableObject {
         OneSignal.setExternalUserId("")
     }
 
+    func onGetCounter() {
+        Task {
+            await self.getCounter()
+        }
+    }
+    
+    func onGetCurrentBalance() {
+        Task {
+            await self.getCurrentBalance()
+        }
+    }
+    
+    func onGetTalentMeeting() {
+        Task {
+            await self.getTalentMeeting(isMore: false)
+        }
+    }
+    
+    func onGetMeetingRequest(isMore: Bool) {
+        Task {
+            await self.getMeetingRequest(isMore: isMore)
+        }
+    }
+    
     func onAppearView() {
 		Task {
 			await self.getUsers()
 			guard !isRefreshFailed else { return }
-            await self.getCounter()
-			await self.getCurrentBalance()
-            self.getTalentMeeting(isMore: false)
-			await self.getMeetingRequest()
+            onGetCounter()
+            onGetCurrentBalance()
+            onGetTalentMeeting()
+            onGetMeetingRequest(isMore: false)
 		}
     }
     
-    func onStartedFetch() {
+    func onStartedFetch(isMore: Bool = false) {
         DispatchQueue.main.async {[weak self] in
             self?.isError = false
-            self?.isLoading = true
+            if !isMore {
+                self?.isLoading = true
+            } else {
+                self?.isLoadingMore = true
+                self?.isLoadingMoreRequest = true
+            }
             self?.error = nil
             self?.success = false
         }
@@ -229,16 +263,16 @@ final class TalentHomeViewModel: ObservableObject {
     }
 
     func refreshList() async {
-        withAnimation(.spring()) {
-            getTalentMeeting(isMore: false)
+        Task {
+            self.meetingParam.skip = 0
+            self.meetingParam.take = 15
             
-            Task {
-                await getUsers()
-                
-                await getCurrentBalance()
-                
-                await getMeetingRequest()
-            }
+            await getTalentMeeting(isMore: false)
+            await getUsers()
+            
+            await getCurrentBalance()
+            
+            await getMeetingRequest(isMore: false)
         }
     }
 
@@ -262,50 +296,40 @@ final class TalentHomeViewModel: ObservableObject {
         }
     }
 
-    func getTalentMeeting(isMore: Bool) {
-        onStartedFetch()
+    func getTalentMeeting(isMore: Bool) async {
+        onStartedFetch(isMore: isMore)
 
-        meetRepository.provideGetTalentMeeting(params: meetingParam)
-            .sink { result in
-                switch result {
-                case .failure(let error):
-                    DispatchQueue.main.async {[weak self] in
-                        if error.statusCode.orZero() == 401 {
-                            
-                        } else {
-                            self?.isError = true
-                            self?.isLoading = false
-
-                            self?.error = error.message.orEmpty()
-                        }
-                    }
-
-                case .finished:
-                    DispatchQueue.main.async { [weak self] in
-                        self?.success = true
-                        self?.isLoading = false
-                    }
-                }
-            } receiveValue: { value in
-				if self.filterSelection.isEmpty {
-					self.filterSelection = (value.filters?.options?.first?.label).orEmpty()
-				}
-                self.filterOption = value.filters?.options ?? []
+        let result = await getTalentMeetingUseCase.execute(with: meetingParam)
+        
+        switch result {
+        case .success(let success):
+            DispatchQueue.main.async { [weak self] in
+                self?.success = true
                 if isMore {
-                    self.meetingData += value.data?.meetings ?? []
+                    self?.isLoadingMore = false
                 } else {
-                    self.meetingData = value.data?.meetings ?? []
+                    self?.isLoading = false
                 }
-				self.meetingCounter = value.counter.orEmpty()
+                
+                if self?.filterSelection.isEmpty ?? false {
+                    self?.filterSelection = (success.filters?.options?.first?.label).orEmpty()
+                }
+                self?.filterOption = success.filters?.options ?? []
+                if isMore {
+                    self?.meetingData += success.data?.meetings ?? []
+                } else {
+                    self?.meetingData = success.data?.meetings ?? []
+                }
+                self?.meetingCounter = success.counter.orEmpty()
 
-				if value.nextCursor == nil {
-					self.meetingParam.skip = 0
-					self.meetingParam.take = 15
-				}
-
+                if success.nextCursor == nil {
+                    self?.meetingParam.skip = 0
+                    self?.meetingParam.take = 15
+                }
             }
-            .store(in: &cancellables)
-
+        case .failure(let failure):
+            handleDefaultError(error: failure, isMore: isMore)
+        }
     }
 
     func onStartedDeleteMeeting() {
@@ -316,44 +340,59 @@ final class TalentHomeViewModel: ObservableObject {
             self?.isSuccessDelete = false
         }
     }
+    
+    func handleDefaultErrorDelete(error: Error) {
+        DispatchQueue.main.async { [weak self] in
+            self?.isLoading = false
+            
+            if let error = error as? ErrorResponse {
+                
+                if error.statusCode.orZero() == 401 {
+                    self?.error = error.message.orEmpty()
+                    self?.isRefreshFailed.toggle()
+                } else {
+                    self?.error = error.message.orEmpty()
+                    self?.isErrorAdditionalShow = true
+                }
+            } else {
+                self?.isErrorAdditionalShow = true
+                self?.error = error.localizedDescription
+            }
 
-    func deleteMeeting() {
+        }
+    }
+    
+    func deleteMeeting() async {
         onStartedDeleteMeeting()
 
-        meetRepository.provideDeleteMeeting(by: meetingId)
-            .sink { result in
-                switch result {
-                case .failure(let error):
-                    DispatchQueue.main.async {[weak self] in
-                        if error.statusCode.orZero() == 401 {
-                            
-                        } else {
-                            self?.isErrorAdditionalShow = true
-                            self?.isLoading = false
+        let result = await deleteMeetingUseCase.execute(for: meetingId)
 
-                            self?.error = error.message.orEmpty()
-                        }
-                    }
-
-                case .finished:
-                    DispatchQueue.main.async { [weak self] in
-                        self?.isSuccessDelete = true
-                        self?.isLoading = false
-                    }
-                }
-            } receiveValue: { _ in
-                self.meetingData = []
-                self.meetingParam.skip = 0
-                self.meetingParam.take = 15
-                self.getTalentMeeting(isMore: false)
+        switch result {
+        case .success(let success):
+            DispatchQueue.main.async { [weak self] in
+                self?.isSuccessDelete = true
+                self?.isLoading = false
+                self?.meetingData = []
+                self?.meetingParam.skip = 0
+                self?.meetingParam.take = 15
             }
-            .store(in: &cancellables)
+
+            await self.getTalentMeeting(isMore: false)
+
+        case .failure(let failure):
+            handleDefaultErrorDelete(error: failure)
+        }
 
     }
     
-    func handleDefaultError(error: Error) {
+    func handleDefaultError(error: Error, isMore: Bool = false) {
         DispatchQueue.main.async { [weak self] in
-            self?.isLoading = false
+            if isMore {
+                self?.isLoadingMore = false
+                self?.isLoadingMoreRequest = false
+            } else {
+                self?.isLoading = false
+            }
 
             if let error = error as? ErrorResponse {
 
@@ -434,8 +473,8 @@ final class TalentHomeViewModel: ObservableObject {
         }
     }
 
-	func getMeetingRequest() async {
-		onStartedFetch()
+    func getMeetingRequest(isMore: Bool) async {
+		onStartedFetch(isMore: isMore)
 
 		let result = await meetingRequestUseCase.execute(with: rateCardQuery)
 
@@ -444,6 +483,7 @@ final class TalentHomeViewModel: ObservableObject {
 			DispatchQueue.main.async { [weak self] in
 				self?.success = true
 				self?.isLoading = false
+                self?.isLoadingMoreRequest = false
 
 				if (self?.filterSelectionRequest ?? "").isEmpty {
 					self?.filterSelectionRequest = (success.filters?.options?.first?.label).orEmpty()
@@ -494,7 +534,9 @@ final class TalentHomeViewModel: ObservableObject {
 			meetingData = []
 			meetingParam.skip = 0
 			meetingParam.take = 15
-            getTalentMeeting(isMore: false)
+            Task {
+                await getTalentMeeting(isMore: false)
+            }
 		}
 	}
 
@@ -525,7 +567,7 @@ final class TalentHomeViewModel: ObservableObject {
 			rateCardQuery.take = 15
 
 			Task {
-				await getMeetingRequest()
+                await getMeetingRequest(isMore: false)
 			}
 		}
 	}
@@ -582,11 +624,11 @@ final class TalentHomeViewModel: ObservableObject {
 				self?.meetingParam.skip = 0
 				self?.meetingParam.take = 15
 
-                self?.getTalentMeeting(isMore: false)
 			}
 
 			Task {
-				await self.getMeetingRequest()
+                await self.getTalentMeeting(isMore: false)
+                await self.getMeetingRequest(isMore: false)
 			}
 		case .failure(let failure):
 			handleDefaultErrorConfirm(error: failure)

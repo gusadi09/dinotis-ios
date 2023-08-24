@@ -22,6 +22,7 @@ enum SizeClass {
 struct GroupVideoCallView: View {
     
     @ObservedObject var viewModel: GroupVideoCallViewModel
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         ZStack {
@@ -134,6 +135,9 @@ struct GroupVideoCallView: View {
                 subTitle: viewModel.toastText
             )
         })
+        .onReceive(viewModel.didSendRequest, perform: {
+            dismiss()
+        })
         .onAppear {
             viewModel.onAppear()
             AppDelegate.orientationLock = .all
@@ -187,6 +191,14 @@ struct GroupVideoCallView: View {
             message: viewModel.alert.message,
             primaryButton: viewModel.alert.primaryButton,
             secondaryButton: viewModel.alert.secondaryButton
+        )
+        .dinotisAlert(
+            isPresent: $viewModel.isMeetingForceEnd,
+            type: .videoCall,
+            title: LocalizableText.attentionText,
+            isError: false,
+            message: LocalizableText.videoCallMeetingForceEnd,
+            primaryButton: .init(text: LocalizableText.okText, action: { viewModel.routeToAfterCall() })
         )
         .overlayPreferenceValue(BoundsPreference.self) { value in
             if let preference = value.first(where: { item in
@@ -454,7 +466,7 @@ fileprivate extension GroupVideoCallView {
                 TabView(selection: $viewModel.index) {
                     if viewModel.pinned != nil || !viewModel.screenShareUser.isEmpty || viewModel.host != nil || viewModel.lastActive != nil {
                         VStack {
-                            if !viewModel.screenShareUser.isEmpty {
+                            if viewModel.screenShareId != nil {
                                 
                                 RemoteScreenShareVideoContainerView(viewModel: viewModel, participant: $viewModel.screenShareId)
                                     .padding(.horizontal)
@@ -1932,7 +1944,7 @@ fileprivate extension GroupVideoCallView {
     
     struct AboutCallBottomSheet: View {
         @ObservedObject var viewModel: GroupVideoCallViewModel
-        @Environment(\.presentationMode) var presentationMode
+        @Environment(\.dismiss) var dismiss
         @Namespace var namespace
         
         var body: some View {
@@ -1944,7 +1956,7 @@ fileprivate extension GroupVideoCallView {
                     Spacer()
                     
                     Button {
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     } label: {
                         Image(systemName: "xmark")
                     }
@@ -2106,7 +2118,7 @@ fileprivate extension GroupVideoCallView {
     
     struct QnAListBottomSheet: View {
         @ObservedObject var viewModel: GroupVideoCallViewModel
-        @Environment(\.presentationMode) var presentationMode
+        @Environment(\.dismiss) var dismiss
         @Namespace var namespace
         
         var body: some View {
@@ -2120,7 +2132,7 @@ fileprivate extension GroupVideoCallView {
                         Spacer()
                         
                         Button {
-                            presentationMode.wrappedValue.dismiss()
+                            dismiss()
                         } label: {
                             Image(systemName: "xmark")
                         }
@@ -2278,7 +2290,7 @@ fileprivate extension GroupVideoCallView {
     struct QuestionBoxBottomSheet: View {
         
         @ObservedObject var viewModel: GroupVideoCallViewModel
-        @Environment(\.presentationMode) var presentationMode
+        @Environment(\.dismiss) var dismiss
         
         var body: some View {
             VStack(spacing: 14) {
@@ -2289,7 +2301,7 @@ fileprivate extension GroupVideoCallView {
                     Spacer()
                     
                     Button {
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     } label: {
                         Image(systemName: "xmark")
                     }
@@ -2826,7 +2838,7 @@ fileprivate extension GroupVideoCallView {
     }
     
     struct ChatView: View {
-        @Environment(\.presentationMode) var presentationMode
+        @Environment(\.dismiss) var dismiss
         @State private var isFirstLoadComplete = false
         @ObservedObject var viewModel: GroupVideoCallViewModel
         @State var shouldShowImagePicker = false

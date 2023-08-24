@@ -41,7 +41,7 @@ struct TalentProfileView: View {
 
 	@ObservedObject var stateObservable = StateObservable.shared
 
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
 
 	@State var colorTab = Color.clear
 
@@ -75,7 +75,7 @@ struct TalentProfileView: View {
 				ZStack {
 					HStack {
 						Button(action: {
-							presentationMode.wrappedValue.dismiss()
+							dismiss()
 						}, label: {
 							Image.Dinotis.arrowBackIcon
 								.padding()

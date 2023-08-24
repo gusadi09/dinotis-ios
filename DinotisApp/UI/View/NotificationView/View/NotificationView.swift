@@ -11,7 +11,7 @@ import DinotisDesignSystem
 struct NotificationView: View {
     
     @ObservedObject var viewModel: NotificationViewModel
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         ZStack {
@@ -32,7 +32,7 @@ struct NotificationView: View {
                             strokeColor: nil,
                             iconSize: 12,
                             type: .primary, {
-                                self.presentationMode.wrappedValue.dismiss()
+                                dismiss()
                             }
                         )
                         .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 0)

@@ -13,7 +13,7 @@ struct BundlingFormView: View {
 
 	@ObservedObject var viewModel: BundlingFormViewModel
 
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
 
     var body: some View {
 		GeometryReader { geo in
@@ -76,7 +76,7 @@ struct BundlingFormView: View {
 										title: Text(LocaleText.successTitle),
 										message: Text(LocaleText.successUpdateBundle),
 										dismissButton: .default(Text(LocaleText.okText), action: {
-											presentationMode.wrappedValue.dismiss()
+											dismiss()
 										})
 									)
 								}
@@ -320,12 +320,12 @@ extension BundlingFormView {
 	struct HeaderView: View {
 
 		@ObservedObject var viewModel: BundlingFormViewModel
-		@Environment(\.presentationMode) var presentationMode
+		@Environment(\.dismiss) var dismiss
 
 		var body: some View {
 			HStack {
 				Button(action: {
-					self.presentationMode.wrappedValue.dismiss()
+					dismiss()
 
 				}, label: {
 					Image.Dinotis.arrowBackIcon

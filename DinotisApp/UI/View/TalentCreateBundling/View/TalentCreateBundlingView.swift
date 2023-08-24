@@ -15,7 +15,7 @@ struct TalentCreateBundlingView: View {
 
 	@Binding var meetingArray: [String]
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         GeometryReader { geo in
@@ -81,9 +81,9 @@ struct TalentCreateBundlingView: View {
 						}
 						.listRowBackground(Color.clear)
 
-						ForEach($viewModel.meetingList, id: \.id) { item in
-							BundlingMiniCardView(meeting: item, meetingIdArray: $viewModel.meetingIdArray) {
-								viewModel.addMeeting(id: item.id.wrappedValue.orEmpty())
+						ForEach(viewModel.meetingList, id: \.id) { item in
+                            BundlingMiniCardView(meeting: .constant(item), meetingIdArray: $viewModel.meetingIdArray) {
+								viewModel.addMeeting(id: item.id.orEmpty())
 							}
 							.listRowBackground(Color.clear)
 						}
@@ -117,7 +117,7 @@ struct TalentCreateBundlingView: View {
                             Button {
 								if viewModel.isEdit {
 									meetingArray = viewModel.meetingIdArray
-									presentationMode.wrappedValue.dismiss()
+									dismiss()
 								} else {
 									viewModel.routeToBundlingForm()
 								}
@@ -173,12 +173,12 @@ struct TalentCreateBundlingView_Previews: PreviewProvider {
 extension TalentCreateBundlingView {
     struct HeaderView: View {
 
-        @Environment(\.presentationMode) var presentationMode
+        @Environment(\.dismiss) var dismiss
 
         var body: some View {
 			HStack {
 				Button(action: {
-					self.presentationMode.wrappedValue.dismiss()
+					dismiss()
 
 				}, label: {
 					Image.Dinotis.arrowBackIcon

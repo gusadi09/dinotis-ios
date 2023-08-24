@@ -292,7 +292,7 @@ struct CoinHistoryView: View {
 extension CoinHistoryView {
 	struct NavigationBarTitle: View {
 
-		@Environment(\.presentationMode) var presentationMode
+		@Environment(\.dismiss) var dismiss
 
 		var body: some View {
 			ZStack {
@@ -308,7 +308,7 @@ extension CoinHistoryView {
 
 				HStack {
 					Button(action: {
-						self.presentationMode.wrappedValue.dismiss()
+						dismiss()
 
 					}, label: {
 						Image.Dinotis.arrowBackIcon

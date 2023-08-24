@@ -14,7 +14,7 @@ import DinotisDesignSystem
 struct RateCardServiceBookingView: View {
 
 	@ObservedObject var viewModel: RateCardServiceBookingFormViewModel
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
     @Binding var mainTabValue: TabRoute
 
@@ -61,7 +61,7 @@ struct RateCardServiceBookingView: View {
                             strokeColor: nil,
                             iconSize: 12,
                             type: .primary, {
-                                self.presentationMode.wrappedValue.dismiss()
+                                dismiss()
                             }
                         )
                         .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 0)

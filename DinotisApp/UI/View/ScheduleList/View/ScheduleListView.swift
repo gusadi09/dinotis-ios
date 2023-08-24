@@ -13,7 +13,7 @@ struct ScheduleListView: View {
 	
 	@EnvironmentObject var viewModel: ScheduleListViewModel
 	
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
     
     @Binding var mainTabSelection: TabRoute
 	
@@ -253,7 +253,7 @@ private extension ScheduleListView {
                                     } visitProfile: {
                                         viewModel.routeToTalentProfile(username: (item.meeting?.user?.username).orEmpty())
                                     }
-                                    .frame(width: .infinity)
+                                    .frame(width: abs(.infinity))
                                     .padding()
                                     .background(Color.clear)
                                 }

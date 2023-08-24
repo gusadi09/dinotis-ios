@@ -26,6 +26,7 @@ extension ScheduleDetailTooltip {
 
 final class ScheduleDetailViewModel: ObservableObject {
 
+    private let getRulesUseCase: GetRulesUseCase
     private let meetingsRepo: MeetingsRepository
     private let getBookingDetailUseCase: GetBookingDetailUseCase
     private let getUserUseCase: GetUserUseCase
@@ -36,6 +37,10 @@ final class ScheduleDetailViewModel: ObservableObject {
     private let stateObservable = StateObservable.shared
     private var cancellables = Set<AnyCancellable>()
 	private let isActiveBooking: Bool
+    private let startMeetingUseCase: StartCreatorMeetingUseCase
+    private let getDetailMeetingUseCase: GetMeetingDetailUseCase
+    private let endMeetingUseCase: EndCreatorMeetingUseCase
+    private let deleteMeetingUseCase: DeleteCreatorMeetingUseCase
 
     @Published var currentTooltip: ScheduleDetailTooltip?
 	@Published var confirmationSheet = false
@@ -52,9 +57,9 @@ final class ScheduleDetailViewModel: ObservableObject {
 
     @Published var startPresented = false
 
-	@Published var participantDetail = [UserResponse]()
-
-  @Published var meetingForm = MeetingForm(id: String.random(), title: "", description: "", price: 10000, startAt: "", endAt: "", isPrivate: true, slots: 0, urls: [])
+    @Published var participantDetail = [UserResponse]()
+    
+    @Published var meetingForm = MeetingForm(id: String.random(), title: "", description: "", price: 10000, startAt: "", endAt: "", isPrivate: true, slots: 0, urls: [])
     
     @Published var randomId = UInt.random(in: .init(1...99999999))
 
@@ -77,7 +82,7 @@ final class ScheduleDetailViewModel: ObservableObject {
     @Published var success = false
     @Published var error: String?
     @Published var HTMLContent = ""
-    @Published var dataMeeting: DetailMeeting?
+    @Published var dataMeeting: MeetingDetailResponse?
     @Published var dataBooking: UserBookingData?
 
 	@Published var tokenConversation = ""
@@ -119,6 +124,7 @@ final class ScheduleDetailViewModel: ObservableObject {
     
     init(
 		isActiveBooking: Bool,
+        getRulesUseCase: GetRulesUseCase = GetRulesDefaultUseCase(),
         meetingsRepo: MeetingsRepository = MeetingsDefaultRepository(),
         getBookingDetailUseCase: GetBookingDetailUseCase = GetBookingDetailDefaultUseCase(),
         getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
@@ -126,6 +132,10 @@ final class ScheduleDetailViewModel: ObservableObject {
 		confirmationUseCase: RequestConfirmationUseCase = RequestConfirmationDefaultUseCase(),
 		conversationTokenUseCase: ConversationTokenUseCase = ConversationTokenDefaultUseCase(),
         giveReviewUseCase: GiveReviewUseCase = GiveReviewDefaultUseCase(),
+        startMeetingUseCase: StartCreatorMeetingUseCase = StartCreatorMeetingDefaultUseCase(),
+        getDetailMeetingUseCase: GetMeetingDetailUseCase = GetMeetingDetailDefaultUseCase(),
+        endMeetingUseCase: EndCreatorMeetingUseCase = EndCreatorMeetingDefaultUseCase(),
+        deleteMeetingUseCase: DeleteCreatorMeetingUseCase = DeleteCreatorMeetingDefaultUseCase(),
         bookingId: String,
         backToHome: @escaping (() -> Void),
         talentName: String = "",
@@ -133,6 +143,7 @@ final class ScheduleDetailViewModel: ObservableObject {
         isDirectToHome: Bool
     ) {
 		self.isActiveBooking = isActiveBooking
+        self.getRulesUseCase = getRulesUseCase
         self.meetingsRepo = meetingsRepo
         self.getBookingDetailUseCase = getBookingDetailUseCase
         self.getUserUseCase = getUserUseCase
@@ -145,6 +156,10 @@ final class ScheduleDetailViewModel: ObservableObject {
         self.talentPhoto = talentPhoto
         self.isDirectToHome = isDirectToHome
         self.giveReviewUseCase = giveReviewUseCase
+        self.startMeetingUseCase = startMeetingUseCase
+        self.getDetailMeetingUseCase = getDetailMeetingUseCase
+        self.endMeetingUseCase = endMeetingUseCase
+        self.deleteMeetingUseCase = deleteMeetingUseCase
     }
     
     func onStartRequestReview() {
@@ -200,23 +215,37 @@ final class ScheduleDetailViewModel: ObservableObject {
         }
     }
 
-    func onAppearView() {
-		Task {
-			self.getMeetingRules()
-			await self.getUser()
-			await self.getDetailBookingUser()
-		}
-    }
-
-    func onStartFetch() {
-        DispatchQueue.main.async { [weak self] in
-            self?.error = nil
-            self?.success = false
-            self?.isError = false
-            self?.isLoading = true
-            self?.isEndSuccess = false
-            self?.isDeleteSuccess = false
+    func onGetMeetingRules() {
+        Task {
+            await getMeetingRules()
         }
+    }
+    
+    func onGetUser() {
+        Task {
+            await getUser()
+        }
+    }
+    
+    func onGetDetailBooking() {
+        Task {
+            await getDetailBookingUser()
+        }
+    }
+    func onAppearView() {
+        onGetMeetingRules()
+        onGetUser()
+        onGetDetailBooking()
+    }
+    
+    @MainActor
+    func onStartFetch() {
+        self.error = nil
+        self.success = false
+        self.isError = false
+        self.isLoading = true
+        self.isEndSuccess = false
+        self.isDeleteSuccess = false
     }
     
     func disableStartButton() -> Bool {
@@ -239,15 +268,15 @@ final class ScheduleDetailViewModel: ObservableObject {
         (self.dataBooking?.status).orEmpty() == SessionStatus.done.rawValue
     }
 
+    @MainActor
     func onStartFetchDetail() {
-        DispatchQueue.main.async { [weak self] in
-            self?.error = nil
-            self?.successDetail = false
-            self?.isError = false
-            self?.isLoadingDetail = true
-        }
+        self.error = nil
+        self.successDetail = false
+        self.isError = false
+        self.isLoadingDetail = true
     }
 
+    @MainActor
     func getUser() async {
         onStartFetch()
         
@@ -265,26 +294,26 @@ final class ScheduleDetailViewModel: ObservableObject {
         }
     }
 
+    @MainActor
 	func handleDefaultError(error: Error) {
-		DispatchQueue.main.async { [weak self] in
-			self?.isLoadingDetail = false
+            self.isLoading = false
+			self.isLoadingDetail = false
 
 			if let error = error as? ErrorResponse {
-				self?.error = error.message.orEmpty()
+				self.error = error.message.orEmpty()
 
 				if error.statusCode.orZero() == 401 {
-					self?.isRefreshFailed.toggle()
+					self.isRefreshFailed.toggle()
 				} else {
-					self?.isError = true
+					self.isError = true
 				}
 			} else {
-				self?.isError = true
-				self?.error = error.localizedDescription
+				self.isError = true
+				self.error = error.localizedDescription
 			}
-
-		}
 	}
 
+    @MainActor
 	func getDetailBookingUser() async {
         onStartFetchDetail()
 
@@ -311,142 +340,82 @@ final class ScheduleDetailViewModel: ObservableObject {
 		}
 
     }
-
-	func getDetailMeeting() {
-        onStartFetchDetail()
-
-        meetingsRepo.provideGetDetailMeeting(meetingId: bookingId)
-            .sink { result in
-                switch result {
-                case .failure(let error):
-                    DispatchQueue.main.async {[weak self] in
-                        if error.statusCode.orZero() == 401 {
-                            
-                        } else {
-                            self?.isError = true
-                            self?.isLoadingDetail = false
-
-                            self?.error = error.message.orEmpty()
-                        }
-                    }
-
-                case .finished:
-                    DispatchQueue.main.async { [weak self] in
-                        self?.successDetail = true
-                        self?.isLoadingDetail = false
-                    }
-                }
-            } receiveValue: { value in
-                self.dataMeeting = value
-				self.expiredData = (value.meetingRequest?.expiredAt).orCurrentDate()
-				self.cancelOptionData = value.cancelOptions ?? []
-
-				Task {
-					if value.meetingRequest != nil && ((value.meetingRequest?.isAccepted ?? false) && (value.meetingRequest?.isConfirmed == nil)) {
-						if self.tokenConversation.isEmpty {
-							await self.getConversationToken(id: (value.meetingRequest?.id).orEmpty())
-						}
-					}
-				}
-            }
-            .store(in: &cancellables)
-    }
-
-    func endMeeting() {
-        onStartFetch()
-
-        meetingsRepo.providePatchEndMeeting(by: bookingId)
-            .sink { result in
-                switch result {
-                case .failure(let error):
-                    DispatchQueue.main.async {[weak self] in
-                        if error.statusCode.orZero() == 401 {
-                            
-                        } else {
-                            self?.isError = true
-                            self?.isLoading = false
-
-                            self?.error = error.message.orEmpty()
-                        }
-                    }
-
-                case .finished:
-                    DispatchQueue.main.async { [weak self] in
-                        self?.isEndSuccess = true
-                        self?.isLoading = false
-                    }
-                }
-            } receiveValue: { _ in
-
-            }
-            .store(in: &cancellables)
-
-    }
-
-    func deleteMeeting() {
-        onStartFetch()
-
-        meetingsRepo.provideDeleteMeeting(by: bookingId)
-            .sink { result in
-                switch result {
-                case .failure(let error):
-                    DispatchQueue.main.async {[weak self] in
-                        if error.statusCode.orZero() == 401 {
-                           
-                        } else {
-                            self?.isError = true
-                            self?.isLoading = false
-
-                            self?.error = error.message.orEmpty()
-                        }
-                    }
-
-                case .finished:
-                    DispatchQueue.main.async { [weak self] in
-                        self?.isDeleteSuccess = true
-                        self?.isLoading = false
-                    }
-                }
-            } receiveValue: { _ in
+    
+    func getDetailMeeting() async {
+        await onStartFetchDetail()
+        
+        let result = await getDetailMeetingUseCase.execute(for: bookingId)
+        
+        switch result {
+        case .success(let success):
+            DispatchQueue.main.async { [weak self] in
+                self?.successDetail = true
+                self?.isLoadingDetail = false
                 
-            }
-            .store(in: &cancellables)
-
-    }
-
-    func getMeetingRules() {
-        onStartFetch()
-
-        meetingsRepo.provideGetMeetingsRules()
-            .sink(
-                receiveCompletion: { result in
-                    switch result {
-                    case .failure(let error):
-                        DispatchQueue.main.async {[weak self] in
-                            if error.statusCode.orZero() == 401 {
-                                
-                            } else {
-                                self?.isError = true
-                                self?.isLoading = false
-
-                                self?.error = error.message.orEmpty()
-                            }
+                self?.dataMeeting = success
+                self?.expiredData = (success.meetingRequest?.expiredAt).orCurrentDate()
+                self?.cancelOptionData = success.cancelOptions ?? []
+                
+                if success.meetingRequest != nil && ((success.meetingRequest?.isAccepted ?? false) && (success.meetingRequest?.isConfirmed == nil)) {
+                    if (self?.tokenConversation.isEmpty ?? false) {
+                        Task {
+                            await self?.getConversationToken(id: (success.meetingRequest?.id).orEmpty())
                         }
-
-                    case .finished:
-                        DispatchQueue.main.async { [weak self] in
-                            self?.success = true
-                            self?.isLoading = false
-                        }
-                    }
-                }, receiveValue: { value in
-                    DispatchQueue.main.async { [weak self] in
-                        self?.HTMLContent = value.content.orEmpty()
                     }
                 }
-            )
-            .store(in: &cancellables)
+            }
+        case .failure(let failure):
+            await handleDefaultError(error: failure)
+        }
+    }
+    
+    func endMeeting() async {
+        await onStartFetch()
+        
+        let result = await endMeetingUseCase.execute(for: bookingId)
+        
+        switch result {
+        case .success(let success):
+            DispatchQueue.main.async { [weak self] in
+                self?.isEndSuccess = true
+                self?.isLoading = false
+            }
+        case .failure(let failure):
+            await handleDefaultError(error: failure)
+        }
+    }
 
+    func deleteMeeting() async {
+        await onStartFetch()
+        
+        let result = await deleteMeetingUseCase.execute(for: bookingId)
+        
+        switch result {
+        case .success(let success):
+            DispatchQueue.main.async { [weak self] in
+                self?.isDeleteSuccess = true
+                self?.isLoading = false
+            }
+        case .failure(let failure):
+            await handleDefaultError(error: failure)
+        }
+        
+    }
+
+    @MainActor
+    func getMeetingRules() async {
+        onStartFetch()
+
+        let result = await getRulesUseCase.execute()
+        
+        switch result {
+        case .success(let success):
+            self.success = true
+            isLoading = false
+            HTMLContent = success.content.orEmpty()
+        case .failure(let failure):
+            handleDefaultError(error: failure)
+        }
     }
 
     func onStartRefresh() {
@@ -459,7 +428,7 @@ final class ScheduleDetailViewModel: ObservableObject {
 
     }
 
-    func convertToUserMeet(meet: DetailMeeting) -> UserMeetingData {
+    func convertToUserMeet(meet: MeetingDetailResponse) -> UserMeetingData {
         let meet = UserMeetingData(
             id: meet.id,
             title: meet.title.orEmpty(),
@@ -471,7 +440,7 @@ final class ScheduleDetailViewModel: ObservableObject {
             isLiveStreaming: meet.isLiveStreaming,
 			slots: meet.slots,
 			participants: meet.participants,
-            userID: meet.userID,
+            userID: meet.user?.id,
             startedAt: meet.startedAt,
             endedAt: meet.endedAt,
             createdAt: meet.createdAt,
@@ -562,6 +531,7 @@ final class ScheduleDetailViewModel: ObservableObject {
         }
     }
 
+    @MainActor
 	func getConversationToken(id: String) async {
 		onStartFetchDetail()
 
@@ -687,57 +657,43 @@ final class ScheduleDetailViewModel: ObservableObject {
 	func isShowingChatButton() -> Bool {
 		((dataMeeting?.meetingRequest?.isAccepted ?? false) && (dataMeeting?.meetingRequest?.isConfirmed == nil)) || ((dataBooking?.meeting?.meetingRequest?.isAccepted ?? false) && (dataBooking?.meeting?.meetingRequest?.isConfirmed == nil))
 	}
+    
+    @MainActor
+    func onStartMeeting() {
+        self.error = nil
+        self.isError = false
+        self.isLoadingStart = true
+    }
 
-	func onStartMeeting() {
-		DispatchQueue.main.async { [weak self] in
-			self?.error = nil
-			self?.isError = false
-			self?.isLoadingStart = true
-		}
-	}
-
-	func startMeeting() {
+    @MainActor
+	func startMeeting() async {
 		onStartMeeting()
 
-		meetingsRepo.providePatchStartTalentMeeting(by: bookingId)
-			.sink { result in
-				switch result {
-				case .failure(let error):
-					DispatchQueue.main.async {[weak self] in
-						if error.statusCode.orZero() == 401 {
-							
-						} else {
-							self?.isError = true
-							self?.isLoadingStart = false
+        let result = await startMeetingUseCase.execute(for: bookingId)
+        
+        switch result {
+        case .success(_):
+            DispatchQueue.main.async { [weak self] in
+                self?.isLoadingStart = false
+                self?.startPresented.toggle()
 
-							self?.error = error.message.orEmpty()
-						}
-					}
+                guard let detailMeet = self?.dataMeeting else { return }
+                guard let converted = self?.convertToUserMeet(meet: detailMeet) else { return }
 
-				case .finished:
-					DispatchQueue.main.async { [weak self] in
-						self?.isLoadingStart = false
-						self?.startPresented.toggle()
-
-						guard let detailMeet = self?.dataMeeting else { return }
-						guard let converted = self?.convertToUserMeet(meet: detailMeet) else { return }
-
-						if detailMeet.isPrivate ?? false {
-							self?.routeToVideoCall(meeting: converted)
-						} else if !(detailMeet.isPrivate ?? false) {
-                            if detailMeet.dyteMeetingId == nil {
-                                self?.routeToTwilioLiveStream(meeting: converted)
-                            } else {
-                                self?.routeToGroupCall(
-                                    meeting: converted
-                                )
-                            }
-						}
-					}
-				}
-			} receiveValue: { _ in
-
-			}
-			.store(in: &cancellables)
+                if detailMeet.isPrivate ?? false {
+                    self?.routeToVideoCall(meeting: converted)
+                } else if !(detailMeet.isPrivate ?? false) {
+                    if detailMeet.dyteMeetingId == nil {
+                        self?.routeToTwilioLiveStream(meeting: converted)
+                    } else {
+                        self?.routeToGroupCall(
+                            meeting: converted
+                        )
+                    }
+                }
+            }
+        case .failure(let failure):
+            handleDefaultError(error: failure)
+        }
 	}
 }

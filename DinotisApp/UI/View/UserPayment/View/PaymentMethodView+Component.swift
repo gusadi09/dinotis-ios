@@ -15,7 +15,7 @@ extension PaymentMethodView {
 	struct NavigationHeader: View {
 
 		@Binding var colorTab: Color
-		@Environment(\.presentationMode) var presentationMode
+		@Environment(\.dismiss) var dismiss
 
 		init(colorTab: Binding<Color>) {
 			self._colorTab = colorTab
@@ -24,7 +24,7 @@ extension PaymentMethodView {
 		var body: some View {
 			HStack {
 				Button(action: {
-					presentationMode.wrappedValue.dismiss()
+					dismiss()
 				}, label: {
 					Image.Dinotis.arrowBackIcon
 						.padding()

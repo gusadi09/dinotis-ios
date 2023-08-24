@@ -21,7 +21,7 @@ public struct CreateNewMeetingDefaultUseCase: CreateNewMeetingUseCase {
         self.authRepository = authRepository
     }
 
-    public func execute(from body: AddMeetingRequest) async -> Result<MeetingDetailResponse, Error> {
+    public func execute(from body: AddMeetingRequest) async -> Result<StartCreatorMeetingResponse, Error> {
         do {
             let data = try await repository.provideAddMeeting(with: body)
 

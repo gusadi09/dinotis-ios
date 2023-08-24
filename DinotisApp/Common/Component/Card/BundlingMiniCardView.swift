@@ -8,10 +8,11 @@
 import SwiftUI
 import CurrencyFormatter
 import DinotisDesignSystem
+import DinotisData
 
 struct BundlingMiniCardView: View {
     
-    @Binding var meeting: Meeting
+    @Binding var meeting: MeetingDetailResponse
     @Binding var meetingIdArray: [String]
     var onTap: (() -> Void)
     

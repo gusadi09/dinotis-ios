@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import DinotisData
 
 struct CreateBundling: Codable {
     let title: String
@@ -31,5 +32,5 @@ struct CreateBundlingResponse: Codable {
 }
 
 struct AvailableMeetingResponse: Codable {
-    let data: [Meeting]?
+    let data: [MeetingDetailResponse]?
 }

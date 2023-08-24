@@ -13,7 +13,7 @@ struct OtpVerificationView: View {
 	
 	@ObservedObject var viewModel: OtpVerificationViewModel
 	
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
 	
 	var body: some View {
 		GeometryReader { geo in
@@ -32,7 +32,7 @@ struct OtpVerificationView: View {
                                 strokeColor: nil,
                                 iconSize: 12,
                                 type: .primary, {
-                                    self.presentationMode.wrappedValue.dismiss()
+                                    dismiss()
                                 }
                             )
                         } trailingButton: {

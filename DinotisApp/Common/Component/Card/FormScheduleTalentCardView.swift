@@ -12,7 +12,7 @@ import DinotisData
 struct FormScheduleTalentCardView: View {
     @Binding var collab: [MeetingCollaborationData]
     @Binding var managements: [ManagementWrappedData]?
-    @Binding var meetingForm: MeetingForm
+    @Binding var meetingForm: AddMeetingRequest
     @Binding var maxEdit: Int
     
     @State var selectedWallet: String? = nil
@@ -77,7 +77,7 @@ struct FormScheduleTalentCardView: View {
     
     @State var selected = ""
     
-    init(collab: Binding<[MeetingCollaborationData]>, managements: Binding<[ManagementWrappedData]?>, meetingForm: Binding<MeetingForm>, onTapRemove: @escaping (() -> Void), isShowRemove: Bool = false, isEdit: Bool, disableEdit: Bool = false, maxEdit: Binding<Int>) {
+    init(collab: Binding<[MeetingCollaborationData]>, managements: Binding<[ManagementWrappedData]?>, meetingForm: Binding<AddMeetingRequest>, onTapRemove: @escaping (() -> Void), isShowRemove: Bool = false, isEdit: Bool, disableEdit: Bool = false, maxEdit: Binding<Int>) {
         self._collab = collab
         self._managements = managements
         self._meetingForm = meetingForm
@@ -286,8 +286,13 @@ struct FormScheduleTalentCardView: View {
                         }
                     }
                     .onAppear {
-                        timeStart = DateUtils.dateFormatter(meetingForm.startAt, forFormat: .utcV2)
-                        timeEnd = DateUtils.dateFormatter(meetingForm.endAt, forFormat: .utcV2).addingTimeInterval(3600)
+                        if meetingForm.startAt.isEmpty {
+                            timeStart = DateUtils.dateFormatter(meetingForm.startAt, forFormat: .utcV2).addingTimeInterval(3600)
+                            timeEnd = timeStart?.addingTimeInterval(3600)
+                        } else {
+                            timeStart = DateUtils.dateFormatter(meetingForm.startAt, forFormat: .utcV2)
+                            timeEnd = DateUtils.dateFormatter(meetingForm.endAt, forFormat: .utcV2).addingTimeInterval(3600)
+                        }
                         
                         selected = meetingForm.isPrivate ? LocaleText.privateCallLabel : LocaleText.groupcallLabel
                         
@@ -812,86 +817,86 @@ struct FormScheduleTalentCardView: View {
                         }
                     }
                   
-                  if isShowAdditionalMenu {
-                    VStack(spacing: 10) {
-                      HStack {
-                        Image("ic-pricetag")
-                          .resizable()
-                          .scaledToFit()
-                          .frame(height: 20)
-                        
-                        Text(LocalizableText.urlLinkText)
-                          .font(.robotoMedium(size: 12))
-                          .foregroundColor(.black)
-                        
-                        Spacer()
-                        
-                        Button {
-                          withAnimation(.spring(response: 0.2)) {
-                            meetingForm.urls.append(MeetingURL(title: "", url: ""))
-                          }
-                        } label: {
-                          Text(LocalizableText.addUrlLinkLabel)
-                            .font(.robotoBold(size: 11))
-                            .foregroundColor(.DinotisDefault.primary)
-                        }
-
-                      }
-                      
-                      VStack(alignment: .leading, spacing: 8) {
-                        ForEach(meetingForm.urls.indices, id: \.self) { index in
-                          HStack {
-                            Text("\(LocalizableText.urlLinkText) \(index+1)")
-                              .font(.robotoMedium(size: 10))
-                              .foregroundColor(.black)
-                            
-                            Spacer()
-                            
-                            Button {
-                              meetingForm.urls.remove(at: index)
-                            } label: {
-                              Text(LocalizableText.deleteUrlLinkLabel)
-                                .font(.robotoBold(size: 10))
-                                .foregroundColor(.DinotisDefault.primary)
-                            }
-                          }
-                          
-                          TextField(LocalizableText.urlLinkTitlePlaceholder, text: $meetingForm.urls[index].title)
-                            .font(.robotoRegular(size: 12))
-                            .disableAutocorrection(true)
-                            .foregroundColor(.black)
-                            .accentColor(.black)
-                            .padding(.horizontal)
-                            .padding(.vertical, 15)
-                            .overlay(
-                              RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
-                            )
-                          
-                            VStack(alignment: .leading, spacing: 5) {
-                                TextField(LocalizableText.urlLinkText, text: $meetingForm.urls[index].url)
-                                  .font(.robotoRegular(size: 12))
-                                  .disableAutocorrection(true)
-                                  .foregroundColor(.black)
-                                  .accentColor(.black)
-                                  .padding(.horizontal)
-                                  .padding(.vertical, 15)
-                                  .overlay(
-                                    RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
-                                  )
+                    if isShowAdditionalMenu {
+                        VStack(spacing: 10) {
+                            HStack {
+                                Image("ic-pricetag")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 20)
                                 
-                                if !meetingForm.urls[index].url.validateURL() {
-                                    Text(LocalizableText.invalidUrlMessage)
-                                        .foregroundColor(.red)
-                                        .font(.robotoRegular(size: 10))
-                                        .multilineTextAlignment(.leading)
+                                Text(LocalizableText.urlLinkText)
+                                    .font(.robotoMedium(size: 12))
+                                    .foregroundColor(.black)
+                                
+                                Spacer()
+                                
+                                Button {
+                                    withAnimation(.spring(response: 0.2)) {
+                                        meetingForm.urls.append(MeetingURLrequest(title: "", url: ""))
+                                    }
+                                } label: {
+                                    Text(LocalizableText.addUrlLinkLabel)
+                                        .font(.robotoBold(size: 11))
+                                        .foregroundColor(.DinotisDefault.primary)
+                                }
+                                
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 8) {
+                                ForEach(meetingForm.urls.indices, id: \.self) { index in
+                                    HStack {
+                                        Text("\(LocalizableText.urlLinkText) \(index+1)")
+                                            .font(.robotoMedium(size: 10))
+                                            .foregroundColor(.black)
+                                        
+                                        Spacer()
+                                        
+                                        Button {
+                                            meetingForm.urls.remove(at: index)
+                                        } label: {
+                                            Text(LocalizableText.deleteUrlLinkLabel)
+                                                .font(.robotoBold(size: 10))
+                                                .foregroundColor(.DinotisDefault.primary)
+                                        }
+                                    }
+                                    
+                                    TextField(LocalizableText.urlLinkTitlePlaceholder, text: $meetingForm.urls[index].title)
+                                        .font(.robotoRegular(size: 12))
+                                        .disableAutocorrection(true)
+                                        .foregroundColor(.black)
+                                        .accentColor(.black)
+                                        .padding(.horizontal)
+                                        .padding(.vertical, 15)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
+                                        )
+                                    
+                                    VStack(alignment: .leading, spacing: 5) {
+                                        TextField(LocalizableText.urlLinkText, text: $meetingForm.urls[index].url)
+                                            .font(.robotoRegular(size: 12))
+                                            .disableAutocorrection(true)
+                                            .foregroundColor(.black)
+                                            .accentColor(.black)
+                                            .padding(.horizontal)
+                                            .padding(.vertical, 15)
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
+                                            )
+                                        
+                                        if !meetingForm.urls[index].url.validateURL() {
+                                            Text(LocalizableText.invalidUrlMessage)
+                                                .foregroundColor(.red)
+                                                .font(.robotoRegular(size: 10))
+                                                .multilineTextAlignment(.leading)
+                                        }
+                                    }
+                                    .padding(.bottom, 5)
+                                    
                                 }
                             }
-                            .padding(.bottom, 5)
-                          
                         }
-                      }
                     }
-                  }
                   
                   Button {
                     withAnimation(.spring(response: 0.2)) {
@@ -971,7 +976,7 @@ struct FormScheduleTalentCardView: View {
                         }
                         .padding()
                         .onAppear {
-                            changedTimeStart = timeStart.orCurrentDate()
+                            changedTimeStart = timeStart ?? Date().addingTimeInterval(3600)
                         }
                     }
                     .presentationDetents([.medium])
@@ -1003,7 +1008,7 @@ struct FormScheduleTalentCardView: View {
                         }
                         .padding()
                         .onAppear {
-                            changedTimeStart = timeStart.orCurrentDate()
+                            changedTimeStart = timeStart ?? Date().addingTimeInterval(3600)
                         }
                     }
                 }
@@ -1043,8 +1048,8 @@ struct FormScheduleTalentCardView: View {
                             })
                             .clipShape(RoundedRectangle(cornerRadius: 8.0))
                             .onAppear {
-                                if changedTimeStart < Date() {
-                                    changedTimeStart = Date()
+                                if changedTimeStart < Date().addingTimeInterval(3600) {
+                                    changedTimeStart = Date().addingTimeInterval(3600)
                                 }
                             }
                         }
@@ -1083,8 +1088,8 @@ struct FormScheduleTalentCardView: View {
                             })
                             .clipShape(RoundedRectangle(cornerRadius: 8.0))
                             .onAppear {
-                                if changedTimeStart < Date() {
-                                    changedTimeStart = Date()
+                                if changedTimeStart < Date().addingTimeInterval(3600) {
+                                    changedTimeStart = Date().addingTimeInterval(3600)
                                 }
                             }
                         }
@@ -1134,7 +1139,11 @@ struct FormScheduleTalentCardView: View {
                         }
                         .padding()
                         .onAppear {
-                            changedTimeEnd = timeEnd.orCurrentDate()
+                            if let timeStart = timeStart {
+                                changedTimeEnd = timeStart.addingTimeInterval(3600)
+                            } else {
+                                changedTimeEnd = Date().addingTimeInterval(7200)
+                            }
                         }
                     }
                     .presentationDetents([.medium])
@@ -1176,7 +1185,11 @@ struct FormScheduleTalentCardView: View {
                         }
                         .padding()
                         .onAppear {
-                            changedTimeEnd = timeEnd.orCurrentDate()
+                            if var timeStart = timeStart {
+                                changedTimeEnd = timeStart.addingTimeInterval(3600)
+                            } else {
+                                changedTimeEnd = Date().addingTimeInterval(7200)
+                            }
                         }
                     }
                 }
@@ -1194,7 +1207,7 @@ struct FormScheduleTalentCardView_Previews: PreviewProvider {
             collab: .constant([]),
             managements: .constant([]),
             meetingForm: .constant(
-                MeetingForm(
+                AddMeetingRequest(
                     id: UUID().uuidString,
                     title: "",
                     description: "",

@@ -35,7 +35,7 @@ final class TalentCreateBundlingViewModel: ObservableObject {
     
     @Published var allSelected = false
     
-    @Published var meetingList = [Meeting]()
+    @Published var meetingList = [MeetingDetailResponse]()
     @Published var meetingIdArray = [String]()
     
     init(

@@ -203,7 +203,7 @@ struct TalentCardListView: View {
 
 extension TalentCardListView {
     struct HeaderView: View {
-        @Environment(\.presentationMode) var presentationMode
+        @Environment(\.dismiss) var dismiss
 
         @ObservedObject var viewModel: TalentCardListViewModel
 
@@ -211,7 +211,7 @@ extension TalentCardListView {
             ZStack {
                 HStack {
                     Button(action: {
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     }, label: {
                         Image.Dinotis.arrowBackIcon
                             .padding()

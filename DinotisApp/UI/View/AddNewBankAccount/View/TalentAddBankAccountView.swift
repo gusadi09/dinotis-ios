@@ -13,7 +13,7 @@ import SwiftKeychainWrapper
 struct TalentAddBankAccountView: View {
 	@ObservedObject var viewModel: TalentAddBankAccountViewModel
 	
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
 
 	@Environment(\.viewController) private var viewControllerHolder: ViewControllerHolder
 	
@@ -44,7 +44,7 @@ struct TalentAddBankAccountView: View {
 				VStack(spacing: 0) {
 					HStack(alignment: . center) {
 						Button(action: {
-							presentationMode.wrappedValue.dismiss()
+							dismiss()
 						}, label: {
 							Image.Dinotis.arrowBackIcon
 								.padding()
@@ -86,7 +86,7 @@ struct TalentAddBankAccountView: View {
 											dismissButton: .default(
 												Text(LocaleText.returnText),
 												action: {
-													presentationMode.wrappedValue.dismiss()
+													dismiss()
 												}
 											)
 										)

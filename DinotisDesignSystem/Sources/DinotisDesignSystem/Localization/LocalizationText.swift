@@ -2261,6 +2261,11 @@ public enum LocalizableText {
         bundle: .module,
         comment: "tab agenda in home"
     )
+    public static let videoCallMeetingForceEnd = NSLocalizedString(
+        "video_call_force_end",
+        bundle: .module,
+        comment: "force ended"
+    )
 }
 
 

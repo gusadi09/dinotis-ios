@@ -21,7 +21,7 @@ public struct EndCreatorMeetingDefaultUseCase: EndCreatorMeetingUseCase {
         self.authRepository = authRepository
     }
 
-    public func execute(for meetingId: String) async -> Result<MeetingDetailResponse, Error> {
+    public func execute(for meetingId: String) async -> Result<StartCreatorMeetingResponse, Error> {
         do {
             let data = try await repository.providePatchEndMeeting(meetingId: meetingId)
 
