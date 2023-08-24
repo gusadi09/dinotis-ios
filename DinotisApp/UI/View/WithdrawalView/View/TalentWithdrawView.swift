@@ -12,7 +12,7 @@ import SwiftUITrackableScrollView
 
 struct TalentWithdrawView: View {
 	
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
 	
 	@Environment(\.viewController) private var viewControllerHolder: ViewControllerHolder
 	
@@ -45,7 +45,7 @@ struct TalentWithdrawView: View {
 					
 					HStack {
 						Button(action: {
-							presentationMode.wrappedValue.dismiss()
+							dismiss()
 						}, label: {
 							Image.Dinotis.arrowBackIcon
 								.padding()
@@ -71,7 +71,7 @@ struct TalentWithdrawView: View {
 									message: Text(LocaleText.withdrawUnderProcessText),
 									dismissButton: .default(Text(LocaleText.returnText), action: {
 										viewModel.isPresent.toggle()
-										presentationMode.wrappedValue.dismiss()
+										dismiss()
 									}))
 							}
 						

@@ -46,10 +46,10 @@ final class BundlingDetailViewModel: NSObject, ObservableObject, SKProductsReque
   @Published var alert = AlertAttribute()
 
 	@Published var detailData: DetailBundlingResponse?
-	@Published var meetingData = [Meeting]()
+	@Published var meetingData = [MeetingDetailResponse]()
     @Published var meetingIdArray = [String]()
 
-	@Published var profileDetailBundle: [Meeting]
+	@Published var profileDetailBundle: [GeneralMeetingData]
     
     @Published var isTalent: Bool
 
@@ -118,7 +118,7 @@ final class BundlingDetailViewModel: NSObject, ObservableObject, SKProductsReque
 		talentPhoto: String = "",
 		isTalentVerified: Bool = false,
 		bundleId: String,
-		profileDetailBundle: [Meeting] = [],
+		profileDetailBundle: [GeneralMeetingData] = [],
         meetingIdArray: [String],
         backToHome: @escaping (() -> Void),
         isTalent: Bool,
@@ -546,11 +546,11 @@ final class BundlingDetailViewModel: NSObject, ObservableObject, SKProductsReque
                     }
                 }
             } receiveValue: { value in
-                self.meetingData = value.data?.filter({ item in
+                self.meetingData = (value.data?.filter({ item in
                     self.meetingIdArray.contains {
                         $0 == item.id.orEmpty()
                     }
-                }) ?? []
+                }) ?? [])
             }
             .store(in: &cancellables)
 

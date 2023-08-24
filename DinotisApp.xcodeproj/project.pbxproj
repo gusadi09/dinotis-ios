@@ -33,7 +33,6 @@
 		EC246D3C270588B90084846F /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = EC246D3B270588B90084846F /* .swiftlint.yml */; };
 		EC246D402705AFB90084846F /* SearchTalent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC246D3F2705AFB90084846F /* SearchTalent.swift */; };
 		EC2551FB2A8FE28B001CE6C5 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = EC2551FA2A8FE28B001CE6C5 /* AlertToast */; };
-		EC2551FF2A932624001CE6C5 /* waiting-talent.json in Resources */ = {isa = PBXBuildFile; fileRef = EC2551FE2A932624001CE6C5 /* waiting-talent.json */; };
 		EC25CF2E280D7725000E3D9A /* ChangesPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC25CF2D280D7725000E3D9A /* ChangesPasswordViewModel.swift */; };
 		EC25CF32280D77AB000E3D9A /* ForgotPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC25CF31280D77AB000E3D9A /* ForgotPasswordViewModel.swift */; };
 		EC25CF34280DABC7000E3D9A /* OTPType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC25CF33280DABC7000E3D9A /* OTPType.swift */; };
@@ -62,11 +61,6 @@
 		EC3B977D2A41B4F1006D7B1B /* GroupVideoCallViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3B977C2A41B4F1006D7B1B /* GroupVideoCallViewModel.swift */; };
 		EC3B97802A41B4FF006D7B1B /* GroupVideoCallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3B977F2A41B4FF006D7B1B /* GroupVideoCallView.swift */; };
 		EC47636A2833E03C009EE2FB /* HTMLViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4763692833E03C009EE2FB /* HTMLViewer.swift */; };
-		EC47636F2833E1D4009EE2FB /* MeetingsTargetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC47636E2833E1D4009EE2FB /* MeetingsTargetType.swift */; };
-		EC4763712833E2F3009EE2FB /* MeetingsRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4763702833E2F3009EE2FB /* MeetingsRemoteDataSource.swift */; };
-		EC4763732833E372009EE2FB /* MeetingsDefaultRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4763722833E372009EE2FB /* MeetingsDefaultRemoteDataSource.swift */; };
-		EC4763752833E4ED009EE2FB /* MeetingsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4763742833E4ED009EE2FB /* MeetingsRepository.swift */; };
-		EC4763772833E543009EE2FB /* MeetingsDefaultRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4763762833E543009EE2FB /* MeetingsDefaultRepository.swift */; };
 		EC47EE75297538A100D7D86D /* DinotisData in Frameworks */ = {isa = PBXBuildFile; productRef = EC47EE74297538A100D7D86D /* DinotisData */; };
 		EC48E2C9287BE236000FD848 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC48E2C8287BE236000FD848 /* NotificationService.swift */; };
 		EC48E2CD287BE236000FD848 /* DinotisNotificationServiceExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = EC48E2C6287BE236000FD848 /* DinotisNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -197,6 +191,7 @@
 		ECB0A27528FF01DA0050EC71 /* UserDocumentRealtimeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECB0A27428FF01DA0050EC71 /* UserDocumentRealtimeResponse.swift */; };
 		ECB0A27728FF02250050EC71 /* RoomDocumentRealtimeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECB0A27628FF02250050EC71 /* RoomDocumentRealtimeResponse.swift */; };
 		ECB1C5CC26F37726005E083F /* CustomPresentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECB1C5CB26F37726005E083F /* CustomPresentViewController.swift */; };
+		ECB412A62A978EA300802C07 /* waiting-talent.json in Resources */ = {isa = PBXBuildFile; fileRef = ECB412A52A978EA300802C07 /* waiting-talent.json */; };
 		ECB76C4226D4BD780072E237 /* UserScheduleDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECB76C4126D4BD780072E237 /* UserScheduleDetail.swift */; };
 		ECB95D3626BA522100AC0784 /* ChangePasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECB95D3526BA522100AC0784 /* ChangePasswordView.swift */; };
 		ECB9649B26B9084C00B0390B /* OtpVerificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECB9649A26B9084C00B0390B /* OtpVerificationView.swift */; };
@@ -398,7 +393,6 @@
 		EC246D37270581D00084846F /* ProfileImageContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageContainer.swift; sourceTree = "<group>"; };
 		EC246D3B270588B90084846F /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		EC246D3F2705AFB90084846F /* SearchTalent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTalent.swift; sourceTree = "<group>"; };
-		EC2551FE2A932624001CE6C5 /* waiting-talent.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "waiting-talent.json"; sourceTree = "<group>"; };
 		EC25CF2D280D7725000E3D9A /* ChangesPasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangesPasswordViewModel.swift; sourceTree = "<group>"; };
 		EC25CF31280D77AB000E3D9A /* ForgotPasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordViewModel.swift; sourceTree = "<group>"; };
 		EC25CF33280DABC7000E3D9A /* OTPType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPType.swift; sourceTree = "<group>"; };
@@ -425,11 +419,6 @@
 		EC3B977C2A41B4F1006D7B1B /* GroupVideoCallViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupVideoCallViewModel.swift; sourceTree = "<group>"; };
 		EC3B977F2A41B4FF006D7B1B /* GroupVideoCallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupVideoCallView.swift; sourceTree = "<group>"; };
 		EC4763692833E03C009EE2FB /* HTMLViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLViewer.swift; sourceTree = "<group>"; };
-		EC47636E2833E1D4009EE2FB /* MeetingsTargetType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingsTargetType.swift; sourceTree = "<group>"; };
-		EC4763702833E2F3009EE2FB /* MeetingsRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingsRemoteDataSource.swift; sourceTree = "<group>"; };
-		EC4763722833E372009EE2FB /* MeetingsDefaultRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingsDefaultRemoteDataSource.swift; sourceTree = "<group>"; };
-		EC4763742833E4ED009EE2FB /* MeetingsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingsRepository.swift; sourceTree = "<group>"; };
-		EC4763762833E543009EE2FB /* MeetingsDefaultRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingsDefaultRepository.swift; sourceTree = "<group>"; };
 		EC48E2C6287BE236000FD848 /* DinotisNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DinotisNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC48E2C8287BE236000FD848 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		EC48E2CA287BE236000FD848 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -550,6 +539,7 @@
 		ECB0A27428FF01DA0050EC71 /* UserDocumentRealtimeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDocumentRealtimeResponse.swift; sourceTree = "<group>"; };
 		ECB0A27628FF02250050EC71 /* RoomDocumentRealtimeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomDocumentRealtimeResponse.swift; sourceTree = "<group>"; };
 		ECB1C5CB26F37726005E083F /* CustomPresentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPresentViewController.swift; sourceTree = "<group>"; };
+		ECB412A52A978EA300802C07 /* waiting-talent.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "waiting-talent.json"; sourceTree = "<group>"; };
 		ECB76C4126D4BD780072E237 /* UserScheduleDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserScheduleDetail.swift; sourceTree = "<group>"; };
 		ECB95D3526BA522100AC0784 /* ChangePasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordView.swift; sourceTree = "<group>"; };
 		ECB9649A26B9084C00B0390B /* OtpVerificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtpVerificationView.swift; sourceTree = "<group>"; };
@@ -1184,34 +1174,6 @@
 			path = NotUse;
 			sourceTree = "<group>";
 		};
-		EC47636B2833E1AA009EE2FB /* Meetings */ = {
-			isa = PBXGroup;
-			children = (
-				EC47636C2833E1B7009EE2FB /* Remote */,
-				EC4763742833E4ED009EE2FB /* MeetingsRepository.swift */,
-				EC4763762833E543009EE2FB /* MeetingsDefaultRepository.swift */,
-			);
-			path = Meetings;
-			sourceTree = "<group>";
-		};
-		EC47636C2833E1B7009EE2FB /* Remote */ = {
-			isa = PBXGroup;
-			children = (
-				EC47636D2833E1BF009EE2FB /* TargetType */,
-				EC4763702833E2F3009EE2FB /* MeetingsRemoteDataSource.swift */,
-				EC4763722833E372009EE2FB /* MeetingsDefaultRemoteDataSource.swift */,
-			);
-			path = Remote;
-			sourceTree = "<group>";
-		};
-		EC47636D2833E1BF009EE2FB /* TargetType */ = {
-			isa = PBXGroup;
-			children = (
-				EC47636E2833E1D4009EE2FB /* MeetingsTargetType.swift */,
-			);
-			path = TargetType;
-			sourceTree = "<group>";
-		};
 		EC48E2C7287BE236000FD848 /* DinotisNotificationServiceExtension */ = {
 			isa = PBXGroup;
 			children = (
@@ -1233,7 +1195,7 @@
 		EC4E500327FC0B45009D66FF /* Lottie */ = {
 			isa = PBXGroup;
 			children = (
-				EC2551FE2A932624001CE6C5 /* waiting-talent.json */,
+				ECB412A52A978EA300802C07 /* waiting-talent.json */,
 				ECD4FC8629C4B93A00FBBC01 /* dinotis-white-lottie-loading.json */,
 				F61C58392982710000CCCDBD /* close-to-end.json */,
 			);
@@ -1338,7 +1300,6 @@
 			children = (
 				EC6A755629111AEE0030BC41 /* Bundling */,
 				ECD51FCF28A20C7A000B1F6C /* TwilioData */,
-				EC47636B2833E1AA009EE2FB /* Meetings */,
 				EC62578827B9F9D10079AA10 /* Reusables */,
 			);
 			path = Data;
@@ -3084,7 +3045,7 @@
 				ECDAE38E26B7FD9300419194 /* Montserrat-ExtraBold.ttf in Resources */,
 				EC62578627B8B2140079AA10 /* Icon.xcassets in Resources */,
 				ECBA13EF26B78F78004D452C /* Image.xcassets in Resources */,
-				EC2551FF2A932624001CE6C5 /* waiting-talent.json in Resources */,
+				ECB412A62A978EA300802C07 /* waiting-talent.json in Resources */,
 				ECA0A386271148BC0000739E /* Color.xcassets in Resources */,
 				ECDAE39926B7FD9300419194 /* Montserrat-Italic.ttf in Resources */,
 				ECDAE39726B7FD9300419194 /* Montserrat-Medium.ttf in Resources */,
@@ -3131,7 +3092,6 @@
 				EC62576E27B7A38B0079AA10 /* String+isValidEmail.swift in Sources */,
 				EC6A96E127CDDAF900282253 /* ScheduleListViewModel.swift in Sources */,
 				EC9C4E3D281694EA00837469 /* AnnouncementView.swift in Sources */,
-				EC4763712833E2F3009EE2FB /* MeetingsRemoteDataSource.swift in Sources */,
 				EC0D4C222A8C706A0028B87C /* AftercallFeedbackView.swift in Sources */,
 				EC3B977D2A41B4F1006D7B1B /* GroupVideoCallViewModel.swift in Sources */,
 				ECED4DD829F9297C00E79663 /* SelectedCollabCreatorView.swift in Sources */,
@@ -3242,7 +3202,6 @@
 				EC789C7527C4E81E005872E2 /* BiodataViewModel.swift in Sources */,
 				ECBA9F3226D631F6008CCCDB /* ProfileTalentScheduleCard.swift in Sources */,
 				ECB0A27528FF01DA0050EC71 /* UserDocumentRealtimeResponse.swift in Sources */,
-				EC4763732833E372009EE2FB /* MeetingsDefaultRemoteDataSource.swift in Sources */,
 				F67334F72908F0B2006C1ADF /* TalentEditRateCardScheduleViewModel.swift in Sources */,
 				EC01F1E326BFD7C600CA878F /* UserBiodataView.swift in Sources */,
 				ECBE2B6D27295903002A45D8 /* HistoryCard.swift in Sources */,
@@ -3305,7 +3264,6 @@
 				ECC110C126E9BBE1007FF617 /* TalentTransactionFeeView.swift in Sources */,
 				F63A098F289BED2F008C7815 /* SpeakerGridViewModel.swift in Sources */,
 				EC246D38270581D00084846F /* ProfileImageContainer.swift in Sources */,
-				EC4763772833E543009EE2FB /* MeetingsDefaultRepository.swift in Sources */,
 				F67334F92908F0B2006C1ADF /* RateCardServiceBookingFormViewModel.swift in Sources */,
 				EC5B59BE28CB64AC009D6B2B /* PrivateSpeakerVideoView.swift in Sources */,
 				EC5D281D27FEE56600A740E1 /* LiveStreamCondition.swift in Sources */,
@@ -3320,7 +3278,6 @@
 				F67334D02908EE0C006C1ADF /* BundlingDetailView.swift in Sources */,
 				EC1C145526DD10E400EC66E0 /* TalentAddBankAccountView.swift in Sources */,
 				EC0D4C252A8C70820028B87C /* FeedbackViewModel.swift in Sources */,
-				EC47636F2833E1D4009EE2FB /* MeetingsTargetType.swift in Sources */,
 				EC28759E27D1CB600093E9C9 /* UserInvoiceBookingViewModel.swift in Sources */,
 				ECD51FD728A20CBC000B1F6C /* TwilioRemoteDataSource.swift in Sources */,
 				F67334C82908EE02006C1ADF /* BundlingViewModel.swift in Sources */,
@@ -3365,7 +3322,6 @@
 				ECDD760926C8078900C50956 /* TalentHomeView.swift in Sources */,
 				ECC9C38827C7DBA500495749 /* UserHomeViewModel.swift in Sources */,
 				EC62576527B7A24C0079AA10 /* Moya+Request.swift in Sources */,
-				EC4763752833E4ED009EE2FB /* MeetingsRepository.swift in Sources */,
 				EC2A511628C7099800C717B9 /* TwilioGroupVideoCallView+Component.swift in Sources */,
 				EC789C6827C4C2A7005872E2 /* OTPField.swift in Sources */,
 				EC6A756529111BFF0030BC41 /* BundlingList.swift in Sources */,
@@ -3668,7 +3624,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.1;
+				MARKETING_VERSION = 1.5.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp;
 				PRODUCT_NAME = DinotisStag;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3854,7 +3810,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.1;
+				MARKETING_VERSION = 1.5.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp;
 				PRODUCT_NAME = DinotisDev;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3951,7 +3907,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.1;
+				MARKETING_VERSION = 1.5.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp;
 				PRODUCT_NAME = Dinotis;
 				PROVISIONING_PROFILE_SPECIFIER = "";

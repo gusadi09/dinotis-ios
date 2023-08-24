@@ -169,11 +169,7 @@ final class ScheduleListViewModel: ObservableObject {
         } else if data.status == SessionStatus.done.rawValue {
             routeToTalentProfile(username: (data.meeting?.user?.username).orEmpty())
         } else if data.status == SessionStatus.notReviewed.rawValue {
-            reviewImage = (data.meeting?.user?.profilePhoto).orEmpty()
-            reviewCreatorName = (data.meeting?.user?.name).orEmpty()
-            reviewTitle = (data.meeting?.title).orEmpty()
-            meetingId = (data.meeting?.id).orEmpty()
-            showReviewSheet = true
+            routeToUsertDetailSchedule(bookingId: data.id.orEmpty(), talentName: (data.meeting?.user?.name).orEmpty(), talentPhoto: (data.meeting?.user?.profilePhoto).orEmpty())
         } else if data.status == SessionStatus.waitingForPayment.rawValue {
 			routeToInvoice(id: data.id.orEmpty())
         } else {

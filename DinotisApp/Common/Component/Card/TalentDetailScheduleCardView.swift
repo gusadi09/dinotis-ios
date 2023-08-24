@@ -6,11 +6,12 @@
 //
 
 import SwiftUI
+import DinotisData
 import CurrencyFormatter
 import DinotisDesignSystem
 
 struct TalentDetailScheduleCardView: View {
-	@Binding var data: DetailMeeting
+	@Binding var data: MeetingDetailResponse
 	
 	@State var isShowMenu = false
     @State var isShowCollabList = false
@@ -327,12 +328,12 @@ struct TalentDetailScheduleCardView: View {
 							Spacer()
 						}
 
-                        ForEach($data.participantDetails.prefix(4), id: \.id.wrappedValue) { item in
+                        ForEach((data.participantDetails ?? []).prefix(4), id: \.id) { item in
                             VStack {
                                 HStack {
-                                    ProfileImageContainer(profilePhoto: .constant(item.wrappedValue.profilePhoto), name: .constant(item.wrappedValue.name), width: 40, height: 40)
+                                    ProfileImageContainer(profilePhoto: .constant(item.profilePhoto), name: .constant(item.name), width: 40, height: 40)
                                     
-                                    Text(item.wrappedValue.name.orEmpty())
+                                    Text(item.name.orEmpty())
                                         .font(.robotoMedium(size: 14))
                                         .foregroundColor(.black)
                                     
@@ -354,8 +355,8 @@ struct TalentDetailScheduleCardView: View {
                             }
                         }
                         
-                        if $data.participantDetails.count > 4 {
-                            Text(LocaleText.andMoreParticipant($data.participantDetails.count-4))
+                        if data.participants.orZero() > 4 {
+                            Text(LocaleText.andMoreParticipant(data.participants.orZero()-4))
                                 .font(.robotoBold(size: 12))
                                 .foregroundColor(.black)
                         }

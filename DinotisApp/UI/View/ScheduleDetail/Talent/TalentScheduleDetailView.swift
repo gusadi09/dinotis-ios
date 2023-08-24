@@ -34,7 +34,7 @@ struct TalentScheduleDetailView: View {
     
     @StateObject private var customerChatManager = CustomerChatManager()
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
 
     @Environment(\.viewController) private var viewControllerHolder: ViewControllerHolder
     
@@ -73,13 +73,13 @@ struct TalentScheduleDetailView: View {
                                 title: Text(LocaleText.successTitle),
                                 message: Text(LocaleText.successEndedMeetingText),
                                 dismissButton: .default(Text(LocaleText.returnText), action: {
-                                    self.presentationMode.wrappedValue.dismiss()
+                                    dismiss()
                                 }))
                         }
                         
                         HStack {
                             Button(action: {
-                                presentationMode.wrappedValue.dismiss()
+                                dismiss()
                             }, label: {
                                 Image.Dinotis.arrowBackIcon
                                     .padding()
@@ -100,7 +100,9 @@ struct TalentScheduleDetailView: View {
                                 secondaryButton: .destructive(
                                     Text(LocaleText.yesDeleteText),
                                     action: {
-                                        viewModel.deleteMeeting()
+                                        Task {
+                                            await viewModel.deleteMeeting()
+                                        }
                                     }
                                 )
                             )
@@ -273,7 +275,7 @@ struct TalentScheduleDetailView: View {
 
 					VStack(spacing: 0) {
 
-						if viewModel.dataMeeting?.meetingRequest == nil {
+                        if viewModel.dataMeeting?.meetingRequest == nil {
 							if let dataPrice = viewModel.dataMeeting {
 								HStack {
 									Text(LocaleText.totalIncomeText)
@@ -282,11 +284,11 @@ struct TalentScheduleDetailView: View {
 
 									Spacer()
 
-									Text(viewModel.totalPrice.numberString.toCurrency())
+                                    Text(viewModel.totalPrice.numberString.toCurrency())
 										.font(.robotoMedium(size: 14))
 										.foregroundColor(.black)
 										.onAppear {
-											viewModel.totalPrice = (Int(dataPrice.price.orEmpty()).orZero()) * (dataPrice.bookings?.filter({ item in
+                                            viewModel.totalPrice = (Int(dataPrice.price.orEmpty()).orZero()) * (dataPrice.bookings?.filter({ item in
 												item.bookingPayment?.paidAt != nil
 											}) ?? []).count
 										}
@@ -294,120 +296,124 @@ struct TalentScheduleDetailView: View {
 								.padding(.horizontal)
 								.padding(.vertical, 10)
 								.background(Color.secondaryViolet.edgesIgnoringSafeArea(.all))
-								.isHidden(!(dataPrice.slots.orZero() > 1), remove: !(dataPrice.slots.orZero() > 1))
+								.isHidden((dataPrice.isPrivate ?? false), remove: (dataPrice.isPrivate ?? false))
 							}
 						}
 
-						HStack {
-                            if viewModel.dataMeeting?.meetingRequest != nil && !(viewModel.dataMeeting?.meetingRequest?.isConfirmed ?? false) {
-                                if viewModel.dataMeeting?.meetingRequest?.isAccepted ?? false {
-                                    HStack {
-                                        HStack(spacing: 7) {
-                                            Button {
-												viewModel.confirmationSheet.toggle()
-                                            } label: {
-                                                HStack {
-                                                    Spacer()
-                                                    
-                                                    Text(LocaleText.cancelText)
-                                                        .font(.robotoMedium(size: 12))
-                                                        .foregroundColor(.black)
-                                                    
-                                                    Spacer()
-                                                }
-                                                .padding()
-                                                .background(Color.secondaryViolet)
-                                                .overlay(
-                                                    RoundedRectangle(cornerRadius: 12)
-                                                        .stroke(Color.DinotisDefault.primary, lineWidth: 1)
-                                                )
-                                                .clipShape(RoundedRectangle(cornerRadius: 12))
-                                            }
-                                            
-                                            Button {
-                                                viewModel.routeToEditRateCardSchedule()
-                                            } label: {
-                                                HStack {
-                                                    Spacer()
-                                                    
-                                                    Text(LocaleText.setTime)
-                                                        .font(.robotoMedium(size: 12))
-                                                        .foregroundColor(.white)
-                                                    
-                                                    Spacer()
-                                                }
-                                                .padding()
-                                                .background(Color.DinotisDefault.primary)
-                                                .cornerRadius(12)
-                                            }
-                                            
-                                        }
-                                    }
-                                    .padding()
-                                    .background(Color.white.edgesIgnoringSafeArea(.all))
-                                    .isHidden(
-                                        !(viewModel.dataMeeting?.meetingRequest?.isConfirmed ?? false) && !(viewModel.dataMeeting?.meetingRequest?.isAccepted ?? false),
-                                        remove: !(viewModel.dataMeeting?.meetingRequest?.isConfirmed ?? false)
-                                    )
-                                }
-							} else {
-								HStack {
-									HStack(spacing: 10) {
-										Image.Dinotis.coinIcon
-											.resizable()
-											.scaledToFit()
-											.frame(height: 15)
-
-										if let dataPrice = viewModel.dataMeeting {
-											if (dataPrice.price.orEmpty()) == "0" {
-												Text(LocaleText.freeTextLabel)
-													.font(.robotoBold(size: 14))
-													.foregroundColor(.DinotisDefault.primary)
-											} else {
-												if dataPrice.slots.orZero() > 1 {
-													Text("\(dataPrice.price.orEmpty().toPriceFormat()) \(LocaleText.personSuffix)")
-														.font(.robotoBold(size: 14))
-														.foregroundColor(.DinotisDefault.primary)
-												} else {
-													Text(dataPrice.price.orEmpty().toPriceFormat())
-														.font(.robotoBold(size: 14))
-														.foregroundColor(.DinotisDefault.primary)
-												}
-											}
-										}
-									}
-									.padding(.vertical, 10)
-
-									Spacer()
-
-									if viewModel.dataMeeting?.endedAt == nil {
-                                        Button(action: {
-                                            viewModel.startPresented.toggle()
-                                        }, label: {
+                        Group {
+                            if viewModel.dataMeeting != nil {
+                                HStack {
+                                    if viewModel.dataMeeting?.meetingRequest != nil && !(viewModel.dataMeeting?.meetingRequest?.isConfirmed ?? false) {
+                                        if viewModel.dataMeeting?.meetingRequest?.isAccepted ?? false {
                                             HStack {
-                                                Text(LocaleText.startNowText)
-                                                    .font(.robotoMedium(size: 14))
-													.foregroundColor(.white)
-													.padding(10)
-													.padding(.horizontal, 5)
-													.padding(.vertical, 5)
-											}
-                                            .background(Color.DinotisDefault.primary)
-											.clipShape(RoundedRectangle(cornerRadius: 12))
-										})
-									}
-								}
-								.padding()
-								.background(Color.white.edgesIgnoringSafeArea(.all))
-							}
-
-						}
+                                                HStack(spacing: 7) {
+                                                    Button {
+                                                        viewModel.confirmationSheet.toggle()
+                                                    } label: {
+                                                        HStack {
+                                                            Spacer()
+                                                            
+                                                            Text(LocaleText.cancelText)
+                                                                .font(.robotoMedium(size: 12))
+                                                                .foregroundColor(.black)
+                                                            
+                                                            Spacer()
+                                                        }
+                                                        .padding()
+                                                        .background(Color.secondaryViolet)
+                                                        .overlay(
+                                                            RoundedRectangle(cornerRadius: 12)
+                                                                .stroke(Color.DinotisDefault.primary, lineWidth: 1)
+                                                        )
+                                                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                                                    }
+                                                    
+                                                    Button {
+                                                        viewModel.routeToEditRateCardSchedule()
+                                                    } label: {
+                                                        HStack {
+                                                            Spacer()
+                                                            
+                                                            Text(LocaleText.setTime)
+                                                                .font(.robotoMedium(size: 12))
+                                                                .foregroundColor(.white)
+                                                            
+                                                            Spacer()
+                                                        }
+                                                        .padding()
+                                                        .background(Color.DinotisDefault.primary)
+                                                        .cornerRadius(12)
+                                                    }
+                                                    
+                                                }
+                                            }
+                                            .padding()
+                                            .background(Color.white.edgesIgnoringSafeArea(.all))
+                                            .isHidden(
+                                                !(viewModel.dataMeeting?.meetingRequest?.isConfirmed ?? false) && !(viewModel.dataMeeting?.meetingRequest?.isAccepted ?? false),
+                                                remove: !(viewModel.dataMeeting?.meetingRequest?.isConfirmed ?? false)
+                                            )
+                                        }
+                                    } else {
+                                        HStack {
+                                            HStack(spacing: 10) {
+                                                Image.Dinotis.coinIcon
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .frame(height: 15)
+                                                
+                                                if let dataPrice = viewModel.dataMeeting {
+                                                    if (dataPrice.price.orEmpty()) == "0" {
+                                                        Text(LocaleText.freeTextLabel)
+                                                            .font(.robotoBold(size: 14))
+                                                            .foregroundColor(.DinotisDefault.primary)
+                                                    } else {
+                                                        if !(dataPrice.isPrivate ?? false) {
+                                                            Text("\(dataPrice.price.orEmpty().toPriceFormat()) \(LocaleText.personSuffix)")
+                                                                .font(.robotoBold(size: 14))
+                                                                .foregroundColor(.DinotisDefault.primary)
+                                                        } else {
+                                                            Text(dataPrice.price.orEmpty().toPriceFormat())
+                                                                .font(.robotoBold(size: 14))
+                                                                .foregroundColor(.DinotisDefault.primary)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            .padding(.vertical, 10)
+                                            
+                                            Spacer()
+                                            
+                                            if viewModel.dataMeeting?.endedAt == nil {
+                                                Button(action: {
+                                                    viewModel.startPresented.toggle()
+                                                }, label: {
+                                                    HStack {
+                                                        Text(LocaleText.startNowText)
+                                                            .font(.robotoMedium(size: 14))
+                                                            .foregroundColor(.white)
+                                                            .padding(10)
+                                                            .padding(.horizontal, 5)
+                                                            .padding(.vertical, 5)
+                                                    }
+                                                    .background(Color.DinotisDefault.primary)
+                                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                                })
+                                            }
+                                        }
+                                        .padding()
+                                        .background(Color.white.edgesIgnoringSafeArea(.all))
+                                    }
+                                    
+                                }
+                            }
+                        }
 						.alert(isPresented: $viewModel.isDeleteSuccess) {
 							Alert(
 								title: Text(LocaleText.successTitle),
 								message: Text(LocaleText.successDeleteMeetingText),
 								dismissButton: .default(Text(LocaleText.returnText), action: {
-									self.presentationMode.wrappedValue.dismiss()
+									dismiss()
 								}))
 						}
 
@@ -436,7 +442,7 @@ struct TalentScheduleDetailView: View {
 									title: Text(LocaleText.successTitle),
 									message: Text(LocaleText.successConfirmRequestText),
 									dismissButton: .default(Text(LocaleText.okText), action: {
-										presentationMode.wrappedValue.dismiss()
+										dismiss()
                                     })
                                 )
                             }
@@ -494,7 +500,7 @@ struct TalentScheduleDetailView: View {
 						guard let meet = viewModel.dataMeeting else {return}
 
 						if meet.isPrivate ?? false {
-							privateStreamManager.meetingId = meet.id
+                            privateStreamManager.meetingId = meet.id.orEmpty()
 
 							let localParticipant = PrivateLocalParticipantManager()
 							let roomManager = PrivateRoomManager()
@@ -505,12 +511,12 @@ struct TalentScheduleDetailView: View {
 							let speakersMap = SyncUsersMap()
 
 							privateStreamManager.configure(roomManager: roomManager)
-							privateStreamViewModel.configure(streamManager: privateStreamManager, speakerSettingsManager: privateSpeakerSettingsManager, meetingId: meet.id)
+                            privateStreamViewModel.configure(streamManager: privateStreamManager, speakerSettingsManager: privateSpeakerSettingsManager, meetingId: meet.id.orEmpty())
 							privateSpeakerSettingsManager.configure(roomManager: roomManager)
 							privateSpeakerViewModel.configure(roomManager: roomManager, speakersMap: speakersMap, speakerVideoViewModelFactory: speakerVideoViewModelFactory)
 
 						} else {
-							streamManager.meetingId = meet.id
+                            streamManager.meetingId = meet.id.orEmpty()
 
 							let localParticipant = LocalParticipantManager()
 							let roomManager = RoomManager()
@@ -524,10 +530,10 @@ struct TalentScheduleDetailView: View {
 							let syncManager = SyncManager(speakersMap: speakersMap, viewersMap: viewersMap, raisedHandsMap: raisedHandsMap, userDocument: userDocument, roomDocument: roomDocument)
 							participantsViewModel.configure(streamManager: streamManager, roomManager: roomManager, speakersMap: speakersMap, viewersMap: viewersMap, raisedHandsMap: raisedHandsMap)
 							streamManager.configure(roomManager: roomManager, playerManager: PlayerManager(), syncManager: syncManager, chatManager: chatManager)
-							streamViewModel.configure(streamManager: streamManager, speakerSettingsManager: speakerSettingsManager, userDocument: userDocument, meetingId: meet.id, roomDocument: roomDocument)
+                            streamViewModel.configure(streamManager: streamManager, speakerSettingsManager: speakerSettingsManager, userDocument: userDocument, meetingId: meet.id.orEmpty(), roomDocument: roomDocument)
 							speakerSettingsManager.configure(roomManager: roomManager)
 							hostControlsManager.configure(roomManager: roomManager)
-							speakerVideoViewModelFactory.configure(meetingId: meet.id, speakersMap: speakersMap)
+                            speakerVideoViewModelFactory.configure(meetingId: meet.id.orEmpty(), speakersMap: speakersMap)
 							speakerGridViewModel.configure(roomManager: roomManager, speakersMap: speakersMap, speakerVideoViewModelFactory: speakerVideoViewModelFactory)
 							presentationLayoutViewModel.configure(roomManager: roomManager, speakersMap: speakersMap, speakerVideoViewModelFactory: speakerVideoViewModelFactory)
 						}
@@ -586,7 +592,9 @@ struct TalentScheduleDetailView: View {
 						secondaryButton: .destructive(
 							Text(LocaleText.yesDeleteText),
 							action: {
-								viewModel.endMeeting()
+                                Task {
+                                    await viewModel.endMeeting()
+                                }
 							}
 						)
 					)
@@ -655,9 +663,10 @@ struct TalentScheduleDetailView: View {
 								})
 
 								Button(action: {
-
-									viewModel.startMeeting()
-
+                                    Task {
+                                        await viewModel.startMeeting()
+                                        
+                                    }
 								}, label: {
 									HStack {
 										Spacer()
@@ -725,9 +734,9 @@ struct TalentScheduleDetailView: View {
 								})
 
 								Button(action: {
-
-									viewModel.startMeeting()
-
+                                    Task {
+                                        await viewModel.startMeeting()
+                                    }
 								}, label: {
 									HStack {
 										Spacer()
@@ -753,7 +762,9 @@ struct TalentScheduleDetailView: View {
 
         })
         .onAppear(perform: {
-            viewModel.getDetailMeeting()
+            Task {
+                await viewModel.getDetailMeeting()
+            }
             stateObservable.spotlightedIdentity = ""
             StateObservable.shared.cameraPositionUsed = .front
             StateObservable.shared.twilioRole = ""
@@ -894,7 +905,9 @@ struct TalentScheduleDetailView: View {
     }
     
     private func refreshList() {
-        viewModel.getDetailMeeting()
+        Task {
+            await viewModel.getDetailMeeting()
+        }
     }
 }
 

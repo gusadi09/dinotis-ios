@@ -8,5 +8,5 @@
 import Foundation
 
 public protocol CreateNewMeetingUseCase {
-    func execute(from body: AddMeetingRequest) async -> Result<MeetingDetailResponse, Error>
+    func execute(from body: AddMeetingRequest) async -> Result<StartCreatorMeetingResponse, Error>
 }

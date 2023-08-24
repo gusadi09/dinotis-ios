@@ -79,7 +79,7 @@ final class SearchTalentViewModel: NSObject, ObservableObject, SKProductsRequest
     @Published var isShowCollabList = false
     @Published var isDescComplete = false
     
-    @Published var sessionCard = MeetingDetailResponse(user: nil, background: [""], meetingCollaborations: nil, meetingUrls: nil, meetingUploads: nil, isCollaborationAlreadyConfirmed: nil)
+    @Published var sessionCard = MeetingDetailResponse(user: nil, background: [""], meetingCollaborations: nil, meetingUrls: nil, meetingUploads: nil, isCollaborationAlreadyConfirmed: nil, isAlreadyBooked: nil)
     
     @Published var extraFee = 0
     @Published var totalPayment = 0

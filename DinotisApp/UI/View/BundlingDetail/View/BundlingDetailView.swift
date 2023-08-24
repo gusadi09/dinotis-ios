@@ -16,7 +16,7 @@ struct BundlingDetailView: View {
     
     @ObservedObject var viewModel: BundlingDetailViewModel
 	@ObservedObject var state = StateObservable.shared
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
     let isPreview: Bool
     
     @Binding var tabValue: TabRoute
@@ -356,7 +356,7 @@ extension BundlingDetailView {
 	}
 	
     struct HeaderView: View {
-        @Environment(\.presentationMode) var presentationMode
+        @Environment(\.dismiss) var dismiss
         
         @ObservedObject var viewModel: BundlingDetailViewModel
         
@@ -366,7 +366,7 @@ extension BundlingDetailView {
             ZStack {
                 HStack {
                     Button(action: {
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     }, label: {
                         Image.Dinotis.arrowBackIcon
                             .padding()

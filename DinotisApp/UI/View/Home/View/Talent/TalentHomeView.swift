@@ -83,7 +83,9 @@ struct TalentHomeView: View {
                         secondaryButton: .destructive(
                             Text(LocaleText.yesDeleteText),
                             action: {
-                                homeVM.deleteMeeting()
+                                Task {
+                                    await homeVM.deleteMeeting()
+                                }
                             }
                         )
                     )
@@ -342,9 +344,9 @@ struct TalentHomeView: View {
                                 .listRowBackground(Color.clear)
                                 
                                 Section {
-                                    VStack {
+                                    Group {
                                         if homeVM.tabNumb == 0 {
-                                            VStack {
+//                                            VStack {
                                                 HStack {
                                                     Image(systemName: "slider.horizontal.3")
                                                         .resizable()
@@ -388,6 +390,7 @@ struct TalentHomeView: View {
                                                         .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.DinotisDefault.primary, lineWidth: 1))
                                                     }
                                                 }
+                                                .listRowInsets(EdgeInsets(top: 10, leading: 20, bottom: 0, trailing: 20))
                                                 .buttonStyle(.plain)
                                                 .padding(.bottom, 8)
                                                 .onChange(of: homeVM.filterSelection) { newValue in
@@ -401,11 +404,11 @@ struct TalentHomeView: View {
                                                         buttonText: LocaleText.createScheduleText,
                                                         primaryAction: homeVM.routeToTalentFormSchedule
                                                     )
+                                                    .listRowInsets(EdgeInsets(top: 10, leading: 20, bottom: 0, trailing: 20))
                                                     
                                                 } else {
-                                                    LazyVStack(spacing: 20) {
-                                                        
-                                                        ForEach(homeVM.meetingData.unique(), id: \.id) { items in
+                                                    ForEach(homeVM.meetingData.unique(), id: \.id) { items in
+                                                        if (homeVM.meetingData.unique().last?.id).orEmpty() == items.id {
                                                             TalentScheduleCardView(
                                                                 data: .constant(items),
                                                                 isBundle: false,
@@ -418,21 +421,49 @@ struct TalentHomeView: View {
                                                                     homeVM.meetingId = items.id.orEmpty()
                                                                 }
                                                             )
+                                                            .listRowInsets(EdgeInsets(top: 10, leading: 20, bottom: 13, trailing: 20))
                                                             .onAppear {
                                                                 if (homeVM.meetingData.unique().last?.id).orEmpty() == items.id {
-                                                                    homeVM.meetingParam.skip = homeVM.meetingParam.take
-                                                                    homeVM.meetingParam.take += 15
-                                                                    homeVM.getTalentMeeting(isMore: true)
+                                                                    Task {
+                                                                        homeVM.meetingParam.skip = homeVM.meetingParam.take
+                                                                        homeVM.meetingParam.take += 15
+                                                                        await homeVM.getTalentMeeting(isMore: true)
+                                                                    }
                                                                 }
                                                             }
+                                                            
+                                                            if homeVM.isLoadingMore {
+                                                                HStack {
+                                                                    Spacer()
+                                                                    
+                                                                    ProgressView()
+                                                                        .progressViewStyle(.circular)
+                                                                    
+                                                                    Spacer()
+                                                                }
+                                                                .listRowInsets(EdgeInsets(top: 10, leading: 20, bottom: 13, trailing: 20))
+                                                            }
+                                                            
+                                                        } else {
+                                                            TalentScheduleCardView(
+                                                                data: .constant(items),
+                                                                isBundle: false,
+                                                                onTapButton: {
+                                                                    homeVM.routeToTalentDetailSchedule(meetingId: items.id.orEmpty())
+                                                                }, onTapEdit: {
+                                                                    homeVM.routeToEditSchedule(id: items.id.orEmpty())
+                                                                }, onTapDelete: {
+                                                                    homeVM.isShowDelete.toggle()
+                                                                    homeVM.meetingId = items.id.orEmpty()
+                                                                }
+                                                            )
+                                                            .listRowInsets(EdgeInsets(top: 10, leading: 20, bottom: 13, trailing: 20))
                                                         }
                                                     }
-                                                    .padding(.top)
-                                                    .padding(.bottom, 40)
+                                                    
                                                 }
-                                            }
+                                            
                                         } else {
-                                            VStack {
                                                 HStack {
                                                     Image(systemName: "slider.horizontal.3")
                                                         .resizable()
@@ -477,6 +508,7 @@ struct TalentHomeView: View {
                                                     }
                                                 }
                                                 .buttonStyle(.plain)
+                                                .listRowInsets(EdgeInsets(top: 10, leading: 20, bottom: 0, trailing: 20))
                                                 .padding(.bottom, 8)
                                                 .onChange(of: homeVM.filterSelectionRequest) { item in
                                                     homeVM.filterMeetingRequest(newValue: item)
@@ -489,34 +521,61 @@ struct TalentHomeView: View {
                                                         buttonText: LocaleText.createRateCard,
                                                         primaryAction: homeVM.routeToTalentRateCardList
                                                     )
+                                                    .listRowInsets(EdgeInsets(top: 10, leading: 20, bottom: 0, trailing: 20))
                                                 } else {
                                                     ForEach(homeVM.meetingRequestData.unique(), id:\.id) { item in
-                                                        RequestCardView(
-                                                            user: item.user,
-                                                            item: item,
-                                                            onTapDecline: {
-                                                                homeVM.requestId = item.id.orEmpty()
-                                                                homeVM.confirmationSheet = .declined
-                                                            },
-                                                            onTapAccept: {
-                                                                homeVM.requestId = item.id.orEmpty()
-                                                                homeVM.confirmationSheet = .accepted
-                                                            }
-                                                        )
-                                                        .onAppear {
-                                                            Task {
-                                                                if item.id == homeVM.meetingRequestData.unique().last?.id {
-                                                                    homeVM.rateCardQuery.skip = homeVM.rateCardQuery.take
-                                                                    homeVM.rateCardQuery.take += 15
-                                                                    await homeVM.getMeetingRequest()
+                                                        if item.id == homeVM.meetingRequestData.unique().last?.id {
+                                                            RequestCardView(
+                                                                user: item.user,
+                                                                item: item,
+                                                                onTapDecline: {
+                                                                    homeVM.requestId = item.id.orEmpty()
+                                                                    homeVM.confirmationSheet = .declined
+                                                                },
+                                                                onTapAccept: {
+                                                                    homeVM.requestId = item.id.orEmpty()
+                                                                    homeVM.confirmationSheet = .accepted
+                                                                }
+                                                            )
+                                                            .listRowInsets(EdgeInsets(top: 10, leading: 20, bottom: 5, trailing: 20))
+                                                            .onAppear {
+                                                                Task {
+                                                                    if item.id == homeVM.meetingRequestData.unique().last?.id {
+                                                                        homeVM.rateCardQuery.skip = homeVM.rateCardQuery.take
+                                                                        homeVM.rateCardQuery.take += 15
+                                                                        await homeVM.getMeetingRequest(isMore: true)
+                                                                    }
                                                                 }
                                                             }
+                                                            
+                                                            if homeVM.isLoadingMoreRequest {
+                                                                HStack {
+                                                                    Spacer()
+                                                                    
+                                                                    ProgressView()
+                                                                        .progressViewStyle(.circular)
+                                                                    
+                                                                    Spacer()
+                                                                }
+                                                                .listRowInsets(EdgeInsets(top: 10, leading: 20, bottom: 5, trailing: 20))
+                                                            }
+                                                        } else {
+                                                            RequestCardView(
+                                                                user: item.user,
+                                                                item: item,
+                                                                onTapDecline: {
+                                                                    homeVM.requestId = item.id.orEmpty()
+                                                                    homeVM.confirmationSheet = .declined
+                                                                },
+                                                                onTapAccept: {
+                                                                    homeVM.requestId = item.id.orEmpty()
+                                                                    homeVM.confirmationSheet = .accepted
+                                                                }
+                                                            )
+                                                            .listRowInsets(EdgeInsets(top: 10, leading: 20, bottom: 5, trailing: 20))
                                                         }
-                                                        .padding(.bottom, 5)
                                                     }
                                                 }
-                                            }
-                                            .padding(.bottom)
                                         }
                                     }
                                     .buttonStyle(.plain)
@@ -595,7 +654,6 @@ struct TalentHomeView: View {
                                     )
                                     .padding(.horizontal, -20)
                                 }
-                                .listRowInsets(EdgeInsets(top: 10, leading: 20, bottom: 0, trailing: 20))
                                 .listRowBackground(Color.white)
                                 .background(
                                     Color.white

@@ -13,7 +13,7 @@ struct ForgotPasswordView: View {
 	
 	@ObservedObject var viewModel: ForgotPasswordViewModel
 	
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
 	
 	var body: some View {
         GeometryReader { geo in
@@ -47,7 +47,7 @@ struct ForgotPasswordView: View {
 									strokeColor: nil,
 									iconSize: 12,
 									type: .primary, {
-										self.presentationMode.wrappedValue.dismiss()
+										dismiss()
 									}
 								)
 							},

@@ -16,6 +16,6 @@ struct DetailBundlingResponse: Codable {
     let user: UserResponse?
 	let createdAt: Date?
 	let updatedAt: Date?
-	let meetings: [Meeting]?
+	let meetings: [MeetingDetailResponse]?
 }
 

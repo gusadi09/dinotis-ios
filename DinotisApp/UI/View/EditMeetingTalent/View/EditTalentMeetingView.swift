@@ -19,7 +19,7 @@ struct EditTalentMeetingView: View {
 		self.viewControllerHolder.value
 	}
 	
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
 	
 	var body: some View {
 		ZStack {
@@ -58,7 +58,7 @@ struct EditTalentMeetingView: View {
 						
 						HStack {
 							Button(action: {
-								presentationMode.wrappedValue.dismiss()
+								dismiss()
 							}, label: {
 								Image.Dinotis.arrowBackIcon
 									.padding()
@@ -103,7 +103,9 @@ struct EditTalentMeetingView: View {
 
 					VStack(spacing: 0) {
 						Button(action: {
-							viewModel.editMeeting()
+                            Task {
+                                await viewModel.editMeeting()
+                            }
 						}, label: {
 							HStack {
 								Spacer()
@@ -136,7 +138,7 @@ struct EditTalentMeetingView: View {
 							dismissButton: .default(
 								Text(LocaleText.returnText),
 								action: {
-									self.presentationMode.wrappedValue.dismiss()
+									dismiss()
 								}
 							)
 						)
@@ -148,10 +150,7 @@ struct EditTalentMeetingView: View {
             DinotisLoadingView(.fullscreen, hide: !viewModel.isLoading)
 		}
 		.onAppear {
-            Task {
-                await viewModel.getUsers()
-                viewModel.getMeetingDetail()
-            }
+            viewModel.onAppear()
 		}
 		.navigationBarTitle(Text(""))
 		.navigationBarHidden(true)

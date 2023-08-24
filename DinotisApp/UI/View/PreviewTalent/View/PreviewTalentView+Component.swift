@@ -14,13 +14,13 @@ extension PreviewTalentView {
 
 		@ObservedObject var viewModel: PreviewTalentViewModel
 
-		@Environment(\.presentationMode) var presentationMode
+		@Environment(\.dismiss) var dismiss
 
 		var body: some View {
 			ZStack {
 				HStack {
 					Button(action: {
-						presentationMode.wrappedValue.dismiss()
+						dismiss()
 					}, label: {
 						Image.Dinotis.arrowBackIcon
 							.padding()

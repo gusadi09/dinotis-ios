@@ -13,7 +13,7 @@ struct AftercallFeedbackView: View {
     
     @ObservedObject var viewModel: FeedbackViewModel
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
     init(viewModel: FeedbackViewModel) {
         self.viewModel = viewModel

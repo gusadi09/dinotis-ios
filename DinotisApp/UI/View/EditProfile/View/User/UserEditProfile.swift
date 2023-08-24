@@ -14,7 +14,7 @@ import SwiftUINavigation
 struct UserEditProfile: View {
 	@ObservedObject var stateObservable = StateObservable.shared
 
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
 
 	@Environment(\.viewController) private var viewControllerHolder: ViewControllerHolder
 
@@ -55,7 +55,7 @@ struct UserEditProfile: View {
 								strokeColor: nil,
 								iconSize: 12,
 								type: .primary, {
-									self.presentationMode.wrappedValue.dismiss()
+									dismiss()
 								}
 							)
 						},
@@ -142,7 +142,7 @@ struct UserEditProfile: View {
                         bgColor: !viewModel.isAvailableToSaveUser() ? .DinotisDefault.lightPrimary : .DinotisDefault.primary
                     ) {
                         viewModel.onUpload {
-                            presentationMode.wrappedValue.dismiss()
+                            dismiss()
                         }
                     }
                     .disabled(!viewModel.isAvailableToSaveUser())

@@ -13,7 +13,7 @@ struct FollowedCreatorView: View {
 
 	@ObservedObject var viewModel: FollowedCreatorViewModel
 
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
     
     @Binding var tabValue: TabRoute
 
@@ -46,7 +46,7 @@ struct FollowedCreatorView: View {
                 strokeColor: nil,
                 iconSize: 12,
                 type: .primary, {
-                  self.presentationMode.wrappedValue.dismiss()
+                  dismiss()
                 }
               )
             },

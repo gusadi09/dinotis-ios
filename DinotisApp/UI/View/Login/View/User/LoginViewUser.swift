@@ -13,7 +13,7 @@ struct LoginViewUser: View {
 
 	@ObservedObject var loginVM: LoginViewModel
 
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
 
 	var body: some View {
 		GeometryReader { geo in
@@ -32,7 +32,7 @@ struct LoginViewUser: View {
 								strokeColor: nil,
 								iconSize: 12,
 								type: .primary, {
-									self.presentationMode.wrappedValue.dismiss()
+									dismiss()
 								}
 							)
 						} trailingButton: {

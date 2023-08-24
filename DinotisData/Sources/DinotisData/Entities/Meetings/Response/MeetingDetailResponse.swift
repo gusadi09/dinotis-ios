@@ -86,6 +86,19 @@ public struct MeetingDetailResponse: Codable, Hashable {
     public let meetingUrls: [MeetingURLData]?
     public let meetingUploads: [MeetingUploadData]?
     public let isCollaborationAlreadyConfirmed: Bool?
+    public let isAlreadyBooked: Bool?
+    public let booking: UserBookingData?
+    public let bookings: [UserBookingData]?
+    public let meetingRequest: MeetingRequestData?
+    public let managementId: Int?
+    public let cancelOptions: [CancelOptionData]?
+    public let maxEditAt: Date?
+    public let status: String?
+    public let roomSid: String?
+    public let dyteMeetingId: String?
+    public let isInspected: Bool?
+    public let reviews: [ReviewSuccessResponse]?
+    public let participantDetails: [UserResponse]?
     
     public init(
         id: String = "",
@@ -111,7 +124,20 @@ public struct MeetingDetailResponse: Codable, Hashable {
         meetingCollaborations: [MeetingCollaborationData]?,
         meetingUrls: [MeetingURLData]?,
         meetingUploads: [MeetingUploadData]?,
-        isCollaborationAlreadyConfirmed: Bool?
+        isCollaborationAlreadyConfirmed: Bool?,
+        isAlreadyBooked: Bool? = false,
+        booking: UserBookingData? = nil,
+        bookings: [UserBookingData]? = nil,
+        meetingRequest: MeetingRequestData? = nil,
+        managementId: Int? = nil,
+        cancelOptions: [CancelOptionData]? = [],
+        maxEditAt: Date? = nil,
+        status: String? = nil,
+        roomSid: String? = nil,
+        dyteMeetingId: String? = nil,
+        isInspected: Bool? = nil,
+        reviews: [ReviewSuccessResponse]? = [],
+        participantDetails: [UserResponse]? = []
     ) {
         self.id = id
         self.title = title
@@ -137,6 +163,19 @@ public struct MeetingDetailResponse: Codable, Hashable {
         self.meetingUrls = meetingUrls
         self.meetingUploads = meetingUploads
         self.isCollaborationAlreadyConfirmed = isCollaborationAlreadyConfirmed
+        self.isAlreadyBooked = isAlreadyBooked
+        self.booking = booking
+        self.bookings = bookings
+        self.meetingRequest = meetingRequest
+        self.managementId = managementId
+        self.cancelOptions = cancelOptions
+        self.maxEditAt = maxEditAt
+        self.status = status
+        self.roomSid = roomSid
+        self.dyteMeetingId = dyteMeetingId
+        self.isInspected = isInspected
+        self.reviews = reviews
+        self.participantDetails = participantDetails
     }
     
     public static func == (lhs: MeetingDetailResponse, rhs: MeetingDetailResponse) -> Bool {

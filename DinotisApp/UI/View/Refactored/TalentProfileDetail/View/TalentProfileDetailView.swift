@@ -17,7 +17,7 @@ struct TalentProfileDetailView: View {
     
     @ObservedObject var viewModel: TalentProfileDetailViewModel
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
     @Binding var tabValue: TabRoute
     
@@ -103,7 +103,7 @@ struct TalentProfileDetailView: View {
                                 iconSize: 12,
                                 type: .primary
                             ) {
-                                presentationMode.wrappedValue.dismiss()
+                                dismiss()
                             }
                             .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 0)
                         },
@@ -336,34 +336,36 @@ struct TalentProfileDetailView: View {
                         .listSectionSeparator(.hidden)
                         .listRowBackground(Color.white)
                         .onChange(of: viewModel.filterSelection) { newValue in
-                            if let optionLabel = viewModel.filterOption.firstIndex(where: { query in
-                                query.label.orEmpty() == newValue
-                            }) {
-                                if newValue == viewModel.filterOption[optionLabel].label.orEmpty() {
-                                    if let isEnded = viewModel.filterOption[optionLabel].queries?.firstIndex(where: { option in
-                                        option.name.orEmpty() == "is_ended"
-                                    }) {
-                                        viewModel.meetingParam.isEnded = (viewModel.filterOption[optionLabel].queries?[isEnded].value).orEmpty()
-                                    } else {
-                                        viewModel.meetingParam.isEnded = ""
+                            Task {
+                                if let optionLabel = viewModel.filterOption.firstIndex(where: { query in
+                                    query.label.orEmpty() == newValue
+                                }) {
+                                    if newValue == viewModel.filterOption[optionLabel].label.orEmpty() {
+                                        if let isEnded = viewModel.filterOption[optionLabel].queries?.firstIndex(where: { option in
+                                            option.name.orEmpty() == "is_ended"
+                                        }) {
+                                            viewModel.meetingParam.isEnded = (viewModel.filterOption[optionLabel].queries?[isEnded].value).orEmpty()
+                                        } else {
+                                            viewModel.meetingParam.isEnded = ""
+                                        }
+                                        
+                                        if let isAvail = viewModel.filterOption[optionLabel].queries?.firstIndex(where: { option in
+                                            option.name.orEmpty() == "is_available"
+                                        }) {
+                                            viewModel.meetingParam.isAvailable = (viewModel.filterOption[optionLabel].queries?[isAvail].value).orEmpty()
+                                        } else {
+                                            viewModel.meetingParam.isAvailable = ""
+                                        }
                                     }
                                     
-                                    if let isAvail = viewModel.filterOption[optionLabel].queries?.firstIndex(where: { option in
-                                        option.name.orEmpty() == "is_available"
-                                    }) {
-                                        viewModel.meetingParam.isAvailable = (viewModel.filterOption[optionLabel].queries?[isAvail].value).orEmpty()
-                                    } else {
-                                        viewModel.meetingParam.isAvailable = ""
-                                    }
+                                    print(viewModel.meetingParam)
+                                    
+                                    viewModel.bundlingData = []
+                                    viewModel.meetingData = []
+                                    viewModel.meetingParam.skip = 0
+                                    viewModel.meetingParam.take = 15
+                                    await viewModel.getTalentMeeting(by: (viewModel.talentData?.id).orEmpty(), isMore: false)
                                 }
-                                
-                                print(viewModel.meetingParam)
-                                
-                                viewModel.bundlingData = []
-                                viewModel.meetingData = []
-                                viewModel.meetingParam.skip = 0
-                                viewModel.meetingParam.take = 15
-                                viewModel.getTalentMeeting(by: (viewModel.talentData?.id).orEmpty(), isMore: false)
                             }
                         }
                     }

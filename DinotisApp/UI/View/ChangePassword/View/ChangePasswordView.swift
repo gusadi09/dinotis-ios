@@ -16,7 +16,7 @@ struct ChangePasswordView: View {
     @ObservedObject var viewModel: ChangesPasswordViewModel
     @ObservedObject var stateObservable = StateObservable.shared
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     @Environment(\.viewController) private var viewControllerHolder: ViewControllerHolder
     
     private var viewController: UIViewController? {
@@ -55,7 +55,7 @@ struct ChangePasswordView: View {
                                 strokeColor: nil,
                                 iconSize: 12,
                                 type: .primary, {
-                                    self.presentationMode.wrappedValue.dismiss()
+                                    dismiss()
                                 }
                             )
                         },
@@ -153,7 +153,7 @@ struct ChangePasswordView: View {
                     ) {
                         Task {
                             await viewModel.resetPassword {
-                                presentationMode.wrappedValue.dismiss()
+                                dismiss()
                             }
                         }
                     }

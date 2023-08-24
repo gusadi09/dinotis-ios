@@ -25,7 +25,7 @@ struct DetailPaymentView: View {
 		self.viewControllerHolder.value
 	}
 	
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
     
     @Binding var mainTabValue: TabRoute
 	

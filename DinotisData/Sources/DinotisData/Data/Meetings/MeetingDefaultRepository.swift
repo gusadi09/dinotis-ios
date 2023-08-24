@@ -27,11 +27,11 @@ public final class MeetingsDefaultRepository: MeetingsRepository {
         try await self.remote.getTalentDetailMeeting(userID: userID, params: params)
     }
     
-    public func providePatchEndMeeting(meetingId: String) async throws -> MeetingDetailResponse {
+    public func providePatchEndMeeting(meetingId: String) async throws -> StartCreatorMeetingResponse {
         try await self.remote.patchEndMeeting(meetingId: meetingId)
     }
     
-    public func providePutEditMeeting(meetingId: String, body: AddMeetingRequest) async throws -> MeetingDetailResponse {
+    public func providePutEditMeeting(meetingId: String, body: AddMeetingRequest) async throws -> StartCreatorMeetingResponse {
         try await self.remote.putEditMeeting(meetingId: meetingId, body: body)
     }
     
@@ -47,11 +47,11 @@ public final class MeetingsDefaultRepository: MeetingsRepository {
         try await self.remote.getDetailMeeting(meetingId: meetingId)
     }
     
-    public func provideAddMeeting(with body: AddMeetingRequest) async throws -> MeetingDetailResponse {
+    public func provideAddMeeting(with body: AddMeetingRequest) async throws -> StartCreatorMeetingResponse {
         try await self.remote.addMeeting(with: body)
     }
     
-    public func providePatchStartTalentMeeting(by meetingId: String) async throws -> MeetingDetailResponse {
+    public func providePatchStartTalentMeeting(by meetingId: String) async throws -> StartCreatorMeetingResponse {
         try await self.remote.patchStartTalentMeeting(by: meetingId)
     }
     

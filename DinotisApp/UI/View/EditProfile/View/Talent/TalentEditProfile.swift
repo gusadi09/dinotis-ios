@@ -15,7 +15,7 @@ struct TalentEditProfile: View {
 
 	@Binding var profesionSelect: [ProfessionData]
 
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
 
 	@Environment(\.viewController) private var viewControllerHolder: ViewControllerHolder
 
@@ -247,7 +247,7 @@ struct TalentEditProfile: View {
                         Spacer()
                         Button(action: {
                             viewModel.onUpload {
-                                presentationMode.wrappedValue.dismiss()
+                                dismiss()
                             }
                         }, label: {
                             HStack {
@@ -281,7 +281,7 @@ struct TalentEditProfile: View {
 
 					HStack {
 						Button(action: {
-							presentationMode.wrappedValue.dismiss()
+							dismiss()
 						}, label: {
 							Image.Dinotis.arrowBackIcon
 								.padding()

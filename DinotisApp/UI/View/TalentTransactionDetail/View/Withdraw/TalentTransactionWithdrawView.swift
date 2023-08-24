@@ -13,7 +13,7 @@ import SwiftUITrackableScrollView
 
 struct TalentTransactionWithdrawView: View {
 
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
 
 	@ObservedObject var viewModel: TalentTransactionDetailViewModel
 
@@ -46,7 +46,7 @@ struct TalentTransactionWithdrawView: View {
 					
 					HStack {
 						Button(action: {
-							presentationMode.wrappedValue.dismiss()
+							dismiss()
 						}, label: {
 							Image.Dinotis.arrowBackIcon
 								.padding()

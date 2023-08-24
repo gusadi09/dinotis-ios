@@ -26,7 +26,7 @@ struct TwilioGroupVideoCallView: View {
     
     var speaker: SpeakerVideoViewModel
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
     
@@ -55,7 +55,7 @@ struct TwilioGroupVideoCallView: View {
                         switch alertIdentifier {
                         case .error:
                             return Alert(error: streamViewModel.error) {
-                                presentationMode.wrappedValue.dismiss()
+                                dismiss()
                             }
                         case .receivedSpeakerInvite:
                             return Alert(
@@ -80,7 +80,7 @@ struct TwilioGroupVideoCallView: View {
                                 title: Text(LocaleText.streamEndedByHostTitle),
                                 message: Text(LocaleText.streamEndedByHostMessage),
                                 dismissButton: .default(Text(LocaleText.okText)) {
-                                    presentationMode.wrappedValue.dismiss()
+                                    dismiss()
                                 }
                             )
                         case .streamWillEndIfHostLeaves:

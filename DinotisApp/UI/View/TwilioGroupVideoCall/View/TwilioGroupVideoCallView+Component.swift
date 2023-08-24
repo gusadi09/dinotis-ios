@@ -293,7 +293,7 @@ extension TwilioGroupVideoCallView {
         @EnvironmentObject var speakerGridVM: SpeakerGridViewModel
         
         let closeLive: (() -> Void)
-        @Environment(\.presentationMode) var presentationMode
+        @Environment(\.dismiss) var dismiss
         
         var body: some View {
             HStack {
@@ -465,7 +465,7 @@ extension TwilioGroupVideoCallView {
         @ObservedObject var twilioLiveVM: TwilioLiveStreamViewModel
         @EnvironmentObject var streamManager: StreamManager
         @EnvironmentObject var participantsViewModel: ParticipantsViewModel
-        @Environment(\.presentationMode) var presentationMode
+        @Environment(\.dismiss) var dismiss
         
         var body: some View {
             NavigationView {
@@ -536,7 +536,7 @@ extension TwilioGroupVideoCallView {
                 .toolbar {
                     ToolbarItem(placement: .confirmationAction) {
                         Button(LocaleText.okText) {
-                            presentationMode.wrappedValue.dismiss()
+                            dismiss()
                             participantsViewModel.haveNewRaisedHand = false
                         }
                     }
@@ -551,7 +551,7 @@ extension TwilioGroupVideoCallView {
         @EnvironmentObject var participantVM: ParticipantsViewModel
         @EnvironmentObject var speakerSettingsManager: SpeakerSettingsManager
         @EnvironmentObject var streamVM: StreamViewModel
-        @Environment(\.presentationMode) var presentationMode
+        @Environment(\.dismiss) var dismiss
         
         var body: some View {
             NavigationView {
@@ -633,7 +633,7 @@ extension TwilioGroupVideoCallView {
                 .toolbar {
                     ToolbarItem(placement: .confirmationAction) {
                         Button(LocaleText.back) {
-                            presentationMode.wrappedValue.dismiss()
+                            dismiss()
                         }
                     }
                 }
@@ -642,7 +642,7 @@ extension TwilioGroupVideoCallView {
     }
     
     struct ChatView: View {
-        @Environment(\.presentationMode) var presentationMode
+        @Environment(\.dismiss) var dismiss
         @EnvironmentObject var chatManager: ChatManager
         @State private var isFirstLoadComplete = false
         @ObservedObject var viewModel: TwilioLiveStreamViewModel
@@ -729,7 +729,7 @@ extension TwilioGroupVideoCallView {
                 .toolbar {
                     ToolbarItem(placement: .confirmationAction) {
                         Button(LocaleText.back) {
-                            presentationMode.wrappedValue.dismiss()
+                            dismiss()
                         }
                     }
                 }

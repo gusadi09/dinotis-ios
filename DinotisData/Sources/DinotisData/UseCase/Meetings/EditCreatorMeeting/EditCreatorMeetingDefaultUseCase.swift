@@ -21,7 +21,7 @@ public struct EditCreatorMeetingDefaultUseCase: EditCreatorMeetingUseCase {
         self.authRepository = authRepository
     }
 
-    public func execute(for meetingId: String, with params: AddMeetingRequest) async -> Result<MeetingDetailResponse, Error> {
+    public func execute(for meetingId: String, with params: AddMeetingRequest) async -> Result<StartCreatorMeetingResponse, Error> {
         do {
             let data = try await repository.providePutEditMeeting(meetingId: meetingId, body: params)
 

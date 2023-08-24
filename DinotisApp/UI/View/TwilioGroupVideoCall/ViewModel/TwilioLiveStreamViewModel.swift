@@ -16,7 +16,6 @@ final class TwilioLiveStreamViewModel: ObservableObject {
 	
 //	private let questionRepository: QuestionRepository
 	private let authRepository: AuthenticationRepository
-	private let meetRepository: MeetingsRepository
 	private let getUserUseCase: GetUserUseCase
 	private let twilioRepo: TwilioDataRepository
 	private var cancellables = Set<AnyCancellable>()
@@ -24,6 +23,7 @@ final class TwilioLiveStreamViewModel: ObservableObject {
     private let getQuestionUseCase: GetQuestionUseCase
     private let putQuestionUseCase: PutQuestionUseCase
     private let sendQuestionUseCase: SendQuestionUseCase
+    private let checkMeetingEndUseCase: CheckEndedMeetingUseCase
 	
 	var backToHome: (() -> Void)
     
@@ -92,22 +92,22 @@ final class TwilioLiveStreamViewModel: ObservableObject {
 		authRepository: AuthenticationRepository = AuthenticationDefaultRepository(),
 		getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
 		twilioRepo: TwilioDataRepository = TwilioDataDefaultRepository(),
-		meetRepository: MeetingsRepository = MeetingsDefaultRepository(),
 		meeting: UserMeetingData,
         getQuestionUseCase: GetQuestionUseCase = GetQuestionDefaultUseCase(),
         putQuestionUseCase: PutQuestionUseCase = PutQuestionDefaultUseCase(),
-        sendQuestionUseCase: SendQuestionUseCase = SendQuestionDefaultUseCase()
+        sendQuestionUseCase: SendQuestionUseCase = SendQuestionDefaultUseCase(),
+        checkMeetingEndUseCase: CheckEndedMeetingUseCase = CheckEndedMeetingDefaultUseCase()
 	) {
 		self.backToHome = backToHome
 		self.authRepository = authRepository
 		self.getUserUseCase = getUserUseCase
 		self.twilioRepo = twilioRepo
-		self.meetRepository = meetRepository
 		self.meeting = meeting
         self.getQuestionUseCase = getQuestionUseCase
         self.putQuestionUseCase = putQuestionUseCase
         self.sendQuestionUseCase = sendQuestionUseCase
 		self.futureDate = meeting.endAt.orCurrentDate()
+        self.checkMeetingEndUseCase = checkMeetingEndUseCase
 	}
     
     func qnaFiltered() -> [QuestionData] {
@@ -142,7 +142,9 @@ final class TwilioLiveStreamViewModel: ObservableObject {
 		self.isNearbyEnd = dateTime <= meeting.endAt.orCurrentDate().addingTimeInterval(-300)
 		
 		if hours == 0 && minutes == 0 && seconds == 0 {
-			self.checkMeetingEnd()
+            Task {
+                await self.checkMeetingEnd()
+            }
 		}
 		
 		withAnimation {
@@ -152,40 +154,29 @@ final class TwilioLiveStreamViewModel: ObservableObject {
 		self.stringTime = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
 	}
 	
-	func checkMeetingEnd() {
+	func checkMeetingEnd() async {
 		onStartFetch()
 		
 		self.stringTime = "00:00:00"
 		
-		meetRepository
-			.providePostCheckMeetingEnd(meetingId: meeting.id.orEmpty())
-			.sink { result in
-				switch result {
-				case .failure(let error):
-					DispatchQueue.main.async {[weak self] in
-						if error.statusCode.orZero() == 401 {
-							
-						} else {
-							self?.isLoading = false
-							self?.isError = true
-							
-							self?.error = error.message.orEmpty()
-						}
-					}
-					
-				case .finished:
-					DispatchQueue.main.async { [weak self] in
-						self?.success = true
-						self?.isLoading = false
-						
-					}
-				}
-			} receiveValue: { value in
-				self.futureDate = value.endAt.orCurrentDate()
-				guard let isEnded = value.isEnd else { return }
-				self.isMeetingForceEnd = isEnded
-			}
-			.store(in: &cancellables)
+        let result = await checkMeetingEndUseCase.execute(for: meeting.id.orEmpty())
+        
+        switch result {
+        case .success(let success):
+            DispatchQueue.main.async { [weak self] in
+                self?.success = true
+                self?.isLoading = false
+                
+                self?.futureDate = success.endAt.orCurrentDate()
+                guard let isEnded = success.isEnd else { return }
+                self?.isMeetingForceEnd = isEnded
+                
+                self?.getRealTime()
+            }
+        case .failure(let failure):
+            handleDefaultError(error: failure)
+        }
+		
 	}
 	
 	func totalParticipant(meeting: UserMeetingData?) -> String {

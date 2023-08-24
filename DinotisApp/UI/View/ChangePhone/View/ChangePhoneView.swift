@@ -23,7 +23,7 @@ struct ChangePhoneView: View {
 		self.viewControllerHolder.value
 	}
 	
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
 	
 	var body: some View {
         GeometryReader { geo in
@@ -58,7 +58,7 @@ struct ChangePhoneView: View {
 								strokeColor: nil,
 								iconSize: 12,
 								type: .primary, {
-									self.presentationMode.wrappedValue.dismiss()
+									dismiss()
 								}
 							)
 						} trailingButton: {

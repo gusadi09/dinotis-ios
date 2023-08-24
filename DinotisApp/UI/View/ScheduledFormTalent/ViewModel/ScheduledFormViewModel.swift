@@ -19,6 +19,7 @@ final class ScheculedFormViewModel: ObservableObject {
 	private lazy var stateObservable = StateObservable.shared
 	private var cancellables = Set<AnyCancellable>()
     private let userUseCase: GetUserUseCase
+    private let addMeetingUseCase: CreateNewMeetingUseCase
 	
 	var backToHome: () -> Void
 
@@ -34,7 +35,7 @@ final class ScheculedFormViewModel: ObservableObject {
 
 	@Published var isRefreshFailed = false
 
-  @Published var meetingArr = [MeetingForm(id: String.random(), title: "", description: "", price: 0, startAt: "", endAt: "", isPrivate: true, slots: 1, managementId: nil, urls: [])]
+  @Published var meetingArr = [AddMeetingRequest(id: String.random(), title: "", description: "", price: 0, startAt: "", endAt: "", isPrivate: true, slots: 1, managementId: nil, urls: [])]
 
 	@Published private var scrollViewContentOffset = CGFloat(0)
 	
@@ -42,12 +43,14 @@ final class ScheculedFormViewModel: ObservableObject {
 		backToHome: @escaping (() -> Void),
 		meetingRepository: MeetingsRepository = MeetingsDefaultRepository(),
 		authRepository: AuthenticationRepository = AuthenticationDefaultRepository(),
-        userUseCase: GetUserUseCase = GetUserDefaultUseCase()
+        userUseCase: GetUserUseCase = GetUserDefaultUseCase(),
+        addMeetingUseCase: CreateNewMeetingUseCase = CreateNewMeetingDefaultUseCase()
 	) {
 		self.backToHome = backToHome
 		self.meetingRepository = meetingRepository
 		self.authRepository = authRepository
         self.userUseCase = userUseCase
+        self.addMeetingUseCase = addMeetingUseCase
 	}
 
 	func routeToRoot() {
@@ -112,22 +115,22 @@ final class ScheculedFormViewModel: ObservableObject {
 		} else {
 			for items in meetingArr.indices {
 				if meetingArr[items].endAt.isEmpty && meetingArr[items].startAt.isEmpty {
-                    meetingArr[items].endAt = DateUtils.dateFormatter(Date().addingTimeInterval(3600), forFormat: .utcV2)
+                    meetingArr[items].endAt = DateUtils.dateFormatter(Date().addingTimeInterval(7200), forFormat: .utcV2)
 
-                    meetingArr[items].startAt = DateUtils.dateFormatter(Date(), forFormat: .utcV2)
-                    addMeeting(meeting: meetingArr[items])
+                    meetingArr[items].startAt = DateUtils.dateFormatter(Date().addingTimeInterval(3600), forFormat: .utcV2)
+                    onCreateMeeting(with: meetingArr[items])
                 } else if meetingArr[items].endAt.isEmpty {
                     let time = DateUtils.dateFormatter(meetingArr[items].startAt, forFormat: .utcV2)
                     meetingArr[items].endAt = DateUtils.dateFormatter(time.addingTimeInterval(3600), forFormat: .utcV2)
-                    addMeeting(meeting: meetingArr[items])
+                    onCreateMeeting(with: meetingArr[items])
                     
                 } else if meetingArr[items].startAt.isEmpty {
-                    meetingArr[items].endAt = DateUtils.dateFormatter(Date().addingTimeInterval(3600), forFormat: .utcV2)
+                    meetingArr[items].endAt = DateUtils.dateFormatter(Date().addingTimeInterval(7200), forFormat: .utcV2)
 
-                    meetingArr[items].startAt = DateUtils.dateFormatter(Date(), forFormat: .utcV2)
-					addMeeting(meeting: meetingArr[items])
+                    meetingArr[items].startAt = DateUtils.dateFormatter(Date().addingTimeInterval(3600), forFormat: .utcV2)
+                    onCreateMeeting(with: meetingArr[items])
 				} else {
-					addMeeting(meeting: meetingArr[items])
+                    onCreateMeeting(with: meetingArr[items])
 				}
 			}
 		}
@@ -143,37 +146,29 @@ final class ScheculedFormViewModel: ObservableObject {
 		}
 
 	}
+    
+    func onCreateMeeting(with meeting: AddMeetingRequest) {
+        Task {
+            await addMeeting(meeting: meeting)
+        }
+    }
 
-	func addMeeting(meeting: MeetingForm) {
+	func addMeeting(meeting: AddMeetingRequest) async {
 		onStartRequest()
+        
+        let result = await addMeetingUseCase.execute(from: meeting)
+        
+        switch result {
+        case .success(let success):
+            DispatchQueue.main.async { [weak self] in
+                self?.isLoading = false
 
-		meetingRepository.provideAddMeeting(with: meeting)
-			.sink { result in
-				switch result {
-				case .failure(let error):
-					DispatchQueue.main.async {[weak self] in
-						if error.statusCode.orZero() == 401 {
-							
-						} else {
-							self?.isLoading = false
-							self?.isError = true
-
-							self?.error = error.message.orEmpty()
-						}
-					}
-
-				case .finished:
-					DispatchQueue.main.async { [weak self] in
-						self?.isLoading = false
-
-						if meeting.id == (self?.meetingArr.last?.id).orEmpty() {
-							self?.success = true
-						}
-					}
-				}
-			} receiveValue: { _ in
-
-			}
-			.store(in: &cancellables)
+                if meeting.id == (self?.meetingArr.last?.id).orEmpty() {
+                    self?.success = true
+                }
+            }
+        case .failure(let failure):
+            handleDefaultError(error: failure)
+        }
 	}
 }

@@ -407,7 +407,7 @@ extension TalentProfileDetailView {
                             viewModel.routeToBundlingDetail(bundleId: item.id.orEmpty(), meetingArray: item.meetings ?? [], isActive: item.isActive.orFalse())
                         }
                     } visitProfile: {
-                        
+
                     }
                     .grayscale(item.isActive.orFalse() ? 0 : 1)
                     .padding(.horizontal)
@@ -432,7 +432,7 @@ extension TalentProfileDetailView {
                             isVerified: (items.user?.isVerified) ?? false,
                             photo: (items.user?.profilePhoto).orEmpty(),
                             name: (items.user?.name).orEmpty(),
-                            color: items.background,
+                            color: items.background ?? [],
                             isActive: items.endAt.orCurrentDate() > Date(),
                             collaborationCount: (items.meetingCollaborations ?? []).count,
                             collaborationName: (items.meetingCollaborations ?? []).compactMap({
@@ -445,7 +445,7 @@ extension TalentProfileDetailView {
                     ) {
                         if items.isAlreadyBooked ?? false {
                             viewModel.bookingId = (items.booking?.id).orEmpty()
-                            
+
                             viewModel.routeToUserScheduleDetail()
                         } else if !(items.isAlreadyBooked ?? false) && items.booking != nil {
                             viewModel.routeToInvoice(id: (items.booking?.id).orEmpty())
@@ -455,14 +455,16 @@ extension TalentProfileDetailView {
                             viewModel.meetingId = items.id.orEmpty()
                         }
                     } visitProfile: {
-                        
+
                     }
                     .grayscale(items.endAt.orCurrentDate() < Date() ? 1 : 0)
                     .onAppear {
-                        if viewModel.meetingData.unique().last?.id == items.id && viewModel.nextCursorMeeting != nil {
-                            viewModel.meetingParam.skip = viewModel.meetingParam.take
-                            viewModel.meetingParam.take += 15
-                            viewModel.getTalentMeeting(by: (viewModel.talentData?.id).orEmpty(), isMore: true)
+                        Task {
+                            if viewModel.meetingData.unique().last?.id == items.id && viewModel.nextCursorMeeting != nil {
+                                viewModel.meetingParam.skip = viewModel.meetingParam.take
+                                viewModel.meetingParam.take += 15
+                                await viewModel.getTalentMeeting(by: (viewModel.talentData?.id).orEmpty(), isMore: true)
+                            }
                         }
                     }
                     .buttonStyle(.plain)
@@ -1117,7 +1119,7 @@ extension TalentProfileDetailView {
                                 }
                                 
                                 VStack(alignment: .leading) {
-                                    Text((viewModel.selectedMeeting?.meetingDescription).orEmpty())
+                                    Text((viewModel.selectedMeeting?.description).orEmpty())
                                         .font(.robotoRegular(size: 12))
                                         .foregroundColor(.black)
                                         .multilineTextAlignment(.leading)
@@ -1133,8 +1135,8 @@ extension TalentProfileDetailView {
                                             .foregroundColor(.DinotisDefault.primary)
                                     }
                                     .isHidden(
-                                        (viewModel.selectedMeeting?.meetingDescription).orEmpty().count < 150,
-                                        remove: (viewModel.selectedMeeting?.meetingDescription).orEmpty().count < 150
+                                        (viewModel.selectedMeeting?.description).orEmpty().count < 150,
+                                        remove: (viewModel.selectedMeeting?.description).orEmpty().count < 150
                                     )
                                 }
                             }

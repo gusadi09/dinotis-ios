@@ -11,7 +11,7 @@ import SwiftUI
 struct CreateTalentRateCardForm: View {
 
 	@ObservedObject var viewModel: CreateTalentRateCardFormViewModel
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
 
     var body: some View {
 		ZStack {
@@ -27,14 +27,14 @@ struct CreateTalentRateCardForm: View {
 					}
 					.padding()
 				}
-
-				Button {
-          viewModel.submitForm {
-            presentationMode.wrappedValue.dismiss()
-          }
-				} label: {
-					HStack {
-						Spacer()
+                
+                Button {
+                    viewModel.submitForm {
+                        dismiss()
+                    }
+                } label: {
+                    HStack {
+                        Spacer()
 
 						Text(viewModel.buttonSubmitText())
 							.font(.robotoMedium(size: 12))
@@ -76,7 +76,7 @@ struct CreateTalentRateCardForm: View {
 
 extension CreateTalentRateCardForm {
 	struct HeaderView: View {
-		@Environment(\.presentationMode) var presentationMode
+		@Environment(\.dismiss) var dismiss
 
 		@ObservedObject var viewModel: CreateTalentRateCardFormViewModel
 
@@ -84,7 +84,7 @@ extension CreateTalentRateCardForm {
 			ZStack {
 				HStack {
 					Button(action: {
-						presentationMode.wrappedValue.dismiss()
+						dismiss()
 					}, label: {
 						Image.Dinotis.arrowBackIcon
 							.padding()

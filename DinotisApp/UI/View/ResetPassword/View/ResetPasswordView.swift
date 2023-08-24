@@ -12,7 +12,7 @@ struct ResetPasswordView: View {
 	
 	@ObservedObject var viewModel: ResetPasswordViewModel
 	
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
 	
 	var body: some View {
 		ZStack {

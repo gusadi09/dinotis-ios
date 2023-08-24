@@ -8,10 +8,11 @@
 import SwiftUI
 import CurrencyFormatter
 import DinotisDesignSystem
+import DinotisData
 
 struct TalentScheduleCardView: View {
     @State var isShowMenu = false
-    @Binding var data: Meeting
+    @Binding var data: MeetingDetailResponse
     
     @State var isShowCollabList = false
 
@@ -96,7 +97,7 @@ struct TalentScheduleCardView: View {
                     .font(.robotoBold(size: 14))
                     .foregroundColor(.black)
                 
-                Text(data.meetingDescription.orEmpty())
+                Text(data.description.orEmpty())
                     .font(.robotoRegular(size: 12))
                     .foregroundColor(.black)
                     .padding(.bottom, 3)
@@ -361,7 +362,7 @@ struct TalentScheduleCardView: View {
         .padding(.vertical, 25)
         .background(Color.white)
         .cornerRadius(12)
-        .shadow(color: Color("dinotis-shadow-1").opacity(0.15), radius: 10, x: 0.0, y: 0.0)
+        .shadow(color: Color("dinotis-shadow-1").opacity(0.1), radius: 8, x: 0.0, y: 0.0)
         .onTapGesture(perform: {
             isShowMenu = false
         })

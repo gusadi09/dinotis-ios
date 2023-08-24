@@ -17,7 +17,7 @@ struct PaymentMethodView: View {
 	
 	@ObservedObject var viewModel: PaymentMethodsViewModel
 	
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
     
     @Binding var mainTabValue: TabRoute
 	

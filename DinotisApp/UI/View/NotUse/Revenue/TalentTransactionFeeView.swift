@@ -16,7 +16,7 @@ struct TalentTransactionFeeView: View {
 	
 	@Binding var data: BalanceDetails?
 	
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
 	
 	var body: some View {
 		ZStack {
@@ -31,7 +31,7 @@ struct TalentTransactionFeeView: View {
 					
 					HStack {
 						Button(action: {
-							presentationMode.wrappedValue.dismiss()
+							dismiss()
 						}, label: {
 							Image("ic-chevron-back")
 								.padding()
