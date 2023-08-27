@@ -13,8 +13,10 @@ import DinotisData
 
 final class BundlingViewModel: ObservableObject {
 
-	private let bundlingRepository: BundlingRepository
 	private let authRepository: AuthenticationRepository
+    
+    private let getBundlingListUseCase: GetBundlingListUseCase
+    private let deleteBundlingUseCase: DeleteBundlingUseCase
 
 	private var cancellables = Set<AnyCancellable>()
 	private var stateObservable = StateObservable.shared
@@ -22,7 +24,7 @@ final class BundlingViewModel: ObservableObject {
     
     var backToHome: () -> Void
 
-	@Published var query = BundlingListFilter()
+	@Published var query = BundlingListFilter(take: 15, skip: 0)
 
 	@Published var isLoading = false
 	@Published var isError = false
@@ -42,11 +44,14 @@ final class BundlingViewModel: ObservableObject {
     init(
 		backToHome: @escaping (() -> Void),
 		bundlingRepository: BundlingRepository = BundlingDefaultRepository(),
-		authRepository: AuthenticationRepository = AuthenticationDefaultRepository()
+		authRepository: AuthenticationRepository = AuthenticationDefaultRepository(),
+        getBundlingListUseCase: GetBundlingListUseCase = GetBundlingListDefaultUseCase(),
+        deleteBundlingUseCase: DeleteBundlingUseCase = DeleteBundlingDefaultUseCase()
 	) {
         self.backToHome = backToHome
-		self.bundlingRepository = bundlingRepository
 		self.authRepository = authRepository
+        self.getBundlingListUseCase = getBundlingListUseCase
+        self.deleteBundlingUseCase = deleteBundlingUseCase
     }
     
     func changeFilter(filter: String) {
@@ -67,7 +72,9 @@ final class BundlingViewModel: ObservableObject {
 				self?.bundlingListData = []
 				self?.query.skip = 0
 				self?.query.take = 15
-				self?.getBundlingList()
+                Task {
+                    await self?.getBundlingList()
+                }
 			}
 		}
     }
@@ -82,85 +89,82 @@ final class BundlingViewModel: ObservableObject {
 
 	}
     
-    func getBundlingList() {
-        onStartRequest()
-        
-        bundlingRepository.provideGetBundlingList(query: query)
-            .sink { result in
-                switch result {
-                case .failure(let error):
-                    DispatchQueue.main.async {[weak self] in
-                        if error.statusCode.orZero() == 401 {
-                            
-                        } else {
-                            self?.isLoading = false
-                            self?.isError = true
-                            
-                            self?.error = error.message.orEmpty()
-                        }
-                    }
-                    
-                case .finished:
-                    DispatchQueue.main.async { [weak self] in
-                        self?.isLoading = false
-                    }
-                }
-            } receiveValue: { response in
-                DispatchQueue.main.async {[weak self] in
-                    withAnimation {
-                        if self?.filterSelection.isEmpty ?? false {
-                            self?.filterSelection = (response.filters?.options?.first?.label).orEmpty()
-                        }
-                        
-                        self?.bundlingListData += response.data ?? []
-                        self?.filterList = response.filters?.options ?? []
-                        
-                        if response.nextCursor == nil {
-                            self?.query.skip = 0
-                            self?.query.take = 15
-                        }
-                    }
-                }
+    func handleDefaultError(error: ErrorResponse) {
+        DispatchQueue.main.async {[weak self] in
+            if error.statusCode.orZero() == 401 {
                 
+            } else {
+                self?.isLoading = false
+                self?.isError = true
+
+                self?.error = error.message.orEmpty()
             }
-            .store(in: &cancellables)
+        }
     }
     
-    func deleteBundling(bundleId: String) {
+    func getBundlingList() async {
         onStartRequest()
         
-        bundlingRepository.provideDeleteBundling(by: bundleId)
-            .sink { result in
-                switch result {
-                case .failure(let error):
-                    DispatchQueue.main.async {[weak self] in
-                        if error.statusCode.orZero() == 401 {
-                            
-                        } else {
-                            self?.isLoading = false
-                            self?.isError = true
-
-                            self?.error = error.message.orEmpty()
-                        }
+        let result = await getBundlingListUseCase.execute(query: query)
+        
+        switch result {
+        case .success(let response):
+            DispatchQueue.main.async {[weak self] in
+                withAnimation {
+                    self?.isLoading = false
+                    if self?.filterSelection.isEmpty ?? false {
+                        self?.filterSelection = (response.filters?.options?.first?.label).orEmpty()
                     }
-                case .finished:
-                    DispatchQueue.main.async { [weak self] in
-                        withAnimation {
-                            self?.isLoading = false
-                            self?.bundlingListData = []
-                            self?.getBundlingList()
-                        }
+                    
+                    self?.bundlingListData += response.data ?? []
+                    self?.filterList = response.filters?.options ?? []
+                    
+                    if response.nextCursor == nil {
+                        self?.query.skip = 0
+                        self?.query.take = 15
                     }
                 }
-            } receiveValue: { _ in
-                
             }
-            .store(in: &cancellables)
+        case .failure(let error):
+            guard let error = error as? ErrorResponse else { return }
+            handleDefaultError(error: error)
+        }
+    }
+    
+    func defaultDeleteBundling(bundleId: String) {
+        Task {
+            await deleteBundling(bundleId: bundleId)
+        }
+    }
+    
+    func deleteBundling(bundleId: String) async {
+        onStartRequest()
+        
+        let result = await deleteBundlingUseCase.execute(by: bundleId)
+        
+        switch result {
+        case .success:
+            DispatchQueue.main.async { [weak self] in
+                withAnimation {
+                    self?.isLoading = false
+                    self?.bundlingListData = []
+                    Task {
+                        await self?.getBundlingList()
+                    }
+                }
+            }
+            
+        case .failure(let error):
+            guard let error = error as? ErrorResponse else { return }
+            handleDefaultError(error: error)
+        }
     }
 
     func onAppear() {
         DispatchQueue.main.async {[weak self] in
-            self?.getBundlingList()
+            Task {
+                await self?.getBundlingList()
+            }
         }
     }
     

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import DinotisDesignSystem
+import DinotisData
 
 struct UserBundlingScheduleCardView: View {
 

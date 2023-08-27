@@ -19,8 +19,10 @@ final class TalentCreateBundlingViewModel: ObservableObject {
 
 	private var onValueChanged: ((_ refreshControl: UIRefreshControl) -> Void)?
     
-    private let bundlingRepository: BundlingRepository
     private let authRepository: AuthenticationRepository
+    
+    private let getAvailableMeetingUseCase: GetAvailableMeetingUseCase
+    private let getAvailableMeetingForEditUseCase: GetAvailableMeetingForEditUseCase
 
     private var cancellables = Set<AnyCancellable>()
     private var stateObservable = StateObservable.shared
@@ -44,14 +46,17 @@ final class TalentCreateBundlingViewModel: ObservableObject {
         backToHome: @escaping (() -> Void),
         backToBundlingList: @escaping (() -> Void),
         bundlingRepository: BundlingRepository = BundlingDefaultRepository(),
-        authRepository: AuthenticationRepository = AuthenticationDefaultRepository()
+        authRepository: AuthenticationRepository = AuthenticationDefaultRepository(),
+        getAvailableMeetingUseCase: GetAvailableMeetingUseCase = GetAvailableMeetingDefaultUseCase(),
+        getAvailableMeetingForEditUseCase: GetAvailableMeetingForEditUseCase = GetAvailableMeetingForEditDefaultUseCase()
     ) {
 		self.bundleId = bundleId
 		self.isEdit = isEdit
         self.backToHome = backToHome
         self.backToBundlingList = backToBundlingList
-        self.bundlingRepository = bundlingRepository
         self.authRepository = authRepository
+        self.getAvailableMeetingUseCase = getAvailableMeetingUseCase
+        self.getAvailableMeetingForEditUseCase = getAvailableMeetingForEditUseCase
     }
     
     func onStartFetch() {
@@ -63,63 +68,52 @@ final class TalentCreateBundlingViewModel: ObservableObject {
         }
     }
     
-    func getAvailableMeeting() {
+    func handleDefaultError(error: Error) {
+        guard let error = error as? ErrorResponse else { return }
+        DispatchQueue.main.async { [weak self] in
+            if error.statusCode.orZero() == 401 {
+                
+            } else {
+                self?.isLoading = false
+                self?.isError = true
+
+                self?.error = error.message.orEmpty()
+            }
+        }
+    }
+    
+    func getAvailableMeeting() async {
         onStartFetch()
         
-        bundlingRepository.provideGetAvailableMeeting()
-            .sink { result in
-                switch result {
-                case .failure(let error):
-                    DispatchQueue.main.async { [weak self] in
-                        if error.statusCode.orZero() == 401 {
-                            
-                        } else {
-                            self?.isLoading = false
-                            self?.isError = true
-
-                            self?.error = error.message.orEmpty()
-                        }
-                    }
-                case .finished:
-                    DispatchQueue.main.async { [weak self] in
-                        self?.isLoading = false
-                    }
-                }
-            } receiveValue: { value in
-                self.meetingList = value.data ?? []
+        let result = await getAvailableMeetingUseCase.execute()
+        
+        switch result {
+        case .success(let value):
+            DispatchQueue.main.async { [weak self] in
+                self?.isLoading = false
+                self?.meetingList = value.data ?? []
             }
-            .store(in: &cancellables)
-
+            
+        case .failure(let error):
+            handleDefaultError(error: error)
+        }
     }
 
-	func getAvailableMeetingForEdit() {
+	func getAvailableMeetingForEdit() async {
 		onStartFetch()
-
-		bundlingRepository.provideGetAvailableMeetingForEdit(with: bundleId)
-			.sink { result in
-				switch result {
-				case .failure(let error):
-					DispatchQueue.main.async { [weak self] in
-						if error.statusCode.orZero() == 401 {
-							
-						} else {
-							self?.isLoading = false
-							self?.isError = true
-
-							self?.error = error.message.orEmpty()
-						}
-					}
-				case .finished:
-					DispatchQueue.main.async { [weak self] in
-						self?.isLoading = false
-					}
-				}
-			} receiveValue: { value in
-				self.meetingList = value.data ?? []
-				print(self.meetingList)
-			}
-			.store(in: &cancellables)
-
+        
+        let result = await getAvailableMeetingForEditUseCase.execute(with: bundleId)
+        
+        switch result {
+        case .success(let value):
+            DispatchQueue.main.async { [weak self] in
+                self?.isLoading = false
+                self?.meetingList = value.data ?? []
+            }
+            
+        case .failure(let error):
+            handleDefaultError(error: error)
+        }
 	}
     
     func addMeeting(id: String) {

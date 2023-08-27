@@ -98,13 +98,6 @@
 		EC6767A128C765D100C72B58 /* SelectChannelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6767A028C765D100C72B58 /* SelectChannelView.swift */; };
 		EC67E2A82936FBC2002BEC4A /* DinotisDesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = EC67E2A72936FBC2002BEC4A /* DinotisDesignSystem */; };
 		EC6A0A08270D6BB300316D1C /* PaymentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A0A07270D6BB300316D1C /* PaymentMethod.swift */; };
-		EC6A755A29111B110030BC41 /* BundlingTargetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A755929111B110030BC41 /* BundlingTargetType.swift */; };
-		EC6A755C29111B240030BC41 /* BundlingRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A755B29111B240030BC41 /* BundlingRemoteDataSource.swift */; };
-		EC6A755E29111B310030BC41 /* BundlingDefaultRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A755D29111B310030BC41 /* BundlingDefaultRemoteDataSource.swift */; };
-		EC6A756029111B3E0030BC41 /* BundlingRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A755F29111B3E0030BC41 /* BundlingRepository.swift */; };
-		EC6A756229111B4C0030BC41 /* BundlingDefaultRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A756129111B4C0030BC41 /* BundlingDefaultRepository.swift */; };
-		EC6A756529111BFF0030BC41 /* BundlingList.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A756429111BFF0030BC41 /* BundlingList.swift */; };
-		EC6A7567291121660030BC41 /* DetailBundling.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A7566291121660030BC41 /* DetailBundling.swift */; };
 		EC6A757A2918A1760030BC41 /* EditTalentMeetingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A75792918A1760030BC41 /* EditTalentMeetingViewModel.swift */; };
 		EC6A758B291957650030BC41 /* TalentAddBankAccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A758A291957650030BC41 /* TalentAddBankAccountViewModel.swift */; };
 		EC6A759129196CDF0030BC41 /* TalentTransactionDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A759029196CDF0030BC41 /* TalentTransactionDetailViewModel.swift */; };
@@ -315,7 +308,6 @@
 		F665C44928C9D96700D669A8 /* PrivateStreamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F665C44828C9D96700D669A8 /* PrivateStreamManager.swift */; };
 		F665C44B28C9DDFB00D669A8 /* PrivateStreamViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F665C44A28C9DDFB00D669A8 /* PrivateStreamViewModel.swift */; };
 		F665C44E28C9E1E900D669A8 /* PrivateSpeakerSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F665C44D28C9E1E900D669A8 /* PrivateSpeakerSettingsManager.swift */; };
-		F6710123291354B8008E56A4 /* CreateBundling.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6710122291354B8008E56A4 /* CreateBundling.swift */; };
 		F67334B42908EBE5006C1ADF /* BundlingMiniCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67334B32908EBE4006C1ADF /* BundlingMiniCardView.swift */; };
 		F67334BA2908EC26006C1ADF /* TalentCreateBundlingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67334B72908EC26006C1ADF /* TalentCreateBundlingViewModel.swift */; };
 		F67334BB2908EC26006C1ADF /* TalentCreateBundlingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67334B92908EC26006C1ADF /* TalentCreateBundlingView.swift */; };
@@ -454,13 +446,6 @@
 		EC62578927B9F9E00079AA10 /* DinotisTargetType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DinotisTargetType.swift; sourceTree = "<group>"; };
 		EC6767A028C765D100C72B58 /* SelectChannelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectChannelView.swift; sourceTree = "<group>"; };
 		EC6A0A07270D6BB300316D1C /* PaymentMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethod.swift; sourceTree = "<group>"; };
-		EC6A755929111B110030BC41 /* BundlingTargetType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundlingTargetType.swift; sourceTree = "<group>"; };
-		EC6A755B29111B240030BC41 /* BundlingRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundlingRemoteDataSource.swift; sourceTree = "<group>"; };
-		EC6A755D29111B310030BC41 /* BundlingDefaultRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundlingDefaultRemoteDataSource.swift; sourceTree = "<group>"; };
-		EC6A755F29111B3E0030BC41 /* BundlingRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundlingRepository.swift; sourceTree = "<group>"; };
-		EC6A756129111B4C0030BC41 /* BundlingDefaultRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundlingDefaultRepository.swift; sourceTree = "<group>"; };
-		EC6A756429111BFF0030BC41 /* BundlingList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundlingList.swift; sourceTree = "<group>"; };
-		EC6A7566291121660030BC41 /* DetailBundling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailBundling.swift; sourceTree = "<group>"; };
 		EC6A75792918A1760030BC41 /* EditTalentMeetingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTalentMeetingViewModel.swift; sourceTree = "<group>"; };
 		EC6A758A291957650030BC41 /* TalentAddBankAccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalentAddBankAccountViewModel.swift; sourceTree = "<group>"; };
 		EC6A759029196CDF0030BC41 /* TalentTransactionDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalentTransactionDetailViewModel.swift; sourceTree = "<group>"; };
@@ -653,7 +638,6 @@
 		F665C44828C9D96700D669A8 /* PrivateStreamManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateStreamManager.swift; sourceTree = "<group>"; };
 		F665C44A28C9DDFB00D669A8 /* PrivateStreamViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateStreamViewModel.swift; sourceTree = "<group>"; };
 		F665C44D28C9E1E900D669A8 /* PrivateSpeakerSettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateSpeakerSettingsManager.swift; sourceTree = "<group>"; };
-		F6710122291354B8008E56A4 /* CreateBundling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateBundling.swift; sourceTree = "<group>"; };
 		F67334B32908EBE4006C1ADF /* BundlingMiniCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BundlingMiniCardView.swift; sourceTree = "<group>"; };
 		F67334B72908EC26006C1ADF /* TalentCreateBundlingViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TalentCreateBundlingViewModel.swift; sourceTree = "<group>"; };
 		F67334B92908EC26006C1ADF /* TalentCreateBundlingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TalentCreateBundlingView.swift; sourceTree = "<group>"; };
@@ -1298,7 +1282,6 @@
 		EC62578727B9F9C90079AA10 /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				EC6A755629111AEE0030BC41 /* Bundling */,
 				ECD51FCF28A20C7A000B1F6C /* TwilioData */,
 				EC62578827B9F9D10079AA10 /* Reusables */,
 			);
@@ -1341,44 +1324,6 @@
 				F686669D28A4D6620067345C /* Question.swift */,
 			);
 			path = Misc;
-			sourceTree = "<group>";
-		};
-		EC6A755629111AEE0030BC41 /* Bundling */ = {
-			isa = PBXGroup;
-			children = (
-				EC6A755729111AF90030BC41 /* Remote */,
-				EC6A755F29111B3E0030BC41 /* BundlingRepository.swift */,
-				EC6A756129111B4C0030BC41 /* BundlingDefaultRepository.swift */,
-			);
-			path = Bundling;
-			sourceTree = "<group>";
-		};
-		EC6A755729111AF90030BC41 /* Remote */ = {
-			isa = PBXGroup;
-			children = (
-				EC6A755829111B000030BC41 /* TargetType */,
-				EC6A755B29111B240030BC41 /* BundlingRemoteDataSource.swift */,
-				EC6A755D29111B310030BC41 /* BundlingDefaultRemoteDataSource.swift */,
-			);
-			path = Remote;
-			sourceTree = "<group>";
-		};
-		EC6A755829111B000030BC41 /* TargetType */ = {
-			isa = PBXGroup;
-			children = (
-				EC6A755929111B110030BC41 /* BundlingTargetType.swift */,
-			);
-			path = TargetType;
-			sourceTree = "<group>";
-		};
-		EC6A756329111BF20030BC41 /* BundlingModel */ = {
-			isa = PBXGroup;
-			children = (
-				EC6A756429111BFF0030BC41 /* BundlingList.swift */,
-				EC6A7566291121660030BC41 /* DetailBundling.swift */,
-				F6710122291354B8008E56A4 /* CreateBundling.swift */,
-			);
-			path = BundlingModel;
 			sourceTree = "<group>";
 		};
 		EC6A75772918A1520030BC41 /* View */ = {
@@ -2187,7 +2132,6 @@
 			children = (
 				EC7222702950B7A200C05A1B /* FriendshipModel */,
 				EC1F0C70291CC6F200B49B2A /* RateCardModel */,
-				EC6A756329111BF20030BC41 /* BundlingModel */,
 				ECB0A26D28FEF2050050EC71 /* Firebase */,
 				F63A09A1289CBE52008C7815 /* Twilio */,
 				ECBFE6802710265E0075D01F /* Agora */,
@@ -3073,20 +3017,17 @@
 				EC625604272ADF6D00FA209B /* EditTalentMeetingView.swift in Sources */,
 				EC99AD6D26C147620060F221 /* TalentProfileView.swift in Sources */,
 				EC6D5B0128B36ADD00BB794F /* SyncRoomDocument.swift in Sources */,
-				EC6A756029111B3E0030BC41 /* BundlingRepository.swift in Sources */,
 				EC6D0E60298306BF0016C45D /* TabViewContainer.swift in Sources */,
 				ECDAE3A126B7FF3D00419194 /* FontManager.swift in Sources */,
 				EC7222682950150100C05A1B /* FollowedCreatorView.swift in Sources */,
 				EC246D402705AFB90084846F /* SearchTalent.swift in Sources */,
 				EC4E4FE727FB4D75009D66FF /* Message.swift in Sources */,
 				F67334DE2908EE41006C1ADF /* CreateTalentRateCardForm.swift in Sources */,
-				EC6A7567291121660030BC41 /* DetailBundling.swift in Sources */,
 				EC04ED3726C8CB6800E0D473 /* ScheduleCardView.swift in Sources */,
 				F665C44428C9CEA800D669A8 /* PrivateLocalParticipantManager.swift in Sources */,
 				EC2C67FB26C582BE008F094D /* MultilineTextField.swift in Sources */,
 				F67334D62908EE30006C1ADF /* TalentCardListViewModel.swift in Sources */,
 				EC9C4E34281426AD00837469 /* RequestSchedule.swift in Sources */,
-				EC6A756229111B4C0030BC41 /* BundlingDefaultRepository.swift in Sources */,
 				F63A09A5289CEC6F008C7815 /* SwiftUIPlayerView.swift in Sources */,
 				ECD51FCC28A125F0000B1F6C /* SyncUserDocument.swift in Sources */,
 				EC62576E27B7A38B0079AA10 /* String+isValidEmail.swift in Sources */,
@@ -3116,7 +3057,6 @@
 				ECBE153F28D17DC400EE92A4 /* DinotisList.swift in Sources */,
 				ECD6C1FF2701B37500A09AD8 /* ImagePicker.swift in Sources */,
 				EC6A96DA27CD39C700282253 /* TalentQuery.swift in Sources */,
-				EC6A755E29111B310030BC41 /* BundlingDefaultRemoteDataSource.swift in Sources */,
 				EC2C296827C74DA100F1A69C /* ChangePhoneVerifyViewModel.swift in Sources */,
 				ECC0ECB926F1901E00FA9F85 /* LoginViewModel.swift in Sources */,
 				F665C44928C9D96700D669A8 /* PrivateStreamManager.swift in Sources */,
@@ -3196,7 +3136,6 @@
 				ECD51FD328A20CA0000B1F6C /* TwilioDataRepository.swift in Sources */,
 				ECC110BF26E9BBD3007FF617 /* TalentTransactionWithdrawView.swift in Sources */,
 				EC28CD5927A113460023A745 /* TopBarInstructionView.swift in Sources */,
-				EC6A755C29111B240030BC41 /* BundlingRemoteDataSource.swift in Sources */,
 				ECBB02DA2A7C1058001DEA6B /* PollingVideoCall.swift in Sources */,
 				F61E53E328CB5010006594B4 /* PrivateSpeakerVideoViewModelFactory.swift in Sources */,
 				EC789C7527C4E81E005872E2 /* BiodataViewModel.swift in Sources */,
@@ -3230,7 +3169,6 @@
 				ECBFE67C270FF9F80075D01F /* PrivateVideoCall+VideoCall.swift in Sources */,
 				EC6A96F327CF17D800282253 /* AfterCallView.swift in Sources */,
 				EC62577827B7E12E0079AA10 /* OptionalDate+orCurrentDate.swift in Sources */,
-				EC6A755A29111B110030BC41 /* BundlingTargetType.swift in Sources */,
 				EC9C4E362814284C00837469 /* RequestScheduleType.swift in Sources */,
 				F67335052908F190006C1ADF /* RateHorizontalCardView.swift in Sources */,
 				EC9C7F8626D7D46000026F0E /* TalentWalletView.swift in Sources */,
@@ -3314,7 +3252,6 @@
 				ECD51FAE28A0C25A000B1F6C /* RoomMessage.swift in Sources */,
 				EC4B891729248D270074732A /* CustomerChatManager.swift in Sources */,
 				ECBE2B652729265D002A45D8 /* WithdrawBank.swift in Sources */,
-				F6710123291354B8008E56A4 /* CreateBundling.swift in Sources */,
 				ECED4DD529F8FFC900E79663 /* CreatorPickerView.swift in Sources */,
 				F67335062908F190006C1ADF /* UserBundlingScheduleCardView.swift in Sources */,
 				EC2C296127C7187F00F1A69C /* ChangePhoneViewModel.swift in Sources */,
@@ -3324,7 +3261,6 @@
 				EC62576527B7A24C0079AA10 /* Moya+Request.swift in Sources */,
 				EC2A511628C7099800C717B9 /* TwilioGroupVideoCallView+Component.swift in Sources */,
 				EC789C6827C4C2A7005872E2 /* OTPField.swift in Sources */,
-				EC6A756529111BFF0030BC41 /* BundlingList.swift in Sources */,
 				F63A0965289BB7A0008C7815 /* TwilioLiveStreamViewModel.swift in Sources */,
 				EC6D0E5F298306BF0016C45D /* TabViewContainerViewModel.swift in Sources */,
 				EC0279F527C61D7900B8C392 /* ProfileViewModel.swift in Sources */,

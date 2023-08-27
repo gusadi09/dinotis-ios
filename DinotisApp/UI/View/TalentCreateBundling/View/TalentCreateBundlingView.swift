@@ -50,9 +50,13 @@ struct TalentCreateBundlingView: View {
 					DinotisList {
 						if viewModel.isEdit {
 							viewModel.meetingIdArray = meetingArray
-							viewModel.getAvailableMeetingForEdit()
+                            Task {
+                                await viewModel.getAvailableMeetingForEdit()
+                            }
 						} else {
-							viewModel.getAvailableMeeting()
+                            Task {
+                                await viewModel.getAvailableMeeting()
+                            }
 						}
 					} introspectConfig: { view in
 						view.separatorStyle = .none
@@ -62,9 +66,13 @@ struct TalentCreateBundlingView: View {
 						viewModel.use(for: view) { refresh in
 							if viewModel.isEdit {
 								viewModel.meetingIdArray = meetingArray
-								viewModel.getAvailableMeetingForEdit()
+                                Task {
+                                    await viewModel.getAvailableMeetingForEdit()
+                                }
 							} else {
-								viewModel.getAvailableMeeting()
+                                Task {
+                                    await viewModel.getAvailableMeeting()
+                                }
 							}
 							refresh.endRefreshing()
 						}
@@ -150,9 +158,13 @@ struct TalentCreateBundlingView: View {
             .onAppear {
 				if viewModel.isEdit {
 					viewModel.meetingIdArray = meetingArray
-					viewModel.getAvailableMeetingForEdit()
+                    Task {
+                        await viewModel.getAvailableMeetingForEdit()
+                    }
 				} else {
-					viewModel.getAvailableMeeting()
+                    Task {
+                        await viewModel.getAvailableMeeting()
+                    }
 				}
             }
             .onChange(of: viewModel.meetingIdArray) { value in

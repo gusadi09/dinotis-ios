@@ -15,7 +15,6 @@ import OneSignal
 
 final class BundlingDetailViewModel: NSObject, ObservableObject, SKProductsRequestDelegate, SKPaymentTransactionObserver {
 
-	private let bundlingRepository: BundlingRepository
 	private let authRepository: AuthenticationRepository
 	private let getUserUseCase: GetUserUseCase
 	private let coinVerificationUseCase: CoinVerificationUseCase
@@ -23,6 +22,8 @@ final class BundlingDetailViewModel: NSObject, ObservableObject, SKProductsReque
 	private let promoCodeCheckingUseCase: PromoCodeCheckingUseCase
 	private let extraFeeUseCase: GetExtraFeeUseCase
 	private let bookingPaymentUseCase: BookingPaymentUseCase
+    private let getAvailableMeetingUseCase: GetAvailableMeetingUseCase
+    private let getBundlingDetailUseCase: GetBundlingDetailUseCase
 	private let bundleId: String
 
 	private var cancellables = Set<AnyCancellable>()
@@ -49,7 +50,7 @@ final class BundlingDetailViewModel: NSObject, ObservableObject, SKProductsReque
 	@Published var meetingData = [MeetingDetailResponse]()
     @Published var meetingIdArray = [String]()
 
-	@Published var profileDetailBundle: [GeneralMeetingData]
+	@Published var profileDetailBundle: [MeetingDetailResponse]
     
     @Published var isTalent: Bool
 
@@ -114,18 +115,19 @@ final class BundlingDetailViewModel: NSObject, ObservableObject, SKProductsReque
 		promoCodeCheckingUseCase: PromoCodeCheckingUseCase = PromoCodeCheckingDefaultUseCase(),
 		extraFeeUseCase: GetExtraFeeUseCase = GetExtraFeeDefaultUseCase(),
 		bookingPaymentUseCase: BookingPaymentUseCase = BookingPaymentDefaultUseCase(),
+        getAvailableMeetingUseCase: GetAvailableMeetingUseCase = GetAvailableMeetingDefaultUseCase(),
+        getBundlingDetailUseCase: GetBundlingDetailUseCase = GetBundlingDetailDefaultUseCase(),
 		talentName: String = "",
 		talentPhoto: String = "",
 		isTalentVerified: Bool = false,
 		bundleId: String,
-		profileDetailBundle: [GeneralMeetingData] = [],
+		profileDetailBundle: [MeetingDetailResponse] = [],
         meetingIdArray: [String],
         backToHome: @escaping (() -> Void),
         isTalent: Bool,
 		isActive: Bool
     ) {
 		self.profileDetailBundle = profileDetailBundle
-		self.bundlingRepository = bundlingRepository
 		self.authRepository = authRepository
 		self.bundleId = bundleId
         self.meetingIdArray = meetingIdArray
@@ -141,6 +143,8 @@ final class BundlingDetailViewModel: NSObject, ObservableObject, SKProductsReque
 		self.promoCodeCheckingUseCase = promoCodeCheckingUseCase
 		self.extraFeeUseCase = extraFeeUseCase
 		self.bookingPaymentUseCase = bookingPaymentUseCase
+        self.getBundlingDetailUseCase = getBundlingDetailUseCase
+        self.getAvailableMeetingUseCase = getAvailableMeetingUseCase
     }
     
     func handleDefaultError(error: Error) {
@@ -523,80 +527,75 @@ final class BundlingDetailViewModel: NSObject, ObservableObject, SKProductsReque
 		}
 	}
     
-    func getAvailableMeeting() {
+    func getAvailableMeeting() async {
         onStartRequest()
         
-        bundlingRepository.provideGetAvailableMeeting()
-            .sink { result in
-                switch result {
-                case .failure(let error):
-                    DispatchQueue.main.async { [weak self] in
-                        if error.statusCode.orZero() == 401 {
-                            
-                        } else {
-                            self?.isLoading = false
-                            self?.isError = true
-
-                            self?.error = error.message.orEmpty()
-                        }
-                    }
-                case .finished:
-                    DispatchQueue.main.async { [weak self] in
-                        self?.isLoading = false
-                    }
-                }
-            } receiveValue: { value in
-                self.meetingData = (value.data?.filter({ item in
+        let result = await getAvailableMeetingUseCase.execute()
+        
+        switch result {
+        case .success(let value):
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.isLoading = false
+                self.meetingData = value.data?.filter({ item in
                     self.meetingIdArray.contains {
                         $0 == item.id.orEmpty()
                     }
-                }) ?? [])
+                }) ?? []
             }
-            .store(in: &cancellables)
+            
+        case .failure(let error):
+            guard let error = error as? ErrorResponse else { return }
+            DispatchQueue.main.async { [weak self] in
+                if error.statusCode.orZero() == 401 {
+                    
+                } else {
+                    self?.isLoading = false
+                    self?.isError = true
 
+                    self?.error = error.message.orEmpty()
+                }
+            }
+        }
     }
 
-	func getBundleDetail() {
+	func getBundleDetail() async {
 		onStartRequest()
+        
+        let result = await getBundlingDetailUseCase.execute(by: bundleId)
+        
+        switch result {
+        case .success(let response):
+            DispatchQueue.main.async {[weak self] in
+                self?.isLoading = false
+                self?.detailData = response
+                self?.meetingData = response.meetings ?? []
+                self?.price = response.price.orEmpty()
+            }
+            
+        case .failure(let error):
+            guard let error = error as? ErrorResponse else { return }
+            DispatchQueue.main.async {[weak self] in
+                if error.statusCode.orZero() == 401 {
+                    
+                } else {
+                    self?.isLoading = false
+                    self?.isError = true
 
-		bundlingRepository.provideGetDetailBundling(by: bundleId)
-			.sink { result in
-				switch result {
-				case .failure(let error):
-					DispatchQueue.main.async {[weak self] in
-						if error.statusCode.orZero() == 401 {
-							
-						} else {
-							self?.isLoading = false
-							self?.isError = true
-
-							self?.error = error.message.orEmpty()
-						}
-					}
-
-				case .finished:
-					DispatchQueue.main.async { [weak self] in
-						self?.isLoading = false
-					}
-				}
-			} receiveValue: { response in
-				DispatchQueue.main.async {[weak self] in
-					self?.detailData = response
-					self?.meetingData = response.meetings ?? []
-					self?.price = response.price.orEmpty()
-                    print("Response: ", response)
-				}
-
-			}
-			.store(in: &cancellables)
+                    self?.error = error.message.orEmpty()
+                }
+            }
+        }
 	}
 
     func onAppear(isPreview: Bool) {
 		DispatchQueue.main.async {[weak self] in
-            if isPreview {
-                self?.getAvailableMeeting()
-            } else {
-                self?.getBundleDetail()
+            Task {
+                if isPreview {
+                    await self?.getAvailableMeeting()
+                } else {
+                    await self?.getBundleDetail()
+                }
             }
 		}
 	}

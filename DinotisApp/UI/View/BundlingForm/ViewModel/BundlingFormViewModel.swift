@@ -11,9 +11,12 @@ import DinotisData
 
 final class BundlingFormViewModel: ObservableObject {
     
-    private let bundlingRepository: BundlingRepository
     private let authRepository: AuthenticationRepository
 	private let bundleId: String
+    
+    private let createBundlingUseCase: CreateBundlingUseCase
+    private let updateBundlingUseCase: UpdateBundlingUseCase
+    private let getBundlingDetailUseCase: GetBundlingDetailUseCase
 
     private var cancellables = Set<AnyCancellable>()
     private var stateObservable = StateObservable.shared
@@ -52,15 +55,20 @@ final class BundlingFormViewModel: ObservableObject {
         backToHome: @escaping (() -> Void),
         backToBundlingList: @escaping (() -> Void),
         bundlingRepository: BundlingRepository = BundlingDefaultRepository(),
-        authRepository: AuthenticationRepository = AuthenticationDefaultRepository()
+        authRepository: AuthenticationRepository = AuthenticationDefaultRepository(),
+        createBundlingUseCase: CreateBundlingUseCase = CreateBundlingDefaultUseCase(),
+        updateBundlingUseCase: UpdateBundlingUseCase = UpdateBundlingDefaultUseCase(),
+        getBundlingDetailUseCase: GetBundlingDetailUseCase = GetBundlingDetailDefaultUseCase()
     ) {
 		self.bundleId = bundleId
         self.meetingIdArray = meetingIdArray
 		self.isEdit = isEdit
         self.backToHome = backToHome
         self.backToBundlingList = backToBundlingList
-        self.bundlingRepository = bundlingRepository
         self.authRepository = authRepository
+        self.createBundlingUseCase = createBundlingUseCase
+        self.updateBundlingUseCase = updateBundlingUseCase
+        self.getBundlingDetailUseCase = getBundlingDetailUseCase
     }
     
     func onStartFetch() {
@@ -73,7 +81,7 @@ final class BundlingFormViewModel: ObservableObject {
         }
     }
     
-    func createBundle() {
+    func createBundle() async {
         onStartFetch()
         
         let body = CreateBundling(
@@ -83,47 +91,44 @@ final class BundlingFormViewModel: ObservableObject {
             meetings: meetingIdArray
         )
         
-        bundlingRepository.provideCreateBundling(body: body)
-            .sink { result in
-                switch result {
-                case .failure(let error):
-                    DispatchQueue.main.async { [weak self] in
-                        if error.statusCode.orZero() == 401 {
-                            
-                        } else if error.statusCode.orZero() == 422 {
-                            if let titleError = error.fields?.filter({
-                                $0.name == "title"
-                            }).first {
-                                self?.titleError = titleError.error
-                            }
-                            
-                            if let descError = error.fields?.filter({
-                                $0.name == "description"
-                            }).first {
-                                self?.descError = descError.error
-                            }
-                            self?.isLoading = false
-                        } else {
-                            self?.isLoading = false
-                            self?.isError = true
-                            self?.isBundleCreated = false
-                            self?.error = error.message.orEmpty()
-                        }
-                    }
-                case .finished:
-                    DispatchQueue.main.async { [weak self] in
-                        self?.isLoading = false
-                        self?.isBundleCreated = true
-                    }
-                }
-            } receiveValue: { value in
-                
+        let result = await createBundlingUseCase.execute(body: body)
+        
+        switch result {
+        case .success:
+            DispatchQueue.main.async { [weak self] in
+                self?.isLoading = false
+                self?.isBundleCreated = true
             }
-            .store(in: &cancellables)
-
+            
+        case .failure(let error):
+            guard let error = error as? ErrorResponse else { return }
+            DispatchQueue.main.async { [weak self] in
+                if error.statusCode.orZero() == 401 {
+                    
+                } else if error.statusCode.orZero() == 422 {
+                    if let titleError = error.fields?.filter({
+                        $0.name == "title"
+                    }).first {
+                        self?.titleError = titleError.error
+                    }
+                    
+                    if let descError = error.fields?.filter({
+                        $0.name == "description"
+                    }).first {
+                        self?.descError = descError.error
+                    }
+                    self?.isLoading = false
+                } else {
+                    self?.isLoading = false
+                    self?.isError = true
+                    self?.isBundleCreated = false
+                    self?.error = error.message.orEmpty()
+                }
+            }
+        }
     }
 
-	func updateBundle() {
+	func updateBundle() async {
 		onStartFetch()
 
 		let body = UpdateBundlingBody(
@@ -132,47 +137,43 @@ final class BundlingFormViewModel: ObservableObject {
 			price: Int(price).orZero(),
 			meetingIds: meetingIdArray
 		)
+        
+        let result = await updateBundlingUseCase.execute(by: (detailData?.id).orEmpty(), body: body)
+        
+        switch result {
+        case .success:
+            DispatchQueue.main.async { [weak self] in
+                self?.isLoading = false
+                self?.isBundleUpdated = true
+            }
+        case .failure(let error):
+            guard let error = error as? ErrorResponse else { return }
+            DispatchQueue.main.async { [weak self] in
+                if error.statusCode.orZero() == 401 {
+                    
+                } else if error.statusCode.orZero() == 422 {
+                    print(body)
+                    print(error)
+                    if let titleError = error.fields?.filter({
+                        $0.name == "title"
+                    }).first {
+                        self?.titleError = titleError.error
+                    }
 
-		bundlingRepository.provideUpdateBundling(by: (detailData?.id).orEmpty(), body: body)
-			.sink { result in
-				switch result {
-				case .failure(let error):
-					DispatchQueue.main.async { [weak self] in
-						if error.statusCode.orZero() == 401 {
-							
-						} else if error.statusCode.orZero() == 422 {
-							print(body)
-							print(error)
-							if let titleError = error.fields?.filter({
-								$0.name == "title"
-							}).first {
-								self?.titleError = titleError.error
-							}
-
-							if let descError = error.fields?.filter({
-								$0.name == "description"
-							}).first {
-								self?.descError = descError.error
-							}
-							self?.isLoading = false
-						} else {
-							self?.isLoading = false
-							self?.isError = true
-							self?.isBundleUpdated = false
-							self?.error = error.message.orEmpty()
-						}
-					}
-				case .finished:
-					DispatchQueue.main.async { [weak self] in
-						self?.isLoading = false
-						self?.isBundleUpdated = true
-					}
-				}
-			} receiveValue: { value in
-
-			}
-			.store(in: &cancellables)
-
+                    if let descError = error.fields?.filter({
+                        $0.name == "description"
+                    }).first {
+                        self?.descError = descError.error
+                    }
+                    self?.isLoading = false
+                } else {
+                    self?.isLoading = false
+                    self?.isError = true
+                    self?.isBundleUpdated = false
+                    self?.error = error.message.orEmpty()
+                }
+            }
+        }
 	}
 
 	func isFieldEmpty() -> Bool {
@@ -196,47 +197,44 @@ final class BundlingFormViewModel: ObservableObject {
 		}
 	}
 
-	func getBundleDetail() {
+	func getBundleDetail() async {
 		onStartRequest()
+        
+        let result = await getBundlingDetailUseCase.execute(by: bundleId)
+        
+        switch result {
+        case .success(let response):
+            DispatchQueue.main.async {[weak self] in
+                self?.isLoadingDetail = false
+                self?.detailData = response
+                self?.title = response.title.orEmpty()
+                self?.desc = response.description.orEmpty()
+                self?.price = response.price.orEmpty()
+                self?.meetingIdArray = (response.meetings ?? []).map({
+                    $0.id.orEmpty()
+                })
+            }
+            
+        case .failure(let error):
+            guard let error = error as? ErrorResponse else { return }
+            DispatchQueue.main.async {[weak self] in
+                if error.statusCode.orZero() == 401 {
+                    
+                } else {
+                    self?.isLoadingDetail = false
+                    self?.isErrorDetail = true
 
-		bundlingRepository.provideGetDetailBundling(by: bundleId)
-			.sink { result in
-				switch result {
-				case .failure(let error):
-					DispatchQueue.main.async {[weak self] in
-						if error.statusCode.orZero() == 401 {
-							
-						} else {
-							self?.isLoadingDetail = false
-							self?.isErrorDetail = true
-
-							self?.errorDetail = error.message.orEmpty()
-						}
-					}
-
-				case .finished:
-					DispatchQueue.main.async { [weak self] in
-						self?.isLoadingDetail = false
-					}
-				}
-			} receiveValue: { response in
-				DispatchQueue.main.async {[weak self] in
-					self?.detailData = response
-					self?.title = response.title.orEmpty()
-					self?.desc = response.description.orEmpty()
-					self?.price = response.price.orEmpty()
-					self?.meetingIdArray = (response.meetings ?? []).map({
-						$0.id.orEmpty()
-					})
-				}
-
-			}
-			.store(in: &cancellables)
+                    self?.errorDetail = error.message.orEmpty()
+                }
+            }
+        }
 	}
 
 	func onAppear() {
 		if isEdit {
-			getBundleDetail()
+            Task {
+                await getBundleDetail()
+            }
 		}
 	}
 
