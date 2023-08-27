@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftUINavigation
 import DinotisDesignSystem
+import DinotisData
 
 struct BundlingScheduleCardView: View {
     

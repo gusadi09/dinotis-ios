@@ -7,6 +7,22 @@
 
 import Foundation
 
+public struct BundlingListResponse: Codable {
+    public let data: [BundlingData]?
+    public let filters: FilterBundlingData?
+    public let nextCursor: Int?
+    
+    public init(
+        data: [BundlingData]?,
+        filters: FilterBundlingData?,
+        nextCursor: Int?
+    ) {
+        self.data = data
+        self.filters = filters
+        self.nextCursor = nextCursor
+    }
+}
+
 public struct BundlingData: Codable, Hashable {
 	public static func == (lhs: BundlingData, rhs: BundlingData) -> Bool {
 		lhs.id == rhs.id
@@ -28,7 +44,7 @@ public struct BundlingData: Codable, Hashable {
 	public let isAlreadyBooked: Bool?
 	public let isFailed: Bool?
 	public let user: UserResponse?
-	public let meetings: [GeneralMeetingData]?
+	public let meetings: [MeetingDetailResponse]?
 	public let meetingBundleId: String?
 	public let background: [String]?
 
@@ -45,7 +61,7 @@ public struct BundlingData: Codable, Hashable {
 		isAlreadyBooked: Bool?,
 		isFailed: Bool?,
 		user: UserResponse?,
-		meetings: [GeneralMeetingData]?,
+		meetings: [MeetingDetailResponse]?,
 		meetingBundleId: String?,
 		background: [String]?
 	) {
@@ -65,4 +81,101 @@ public struct BundlingData: Codable, Hashable {
 		self.meetingBundleId = meetingBundleId
 		self.background = background
 	}
+}
+
+public struct FilterBundlingData: Codable {
+    public let options: [BundlingFilterOptions]?
+    
+    public init(options: [BundlingFilterOptions]?) {
+        self.options = options
+    }
+}
+
+public struct BundlingFilterOptions: Codable, Identifiable {
+    public let id = UUID()
+    public let queries: [BundlingFilterOptionQuery]?
+    public let label: String?
+    
+    public init(
+        queries: [BundlingFilterOptionQuery]?,
+        label: String?
+    ) {
+        self.queries = queries
+        self.label = label
+    }
+}
+
+public struct BundlingFilterOptionQuery: Codable, Identifiable {
+    public let id = UUID()
+    public let name: String?
+    public let value: String?
+    
+    public init(name: String?, value: String?) {
+        self.name = name
+        self.value = value
+    }
+}
+
+public struct DetailBundlingResponse: Codable {
+    public let id: String?
+    public let title: String?
+    public let description: String?
+    public let price: String?
+    public let user: UserResponse?
+    public let createdAt: Date?
+    public let updatedAt: Date?
+    public let meetings: [MeetingDetailResponse]?
+    
+    public init(
+        id: String?,
+        title: String?,
+        description: String?,
+        price: String?,
+        user: UserResponse?,
+        createdAt: Date?,
+        updatedAt: Date?,
+        meetings: [MeetingDetailResponse]?
+    ) {
+        self.id = id
+        self.title = title
+        self.description = description
+        self.price = price
+        self.user = user
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+        self.meetings = meetings
+    }
+}
+
+public struct CreateBundlingResponse: Codable {
+    public let id: String?
+    public let title: String?
+    public let description: String?
+    public let price: String?
+    public let createdAt: Date?
+    public let updatedAt: Date?
+    
+    public init(
+        id: String?,
+        title: String?,
+        description: String?,
+        price: String?,
+        createdAt: Date?,
+        updatedAt: Date?
+    ) {
+        self.id = id
+        self.title = title
+        self.description = description
+        self.price = price
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+    }
+}
+
+public struct AvailableMeetingResponse: Codable {
+    public let data: [MeetingDetailResponse]?
+    
+    public init(data: [MeetingDetailResponse]?) {
+        self.data = data
+    }
 }

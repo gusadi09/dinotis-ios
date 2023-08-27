@@ -77,7 +77,9 @@ struct BundlingDetailView: View {
 						Spacer()
 					} else {
 						DinotisList {
-							viewModel.getBundleDetail()
+                            Task {
+                                await viewModel.getBundleDetail()
+                            }
 						} introspectConfig: { view in
 							view.separatorStyle = .none
 							view.indicatorStyle = .white
@@ -85,7 +87,9 @@ struct BundlingDetailView: View {
 							view.showsVerticalScrollIndicator = false
 							viewModel.use(for: view) { refresh in
 								DispatchQueue.main.async {
-									viewModel.getBundleDetail()
+                                    Task {
+                                        await viewModel.getBundleDetail()
+                                    }
 									refresh.endRefreshing()
 								}
 							}

@@ -120,11 +120,13 @@ struct BundlingFormView: View {
 					}
 
 					Button {
-						if !viewModel.isEdit {
-							viewModel.createBundle()
-						} else {
-							viewModel.updateBundle()
-						}
+                        Task {
+                            if !viewModel.isEdit {
+                                await viewModel.createBundle()
+                            } else {
+                                await viewModel.updateBundle()
+                            }
+                        }
 					} label: {
 						HStack {
                             Spacer()

@@ -126,14 +126,18 @@ struct BundlingView: View {
                         
 						Group {
 							DinotisList {
-								viewModel.getBundlingList()
+                                Task {
+                                    await viewModel.getBundlingList()
+                                }
 							} introspectConfig: { view in
 								view.separatorStyle = .none
 								view.indicatorStyle = .white
 								view.sectionHeaderHeight = -10
 								view.showsVerticalScrollIndicator = false
 								viewModel.use(for: view) { refresh in
-									viewModel.getBundlingList()
+                                    Task {
+                                        await viewModel.getBundlingList()
+                                    }
 									refresh.endRefreshing()
 								}
 							} content: {
@@ -207,7 +211,9 @@ struct BundlingView: View {
 												viewModel.query.skip = viewModel.query.take
 												viewModel.query.take += 15
 												
-												viewModel.getBundlingList()
+                                                Task {
+                                                    await viewModel.getBundlingList()
+                                                }
 											}
 										}
 										.buttonStyle(.plain)
@@ -219,7 +225,7 @@ struct BundlingView: View {
                                                 primaryButton: .default(Text(LocaleText.noText)),
                                                 secondaryButton: .destructive(Text(LocaleText.yesDeleteText)) {
                                                     withAnimation {
-                                                        viewModel.deleteBundling(bundleId: viewModel.idToDelete)
+                                                        viewModel.defaultDeleteBundling(bundleId: viewModel.idToDelete)
                                                     }
                                                 }
                                             )

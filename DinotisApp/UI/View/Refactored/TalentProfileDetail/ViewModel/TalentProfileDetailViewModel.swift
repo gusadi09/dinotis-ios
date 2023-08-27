@@ -1197,7 +1197,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         }
     }
     
-    func routeToBundlingDetail(bundleId: String, meetingArray: [GeneralMeetingData], isActive: Bool) {
+    func routeToBundlingDetail(bundleId: String, meetingArray: [MeetingDetailResponse], isActive: Bool) {
         let viewModel = BundlingDetailViewModel(bundleId: bundleId, profileDetailBundle: meetingArray, meetingIdArray: [], backToHome: self.backToHome, isTalent: false, isActive: isActive)
         
         DispatchQueue.main.async { [weak self] in
