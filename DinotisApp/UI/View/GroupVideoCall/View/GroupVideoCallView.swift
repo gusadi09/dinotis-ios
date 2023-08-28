@@ -3043,7 +3043,7 @@ fileprivate extension GroupVideoCallView {
         let isAuthorYou: Bool
         
         var body: some View {
-            Text(messageBody)
+            Text(messageBody.containURL(whiteText: isAuthorYou, size: 14))
                 .font(.robotoRegular(size: 14))
                 .foregroundColor(.white)
                 .padding(10)
