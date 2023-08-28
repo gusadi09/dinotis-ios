@@ -972,17 +972,19 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
     func onParticipantPinned(participant: DyteJoinedMeetingParticipant) {
         self.pinned = nil
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
             self.pinned = participant
-            self.index = 0
         }
+        
+        self.participants.removeAll()
+        self.participants = meeting.participants.active
     }
     
     func onParticipantUnpinned(participant: DyteJoinedMeetingParticipant) {
         self.pinned = nil
         
-        self.participants = self.meeting.participants.active
-        self.index = 1
+        self.participants.removeAll()
+        self.participants = meeting.participants.active
     }
     
     func onScreenShareEnded(participant: DyteScreenShareMeetingParticipant) {

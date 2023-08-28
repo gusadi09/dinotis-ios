@@ -2598,8 +2598,6 @@ fileprivate extension GroupVideoCallView {
                                                     .font(.robotoRegular(size: 14))
                                                     .foregroundColor(.white)
                                             )
-                                            .padding(.leading, 12)
-                                            .padding(.trailing, 10)
                                     } else {
                                         ImageLoader(url: participant.picture.orEmpty(), width: 42, height: 42)
                                             .frame(width: 42, height: 42)
