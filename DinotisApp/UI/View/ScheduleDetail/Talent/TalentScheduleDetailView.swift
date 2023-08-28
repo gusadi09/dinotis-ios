@@ -626,7 +626,7 @@ struct TalentScheduleDetailView: View {
 						Image.Dinotis.popoutImage
 							.resizable()
 							.scaledToFit()
-							.frame(height: 150)
+                            .frame(maxHeight: 200)
 
 						VStack(spacing: 35) {
 							VStack(spacing: 10) {
@@ -688,7 +688,7 @@ struct TalentScheduleDetailView: View {
 				}
 					.padding()
 					.padding(.vertical)
-					.presentationDetents([.fraction(0.8), .large])
+					.presentationDetents([.height(450)])
 			} else {
 				VStack(spacing: 15) {
 					if viewModel.isLoadingStart {
@@ -697,7 +697,7 @@ struct TalentScheduleDetailView: View {
 						Image.Dinotis.popoutImage
 							.resizable()
 							.scaledToFit()
-							.frame(height: 150)
+                            .frame(maxHeight: 200)
 
 						VStack(spacing: 35) {
 							VStack(spacing: 10) {

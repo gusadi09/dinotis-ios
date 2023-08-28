@@ -352,10 +352,13 @@ struct UserScheduleDetail: View {
             .sheet(isPresented: $viewModel.startPresented, content: {
                 if #available(iOS 16.0, *) {
                     VStack(spacing: 15) {
+                        
+                        Spacer()
+                        
                         Image.Dinotis.popoutImage
                             .resizable()
                             .scaledToFit()
-                            .frame(height: 200)
+                            .frame(maxHeight: 200)
                         
                         VStack(spacing: 35) {
                             VStack(spacing: 10) {
@@ -422,14 +425,16 @@ struct UserScheduleDetail: View {
                         }
                     }
                     .padding()
-                    .padding(.vertical)
-                    .presentationDetents([.fraction(0.7), .large])
+                    .presentationDetents([.height(450)])
                 } else {
                     VStack(spacing: 15) {
+                        
+                        Spacer()
+                        
                         Image.Dinotis.popoutImage
                             .resizable()
                             .scaledToFit()
-                            .frame(height: 200)
+                            .frame(maxHeight: 200)
                         
                         VStack(spacing: 35) {
                             VStack(spacing: 10) {
