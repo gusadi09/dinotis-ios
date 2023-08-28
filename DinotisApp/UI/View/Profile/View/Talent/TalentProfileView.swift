@@ -517,6 +517,8 @@ struct TalentProfileView: View {
 			content: {
 				if #available(iOS 16.0, *) {
 					VStack(spacing: 16) {
+                        Spacer()
+                        
 						Image.profileLogoutImage
 							.resizable()
 							.scaledToFit()
@@ -555,9 +557,12 @@ struct TalentProfileView: View {
 					}
 						.padding()
 						.padding(.vertical)
-						.presentationDetents([.fraction(0.55), .large])
+						.presentationDetents([.height(360)])
 				} else {
 					VStack(spacing: 16) {
+                        
+                        Spacer()
+                        
 						Image.profileLogoutImage
 							.resizable()
 							.scaledToFit()
@@ -605,6 +610,8 @@ struct TalentProfileView: View {
 			content: {
 				if #available(iOS 16.0, *) {
 					VStack(spacing: 10) {
+                        Spacer()
+                        
 						Image.Dinotis.removeUserImage
 							.resizable()
 							.scaledToFit()
@@ -658,9 +665,11 @@ struct TalentProfileView: View {
 					}
 						.padding()
 						.padding(.vertical)
-						.presentationDetents([.fraction(0.6), .large])
+						.presentationDetents([.height(380)])
 				} else {
 					VStack(spacing: 10) {
+                        Spacer()
+                        
 						Image.Dinotis.removeUserImage
 							.resizable()
 							.scaledToFit()
@@ -723,6 +732,9 @@ struct TalentProfileView: View {
 			content: {
 				if #available(iOS 16.0, *) {
 					VStack(spacing: 10) {
+                        
+                        Spacer()
+                        
 						Image(systemName: "checkmark.seal.fill")
 							.resizable()
 							.scaledToFit()
@@ -760,9 +772,11 @@ struct TalentProfileView: View {
 					}
 						.padding()
 						.padding(.vertical)
-						.presentationDetents([.fraction(0.65), .large])
+						.presentationDetents([.height(380)])
 				} else {
 					VStack(spacing: 10) {
+                        Spacer()
+                        
 						Image(systemName: "checkmark.seal.fill")
 							.resizable()
 							.scaledToFit()

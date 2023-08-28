@@ -459,7 +459,7 @@ struct UserProfileView: View {
 					}
 						.padding()
 						.padding(.vertical)
-						.presentationDetents([.fraction(0.6), .large])
+						.presentationDetents([.height(360)])
 				} else {
 					VStack(spacing: 16) {
 
@@ -567,7 +567,7 @@ struct UserProfileView: View {
 					}
 						.padding()
 						.padding(.vertical)
-						.presentationDetents([.fraction(0.6), .large])
+						.presentationDetents([.height(380)])
 				} else {
 					VStack(spacing: 10) {
 						Spacer()
@@ -674,7 +674,7 @@ struct UserProfileView: View {
 					}
 						.padding()
 						.padding(.vertical)
-						.presentationDetents([.fraction(0.55), .large])
+						.presentationDetents([.height(380)])
 				} else {
 					VStack(spacing: 10) {
 
@@ -829,8 +829,7 @@ struct UserProfileView: View {
 						}
 					}
 					.padding()
-					.padding(.vertical)
-					.presentationDetents([.fraction(0.67), .large])
+					.presentationDetents([.height(430)])
 				} else {
 					VStack(spacing: 20) {
 
@@ -936,7 +935,6 @@ struct UserProfileView: View {
 						}
 					}
 					.padding()
-					.padding(.vertical)
 				}
 			})
 		.sheet(isPresented: $viewModel.isTransactionSucceed, content: {
@@ -968,7 +966,7 @@ struct UserProfileView: View {
 				}
 				.padding()
 				.padding(.vertical)
-				.presentationDetents([.fraction(0.35), .large])
+				.presentationDetents([.height(350)])
 			} else {
 				GeometryReader { geo in
 					HStack {
