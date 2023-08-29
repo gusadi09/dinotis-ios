@@ -374,6 +374,7 @@ struct TalentHomeView: View {
                                                             Text(homeVM.filterSelection)
                                                                 .font(.robotoRegular(size: 12))
                                                                 .foregroundColor(.black)
+                                                                .frame(maxWidth: homeVM.filterSelection.isEmpty ? 100 : nil)
                                                             
                                                             Image(systemName: "chevron.down")
                                                                 .resizable()

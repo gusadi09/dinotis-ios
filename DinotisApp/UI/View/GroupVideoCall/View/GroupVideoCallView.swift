@@ -395,6 +395,7 @@ fileprivate extension GroupVideoCallView {
         var isPortrait: Bool {
             horizontalSizeClass == .compact && verticalSizeClass == .regular
         }
+        @Namespace var indexView
         
         var body: some View {
             VStack {
@@ -524,7 +525,8 @@ fileprivate extension GroupVideoCallView {
                                             }
                                         }
                                     }
-                                    .padding(15)
+                                    .padding(.horizontal)
+                                    .padding(.vertical, 5)
                                 }
                             }
                         }
@@ -742,6 +744,33 @@ fileprivate extension GroupVideoCallView {
                     //                    }
                     
                     Spacer()
+                        .onChange(of: viewModel.index) { idx in
+                            if viewModel.pinned != nil || !viewModel.screenShareUser.isEmpty || viewModel.host != nil || viewModel.lastActive != nil {
+                                if idx == 1 {
+                                    viewModel.getTwoSecondTime()
+                                    
+                                } else {
+                                    withAnimation(.spring()) {
+                                        viewModel.mainLobbyTimer?.invalidate()
+                                        viewModel.onSecondTime = 0
+                                        self.viewModel.isLastPage = idx == 1
+                                    }
+                                }
+                            }
+                        }
+                        .onChange(of: viewModel.onSecondTime) { time in
+                            if viewModel.pinned != nil || !viewModel.screenShareUser.isEmpty || viewModel.host != nil || viewModel.lastActive != nil {
+                                if viewModel.index == 1 {
+                                    if time == 2 {
+                                        withAnimation(.spring()) {
+                                            self.viewModel.isLastPage = viewModel.index == 1
+                                            viewModel.mainLobbyTimer?.invalidate()
+                                            viewModel.onSecondTime = 0
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     
                     VStack {
                         Group {
@@ -753,10 +782,10 @@ fileprivate extension GroupVideoCallView {
                                 } label: {
                                     HStack(spacing: 5) {
                                         Text("\(Image(systemName: "arrow.backward")) \(LocalizableText.videoCallToMain)")
-                                            .font(.robotoMedium(size: 14))
+                                            .font(.robotoMedium(size: 12))
                                             .foregroundColor(.white)
                                     }
-                                    .padding(.vertical, 8)
+                                    .frame(maxWidth: 60, maxHeight: 30)
                                     .padding(.horizontal, 10)
                                     .background(
                                         Capsule()
@@ -772,6 +801,7 @@ fileprivate extension GroupVideoCallView {
                                                 .scaledToFit()
                                                 .frame(width: viewModel.index == index ? 6 : 4)
                                                 .foregroundColor(viewModel.index == index ? .DinotisDefault.primary : .gray)
+                                                .matchedGeometryEffect(id: index, in: indexView)
                                         }
                                     } else {
                                         Circle()
