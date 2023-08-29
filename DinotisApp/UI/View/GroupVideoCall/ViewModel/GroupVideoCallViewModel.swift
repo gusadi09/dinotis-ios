@@ -88,6 +88,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     
     private let subject = PassthroughSubject<Void, Never>()
     
+    @Published var onSecondTime = 0
     @Published var meeting = DyteiOSClientBuilder().build()
     @Published var localUserId = ""
     @Published var isLastPage = false
@@ -192,6 +193,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var isLeaving = false
     
     @Published var qnaBoxContentHeight: CGFloat = 0
+    @Published var mainLobbyTimer: Timer?
     
     init(
         backToHome: @escaping () -> Void,
@@ -397,6 +399,16 @@ final class GroupVideoCallViewModel: ObservableObject {
         return questionData.filter({ item in
             qnaTabSelection == 0 ? !(item.isAnswered ?? false) : (item.isAnswered ?? false)
         })
+    }
+    
+    func getTwoSecondTime() {
+        let getting = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(increaseTime), userInfo: nil, repeats: true)
+        
+        self.mainLobbyTimer = getting
+    }
+    
+    @objc func increaseTime() {
+        onSecondTime += 1
     }
     
     func getRealTime() {
