@@ -3560,7 +3560,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.2;
+				MARKETING_VERSION = 1.5.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp;
 				PRODUCT_NAME = DinotisStag;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3746,7 +3746,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.2;
+				MARKETING_VERSION = 1.5.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp;
 				PRODUCT_NAME = DinotisDev;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3843,7 +3843,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.2;
+				MARKETING_VERSION = 1.5.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp;
 				PRODUCT_NAME = Dinotis;
 				PROVISIONING_PROFILE_SPECIFIER = "";
