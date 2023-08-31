@@ -1080,7 +1080,9 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
 
 extension GroupVideoCallViewModel: DyteSelfEventsListener {
     func onStageStatusUpdated(stageStatus: StageStatus) {
-        
+        if stageStatus == .offStage {
+            madeToSpeaker()
+        }
     }
     
     func onRoomMessage(message: String) {
