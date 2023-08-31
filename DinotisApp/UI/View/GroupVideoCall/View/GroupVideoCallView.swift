@@ -2977,6 +2977,9 @@ fileprivate extension GroupVideoCallView {
                                 scrollView.scrollTo(value.last, anchor: .bottom)
                             }
                         }
+                        .onAppear(perform: {
+                            scrollView.scrollTo(viewModel.meeting.chat.messages.last)
+                        })
                         
                         HStack(alignment: .bottom) {
                             
