@@ -2871,7 +2871,8 @@ fileprivate extension GroupVideoCallView {
         @ObservedObject var viewModel: GroupVideoCallViewModel
         @State var shouldShowImagePicker = false
         @State var image: UIImage?
-        
+        @State private var previousHeader: (author: String, date: String)? = nil
+
         var body: some View {
             VStack {
                 //                MARK: Uncomment when the feature is ready
@@ -2906,39 +2907,65 @@ fileprivate extension GroupVideoCallView {
                         ScrollView {
                             LazyVStack {
                                 ForEach(viewModel.meeting.chat.messages, id: \.self) { message in
-                                    VStack(alignment: .leading, spacing: 9) {
-                                        ChatHeaderView(
-                                            author: message.displayName,
-                                            isAuthorYou: message.userId == viewModel.localUserId,
-                                            date: message.time
-                                        )
-                                        switch message.type {
-                                        case .text:
-                                            if let chat = message as? DyteTextMessage {
-                                                ChatBubbleView(
-                                                    messageBody: chat.message,
-                                                    isAuthorYou: message.userId == viewModel.localUserId
-                                                )
-                                                /// Pin chat is not available in Dyte SDK
-                                                //                                                .contextMenu {
-                                                //                                                    Button {
-                                                //                                                        withAnimation(.spring(response: 0.4, dampingFraction: 0.4)) {
-                                                //
-                                                //                                                        }
-                                                //                                                    } label: {
-                                                //                                                        Label("Pin this chat", systemImage: "pin.fill")
-                                                //                                                    }
-                                                //                                                }
+                                    let currentHeader = (author: message.displayName, date: message.time)
+                                    if let prevHeader = previousHeader, prevHeader == currentHeader {
+                                        VStack {
+                                            switch message.type {
+                                            case .text:
+                                                if let chat = message as? DyteTextMessage {
+                                                    ChatBubbleView(
+                                                        messageBody: chat.message,
+                                                        isAuthorYou: message.userId == viewModel.localUserId
+                                                    )
+                                                }
+                                           
+                                            default:
+                                                EmptyView()
                                             }
-                                        default:
-                                            EmptyView()
                                         }
-                                    }
-                                    .padding(.horizontal)
-                                    .padding(.vertical, 7)
-                                    .id(message)
-                                    .onAppear {
-                                        viewModel.hasNewMessage = false
+                                        .padding(.horizontal)
+                                        .id(message)
+                                        .onAppear {
+//                                            viewModel.hasNewMessage = false
+                                            previousHeader = currentHeader
+                                        }
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    } else {
+                                        VStack(alignment: .leading, spacing: 9) {
+                                            ChatHeaderView(
+                                                author: message.displayName,
+                                                isAuthorYou: message.userId == viewModel.localUserId,
+                                                date: message.time
+                                            )
+                                            switch message.type {
+                                            case .text:
+                                                if let chat = message as? DyteTextMessage {
+                                                    ChatBubbleView(
+                                                        messageBody: chat.message,
+                                                        isAuthorYou: message.userId == viewModel.localUserId
+                                                    )
+                                                    /// Pin chat is not available in Dyte SDK
+                                                    //                                                .contextMenu {
+                                                    //                                                    Button {
+                                                    //                                                        withAnimation(.spring(response: 0.4, dampingFraction: 0.4)) {
+                                                    //
+                                                    //                                                        }
+                                                    //                                                    } label: {
+                                                    //                                                        Label("Pin this chat", systemImage: "pin.fill")
+                                                    //                                                    }
+                                                    //                                                }
+                                                }
+                                            default:
+                                                EmptyView()
+                                            }
+                                        }
+                                        .padding(.horizontal)
+                                        .padding(.vertical, 5)
+                                        .id(message)
+                                        .onAppear {
+                                            viewModel.hasNewMessage = false
+                                            previousHeader = currentHeader
+                                        }
                                     }
                                 }
                                 
