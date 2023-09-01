@@ -2905,32 +2905,32 @@ fileprivate extension GroupVideoCallView {
                 ScrollViewReader { scrollView in
                     VStack(spacing: 0) {
                         ScrollView {
-                            LazyVStack {
+                            VStack {
                                 ForEach(viewModel.meeting.chat.messages, id: \.self) { message in
-                                    let currentHeader = (author: message.displayName, date: message.time)
-                                    if let prevHeader = previousHeader, prevHeader == currentHeader {
-                                        VStack {
-                                            switch message.type {
-                                            case .text:
-                                                if let chat = message as? DyteTextMessage {
-                                                    ChatBubbleView(
-                                                        messageBody: chat.message,
-                                                        isAuthorYou: message.userId == viewModel.localUserId
-                                                    )
-                                                }
-                                           
-                                            default:
-                                                EmptyView()
-                                            }
-                                        }
-                                        .padding(.horizontal)
-                                        .id(message)
-                                        .onAppear {
-//                                            viewModel.hasNewMessage = false
-                                            previousHeader = currentHeader
-                                        }
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                    } else {
+//                                    let currentHeader = (author: message.displayName, date: message.time)
+//                                    if let prevHeader = previousHeader, prevHeader == currentHeader {
+//                                        VStack {
+//                                            switch message.type {
+//                                            case .text:
+//                                                if let chat = message as? DyteTextMessage {
+//                                                    ChatBubbleView(
+//                                                        messageBody: chat.message,
+//                                                        isAuthorYou: message.userId == viewModel.localUserId
+//                                                    )
+//                                                }
+//
+//                                            default:
+//                                                EmptyView()
+//                                            }
+//                                        }
+//                                        .padding(.horizontal)
+//                                        .id(message)
+//                                        .onAppear {
+////                                            viewModel.hasNewMessage = false
+//                                            previousHeader = currentHeader
+//                                        }
+//                                        .frame(maxWidth: .infinity, alignment: .leading)
+//                                    } else {
                                         VStack(alignment: .leading, spacing: 9) {
                                             ChatHeaderView(
                                                 author: message.displayName,
@@ -2964,9 +2964,9 @@ fileprivate extension GroupVideoCallView {
                                         .id(message)
                                         .onAppear {
                                             viewModel.hasNewMessage = false
-                                            previousHeader = currentHeader
+//                                            previousHeader = currentHeader
                                         }
-                                    }
+//                                    }
                                 }
                                 
                             }
