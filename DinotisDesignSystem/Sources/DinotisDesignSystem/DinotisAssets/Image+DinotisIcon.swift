@@ -148,4 +148,8 @@ public extension Image {
     
     static let feedbackStarYellow = Image("ic-star-yellow", bundle: .module)
     static let feedbackStarGray = Image("ic-star-gray", bundle: .module)
+    
+    static let homeTalentNotificationIcon = Image("ic-notification-bell-primary", bundle: .module)
+    static let homeTalentChatPrimaryIcon = Image("ic-chat-primary", bundle: .module)
+    static let homeTalentWalletIcon = Image("ic-wallet-home", bundle: .module)
 }

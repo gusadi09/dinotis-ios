@@ -44,7 +44,7 @@ struct TalentHomeView: View {
 
         private var columns: [GridItem] {
             [GridItem](
-                repeating: GridItem(.flexible(), spacing: 20),
+                repeating: GridItem(.flexible(), spacing: 30),
                 count: 3
             )
         }
@@ -106,177 +106,211 @@ struct TalentHomeView: View {
                                 }
                         }
                         
-                        VStack(spacing: 0) {
-                            HStack {
-                                Button(action: {
-                                    homeVM.routeToProfile()
-                                }, label: {
-                                    HStack(spacing: 15) {
-                                        ProfileImageContainer(
-                                            profilePhoto: $homeVM.photoProfile,
-                                            name: $homeVM.nameOfUser,
-                                            width: 48,
-                                            height: 48
-                                        )
-                                        
-                                        VStack(alignment: .leading, spacing: 14) {
-                                            Text(LocaleText.helloText)
-                                                .font(.robotoRegular(size: 12))
-                                                .foregroundColor(.black)
+                        VStack {
+                            VStack(spacing: 0) {
+                                HStack {
+                                    Button(action: {
+                                        homeVM.routeToProfile()
+                                    }, label: {
+                                        HStack(spacing: 15) {
+                                            ProfileImageContainer(
+                                                profilePhoto: $homeVM.photoProfile,
+                                                name: $homeVM.nameOfUser,
+                                                width: 48,
+                                                height: 48
+                                            )
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(Color.white, lineWidth: 2)
+                                            )
+                                            .shadow(color: Color(red: 0.22, green: 0.29, blue: 0.41).opacity(0.06), radius: 20, x: 0, y: 0)
                                             
-                                            Text((homeVM.userData?.name).orEmpty())
-                                                .font(.robotoBold(size: 14))
-                                                .foregroundColor(.black)
-                                        }
-                                    }
-                                    
-                                })
-                                
-                                NavigationLink(
-                                    unwrapping: $homeVM.route,
-                                    case: /HomeRouting.talentProfile) { viewModel in
-                                        TalentProfileView()
-                                            .environmentObject(viewModel.wrappedValue)
-                                    } onNavigate: { _ in
-                                        
-                                    } label: {
-                                        EmptyView()
-                                    }
-                                
-                                NavigationLink(
-                                    unwrapping: $homeVM.route,
-                                    case: /HomeRouting.talentRateCardList) { viewModel in
-                                        TalentCardListView(viewModel: viewModel.wrappedValue)
-                                    } onNavigate: { _ in
-                                        
-                                    } label: {
-                                        EmptyView()
-                                    }
-                                
-                                Spacer()
-                                
-                                Button {
-                                    homeVM.routeToNotification()
-                                } label: {
-                                    ZStack(alignment: .topTrailing) {
-                                        Image(systemName: "bell.fill")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: 20)
-                                            .foregroundColor(.dinotisStrokeSecondary)
-                                            .padding(9)
-                                            .background(Color.white)
-                                            .clipShape(Circle())
-                                        
-                                        Circle()
-                                            .scaledToFit()
-                                            .frame(width: 10)
-                                            .foregroundColor(.red)
-                                    }
-                                }
-                            }
-                            .padding()
-                            .padding(.top, 10)
-                            .alert(isPresented: $homeVM.isSuccessDelete) {
-                                Alert(
-                                    title: Text(LocaleText.successTitle),
-                                    message: Text(LocaleText.meetingDeleted),
-                                    dismissButton: .default(Text(LocaleText.returnText), action: {
-                                        
-                                    }))
-                            }
-                            
-                            DinotisList {
-                                Task {
-                                    await homeVM.refreshList()
-                                }
-                                
-                            } introspectConfig: { view in
-                                view.separatorStyle = .none
-                                view.showsVerticalScrollIndicator = false
-                                homeVM.use(for: view) { refresh in
-                                    Task {
-                                        await homeVM.refreshList()
-                                        refresh.endRefreshing()
-                                    }
-                                }
-                            } content: {
-                                Section {
-                                    HStack(spacing: 15) {
-                                        VStack(alignment: .leading, spacing: 15) {
-                                            Text(LocaleText.walletBalance)
-                                                .font(.robotoRegular(size: 12))
-                                                .foregroundColor(.black)
-                                            
-                                            Text(homeVM.currentBalances.toCurrency())
-                                                .font(.robotoBold(size: 18))
-                                                .foregroundColor(.black)
-                                        }
-                                        
-                                        Spacer()
-                                        
-                                        Button(action: {
-                                            homeVM.routeToWallet()
-                                        }, label: {
-                                            VStack {
-                                                Image.Dinotis.walletButtonIcon
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .frame(height: 34)
-                                                
-                                                Text(LocaleText.withdrawBalance)
-                                                    .font(.robotoBold(size: 12))
+                                            VStack(alignment: .leading, spacing: 0) {
+                                                Text(LocaleText.helloText)
+                                                    .font(.robotoRegular(size: 12))
                                                     .foregroundColor(.black)
-                                                    .fixedSize(horizontal: true, vertical: false)
+                                                    .padding(.bottom, 6)
+                                                
+                                                Text((homeVM.userData?.name).orEmpty())
+                                                    .font(.robotoBold(size: 14))
+                                                    .foregroundColor(.black)
                                             }
-                                        })
-                                        .buttonStyle(.plain)
-                                    }
-                                    .padding(.vertical, 20)
-                                    .padding(.horizontal, 15)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 12)
-                                            .foregroundColor(.white)
-                                    )
-                                    .shadow(color: Color.dinotisShadow.opacity(0.08), radius: 8, x: 0, y: 0)
-                                    .padding(.top, 10)
-                                    
-                                    HStack {
-                                        Spacer()
+                                        }
                                         
-                                        LazyVGrid(columns: columns) {
-                                            Button {
-                                                homeVM.routeToTalentFormSchedule()
-                                            } label: {
-                                                VStack {
-                                                    Image.Dinotis.redCameraVideoIcon
+                                    })
+                                    
+                                    NavigationLink(
+                                        unwrapping: $homeVM.route,
+                                        case: /HomeRouting.talentProfile) { viewModel in
+                                            TalentProfileView()
+                                                .environmentObject(viewModel.wrappedValue)
+                                        } onNavigate: { _ in
+                                            
+                                        } label: {
+                                            EmptyView()
+                                        }
+                                    
+                                    NavigationLink(
+                                        unwrapping: $homeVM.route,
+                                        case: /HomeRouting.talentRateCardList) { viewModel in
+                                            TalentCardListView(viewModel: viewModel.wrappedValue)
+                                        } onNavigate: { _ in
+                                            
+                                        } label: {
+                                            EmptyView()
+                                        }
+                                    
+                                    Spacer()
+                                    
+                                    Button {
+                                        
+                                    } label: {
+                                        ZStack(alignment: .topTrailing) {
+                                            
+                                            Circle()
+                                                .scaledToFit()
+                                                .frame(height: 48)
+                                                .foregroundColor(Color.white)
+                                                .overlay(
+                                                    Image.homeTalentChatPrimaryIcon
                                                         .resizable()
                                                         .scaledToFit()
-                                                        .frame(width: 24)
-                                                        .padding(8)
-                                                        .background(Color.secondaryViolet)
-                                                        .frame(width: 36, height: 36)
-                                                        .cornerRadius(8)
-                                                        .overlay(
-                                                            RoundedRectangle(cornerRadius: 8)
-                                                                .stroke(Color.DinotisDefault.primary, lineWidth: 1)
-                                                                .frame(width: 36, height: 36)
-                                                        )
-                                                    
-                                                    Text(LocaleText.createSessionSchedule)
-                                                        .foregroundColor(.black)
-                                                        .font(.robotoRegular(size: 10))
-                                                        .multilineTextAlignment(.center)
-                                                }
-                                            }
-                                            .buttonStyle(.plain)
+                                                        .frame(height: 21)
+                                                )
+                                                .shadow(color: Color(red: 0.22, green: 0.29, blue: 0.41).opacity(0.06), radius: 20, x: 0, y: 0)
                                             
-                                            Button {
-                                                homeVM.routeToBundling()
-                                            } label: {
-                                                VStack {
-                                                    ZStack(alignment: .topTrailing) {
-                                                        Image.Dinotis.redPricetagIcon
+                                            //                                        if homeVM.hasNewNotif {
+                                            Text("9+")
+                                                .font(.robotoMedium(size: 12))
+                                                .foregroundColor(.white)
+                                                .padding(.horizontal, 3)
+                                                .padding(.vertical, 1)
+                                                .background(
+                                                    RoundedRectangle(cornerRadius: 4)
+                                                        .foregroundColor(.red)
+                                                )
+                                            
+                                            //                                        }
+                                        }
+                                    }
+                                    .isHidden(true, remove: true)
+                                    
+                                    Button {
+                                        homeVM.routeToNotification()
+                                    } label: {
+                                        ZStack(alignment: .topTrailing) {
+                                            
+                                            Circle()
+                                                .scaledToFit()
+                                                .frame(height: 48)
+                                                .foregroundColor(Color.white)
+                                                .overlay(
+                                                    Image.homeTalentNotificationIcon
+                                                        .resizable()
+                                                        .scaledToFit()
+                                                        .frame(height: 20)
+                                                )
+                                                .shadow(color: Color(red: 0.22, green: 0.29, blue: 0.41).opacity(0.06), radius: 20, x: 0, y: 0)
+                                            
+                                            if homeVM.hasNewNotif {
+                                                Text(homeVM.notificationBadgeCountStr)
+                                                    .font(.robotoMedium(size: 12))
+                                                    .foregroundColor(.white)
+                                                    .padding(.horizontal, 3)
+                                                    .padding(.vertical, 1)
+                                                    .background(
+                                                        RoundedRectangle(cornerRadius: 4)
+                                                            .foregroundColor(.red)
+                                                    )
+                                                
+                                            }
+                                        }
+                                    }
+                                }
+                                .padding()
+                                .padding(.top, 10)
+                                .alert(isPresented: $homeVM.isSuccessDelete) {
+                                    Alert(
+                                        title: Text(LocaleText.successTitle),
+                                        message: Text(LocaleText.meetingDeleted),
+                                        dismissButton: .default(Text(LocaleText.returnText), action: {
+                                            
+                                        }))
+                                }
+                                
+                                DinotisList {
+                                    Task {
+                                        homeVM.isShowAdditionalContent.toggle()
+                                        await homeVM.refreshList()
+                                    }
+                                    
+                                } introspectConfig: { view in
+                                    view.separatorStyle = .none
+                                    view.showsVerticalScrollIndicator = false
+                                    homeVM.use(for: view) { refresh in
+                                        Task {
+                                            await homeVM.refreshList()
+                                            refresh.endRefreshing()
+                                        }
+                                    }
+                                } content: {
+                                    Section {
+                                        VStack(spacing: 12) {
+                                            HStack(spacing: 15) {
+                                                VStack(alignment: .leading, spacing: 8) {
+                                                    Text(LocaleText.walletBalance)
+                                                        .font(.robotoRegular(size: 12))
+                                                        .foregroundColor(.black)
+                                                    
+                                                    Text(homeVM.currentBalances.toCurrency())
+                                                        .font(.robotoBold(size: 18))
+                                                        .foregroundColor(.black)
+                                                        .lineLimit(1)
+                                                }
+                                                
+                                                Spacer()
+                                                
+                                                Button(action: {
+                                                    homeVM.routeToWallet()
+                                                }, label: {
+                                                    HStack(spacing: 8) {
+                                                        Image.homeTalentWalletIcon
+                                                            .resizable()
+                                                            .scaledToFit()
+                                                            .frame(height: 16)
+                                                        
+                                                        Text(LocalizableText.homeCreatorWithdraw)
+                                                            .font(.robotoBold(size: 14))
+                                                            .foregroundColor(.black)
+                                                            .fixedSize(horizontal: true, vertical: false)
+                                                    }
+                                                    .padding(.horizontal, 10)
+                                                    .padding(.vertical, 8)
+                                                    .background(
+                                                        RoundedRectangle(cornerRadius: 8)
+                                                            .foregroundColor(.DinotisDefault.lightPrimary)
+                                                    )
+                                                    .overlay(
+                                                        RoundedRectangle(cornerRadius: 8)
+                                                            .inset(by: 0.5)
+                                                            .stroke(Color.DinotisDefault.primary, lineWidth: 1)
+                                                    )
+                                                })
+                                                .buttonStyle(.plain)
+                                            }
+                                            .padding(.vertical, 24)
+                                            .overlay(
+                                                Divider()
+                                                    .foregroundColor(Color.DinotisDefault.smokeWhite),
+                                                alignment: .bottom
+                                            )
+                                            
+                                            LazyVGrid(columns: columns) {
+                                                Button {
+                                                    homeVM.routeToTalentFormSchedule()
+                                                } label: {
+                                                    VStack {
+                                                        Image.Dinotis.redCameraVideoIcon
                                                             .resizable()
                                                             .scaledToFit()
                                                             .frame(width: 24)
@@ -290,387 +324,157 @@ struct TalentHomeView: View {
                                                                     .frame(width: 36, height: 36)
                                                             )
                                                         
-                                                        Image.Dinotis.newBadgeIcon
-                                                            .resizable()
-                                                            .scaledToFit()
-                                                            .frame(width: 18, height: 10)
-                                                            .padding(.top, -5)
-                                                            .padding(.trailing, -9)
-                                                    }
-                                                    
-                                                    Text(LocaleText.talentHomeBundlingMenu)
-                                                        .foregroundColor(.black)
-                                                        .font(.robotoRegular(size: 10))
-                                                        .multilineTextAlignment(.center)
-                                                }
-                                            }
-                                            .buttonStyle(.plain)
-                                            
-                                            Button {
-                                                homeVM.routeToTalentRateCardList()
-                                            } label: {
-                                                VStack {
-                                                    ZStack(alignment: .topTrailing) {
-                                                        Image.Dinotis.rateCardIcon
-                                                            .resizable()
-                                                            .scaledToFit()
-                                                            .frame(width: 36, height: 36)
-                                                        
-                                                        Image.Dinotis.newBadgeIcon
-                                                            .resizable()
-                                                            .scaledToFit()
-                                                            .frame(width: 18, height: 10)
-                                                            .padding(.top, -5)
-                                                            .padding(.trailing, -9)
-                                                    }
-                                                    
-                                                    Text(LocaleText.rateCardMenu)
-                                                        .foregroundColor(.black)
-                                                        .font(.robotoRegular(size: 10))
-                                                        .multilineTextAlignment(.center)
-                                                }
-                                            }
-                                            .buttonStyle(.plain)
-                                        }
-                                        
-                                        Spacer()
-                                    }
-                                    .padding()
-                                    .background(Color.white)
-                                    .cornerRadius(12)
-                                    .shadow(color: Color.dinotisShadow.opacity(0.08), radius: 8, x: 0, y: 0)
-                                    
-                                }
-                                .listRowBackground(Color.clear)
-                                
-                                Section {
-                                    Group {
-                                        if homeVM.tabNumb == 0 {
-//                                            VStack {
-                                                HStack {
-                                                    Image(systemName: "slider.horizontal.3")
-                                                        .resizable()
-                                                        .scaledToFit()
-                                                        .frame(height: 15)
-                                                        .foregroundColor(.DinotisDefault.primary)
-                                                    
-                                                    Text(LocaleText.generalFilterSchedule)
-                                                        .font(.robotoBold(size: 12))
-                                                        .foregroundColor(.DinotisDefault.primary)
-                                                    
-                                                    Spacer()
-                                                    
-                                                    Menu {
-                                                        Picker(selection: $homeVM.filterSelection) {
-                                                            ForEach(homeVM.filterOption, id: \.id) { item in
-                                                                Text(item.label.orEmpty())
-                                                                    .tag(item.label.orEmpty())
-                                                            }
-                                                        } label: {
-                                                            EmptyView()
-                                                        }
-                                                    } label: {
-                                                        HStack(spacing: 10) {
-                                                            Text(homeVM.filterSelection)
-                                                                .font(.robotoRegular(size: 12))
-                                                                .foregroundColor(.black)
-                                                                .frame(maxWidth: homeVM.filterSelection.isEmpty ? 100 : nil)
-                                                            
-                                                            Image(systemName: "chevron.down")
-                                                                .resizable()
-                                                                .scaledToFit()
-                                                                .frame(height: 5)
-                                                                .foregroundColor(.black)
-                                                        }
-                                                        .padding(.horizontal, 15)
-                                                        .padding(.vertical, 10)
-                                                        .background(
-                                                            RoundedRectangle(cornerRadius: 10)
-                                                                .foregroundColor(.secondaryViolet)
-                                                        )
-                                                        .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.DinotisDefault.primary, lineWidth: 1))
-                                                    }
-                                                }
-                                                .listRowInsets(EdgeInsets(top: 10, leading: 20, bottom: 0, trailing: 20))
-                                                .buttonStyle(.plain)
-                                                .padding(.bottom, 8)
-                                                .onChange(of: homeVM.filterSelection) { newValue in
-                                                    homeVM.filterScheduledMeeting(newValue: newValue)
-                                                }
-                                                
-                                                if homeVM.meetingData.unique().isEmpty {
-                                                    EmptyStateView(
-                                                        title: LocaleText.noScheduleLabel,
-                                                        description: LocaleText.createScheduleLabel,
-                                                        buttonText: LocaleText.createScheduleText,
-                                                        primaryAction: homeVM.routeToTalentFormSchedule
-                                                    )
-                                                    .listRowInsets(EdgeInsets(top: 10, leading: 20, bottom: 0, trailing: 20))
-                                                    
-                                                } else {
-                                                    ForEach(homeVM.meetingData.unique(), id: \.id) { items in
-                                                        if (homeVM.meetingData.unique().last?.id).orEmpty() == items.id {
-                                                            TalentScheduleCardView(
-                                                                data: .constant(items),
-                                                                isBundle: false,
-                                                                onTapButton: {
-                                                                    homeVM.routeToTalentDetailSchedule(meetingId: items.id.orEmpty())
-                                                                }, onTapEdit: {
-                                                                    homeVM.routeToEditSchedule(id: items.id.orEmpty())
-                                                                }, onTapDelete: {
-                                                                    homeVM.isShowDelete.toggle()
-                                                                    homeVM.meetingId = items.id.orEmpty()
-                                                                }
-                                                            )
-                                                            .listRowInsets(EdgeInsets(top: 10, leading: 20, bottom: 13, trailing: 20))
-                                                            .onAppear {
-                                                                if (homeVM.meetingData.unique().last?.id).orEmpty() == items.id {
-                                                                    Task {
-                                                                        homeVM.meetingParam.skip = homeVM.meetingParam.take
-                                                                        homeVM.meetingParam.take += 15
-                                                                        await homeVM.getTalentMeeting(isMore: true)
-                                                                    }
-                                                                }
-                                                            }
-                                                            
-                                                            if homeVM.isLoadingMore {
-                                                                HStack {
-                                                                    Spacer()
-                                                                    
-                                                                    ProgressView()
-                                                                        .progressViewStyle(.circular)
-                                                                    
-                                                                    Spacer()
-                                                                }
-                                                                .listRowInsets(EdgeInsets(top: 10, leading: 20, bottom: 13, trailing: 20))
-                                                            }
-                                                            
-                                                        } else {
-                                                            TalentScheduleCardView(
-                                                                data: .constant(items),
-                                                                isBundle: false,
-                                                                onTapButton: {
-                                                                    homeVM.routeToTalentDetailSchedule(meetingId: items.id.orEmpty())
-                                                                }, onTapEdit: {
-                                                                    homeVM.routeToEditSchedule(id: items.id.orEmpty())
-                                                                }, onTapDelete: {
-                                                                    homeVM.isShowDelete.toggle()
-                                                                    homeVM.meetingId = items.id.orEmpty()
-                                                                }
-                                                            )
-                                                            .listRowInsets(EdgeInsets(top: 10, leading: 20, bottom: 13, trailing: 20))
-                                                        }
-                                                    }
-                                                    
-                                                }
-                                            
-                                        } else {
-                                                HStack {
-                                                    Image(systemName: "slider.horizontal.3")
-                                                        .resizable()
-                                                        .scaledToFit()
-                                                        .frame(height: 15)
-                                                        .foregroundColor(.DinotisDefault.primary)
-                                                    
-                                                    Text(LocaleText.generalFilterSchedule)
-                                                        .font(.robotoBold(size: 12))
-                                                        .foregroundColor(.DinotisDefault.primary)
-                                                    
-                                                    Spacer()
-                                                    
-                                                    Menu {
-                                                        Picker(selection: $homeVM.filterSelectionRequest) {
-                                                            ForEach(homeVM.filterData, id: \.id) { item in
-                                                                Text(item.label.orEmpty())
-                                                                    .tag(item.label.orEmpty())
-                                                            }
-                                                        } label: {
-                                                            EmptyView()
-                                                        }
-                                                    } label: {
-                                                        HStack(spacing: 10) {
-                                                            Text(homeVM.filterSelectionRequest)
-                                                                .font(.robotoRegular(size: 12))
-                                                                .foregroundColor(.black)
-                                                            
-                                                            Image(systemName: "chevron.down")
-                                                                .resizable()
-                                                                .scaledToFit()
-                                                                .frame(height: 5)
-                                                                .foregroundColor(.black)
-                                                        }
-                                                        .padding(.horizontal, 15)
-                                                        .padding(.vertical, 10)
-                                                        .background(
-                                                            RoundedRectangle(cornerRadius: 10)
-                                                                .foregroundColor(.secondaryViolet)
-                                                        )
-                                                        .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.DinotisDefault.primary, lineWidth: 1))
-                                                    }
-                                                }
-                                                .buttonStyle(.plain)
-                                                .listRowInsets(EdgeInsets(top: 10, leading: 20, bottom: 0, trailing: 20))
-                                                .padding(.bottom, 8)
-                                                .onChange(of: homeVM.filterSelectionRequest) { item in
-                                                    homeVM.filterMeetingRequest(newValue: item)
-                                                }
-                                                
-                                                if homeVM.meetingRequestData.unique().isEmpty {
-                                                    EmptyStateView(
-                                                        title: LocaleText.emptyMeetingRequestTitle,
-                                                        description: LocaleText.emptyMeetingRequestSubtitle,
-                                                        buttonText: LocaleText.createRateCard,
-                                                        primaryAction: homeVM.routeToTalentRateCardList
-                                                    )
-                                                    .listRowInsets(EdgeInsets(top: 10, leading: 20, bottom: 0, trailing: 20))
-                                                } else {
-                                                    ForEach(homeVM.meetingRequestData.unique(), id:\.id) { item in
-                                                        if item.id == homeVM.meetingRequestData.unique().last?.id {
-                                                            RequestCardView(
-                                                                user: item.user,
-                                                                item: item,
-                                                                onTapDecline: {
-                                                                    homeVM.requestId = item.id.orEmpty()
-                                                                    homeVM.confirmationSheet = .declined
-                                                                },
-                                                                onTapAccept: {
-                                                                    homeVM.requestId = item.id.orEmpty()
-                                                                    homeVM.confirmationSheet = .accepted
-                                                                }
-                                                            )
-                                                            .listRowInsets(EdgeInsets(top: 10, leading: 20, bottom: 5, trailing: 20))
-                                                            .onAppear {
-                                                                Task {
-                                                                    if item.id == homeVM.meetingRequestData.unique().last?.id {
-                                                                        homeVM.rateCardQuery.skip = homeVM.rateCardQuery.take
-                                                                        homeVM.rateCardQuery.take += 15
-                                                                        await homeVM.getMeetingRequest(isMore: true)
-                                                                    }
-                                                                }
-                                                            }
-                                                            
-                                                            if homeVM.isLoadingMoreRequest {
-                                                                HStack {
-                                                                    Spacer()
-                                                                    
-                                                                    ProgressView()
-                                                                        .progressViewStyle(.circular)
-                                                                    
-                                                                    Spacer()
-                                                                }
-                                                                .listRowInsets(EdgeInsets(top: 10, leading: 20, bottom: 5, trailing: 20))
-                                                            }
-                                                        } else {
-                                                            RequestCardView(
-                                                                user: item.user,
-                                                                item: item,
-                                                                onTapDecline: {
-                                                                    homeVM.requestId = item.id.orEmpty()
-                                                                    homeVM.confirmationSheet = .declined
-                                                                },
-                                                                onTapAccept: {
-                                                                    homeVM.requestId = item.id.orEmpty()
-                                                                    homeVM.confirmationSheet = .accepted
-                                                                }
-                                                            )
-                                                            .listRowInsets(EdgeInsets(top: 10, leading: 20, bottom: 5, trailing: 20))
-                                                        }
-                                                    }
-                                                }
-                                        }
-                                    }
-                                    .buttonStyle(.plain)
-                                } header: {
-                                    VStack(spacing: 10) {
-                                        HStack(spacing: 0) {
-                                            Button {
-                                                homeVM.tabNumb = 0
-                                            } label: {
-                                                VStack(spacing: 25) {
-                                                    HStack(alignment: .center) {
-                                                        Text(LocaleText.scheduledSession)
-                                                            .font(homeVM.tabNumb == 0 ? .robotoBold(size: 12) : .robotoRegular(size: 12))
+                                                        Text(LocaleText.createSessionSchedule)
                                                             .foregroundColor(.black)
-                                                        
-                                                        if !homeVM.meetingCounter.isEmpty {
-                                                            Text(homeVM.meetingCounter)
-                                                                .font(.robotoMedium(size: 10))
-                                                                .foregroundColor(.white)
-                                                                .padding(5)
-                                                                .background(
+                                                            .font(.robotoRegular(size: 10))
+                                                            .multilineTextAlignment(.center)
+                                                    }
+                                                }
+                                                .buttonStyle(.plain)
+                                                
+                                                Button {
+                                                    homeVM.routeToBundling()
+                                                } label: {
+                                                    VStack {
+                                                        ZStack(alignment: .topTrailing) {
+                                                            Image.Dinotis.redPricetagIcon
+                                                                .resizable()
+                                                                .scaledToFit()
+                                                                .frame(width: 24)
+                                                                .padding(8)
+                                                                .background(Color.secondaryViolet)
+                                                                .frame(width: 36, height: 36)
+                                                                .cornerRadius(8)
+                                                                .overlay(
                                                                     RoundedRectangle(cornerRadius: 8)
-                                                                        .foregroundColor(.DinotisDefault.primary)
+                                                                        .stroke(Color.DinotisDefault.primary, lineWidth: 1)
+                                                                        .frame(width: 36, height: 36)
                                                                 )
+                                                            
+                                                            Image.Dinotis.newBadgeIcon
+                                                                .resizable()
+                                                                .scaledToFit()
+                                                                .frame(width: 18, height: 10)
+                                                                .padding(.top, -5)
+                                                                .padding(.trailing, -9)
                                                         }
-                                                    }
-                                                    .background(Color.clear)
-                                                    .padding(.bottom, !homeVM.meetingCounter.isEmpty ? -12 : -5)
-                                                    
-                                                    Rectangle()
-                                                        .frame(height: 1.5, alignment: .center)
-                                                        .foregroundColor(homeVM.tabNumb == 0 ? .DinotisDefault.primary : .DinotisDefault.primary.opacity(0.3))
-                                                        .padding(.leading, 5)
-                                                }
-                                            }
-                                            .buttonStyle(.plain)
-                                            
-                                            Button {
-                                                homeVM.tabNumb = 1
-                                            } label: {
-                                                VStack(spacing: 25) {
-                                                    HStack(alignment: .center) {
-                                                        Text(LocaleText.scheduleRequest)
-                                                            .font(homeVM.tabNumb == 1 ? .robotoBold(size: 12) : .robotoRegular(size: 12))
-                                                            .foregroundColor(.black)
                                                         
-                                                        if !homeVM.counterRequest.isEmpty {
-                                                            Text(homeVM.counterRequest)
-                                                                .font(.robotoMedium(size: 10))
-                                                                .foregroundColor(.white)
-                                                                .padding(5)
-                                                                .background(
-                                                                    RoundedRectangle(cornerRadius: 10)
-                                                                        .foregroundColor(.DinotisDefault.primary)
-                                                                )
-                                                        }
+                                                        Text(LocaleText.talentHomeBundlingMenu)
+                                                            .foregroundColor(.black)
+                                                            .font(.robotoRegular(size: 10))
+                                                            .multilineTextAlignment(.center)
                                                     }
-                                                    .background(Color.clear)
-                                                    .padding(.bottom, !homeVM.counterRequest.isEmpty ? -12 : -5)
+                                                }
+                                                .buttonStyle(.plain)
+                                                
+                                                Button {
+                                                    homeVM.routeToTalentRateCardList()
+                                                } label: {
+                                                    VStack {
+                                                        ZStack(alignment: .topTrailing) {
+                                                            Image.Dinotis.rateCardIcon
+                                                                .resizable()
+                                                                .scaledToFit()
+                                                                .frame(width: 36, height: 36)
+                                                            
+                                                            Image.Dinotis.newBadgeIcon
+                                                                .resizable()
+                                                                .scaledToFit()
+                                                                .frame(width: 18, height: 10)
+                                                                .padding(.top, -5)
+                                                                .padding(.trailing, -9)
+                                                        }
+                                                        
+                                                        Text(LocaleText.rateCardMenu)
+                                                            .foregroundColor(.black)
+                                                            .font(.robotoRegular(size: 10))
+                                                            .multilineTextAlignment(.center)
+                                                    }
+                                                }
+                                                .buttonStyle(.plain)
+                                            }
+                                            .padding(.vertical, 12)
+                                        }
+                                        .padding(.vertical, 8)
+                                        .padding(.horizontal, 25)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 11)
+                                                .foregroundColor(.white)
+                                        )
+                                        .shadow(color: Color.dinotisShadow.opacity(0.08), radius: 8, x: 0, y: 0)
+                                        .padding(.top, 10)
+                                    }
+                                    .listRowBackground(Color.clear)
+                                    
+                                    if homeVM.isShowAdditionalContent {
+                                        Section {
+                                            VStack {
+                                                HStack {
+                                                    Text("Jadwal Terdekat Kamu")
+                                                        .font(.robotoRegular(size: 16))
+                                                        .fontWeight(.semibold)
                                                     
-                                                    Rectangle()
-                                                        .frame(height: 1.5, alignment: .center)
-                                                        .foregroundColor(homeVM.tabNumb == 1 ? .DinotisDefault.primary : .DinotisDefault.primary.opacity(0.4))
-                                                        .padding(.trailing, 5)
+                                                    Spacer()
+                                                }
+                                                
+                                                ScrollView(.horizontal, showsIndicators: false) {
+                                                    LazyHStack {
+                                                        ForEach(0...3, id: \.self) { _ in
+                                                            SessionCard(
+                                                                with: SessionCardModel(
+                                                                    title: "Test",
+                                                                    date: Date().toStringFormat(with: .ddMMMMyyyy),
+                                                                    startAt: Date().toStringFormat(with: .HHmm),
+                                                                    endAt: Date().toStringFormat(with: .HHmm),
+                                                                    isPrivate: false,
+                                                                    isVerified: true,
+                                                                    photo: "",
+                                                                    name: "Test",
+                                                                    color: ["#45DSFD"],
+                                                                    description: "Test",
+                                                                    session: 0,
+                                                                    price: "0",
+                                                                    participants: 5,
+                                                                    isActive: true,
+                                                                    type: .session,
+                                                                    invoiceId: "",
+                                                                    status: "",
+                                                                    collaborationCount: 0,
+                                                                    collaborationName: "",
+                                                                    isOnBundling: false,
+                                                                    isAlreadyBooked: false
+                                                                )
+                                                            ) {
+                                                                
+                                                            } visitProfile: {
+                                                                
+                                                            }
+                                                            .frame(width: 310)
+                                                        }
+                                                        .padding(.bottom, 5)
+                                                    }
                                                 }
                                             }
-                                            .buttonStyle(.plain)
-                                            
+                                            .padding(.vertical, 10)
                                         }
-                                        .padding([.leading, .trailing, .top])
+                                        .listRowBackground(Color.clear)
+                                        .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 10, trailing: 20))
                                     }
-                                    .background(
-                                        RoundedCorner(radius: 20, corners: [.topLeft, .topRight])
-                                            .foregroundColor(.white)
-                                            .shadow(color: .black.opacity(0.035), radius: 3, x: 0, y: -5)
-                                    )
-                                    .padding(.horizontal, -20)
                                 }
-                                .listRowBackground(Color.white)
-                                .background(
-                                    Color.white
-                                )
+                                .alert(isPresented: $homeVM.isRefreshFailed) {
+                                    Alert(
+                                        title: Text(LocaleText.attention),
+                                        message: Text(LocaleText.sessionExpireText),
+                                        dismissButton: .default(Text(LocaleText.returnText), action: {
+                                            
+                                            homeVM.routeBack()
+                                        }))
+                                }
                                 
                             }
-                            .alert(isPresented: $homeVM.isRefreshFailed) {
-                                Alert(
-                                    title: Text(LocaleText.attention),
-                                    message: Text(LocaleText.sessionExpireText),
-                                    dismissButton: .default(Text(LocaleText.returnText), action: {
-                                        
-                                        homeVM.routeBack()
-                                    }))
-                            }
+                            .frame(height: homeVM.isShowAdditionalContent ? 570 : 340)
                             
+                            Spacer()
                         }
                         
                         if !(homeVM.meetingData.filter({ query in
