@@ -88,6 +88,8 @@ final class TalentHomeViewModel: ObservableObject {
     
     @Published var tabNumb = 0
     
+    @Published var isShowAdditionalContent = false
+    
     init(
         isFromUserType: Bool,
         getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
