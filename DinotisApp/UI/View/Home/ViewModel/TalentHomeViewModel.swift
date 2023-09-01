@@ -28,6 +28,7 @@ final class TalentHomeViewModel: ObservableObject {
 
     @Published var isFromUserType: Bool
     @Published var hasNewNotif = false
+    @Published var notificationBadgeCountStr = ""
 	@Published var confirmationSheet: MeetingRequestAcceptanceSelection? = nil
     @Published var filterSelection = ""
 	@Published var filterSelectionRequest = ""
@@ -122,6 +123,7 @@ final class TalentHomeViewModel: ObservableObject {
                 self?.success = true
                 self?.isLoading = false
                 self?.hasNewNotif = success.unreadNotificationCount.orZero() > 0
+                self?.notificationBadgeCountStr = success.unreadNotificationCount.orZero() > 9 ? "9+" : "\(success.unreadNotificationCount.orZero())"
             }
         case .failure(let failure):
             handleDefaultError(error: failure)

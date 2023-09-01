@@ -118,11 +118,17 @@ struct TalentHomeView: View {
                                             width: 48,
                                             height: 48
                                         )
+                                        .overlay(
+                                            Circle()
+                                                .stroke(Color.white, lineWidth: 2)
+                                        )
+                                        .shadow(color: Color(red: 0.22, green: 0.29, blue: 0.41).opacity(0.06), radius: 20, x: 0, y: 0)
                                         
-                                        VStack(alignment: .leading, spacing: 14) {
+                                        VStack(alignment: .leading, spacing: 0) {
                                             Text(LocaleText.helloText)
                                                 .font(.robotoRegular(size: 12))
                                                 .foregroundColor(.black)
+                                                .padding(.bottom, 6)
                                             
                                             Text((homeVM.userData?.name).orEmpty())
                                                 .font(.robotoBold(size: 14))
@@ -156,22 +162,67 @@ struct TalentHomeView: View {
                                 Spacer()
                                 
                                 Button {
-                                    homeVM.routeToNotification()
+                                    
                                 } label: {
                                     ZStack(alignment: .topTrailing) {
-                                        Image(systemName: "bell.fill")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: 20)
-                                            .foregroundColor(.dinotisStrokeSecondary)
-                                            .padding(9)
-                                            .background(Color.white)
-                                            .clipShape(Circle())
                                         
                                         Circle()
                                             .scaledToFit()
-                                            .frame(width: 10)
-                                            .foregroundColor(.red)
+                                            .frame(height: 48)
+                                            .foregroundColor(Color.white)
+                                            .overlay(
+                                                Image.homeTalentChatPrimaryIcon
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .frame(height: 21)
+                                            )
+                                            .shadow(color: Color(red: 0.22, green: 0.29, blue: 0.41).opacity(0.06), radius: 20, x: 0, y: 0)
+                                        
+//                                        if homeVM.hasNewNotif {
+                                            Text("9+")
+                                                .font(.robotoMedium(size: 12))
+                                                .foregroundColor(.white)
+                                                .padding(.horizontal, 3)
+                                                .padding(.vertical, 1)
+                                                .background(
+                                                    RoundedRectangle(cornerRadius: 4)
+                                                        .foregroundColor(.red)
+                                                )
+                                                
+//                                        }
+                                    }
+                                }
+                                .isHidden(true, remove: true)
+                                
+                                Button {
+                                    homeVM.routeToNotification()
+                                } label: {
+                                    ZStack(alignment: .topTrailing) {
+                                        
+                                        Circle()
+                                            .scaledToFit()
+                                            .frame(height: 48)
+                                            .foregroundColor(Color.white)
+                                            .overlay(
+                                                Image.homeTalentNotificationIcon
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .frame(height: 20)
+                                            )
+                                            .shadow(color: Color(red: 0.22, green: 0.29, blue: 0.41).opacity(0.06), radius: 20, x: 0, y: 0)
+                                        
+                                        if homeVM.hasNewNotif {
+                                            Text(homeVM.notificationBadgeCountStr)
+                                                .font(.robotoMedium(size: 12))
+                                                .foregroundColor(.white)
+                                                .padding(.horizontal, 3)
+                                                .padding(.vertical, 1)
+                                                .background(
+                                                    RoundedRectangle(cornerRadius: 4)
+                                                        .foregroundColor(.red)
+                                                )
+                                                
+                                        }
                                     }
                                 }
                             }
