@@ -64,6 +64,7 @@ public extension Image {
     
     static let sessionCardCameraIcon = Image("ic-camera-session-card", bundle: Bundle.module)
     static let sessionCardCoinIcon = Image("ic-coin-session-card", bundle: Bundle.module)
+    static let sessionCardCoinYellowPurpleIcon = Image("ic-coin-yellow-purple", bundle: Bundle.module)
     static let sessionCardDateIcon = Image("ic-date-session-card", bundle: Bundle.module)
     static let sessionCardElectricIcon = Image("ic-electric-session-card", bundle: Bundle.module)
     static let sessionCardListSolidIcon = Image("ic-list-solid-session-card", bundle: Bundle.module)
