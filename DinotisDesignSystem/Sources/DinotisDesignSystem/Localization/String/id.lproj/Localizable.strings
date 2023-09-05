@@ -518,3 +518,5 @@
 "status_unconfirmed_session" = "Jadwal belum diatur";
 "status_canceled_session" = "Jadwal dibatalkan";
 "status_completed_session" = "Sesi selesai";
+
+"home_creator_nearest_title" = "Jadwal Terdekat Kamu";

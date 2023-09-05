@@ -2348,6 +2348,11 @@ public enum LocalizableText {
         comment: "creator create session label"
     )
     
+    public static let homeCreatorNearestTitle = NSLocalizedString(
+        "home_creator_nearest_title",
+        bundle: .module,
+        comment: "nearest schedule title"
+    )
 }
 
 
