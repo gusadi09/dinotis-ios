@@ -416,6 +416,7 @@ struct TalentHomeView: View {
                                                     
                                                     Spacer()
                                                 }
+                                                .padding(.horizontal)
                                                 
                                                 ScrollView(.horizontal, showsIndicators: false) {
                                                     LazyHStack {
@@ -449,12 +450,13 @@ struct TalentHomeView: View {
                                                         }
                                                         .padding(.bottom, 5)
                                                     }
+                                                    .padding(.horizontal)
                                                 }
                                             }
                                             .padding(.vertical, 10)
                                         }
                                         .listRowBackground(Color.clear)
-                                        .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 10, trailing: 20))
+                                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
                                     }
                                 }
                                 .alert(isPresented: $homeVM.isRefreshFailed) {
