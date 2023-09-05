@@ -2266,6 +2266,7 @@ public enum LocalizableText {
         bundle: .module,
         comment: "force ended"
     )
+    
     public static let homeCreatorWithdraw = NSLocalizedString(
         "home_creator_withdraw",
         bundle: .module,
@@ -2347,6 +2348,11 @@ public enum LocalizableText {
         comment: "creator create session label"
     )
     
+    public static let homeCreatorNearestTitle = NSLocalizedString(
+        "home_creator_nearest_title",
+        bundle: .module,
+        comment: "nearest schedule title"
+    )
 }
 
 

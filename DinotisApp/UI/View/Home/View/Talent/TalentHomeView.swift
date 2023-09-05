@@ -402,50 +402,48 @@ struct TalentHomeView: View {
                                                 .foregroundColor(.white)
                                                 .shadow(color: Color.dinotisShadow.opacity(0.08), radius: 8, x: 0, y: 0)
                                         )
+                                        .shadow(color: Color.dinotisShadow.opacity(0.08), radius: 8, x: 0, y: 0)
                                         .padding(.top, 10)
                                     }
                                     .listRowBackground(Color.clear)
                                     
-                                    if homeVM.isShowAdditionalContent {
+                                    if !homeVM.closestSessions.isEmpty {
                                         Section {
                                             VStack {
                                                 HStack {
-                                                    Text("Jadwal Terdekat Kamu")
+                                                    Text(LocalizableText.homeCreatorNearestTitle)
                                                         .font(.robotoRegular(size: 16))
                                                         .fontWeight(.semibold)
                                                     
                                                     Spacer()
                                                 }
+                                                .padding(.horizontal)
                                                 
                                                 ScrollView(.horizontal, showsIndicators: false) {
                                                     LazyHStack {
-                                                        ForEach(0...3, id: \.self) { _ in
+                                                        ForEach(homeVM.closestSessions, id: \.id) { item in
                                                             SessionCard(
                                                                 with: SessionCardModel(
-                                                                    title: "Test",
-                                                                    date: Date().toStringFormat(with: .ddMMMMyyyy),
-                                                                    startAt: Date().toStringFormat(with: .HHmm),
-                                                                    endAt: Date().toStringFormat(with: .HHmm),
-                                                                    isPrivate: false,
-                                                                    isVerified: true,
-                                                                    photo: "",
-                                                                    name: "Test",
-                                                                    color: ["#45DSFD"],
-                                                                    description: "Test",
-                                                                    session: 0,
-                                                                    price: "0",
-                                                                    participants: 5,
-                                                                    isActive: true,
-                                                                    type: .session,
-                                                                    invoiceId: "",
-                                                                    status: "",
-                                                                    collaborationCount: 0,
-                                                                    collaborationName: "",
-                                                                    isOnBundling: false,
+                                                                    title: (item.title).orEmpty(),
+                                                                    date: DateUtils.dateFormatter((item.startAt).orCurrentDate(), forFormat: .ddMMMMyyyy),
+                                                                    startAt: DateUtils.dateFormatter((item.startAt).orCurrentDate(), forFormat: .HHmm),
+                                                                    endAt: DateUtils.dateFormatter((item.endAt).orCurrentDate(), forFormat: .HHmm),
+                                                                    isPrivate: (item.isPrivate) ?? false,
+                                                                    isVerified: (item.user?.isVerified) ?? false,
+                                                                    photo: (item.user?.profilePhoto).orEmpty(),
+                                                                    name: (item.user?.name).orEmpty(),
+                                                                    color: item.background,
+                                                                    isActive: item.endAt.orCurrentDate() > Date(),
+                                                                    collaborationCount: (item.meetingCollaborations ?? []).count,
+                                                                    collaborationName: (item.meetingCollaborations ?? []).compactMap({
+                                                                        (
+                                                                            $0.user?.name
+                                                                        ).orEmpty()
+                                                                    }).joined(separator: ", "),
                                                                     isAlreadyBooked: false
                                                                 )
                                                             ) {
-                                                                
+                                                                homeVM.routeToTalentDetailSchedule(meetingId: item.id.orEmpty())
                                                             } visitProfile: {
                                                                 
                                                             }
@@ -453,12 +451,13 @@ struct TalentHomeView: View {
                                                         }
                                                         .padding(.bottom, 5)
                                                     }
+                                                    .padding(.horizontal)
                                                 }
                                             }
                                             .padding(.vertical, 10)
                                         }
                                         .listRowBackground(Color.clear)
-                                        .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 10, trailing: 20))
+                                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
                                     }
                                 }
                                 .alert(isPresented: $homeVM.isRefreshFailed) {
@@ -472,10 +471,11 @@ struct TalentHomeView: View {
                                 }
                                 
                             }
-                            .frame(height: homeVM.isShowAdditionalContent ? 570 : 340)
+                            .frame(height: !homeVM.closestSessions.isEmpty ? 570 : 340)
                             
                             Spacer()
                         }
+                        
                     }
                     
                     NavigationLink(
@@ -694,12 +694,12 @@ struct TalentHomeView: View {
                 }
                 
                 withAnimation {
-                    homeVM.offsetY = homeVM.isShowAdditionalContent ? 562 : 344
+                    homeVM.offsetY = !homeVM.closestSessions.isEmpty ? 562 : 344
                 }
             }
-            .onChange(of: homeVM.isShowAdditionalContent) { newValue in
+            .onChange(of: homeVM.closestSessions.isEmpty) { newValue in
                 withAnimation {
-                    homeVM.offsetY = homeVM.isShowAdditionalContent ? 562 : 344
+                    homeVM.offsetY = !homeVM.closestSessions.isEmpty ? 562 : 344
                 }
             }
         }
