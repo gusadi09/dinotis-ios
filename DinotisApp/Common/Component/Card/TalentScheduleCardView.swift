@@ -10,10 +10,18 @@ import CurrencyFormatter
 import DinotisDesignSystem
 import DinotisData
 
+enum CreatorSessionStatus {
+    case ready
+    case waitingNewSchedule
+    case unconfirmed
+    case canceled
+    case completed
+}
+
 struct TalentScheduleCardView: View {
     @State var isShowMenu = false
     @Binding var data: MeetingDetailResponse
-    
+    @State var status: CreatorSessionStatus = .ready
     @State var isShowCollabList = false
 
 	let isBundle: Bool
@@ -28,10 +36,28 @@ struct TalentScheduleCardView: View {
         ZStack(alignment: .topTrailing) {
             VStack(alignment: .leading, spacing: 10) {
                 HStack {
-                    Image("ic-video-conf")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 32)
+                    switch status {
+                    case .ready:
+                        Image("ic-video-conf")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 32)
+                    default:
+                        Text(statusText())
+                            .font(.robotoMedium(size: 12))
+                            .foregroundColor(statusColor())
+                            .padding(.vertical, 6)
+                            .padding(.horizontal, 8)
+                            .background(
+                                RoundedRectangle(cornerRadius: 60)
+                                    .fill(statusColor().opacity(0.1))
+                            )
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 60)
+                                    .inset(by: 0.5)
+                                    .stroke(statusColor(), lineWidth: 1)
+                            }
+                    }
                     
                     Spacer()
                     
@@ -85,7 +111,7 @@ struct TalentScheduleCardView: View {
                             }
                         } label: {
                             Image(systemName: "ellipsis")
-                                .foregroundColor(.DinotisDefault.darkPrimary)
+                                .foregroundColor(.DinotisDefault.primary)
                                 .imageScale(.large)
                                 .padding()
                         }
@@ -208,11 +234,11 @@ struct TalentScheduleCardView: View {
                                 .foregroundColor(.black)
                                 .padding(.vertical, 5)
                                 .padding(.horizontal)
-                                .background(Color("btn-color-1"))
+                                .background(Color.DinotisDefault.lightPrimary)
                                 .clipShape(Capsule())
                                 .overlay(
                                     Capsule()
-                                        .stroke(Color("btn-stroke-1"), lineWidth: 1.0)
+                                        .stroke(Color.DinotisDefault.primary, lineWidth: 1.0)
                                 )
                             
                         } else if data.isLiveStreaming ?? false {
@@ -221,11 +247,11 @@ struct TalentScheduleCardView: View {
                                 .foregroundColor(.black)
                                 .padding(.vertical, 5)
                                 .padding(.horizontal)
-                                .background(Color("btn-color-1"))
+                                .background(Color.DinotisDefault.lightPrimary)
                                 .clipShape(Capsule())
                                 .overlay(
                                     Capsule()
-                                        .stroke(Color("btn-stroke-1"), lineWidth: 1.0)
+                                        .stroke(Color.DinotisDefault.primary, lineWidth: 1.0)
                                 )
                         } else {
                             Text(NSLocalizedString("private", comment: ""))
@@ -233,11 +259,11 @@ struct TalentScheduleCardView: View {
                                 .foregroundColor(.black)
                                 .padding(.vertical, 5)
                                 .padding(.horizontal)
-                                .background(Color("btn-color-1"))
+                                .background(Color.DinotisDefault.lightPrimary)
                                 .clipShape(Capsule())
                                 .overlay(
                                     Capsule()
-                                        .stroke(Color("btn-stroke-1"), lineWidth: 1.0)
+                                        .stroke(Color.DinotisDefault.primary, lineWidth: 1.0)
                                 )
                         }
                     }
@@ -249,7 +275,7 @@ struct TalentScheduleCardView: View {
                 }
                 
                 HStack(spacing: 10) {
-                    Image.Dinotis.coinIcon
+                    Image.sessionCardCoinYellowPurpleIcon
                         .resizable()
                         .scaledToFit()
                         .frame(height: 15)
@@ -275,11 +301,11 @@ struct TalentScheduleCardView: View {
                             .foregroundColor(.black)
                             .padding()
                             .padding(.horizontal, 10)
-                            .background(Color("btn-color-1"))
+                            .background(Color.DinotisDefault.lightPrimary)
                             .cornerRadius(8)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color("btn-stroke-1"), lineWidth: 1.0)
+                                    .stroke(Color.DinotisDefault.primary, lineWidth: 1.0)
                             )
                             .multilineTextAlignment(.center)
                     })
@@ -287,59 +313,7 @@ struct TalentScheduleCardView: View {
                     
                 }
                 .padding(.top, 10)
-
-				if data.endedAt != nil {
-					HStack {
-						Spacer()
-						
-						Text(LocaleText.sessionHasEnded)
-							.font(.robotoRegular(size: 10))
-							.foregroundColor(.white)
-						
-						Spacer()
-					}
-					.padding(.vertical, 5)
-					.background(
-						Capsule()
-							.foregroundColor(.attentionPink)
-					)
-					.padding(.top, 6)
-				} else if let request = data.meetingRequest, request.isConfirmed == nil {
-					HStack {
-						Spacer()
-
-						Text(LocaleText.sessionNeedConfirmationText)
-							.font(.robotoRegular(size: 10))
-							.foregroundColor(.white)
-
-						Spacer()
-					}
-					.padding(.vertical, 5)
-					.background(
-						Capsule()
-							.foregroundColor(.softYellowDinotis)
-					)
-					.padding(.top, 6)
-				} else if let request = data.meetingRequest, !(request.isConfirmed ?? false) {
-					HStack {
-						Spacer()
-
-						Text(LocaleText.sessionCancelledText)
-							.font(.robotoRegular(size: 10))
-							.foregroundColor(.white)
-
-						Spacer()
-					}
-					.padding(.vertical, 5)
-					.background(
-						Capsule()
-							.foregroundColor(.attentionPink)
-					)
-					.padding(.top, 6)
-				}
-                
             }
-            
         }
         .sheet(isPresented: $isShowCollabList, content: {
             if #available(iOS 16.0, *) {
@@ -368,6 +342,36 @@ struct TalentScheduleCardView: View {
         })
         .onDisappear {
             isShowMenu = false
+        }
+    }
+    
+    private func statusText() -> String {
+        switch status {
+        case .waitingNewSchedule:
+            return LocalizableText.statusWaitingNewSession
+        case .unconfirmed:
+            return LocalizableText.statusUnconfirmedSession
+        case .canceled:
+            return LocalizableText.statusCanceledSession
+        case .completed:
+            return LocalizableText.statusCompletedSession
+        default:
+            return ""
+        }
+    }
+    
+    private func statusColor() -> Color {
+        switch status {
+        case .waitingNewSchedule:
+            return .DinotisDefault.orange
+        case .unconfirmed:
+            return .DinotisDefault.primary
+        case .canceled:
+            return .DinotisDefault.red
+        case .completed:
+            return .DinotisDefault.black1
+        default:
+            return .DinotisDefault.primary
         }
     }
 }

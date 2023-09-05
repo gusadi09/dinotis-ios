@@ -5,11 +5,19 @@
 //  Created by Gus Adi on 16/02/22.
 //
 
-import Foundation
+import DinotisDesignSystem
 import SwiftUI
 import Combine
 import DinotisData
 import OneSignal
+
+enum TalentHomeSection {
+    case scheduled
+    case notConfirmed
+    case pending
+    case canceled
+    case completed
+}
 
 final class TalentHomeViewModel: ObservableObject {
     
@@ -35,6 +43,45 @@ final class TalentHomeViewModel: ObservableObject {
     private var onValueChanged: ((_ refreshControl: UIRefreshControl) -> Void)?
     @Published var filterOption = [OptionQueryResponse]()
     @Published var meetingData = [MeetingDetailResponse]()
+    
+    var creatorSessions: [MeetingDetailResponse] {
+        switch currentSection {
+        case .scheduled:
+            return meetingData.filter { meeting in
+                meeting.endedAt == nil &&
+                (meeting.meetingRequest == nil ||
+                 meeting.meetingRequest?.isConfirmed == true)
+            }
+        case .notConfirmed:
+            return meetingData.filter { meeting in
+                meeting.meetingRequest?.isConfirmed == nil
+            }
+        case .pending:
+            return meetingData.filter { meeting in
+                meeting.meetingRequest?.isConfirmed == nil &&
+                meeting.meetingRequest?.isAccepted == true &&
+                meeting.meetingRequest != nil
+            }
+        case .canceled:
+            return meetingData.filter { meeting in
+                meeting.meetingRequest?.isConfirmed == false ||
+                meeting.meetingRequest?.isAccepted == false
+            }
+        case .completed:
+            return meetingData.filter { meeting in
+                meeting.endedAt != nil
+            }
+        }
+    }
+    
+    func pendingStatus(of meeting: MeetingDetailResponse) -> CreatorSessionStatus {
+        if meeting.meetingRequest?.isConfirmed == nil {
+            return .unconfirmed
+        } else {
+            return .waitingNewSchedule
+        }
+    }
+    
     @Published var meetingParam = MeetingsPageRequest(take: 15, skip: 0, isStarted: "", isEnded: "false", isAvailable: "true")
     
     @Published var photoProfile: String?
@@ -59,6 +106,15 @@ final class TalentHomeViewModel: ObservableObject {
 	@Published var filterData = [OptionMeetingRequestData]()
 	@Published var counterRequest = ""
 	@Published var meetingCounter = ""
+    var pendingCounter: String {
+        let pendingMeeting = meetingData.filter { meeting in
+            meeting.meetingRequest?.isConfirmed == nil &&
+            meeting.meetingRequest?.isAccepted == true &&
+            meeting.meetingRequest != nil
+        }
+        return pendingMeeting.count <= 10 ? "\(pendingMeeting.count)" : "10+"
+    }
+    
     
     @Published var nameOfUser: String?
     @Published var userData: UserResponse?
@@ -89,6 +145,18 @@ final class TalentHomeViewModel: ObservableObject {
     @Published var tabNumb = 0
     
     @Published var isShowAdditionalContent = false
+    @Published var tabSections: [TalentHomeSection] = [
+        .scheduled, .notConfirmed, .pending, .canceled, .completed
+    ]
+    @Published var currentSection: TalentHomeSection = .scheduled
+    
+    @Published var isSortByLatest = true
+    
+    @Published var translation: CGSize = .zero
+    @Published var offsetY: CGFloat = 550
+    var sheetHeight: CGFloat {
+        isShowAdditionalContent ? 562 : 320
+    }
     
     init(
         isFromUserType: Bool,
@@ -112,6 +180,18 @@ final class TalentHomeViewModel: ObservableObject {
         self.counterUseCase = counterUseCase
         self.getTalentMeetingUseCase = getTalentMeetingUseCase
         self.deleteMeetingUseCase = deleteMeetingUseCase
+    }
+    
+    func getBottomSafeArea() -> CGFloat{
+        let keyWindow = UIApplication.shared.connectedScenes
+            .filter({ $0.activationState == .foregroundActive })
+            .map({ $0 as? UIWindowScene })
+            .compactMap({ $0 })
+            .first?.windows
+            .filter({ $0.isKeyWindow }).first
+        
+        return keyWindow?.safeAreaInsets.bottom ?? 0
+        
     }
     
     func getCounter() async {
@@ -265,7 +345,8 @@ final class TalentHomeViewModel: ObservableObject {
         self.success = false
         self.error = nil
     }
-
+    
+    @MainActor
     func refreshList() async {
         Task {
             self.meetingParam.skip = 0

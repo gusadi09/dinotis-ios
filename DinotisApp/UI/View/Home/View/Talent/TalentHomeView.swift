@@ -91,7 +91,7 @@ struct TalentHomeView: View {
                     )
                 }
                 
-                ZStack(alignment: .center) {
+                ZStack(alignment: .bottom) {
                     
                     ZStack(alignment: .bottomTrailing) {
                         VStack {
@@ -400,8 +400,8 @@ struct TalentHomeView: View {
                                         .background(
                                             RoundedRectangle(cornerRadius: 11)
                                                 .foregroundColor(.white)
+                                                .shadow(color: Color.dinotisShadow.opacity(0.08), radius: 8, x: 0, y: 0)
                                         )
-                                        .shadow(color: Color.dinotisShadow.opacity(0.08), radius: 8, x: 0, y: 0)
                                         .padding(.top, 10)
                                     }
                                     .listRowBackground(Color.clear)
@@ -475,24 +475,6 @@ struct TalentHomeView: View {
                             .frame(height: homeVM.isShowAdditionalContent ? 570 : 340)
                             
                             Spacer()
-                        }
-                        
-                        if !(homeVM.meetingData.filter({ query in
-                            !(query.isLiveStreaming ?? false)
-                        }).isEmpty) {
-                            Button(action: {
-                                homeVM.routeToTalentFormSchedule()
-                            }, label: {
-                                Image.Dinotis.plusIcon
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: 22)
-                                    .padding()
-                                    .background(Color.DinotisDefault.primary)
-                                    .clipShape(Circle())
-                                    .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 0)
-                            })
-                            .padding()
                         }
                     }
                     
@@ -570,6 +552,95 @@ struct TalentHomeView: View {
                             }
                         )
                     }
+                    
+                    Color.white
+                        .cornerRadius(homeVM.translation.height > homeVM.getBottomSafeArea() ? 24 : 0, corners: [.topLeft, .topRight])
+                        .ignoresSafeArea(edges: .bottom)
+                        .frame(height: homeVM.getBottomSafeArea() + (homeVM.translation.height > homeVM.getBottomSafeArea() ? .zero : -homeVM.translation.height))
+                    
+                    TalentHomeBottomSheet(viewModel: homeVM) {
+                        Group {
+                            switch homeVM.currentSection {
+                            case .scheduled:
+                                ScheduledSessionView(viewModel: homeVM)
+                            case .notConfirmed:
+                                RequestedSessionView(viewModel: homeVM)
+                            case .pending:
+                                PendingSessionView(viewModel: homeVM)
+                            case .canceled:
+                                CanceledSessionView(viewModel: homeVM)
+                            case .completed:
+                                CompletedSessionView(viewModel: homeVM)
+                            }
+                        }
+                    } header: {
+                        Group {
+                            switch homeVM.currentSection {
+                            case .scheduled:
+                                EmptyView()
+                            default:
+                                HStack {
+                                    HStack(spacing: 12) {
+                                        Image(systemName: "slider.horizontal.3")
+                                        
+                                        Text(LocalizableText.sortLabel)
+                                            .font(.robotoBold(size: 12))
+                                    }
+                                    .foregroundColor(.DinotisDefault.primary)
+                                    
+                                    Spacer()
+                                    
+                                    Menu {
+                                        Button {
+                                            withAnimation {
+                                                homeVM.isSortByLatest = true
+                                            }
+                                        } label: {
+                                            HStack {
+                                                Text(LocalizableText.sortLatest)
+                                                Image(systemName: "checkmark")
+                                                    .isHidden(!homeVM.isSortByLatest)
+                                            }
+                                        }
+                                        
+                                        Button {
+                                            withAnimation {
+                                                homeVM.isSortByLatest = false
+                                            }
+                                        } label: {
+                                            HStack {
+                                                Text(LocalizableText.sortEarliest)
+                                                Image(systemName: "checkmark")
+                                                    .isHidden(homeVM.isSortByLatest)
+                                            }
+                                        }
+                                        
+                                    } label: {
+                                        HStack(spacing: 4) {
+                                            Text(homeVM.isSortByLatest ? LocalizableText.sortLatest : LocalizableText.sortEarliest)
+                                                .font(.robotoMedium(size: 12))
+                                            
+                                            Image(systemName: "chevron.down")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 10, height: 5)
+                                        }
+                                        .foregroundColor(.DinotisDefault.primary)
+                                        .padding(.horizontal, 18)
+                                        .padding(.vertical, 9)
+                                        .background(Color.DinotisDefault.lightPrimary)
+                                        .cornerRadius(8)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 8)
+                                                .inset(by: 0.5)
+                                                .stroke(Color.DinotisDefault.primary, lineWidth: 1)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
                     DinotisLoadingView(.fullscreen, hide: !homeVM.isLoading)
                     
                     DinotisLoadingView(.fullscreen, hide: !homeVM.isLoadingConfirm)
@@ -621,12 +692,190 @@ struct TalentHomeView: View {
                 NotificationCenter.default.addObserver(forName: .creatorHome, object: nil, queue: .main) { _ in
                     homeVM.route = nil
                 }
+                
+                withAnimation {
+                    homeVM.offsetY = homeVM.isShowAdditionalContent ? 562 : 344
+                }
+            }
+            .onChange(of: homeVM.isShowAdditionalContent) { newValue in
+                withAnimation {
+                    homeVM.offsetY = homeVM.isShowAdditionalContent ? 562 : 344
+                }
             }
         }
     }
 }
 
 extension TalentHomeView {
+    
+    struct TalentHomeBottomSheet<Content: View, Header: View>: View {
+        var content: Content
+        var header: Header
+        @ObservedObject var viewModel: TalentHomeViewModel
+        
+        init(viewModel: TalentHomeViewModel, content: @escaping () -> Content, header: @escaping () -> Header) {
+            self.content = content()
+            self.header = header()
+            self.viewModel = viewModel
+        }
+        
+        var body: some View {
+            VStack(alignment: .leading, spacing: 0) {
+                HStack {
+                    Spacer()
+                    Rectangle()
+                        .foregroundColor(.clear)
+                        .frame(width: 119, height: 4)
+                        .background(Color(red: 0.91, green: 0.91, blue: 0.91))
+                        .cornerRadius(36)
+                    
+                    Spacer()
+                }
+                .padding(.vertical)
+                
+                VStack(spacing: 16) {
+                    ScrollViewReader { scrollView in
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 4) {
+                                ForEach(viewModel.tabSections, id: \.self) { tab in
+                                    Button {
+                                        withAnimation {
+                                            viewModel.currentSection = tab
+                                            scrollView.scrollTo(tab, anchor: .center)
+                                            viewModel.offsetY = .zero
+                                        }
+                                    } label: {
+                                        HStack(spacing: 8) {
+                                            Text(headerText(for: tab))
+                                                .font(tab == viewModel.currentSection ? .robotoBold(size: 14) : .robotoRegular(size: 14))
+                                                .foregroundColor(tab == viewModel.currentSection ? .DinotisDefault.primary : .DinotisDefault.black1)
+                                                .frame(maxWidth: .infinity)
+                                            
+                                            switch tab {
+                                            case .scheduled:
+                                                Text(viewModel.meetingCounter)
+                                                    .font(.robotoBold(size: 12))
+                                                    .foregroundColor(.white)
+                                                    .padding(4)
+                                                    .frame(width: 28)
+                                                    .background(Color.DinotisDefault.primary)
+                                                    .cornerRadius(6)
+                                                    .isHidden(viewModel.meetingCounter.isEmpty || viewModel.meetingCounter == "0", remove: viewModel.meetingCounter.isEmpty || viewModel.meetingCounter == "0")
+                                            case .notConfirmed:
+                                                Text(viewModel.counterRequest)
+                                                    .font(.robotoBold(size: 12))
+                                                    .foregroundColor(.white)
+                                                    .padding(4)
+                                                    .frame(width: 28)
+                                                    .background(Color.DinotisDefault.primary)
+                                                    .cornerRadius(6)
+                                                    .isHidden(viewModel.counterRequest.isEmpty || viewModel.counterRequest == "0", remove: viewModel.counterRequest.isEmpty || viewModel.counterRequest == "0")
+                                            case .pending:
+                                                Text(viewModel.pendingCounter)
+                                                    .font(.robotoBold(size: 12))
+                                                    .foregroundColor(.white)
+                                                    .padding(4)
+                                                    .frame(width: 28)
+                                                    .background(Color.DinotisDefault.primary)
+                                                    .cornerRadius(6)
+                                                    .isHidden(viewModel.pendingCounter.isEmpty || viewModel.pendingCounter == "0", remove: viewModel.pendingCounter.isEmpty || viewModel.pendingCounter == "0")
+                                            default:
+                                                EmptyView()
+                                            }
+                                        }
+                                        .padding(12)
+                                        .frame(maxHeight: 38)
+                                        .cornerRadius(20)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 20)
+                                                .fill(tab == viewModel.currentSection ? Color.DinotisDefault.lightPrimary : .white)
+                                        )
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 20)
+                                                .inset(by: 0.5)
+                                                .stroke(Color.DinotisDefault.lightPrimary, lineWidth: 1)
+                                        )
+                                    }
+                                    .id(tab)
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
+                    }
+                    
+                    Rectangle()
+                        .fill(Color.DinotisDefault.lightPrimary)
+                        .frame(height: 1)
+                    
+                    header
+                        .padding([.bottom, .horizontal])
+                }
+                
+                ScrollView(showsIndicators: false) {
+                    content
+                        .padding(.horizontal)
+                        .offset("SCROLL") { scroll in
+                            withAnimation(.spring(response: 0.4)) {
+                                if viewModel.offsetY < viewModel.sheetHeight {
+                                    if scroll > 60 {
+                                        viewModel.offsetY = viewModel.sheetHeight
+                                    }
+                                } else {
+                                    if scroll < -60 {
+                                        viewModel.offsetY = .zero
+                                    }
+                                }
+                            }
+                        }
+                }
+                .coordinateSpace(name: "SCROLL")
+            }
+            .background(
+                VStack(spacing: 0) {
+                    Color.white
+                        .cornerRadius(20, corners: [.topLeft, .topRight])
+                        .shadow(color: Color(red: 0.61, green: 0.69, blue: 0.81).opacity(0.32), radius: 13.5, x: 0, y: 0)
+                    Color.white
+                }
+            )
+            .ignoresSafeArea(edges: .bottom)
+            .offset(y: viewModel.translation.height + viewModel.offsetY)
+            .gesture(
+                DragGesture()
+                    .onChanged({ value in
+                        if viewModel.offsetY < viewModel.sheetHeight+20 {
+                            viewModel.translation = value.translation
+                        }
+                    })
+                    .onEnded({ value in
+                        withAnimation(.spring(response: 0.5)) {
+                            if value.translation.height < -80 {
+                                viewModel.offsetY = .zero
+                            } else {
+                                viewModel.offsetY = viewModel.sheetHeight
+                            }
+                            viewModel.translation = .zero
+                            
+                        }
+                    })
+            )
+        }
+        
+        private func headerText(for tab: TalentHomeSection) -> String {
+            switch tab {
+            case .scheduled:
+                return LocalizableText.filterScheduled
+            case .notConfirmed:
+                return LocalizableText.filterUnconfirmed
+            case .pending:
+                return LocalizableText.filterPending
+            case .canceled:
+                return LocalizableText.filterCanceled
+            case .completed:
+                return LocalizableText.filterSessionCompleted
+            }
+        }
+    }
 
 	struct DeclinedSheet: View {
 
@@ -868,28 +1117,308 @@ extension TalentHomeView {
 					.font(.robotoRegular(size: 12))
 					.multilineTextAlignment(.center)
 					.foregroundColor(.black)
-
-				Button(action: {
-					primaryAction()
-				}, label: {
-					HStack {
-						Spacer()
-						Text(buttonText)
-							.font(.robotoBold(size: 12))
-							.foregroundColor(.white)
-							.padding()
-						Spacer()
-					}
-					.background(Color.DinotisDefault.primary)
-					.cornerRadius(8)
-					.padding()
-				})
+                    .padding(.bottom, 20)
+                
+                DinotisPrimaryButton(
+                    text: buttonText,
+                    type: .adaptiveScreen,
+                    textColor: .white,
+                    bgColor: .DinotisDefault.primary
+                ) {
+                    primaryAction()
+                }
 			}
-			.padding()
-			.background(Color.white)
-			.cornerRadius(12)
-			.shadow(color: Color.dinotisShadow.opacity(0.1), radius: 10, x: 0.0, y: 0.0)
-			.padding(.vertical)
 		}
 	}
+    
+    struct ScheduledSessionView: View {
+        
+        @ObservedObject var viewModel: TalentHomeViewModel
+        
+        var body: some View {
+            LazyVStack(alignment: .leading, spacing: 12) {
+                if !viewModel.creatorSessions.unique().isEmpty {
+                    ForEach(viewModel.creatorSessions.unique(), id: \.id) { meeting in
+                        TalentScheduleCardView(
+                            isShowMenu: true,
+                            data: .constant(meeting),
+                            isShowCollabList: false,
+                            isBundle: false) {
+                                viewModel.routeToTalentDetailSchedule(meetingId: meeting.id.orEmpty())
+                            } onTapEdit: {
+                                viewModel.routeToEditSchedule(id: meeting.id.orEmpty())
+                            } onTapDelete: {
+                                viewModel.meetingId = meeting.id.orEmpty()
+                                viewModel.isShowDelete.toggle()
+                            }
+                            .onAppear {
+                                if (viewModel.meetingData.unique().last?.id).orEmpty() == meeting.id {
+                                    Task {
+                                        viewModel.meetingParam.skip = viewModel.meetingParam.take
+                                        viewModel.meetingParam.take += 15
+                                        await viewModel.getTalentMeeting(isMore: true)
+                                    }
+                                }
+                            }
+                    }
+                    if viewModel.isLoadingMore {
+                        HStack {
+                            Spacer()
+                            
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                            
+                            Spacer()
+                        }
+                        .animation(.spring(), value: viewModel.isLoadingMore)
+                    }
+                    
+                } else {
+                    EmptyStateView(
+                        title: LocalizableText.creatorEmptySessionTitle,
+                        description: LocalizableText.creatorEmptySessionDesc,
+                        buttonText: LocalizableText.creatorCreateSessionLabel) {
+                            viewModel.routeToTalentFormSchedule()
+                        }
+                }
+            }
+            .padding(.vertical)
+            .animation(.spring(), value: viewModel.isLoadingMore)
+        }
+    }
+    
+    struct RequestedSessionView: View {
+        
+        @ObservedObject var viewModel: TalentHomeViewModel
+        
+        var body: some View {
+            LazyVStack(alignment: .leading, spacing: 12) {
+                if !viewModel.meetingRequestData.unique().isEmpty {
+                    ForEach(viewModel.meetingRequestData.sorted(by: { $0.createdAt?.compare($1.createdAt.orCurrentDate()) == (viewModel.isSortByLatest ? .orderedDescending : .orderedAscending) }).unique(), id: \.id) { item in
+                        RequestCardView(
+                            user: item.user,
+                            item: item,
+                            onTapDecline: {
+                                viewModel.requestId = item.id.orEmpty()
+                                viewModel.confirmationSheet = .declined
+                            },
+                            onTapAccept: {
+                                viewModel.requestId = item.id.orEmpty()
+                                viewModel.confirmationSheet = .accepted
+                            }
+                        )
+                        .onAppear {
+                            Task {
+                                if item.id == viewModel.meetingRequestData.unique().last?.id {
+                                    viewModel.rateCardQuery.skip = viewModel.rateCardQuery.take
+                                    viewModel.rateCardQuery.take += 15
+                                    await viewModel.getMeetingRequest(isMore: true)
+                                }
+                            }
+                        }
+                    }
+                    
+                    if viewModel.isLoadingMoreRequest {
+                        HStack {
+                            Spacer()
+                            
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                            
+                            Spacer()
+                        }
+                        .animation(.spring(), value: viewModel.isLoadingMoreRequest)
+                    }
+                    
+                } else {
+                    EmptyStateView(
+                        title: LocalizableText.creatorEmptySessionTitle,
+                        description: LocalizableText.creatorEmptySessionDesc,
+                        buttonText: LocalizableText.creatorCreateSessionLabel) {
+                            viewModel.routeToTalentFormSchedule()
+                        }
+                }
+            }
+            .padding(.vertical)
+            .animation(.spring(), value: viewModel.isLoadingMoreRequest)
+        }
+    }
+    
+    struct PendingSessionView: View {
+        
+        @ObservedObject var viewModel: TalentHomeViewModel
+        
+        var body: some View {
+            LazyVStack(alignment: .leading, spacing: 12) {
+                if !viewModel.creatorSessions.unique().isEmpty {
+                    ForEach(viewModel.creatorSessions.unique(), id: \.id) { meeting in
+                        TalentScheduleCardView(
+                            isShowMenu: true,
+                            data: .constant(meeting),
+                            status: viewModel.pendingStatus(of: meeting),
+                            isShowCollabList: false,
+                            isBundle: false) {
+                                viewModel.routeToTalentDetailSchedule(meetingId: meeting.id.orEmpty())
+                            } onTapEdit: {
+                                viewModel.routeToEditSchedule(id: meeting.id.orEmpty())
+                            } onTapDelete: {
+                                viewModel.meetingId = meeting.id.orEmpty()
+                                viewModel.isShowDelete.toggle()
+                            }
+                            .onAppear {
+                                if (viewModel.meetingData.unique().last?.id).orEmpty() == meeting.id {
+                                    Task {
+                                        viewModel.meetingParam.skip = viewModel.meetingParam.take
+                                        viewModel.meetingParam.take += 15
+                                        await viewModel.getTalentMeeting(isMore: true)
+                                    }
+                                }
+                            }
+                    }
+                    if viewModel.isLoadingMore {
+                        HStack {
+                            Spacer()
+                            
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                            
+                            Spacer()
+                        }
+                        .animation(.spring(), value: viewModel.isLoadingMore)
+                    }
+                    
+                } else {
+                    EmptyStateView(
+                        title: LocalizableText.creatorEmptySessionTitle,
+                        description: LocalizableText.creatorEmptySessionDesc,
+                        buttonText: LocalizableText.creatorCreateSessionLabel) {
+                            viewModel.routeToTalentFormSchedule()
+                        }
+                }
+            }
+            .padding(.vertical)
+            .animation(.spring(), value: viewModel.isLoadingMore)
+        }
+    }
+    
+    struct CanceledSessionView: View {
+        
+        @ObservedObject var viewModel: TalentHomeViewModel
+        
+        var body: some View {
+            LazyVStack(alignment: .leading, spacing: 12) {
+                if !viewModel.creatorSessions.unique().isEmpty {
+                    ForEach(viewModel.creatorSessions.unique(), id: \.id) { meeting in
+                        TalentScheduleCardView(
+                            isShowMenu: true,
+                            data: .constant(meeting),
+                            status: .canceled,
+                            isShowCollabList: false,
+                            isBundle: false) {
+                                viewModel.routeToTalentDetailSchedule(meetingId: meeting.id.orEmpty())
+                            } onTapEdit: {
+                                viewModel.routeToEditSchedule(id: meeting.id.orEmpty())
+                            } onTapDelete: {
+                                viewModel.meetingId = meeting.id.orEmpty()
+                                viewModel.isShowDelete.toggle()
+                            }
+                            .onAppear {
+                                if (viewModel.meetingData.unique().last?.id).orEmpty() == meeting.id {
+                                    Task {
+                                        viewModel.meetingParam.skip = viewModel.meetingParam.take
+                                        viewModel.meetingParam.take += 15
+                                        await viewModel.getTalentMeeting(isMore: true)
+                                    }
+                                }
+                            }
+                    }
+                    if viewModel.isLoadingMore {
+                        HStack {
+                            Spacer()
+                            
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                            
+                            Spacer()
+                        }
+                        .animation(.spring(), value: viewModel.isLoadingMore)
+                    }
+                    
+                } else {
+                    EmptyStateView(
+                        title: LocalizableText.creatorEmptySessionTitle,
+                        description: LocalizableText.creatorEmptySessionDesc,
+                        buttonText: LocalizableText.creatorCreateSessionLabel) {
+                            viewModel.routeToTalentFormSchedule()
+                        }
+                }
+            }
+            .padding(.vertical)
+            .animation(.spring(), value: viewModel.isLoadingMore)
+        }
+    }
+    
+    struct CompletedSessionView: View {
+        
+        @ObservedObject var viewModel: TalentHomeViewModel
+        
+        var body: some View {
+            LazyVStack(alignment: .leading, spacing: 12) {
+                if !viewModel.creatorSessions.unique().isEmpty {
+                    ForEach(viewModel.creatorSessions.unique(), id: \.id) { meeting in
+                        TalentScheduleCardView(
+                            isShowMenu: true,
+                            data: .constant(meeting),
+                            status: .completed,
+                            isShowCollabList: false,
+                            isBundle: false) {
+                                viewModel.routeToTalentDetailSchedule(meetingId: meeting.id.orEmpty())
+                            } onTapEdit: {
+                                viewModel.routeToEditSchedule(id: meeting.id.orEmpty())
+                            } onTapDelete: {
+                                viewModel.meetingId = meeting.id.orEmpty()
+                                viewModel.isShowDelete.toggle()
+                            }
+                            .onAppear {
+                                if (viewModel.meetingData.unique().last?.id).orEmpty() == meeting.id {
+                                    Task {
+                                        viewModel.meetingParam.skip = viewModel.meetingParam.take
+                                        viewModel.meetingParam.take += 15
+                                        await viewModel.getTalentMeeting(isMore: true)
+                                    }
+                                }
+                            }
+                    }
+                    if viewModel.isLoadingMore {
+                        HStack {
+                            Spacer()
+                            
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                            
+                            Spacer()
+                        }
+                        .animation(.spring(), value: viewModel.isLoadingMore)
+                    }
+                    
+                } else {
+                    EmptyStateView(
+                        title: LocalizableText.creatorEmptySessionTitle,
+                        description: LocalizableText.creatorEmptySessionDesc,
+                        buttonText: LocalizableText.creatorCreateSessionLabel) {
+                            viewModel.routeToTalentFormSchedule()
+                        }
+                }
+            }
+            .padding(.vertical)
+            .animation(.spring(), value: viewModel.isLoadingMore)
+        }
+    }
+}
+
+struct TalentHomeView_Previews: PreviewProvider {
+    static var previews: some View {
+        TalentHomeView()
+            .environmentObject(TalentHomeViewModel(isFromUserType: false))
+    }
 }
