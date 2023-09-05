@@ -410,7 +410,7 @@ struct TalentHomeView: View {
                                         Section {
                                             VStack {
                                                 HStack {
-                                                    Text("Jadwal Terdekat Kamu")
+                                                    Text(LocalizableText.homeCreatorNearestTitle)
                                                         .font(.robotoRegular(size: 16))
                                                         .fontWeight(.semibold)
                                                     
