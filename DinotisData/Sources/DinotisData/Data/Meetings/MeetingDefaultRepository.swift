@@ -62,4 +62,8 @@ public final class MeetingsDefaultRepository: MeetingsRepository {
     public func provideApproveInvitation(with isApprove: Bool, for meetingId: String) async throws -> SuccessResponse {
         try await self.remote.approveInvitation(with: isApprove, for: meetingId)
     }
+    
+    public func provideGetClosestSession() async throws -> ClosestMeetingResponse {
+        try await self.remote.getClosestSession()
+    }
 }

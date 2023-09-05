@@ -33,6 +33,7 @@ final class TalentHomeViewModel: ObservableObject {
     private let counterUseCase: GetCounterUseCase
     private let getTalentMeetingUseCase: GetCreatorMeetingListUseCase
     private let deleteMeetingUseCase: DeleteCreatorMeetingUseCase
+    private let getClosestSessionUseCase: GetClosestSessionUseCase
 
     @Published var isFromUserType: Bool
     @Published var hasNewNotif = false
@@ -144,7 +145,6 @@ final class TalentHomeViewModel: ObservableObject {
     
     @Published var tabNumb = 0
     
-    @Published var isShowAdditionalContent = false
     @Published var tabSections: [TalentHomeSection] = [
         .scheduled, .notConfirmed, .pending, .canceled, .completed
     ]
@@ -155,8 +155,10 @@ final class TalentHomeViewModel: ObservableObject {
     @Published var translation: CGSize = .zero
     @Published var offsetY: CGFloat = 550
     var sheetHeight: CGFloat {
-        isShowAdditionalContent ? 562 : 320
+        !closestSessions.isEmpty ? 562 : 320
     }
+    
+    @Published var closestSessions = [MeetingDetailResponse]()
     
     init(
         isFromUserType: Bool,
@@ -168,7 +170,8 @@ final class TalentHomeViewModel: ObservableObject {
         meetingRequestUseCase: MeetingRequestUseCase = MeetingRequestDefaultUseCase(),
         counterUseCase: GetCounterUseCase = GetCounterDefaultUseCase(),
         getTalentMeetingUseCase: GetCreatorMeetingListUseCase = GetCreatorMeetingListDefaultUseCase(),
-        deleteMeetingUseCase: DeleteCreatorMeetingUseCase = DeleteCreatorMeetingDefaultUseCase()
+        deleteMeetingUseCase: DeleteCreatorMeetingUseCase = DeleteCreatorMeetingDefaultUseCase(),
+        getClosestSessionUseCase: GetClosestSessionUseCase = GetClosestSessionDefaultUseCase()
     ) {
         self.isFromUserType = isFromUserType
         self.getUserUseCase = getUserUseCase
@@ -180,6 +183,7 @@ final class TalentHomeViewModel: ObservableObject {
         self.counterUseCase = counterUseCase
         self.getTalentMeetingUseCase = getTalentMeetingUseCase
         self.deleteMeetingUseCase = deleteMeetingUseCase
+        self.getClosestSessionUseCase = getClosestSessionUseCase
     }
     
     func getBottomSafeArea() -> CGFloat{
@@ -192,6 +196,23 @@ final class TalentHomeViewModel: ObservableObject {
         
         return keyWindow?.safeAreaInsets.bottom ?? 0
         
+    }
+    
+    func getClosestSession() async {
+        onStartedFetch()
+        
+        let result = await getClosestSessionUseCase.execute()
+        
+        switch result {
+        case .success(let success):
+            DispatchQueue.main.async { [weak self] in
+                self?.success = true
+                self?.isLoading = false
+                self?.closestSessions = success.data ?? []
+            }
+        case .failure(let error):
+            handleDefaultError(error: error)
+        }
     }
     
     func getCounter() async {
@@ -314,6 +335,12 @@ final class TalentHomeViewModel: ObservableObject {
         }
     }
     
+    func onGetClosestMeeting() {
+        Task {
+            await self.getClosestSession()
+        }
+    }
+    
     func onAppearView() {
 		Task {
 			await self.getUsers()
@@ -321,6 +348,7 @@ final class TalentHomeViewModel: ObservableObject {
             onGetCounter()
             onGetCurrentBalance()
             onGetTalentMeeting()
+            onGetClosestMeeting()
             onGetMeetingRequest(isMore: false)
 		}
     }
@@ -352,12 +380,7 @@ final class TalentHomeViewModel: ObservableObject {
             self.meetingParam.skip = 0
             self.meetingParam.take = 15
             
-            await getTalentMeeting(isMore: false)
-            await getUsers()
-            
-            await getCurrentBalance()
-            
-            await getMeetingRequest(isMore: false)
+            onAppearView()
         }
     }
 

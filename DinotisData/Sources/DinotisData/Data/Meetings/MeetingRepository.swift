@@ -20,4 +20,5 @@ public protocol MeetingsRepository {
     func providePatchStartTalentMeeting(by meetingId: String) async throws -> StartCreatorMeetingResponse
     func provideGetCollabMeeting(by meetingId: String) async throws -> MeetingDetailResponse
     func provideApproveInvitation(with isApprove: Bool, for meetingId: String) async throws -> SuccessResponse
+    func provideGetClosestSession() async throws -> ClosestMeetingResponse
 }

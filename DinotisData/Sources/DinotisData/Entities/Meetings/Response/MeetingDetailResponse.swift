@@ -39,6 +39,14 @@ public struct FilterData: Codable {
     }
 }
 
+public struct ClosestMeetingResponse: Codable {
+    public let data: [MeetingDetailResponse]?
+    
+    public init(data: [MeetingDetailResponse]?) {
+        self.data = data
+    }
+}
+
 public struct OptionQueryResponse: Codable, Identifiable {
     public let id = UUID()
     public let queries: [QueryData]?

@@ -63,4 +63,8 @@ public final class MeetingsDefaultRemoteDataSource: MeetingsRemoteDataSource {
     public func approveInvitation(with isApprove: Bool, for meetingId: String) async throws -> SuccessResponse {
         try await self.provider.request(.approveInvitation(isApprove, meetingId), model: SuccessResponse.self)
     }
+    
+    public func getClosestSession() async throws -> ClosestMeetingResponse {
+        try await self.provider.request(.closestSession, model: ClosestMeetingResponse.self)
+    }
 }
