@@ -239,11 +239,13 @@ struct BundlingDetailView: View {
 							.padding(.vertical)
 							.padding(.top)
 							.presentationDetents([.fraction(0.6), .large])
+                            .dynamicTypeSize(.large)
 					} else {
 						SlideOverCardView(viewModel: viewModel)
 							.padding()
 							.padding(.vertical)
 							.padding(.top)
+                            .dynamicTypeSize(.large)
 					}
 
 				}
@@ -257,12 +259,14 @@ struct BundlingDetailView: View {
                             .padding()
                             .padding(.vertical)
                             .presentationDetents([.height(130)])
+                            .dynamicTypeSize(.large)
 					} else {
 						ScrollView {
 							PaymentTypeOption(viewModel: viewModel)
 								.padding(.top)
 								.padding()
 								.padding(.vertical)
+                                .dynamicTypeSize(.large)
 						}
 						.padding(.top)
 					}
@@ -279,10 +283,12 @@ struct BundlingDetailView: View {
 							.padding()
 							.padding(.vertical)
 							.presentationDetents([.fraction(0.8), .large])
+                            .dynamicTypeSize(.large)
 					} else {
                         CoinPaymentSheetView(viewModel: viewModel, tabValue: $tabValue)
 							.padding()
 							.padding(.vertical)
+                            .dynamicTypeSize(.large)
 					}
 				}
 			)
@@ -294,10 +300,12 @@ struct BundlingDetailView: View {
 							.padding()
 							.padding(.vertical)
 							.presentationDetents([.fraction(0.85), .large])
+                            .dynamicTypeSize(.large)
 					} else {
 						AddCoinSheetView(viewModel: viewModel, geo: geo)
 							.padding()
 							.padding(.vertical)
+                            .dynamicTypeSize(.large)
 					}
 				}
 			)
@@ -309,10 +317,12 @@ struct BundlingDetailView: View {
 							.padding()
 							.padding(.vertical)
 							.presentationDetents([.fraction(0.5), .large])
+                            .dynamicTypeSize(.large)
 					} else {
 						CoinBuySucceed(geo: geo)
 							.padding()
 							.padding(.vertical)
+                            .dynamicTypeSize(.large)
 					}
 
 				}

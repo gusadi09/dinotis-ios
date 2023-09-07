@@ -127,10 +127,12 @@ struct RateCardServiceBookingView: View {
 						.padding()
 						.padding(.vertical)
 						.presentationDetents([.fraction(0.8), .large])
+                        .dynamicTypeSize(.large)
 				} else {
 					DetailOrderSheetView(viewModel: viewModel)
 						.padding()
 						.padding(.vertical)
+                        .dynamicTypeSize(.large)
 				}
             }
         )
@@ -142,10 +144,12 @@ struct RateCardServiceBookingView: View {
 						.padding(.top)
                         .padding(.horizontal)
                         .presentationDetents([.height(240)])
+                        .dynamicTypeSize(.large)
 				} else {
 					PaymentTypeOption(viewModel: viewModel)
 						.padding(.top)
                         .padding(.horizontal)
+                        .dynamicTypeSize(.large)
 				}
 
             }
@@ -161,10 +165,12 @@ struct RateCardServiceBookingView: View {
 						.padding()
 						.padding(.top)
                         .presentationDetents([.fraction(0.9), .large])
+                        .dynamicTypeSize(.large)
 				} else {
 					CoinPaymentSheetView(viewModel: viewModel)
 						.padding()
 						.padding(.vertical)
+                        .dynamicTypeSize(.large)
 				}
             }
         )
@@ -176,10 +182,12 @@ struct RateCardServiceBookingView: View {
 						.padding()
 						.padding(.top)
 						.presentationDetents([.fraction(0.67), .large])
+                        .dynamicTypeSize(.large)
 				} else {
 					AddCoinSheetView(viewModel: viewModel)
 						.padding()
 						.padding(.top)
+                        .dynamicTypeSize(.large)
 				}
             }
         )
