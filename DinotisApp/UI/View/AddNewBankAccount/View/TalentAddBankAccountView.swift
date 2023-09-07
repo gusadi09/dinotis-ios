@@ -175,16 +175,17 @@ struct TalentAddBankAccountView: View {
 								Spacer()
 								Text(LocaleText.saveAccountText)
 									.font(.robotoMedium(size: 12))
-									.foregroundColor(.white)
+                                    .foregroundColor(.white.opacity(viewModel.selectionBank == nil || viewModel.accountName.isEmpty || viewModel.accountNumber.isEmpty ? 0.6 : 1))
 									.padding(10)
 									.padding(.horizontal, 5)
 									.padding(.vertical, 5)
 
 								Spacer()
 							}
-							.background(Color.DinotisDefault.primary)
+                            .background(viewModel.selectionBank == nil || viewModel.accountName.isEmpty || viewModel.accountNumber.isEmpty ? Color.DinotisDefault.primary.opacity(0.6) : Color.DinotisDefault.primary)
 							.clipShape(RoundedRectangle(cornerRadius: 8))
 						})
+                        .disabled(viewModel.selectionBank == nil || viewModel.accountName.isEmpty || viewModel.accountNumber.isEmpty)
 						.padding()
 						.background(
 							Color.white
