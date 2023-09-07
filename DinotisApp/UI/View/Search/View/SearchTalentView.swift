@@ -179,8 +179,10 @@ struct SearchTalentView: View {
                 if #available(iOS 16.0, *) {
                     SessionDetailView(viewModel: viewModel)
                         .presentationDetents([.fraction(0.8), .large])
+                        .dynamicTypeSize(.large)
                 } else {
                     SessionDetailView(viewModel: viewModel)
+                        .dynamicTypeSize(.large)
                 }
             }
         )
@@ -190,8 +192,10 @@ struct SearchTalentView: View {
                 if #available(iOS 16.0, *) {
                     PaymentTypeOption(viewModel: viewModel)
                     .presentationDetents([.fraction(viewModel.sessionCard.isPrivate.orFalse() ? 0.44 : 0.33)])
+                    .dynamicTypeSize(.large)
                 } else {
                     PaymentTypeOption(viewModel: viewModel)
+                        .dynamicTypeSize(.large)
                 }
             }
         )
@@ -204,8 +208,10 @@ struct SearchTalentView: View {
                 if #available(iOS 16.0, *) {
                     CoinPaymentSheetView(viewModel: viewModel)
                         .presentationDetents([.fraction(0.85), .large])
+                        .dynamicTypeSize(.large)
                 } else {
                     CoinPaymentSheetView(viewModel: viewModel)
+                        .dynamicTypeSize(.large)
                 }
             }
         )
@@ -215,8 +221,10 @@ struct SearchTalentView: View {
                 if #available(iOS 16.0, *) {
                     AddCoinSheetView(viewModel: viewModel)
                         .presentationDetents([.fraction(0.67), .large])
+                        .dynamicTypeSize(.large)
                 } else {
                     AddCoinSheetView(viewModel: viewModel)
+                        .dynamicTypeSize(.large)
                 }
             }
         )
@@ -235,6 +243,7 @@ struct SearchTalentView: View {
                   viewModel.routeToTalentProfile(username: item)
                 }
                 .presentationDetents([.medium, .large])
+                .dynamicTypeSize(.large)
             } else {
               SelectedCollabCreatorView(
                 isEdit: false,
@@ -248,6 +257,7 @@ struct SearchTalentView: View {
                   viewModel.isShowSessionDetail = false
                   viewModel.routeToTalentProfile(username: item)
                 }
+                .dynamicTypeSize(.large)
             }
         })
 	}

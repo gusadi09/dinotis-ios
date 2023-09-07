@@ -323,12 +323,14 @@ struct TalentScheduleCardView: View {
                     isShowCollabList = false
                 }
                 .presentationDetents([.medium, .large])
+                .dynamicTypeSize(.large)
             } else {
                 SelectedCollabCreatorView(isEdit: false, arrUsername: .constant((data.meetingCollaborations ?? []).compactMap({
                     $0.username
                 })), arrTalent: .constant(data.meetingCollaborations ?? [])) {
                     isShowCollabList = false
                 }
+                .dynamicTypeSize(.large)
             }
         })
         .buttonStyle(.plain)

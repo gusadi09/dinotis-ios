@@ -324,6 +324,7 @@ struct TalentWithdrawView: View {
 					.padding()
 					.padding(.vertical)
 					.presentationDetents([.fraction(0.6), .large])
+                    .dynamicTypeSize(.large)
 			} else {
 				VStack {
 					HStack {
@@ -440,6 +441,7 @@ struct TalentWithdrawView: View {
 				}
 					.padding()
 					.padding(.vertical)
+                    .dynamicTypeSize(.large)
 			}
 		})
 		.onAppear {

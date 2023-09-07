@@ -669,16 +669,20 @@ struct TalentHomeView: View {
                                     .padding()
                                     .presentationDetents([.medium])
                                     .presentationDragIndicator(.hidden)
+                                    .dynamicTypeSize(.large)
                             } else {
                                 AcceptedSheet(viewModel: homeVM, isOnSheet: false)
+                                    .dynamicTypeSize(.large)
                             }
                         case .declined:
                             if #available(iOS 16.0, *) {
                                 DeclinedSheet(viewModel: homeVM, isOnSheet: true)
                                     .padding()
                                     .presentationDetents([.medium])
+                                    .dynamicTypeSize(.large)
                             } else {
                                 DeclinedSheet(viewModel: homeVM, isOnSheet: false)
+                                    .dynamicTypeSize(.large)
                             }
                         }
                     }

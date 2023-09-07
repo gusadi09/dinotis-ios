@@ -281,6 +281,7 @@ struct TalentAddBankAccountView: View {
                     }
                 })
             }
+            .dynamicTypeSize(.large)
 		}
 		.onAppear {
 			viewModel.onAppear()

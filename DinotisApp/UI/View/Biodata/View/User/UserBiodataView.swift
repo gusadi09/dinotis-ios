@@ -347,6 +347,7 @@ struct UserBiodataView: View {
 				}
 				.padding(.vertical)
 				.presentationDetents([.fraction(0.5), .large])
+                .dynamicTypeSize(.large)
 			} else {
 				VStack {
 					ScrollView(.vertical, showsIndicators: true) {
@@ -396,6 +397,7 @@ struct UserBiodataView: View {
 					}
 				}
 				.padding(.vertical)
+                .dynamicTypeSize(.large)
 			}
 		})
         .dinotisAlert(
