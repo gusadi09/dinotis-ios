@@ -23,6 +23,10 @@ public final class MeetingsDefaultRepository: MeetingsRepository {
         try await self.remote.getTalentMeeting(params: params)
     }
     
+    public func provideGetTalentMeetingWithStatus(params: MeetingsStatusPageRequest) async throws -> CreatorMeetingWithStatusResponse {
+        try await self.remote.getTalentMeetingWithStatus(params: params)
+    }
+    
     public func provideGetTalentDetailMeeting(userID: String, params: MeetingsPageRequest) async throws -> TalentMeetingResponse {
         try await self.remote.getTalentDetailMeeting(userID: userID, params: params)
     }

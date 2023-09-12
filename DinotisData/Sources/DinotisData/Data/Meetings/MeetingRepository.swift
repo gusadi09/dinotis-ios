@@ -11,6 +11,7 @@ public protocol MeetingsRepository {
     func provideGetMeetingsRules() async throws -> MeetingRulesResponse
     func provideGetTalentMeeting(params: MeetingsPageRequest) async throws -> TalentMeetingResponse
     func provideGetTalentDetailMeeting(userID: String, params: MeetingsPageRequest) async throws -> TalentMeetingResponse
+    func provideGetTalentMeetingWithStatus(params: MeetingsStatusPageRequest) async throws -> CreatorMeetingWithStatusResponse
     func providePatchEndMeeting(meetingId: String) async throws -> StartCreatorMeetingResponse
     func providePutEditMeeting(meetingId: String, body: AddMeetingRequest) async throws -> StartCreatorMeetingResponse
     func provideDeleteMeeting(meetingId: String) async throws -> SuccessResponse

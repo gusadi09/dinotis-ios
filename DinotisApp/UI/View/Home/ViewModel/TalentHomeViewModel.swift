@@ -33,6 +33,7 @@ final class TalentHomeViewModel: ObservableObject {
     private let counterUseCase: GetCounterUseCase
     private let getTalentMeetingUseCase: GetCreatorMeetingListUseCase
     private let deleteMeetingUseCase: DeleteCreatorMeetingUseCase
+    private let getTalentMeetingWithStatusUseCase: GetCreatorMeetingWithStatusListUseCase
     private let getClosestSessionUseCase: GetClosestSessionUseCase
 
     @Published var isFromUserType: Bool
@@ -44,6 +45,25 @@ final class TalentHomeViewModel: ObservableObject {
     private var onValueChanged: ((_ refreshControl: UIRefreshControl) -> Void)?
     @Published var filterOption = [OptionQueryResponse]()
     @Published var meetingData = [MeetingDetailResponse]()
+    
+    @Published var isLoadingMoreScheduled = false
+    @Published var isLoadingMorePending = false
+    @Published var isLoadingMoreEnded = false
+    @Published var isLoadingMoreCancelled = false
+    
+    @Published var scheduledRequest = MeetingsStatusPageRequest(take: 8, skip: 0, status: "scheduled", sort: "desc")
+    @Published var pendingRequest = MeetingsStatusPageRequest(take: 8, skip: 0, status: "pending", sort: "desc")
+    @Published var endedRequest = MeetingsStatusPageRequest(take: 8, skip: 0, status: "ended", sort: "desc")
+    @Published var canceledRequest = MeetingsStatusPageRequest(take: 8, skip: 0, status: "canceled", sort: "desc")
+    
+    @Published var scheduledData = [MeetingDetailResponse]()
+    @Published var scheduledCounter: String? = nil
+    @Published var pendingData = [MeetingDetailResponse]()
+    @Published var pendingCounter: String? = nil
+    @Published var endedData = [MeetingDetailResponse]()
+    @Published var endedCounter: String? = nil
+    @Published var canceledData = [MeetingDetailResponse]()
+    @Published var canceledCounter: String? = nil
     
     var creatorSessions: [MeetingDetailResponse] {
         switch currentSection {
@@ -107,15 +127,6 @@ final class TalentHomeViewModel: ObservableObject {
 	@Published var filterData = [OptionMeetingRequestData]()
 	@Published var counterRequest = ""
 	@Published var meetingCounter = ""
-    var pendingCounter: String {
-        let pendingMeeting = meetingData.filter { meeting in
-            meeting.meetingRequest?.isConfirmed == nil &&
-            meeting.meetingRequest?.isAccepted == true &&
-            meeting.meetingRequest != nil
-        }
-        return pendingMeeting.count <= 10 ? "\(pendingMeeting.count)" : "10+"
-    }
-    
     
     @Published var nameOfUser: String?
     @Published var userData: UserResponse?
@@ -151,7 +162,10 @@ final class TalentHomeViewModel: ObservableObject {
     ]
     @Published var currentSection: TalentHomeSection = .scheduled
     
-    @Published var isSortByLatest = true
+    @Published var isSortByLatestNotConfirmed = true
+    @Published var isSortByLatestPending = true
+    @Published var isSortByLatestCanceled = true
+    @Published var isSortByLatestEnded = true
     
     @Published var translation: CGSize = .zero
     @Published var offsetY: CGFloat = 550
@@ -172,6 +186,7 @@ final class TalentHomeViewModel: ObservableObject {
         counterUseCase: GetCounterUseCase = GetCounterDefaultUseCase(),
         getTalentMeetingUseCase: GetCreatorMeetingListUseCase = GetCreatorMeetingListDefaultUseCase(),
         deleteMeetingUseCase: DeleteCreatorMeetingUseCase = DeleteCreatorMeetingDefaultUseCase(),
+        getTalentMeetingWithStatusUseCase: GetCreatorMeetingWithStatusListUseCase = GetCreatorMeetingWithStatusListDefaultUseCase(),
         getClosestSessionUseCase: GetClosestSessionUseCase = GetClosestSessionDefaultUseCase()
     ) {
         self.isFromUserType = isFromUserType
@@ -184,6 +199,7 @@ final class TalentHomeViewModel: ObservableObject {
         self.counterUseCase = counterUseCase
         self.getTalentMeetingUseCase = getTalentMeetingUseCase
         self.deleteMeetingUseCase = deleteMeetingUseCase
+        self.getTalentMeetingWithStatusUseCase = getTalentMeetingWithStatusUseCase
         self.getClosestSessionUseCase = getClosestSessionUseCase
     }
     
@@ -348,7 +364,10 @@ final class TalentHomeViewModel: ObservableObject {
 			guard !isRefreshFailed else { return }
             onGetCounter()
             onGetCurrentBalance()
-            onGetTalentMeeting()
+            onGetScheduledMeeting(isMore: false)
+            onGetPendingMeeting(isMore: false)
+            onGetCanceledMeeting(isMore: false)
+            onGetEndedMeeting(isMore: false)
             onGetClosestMeeting()
             onGetMeetingRequest(isMore: false)
 		}
@@ -365,6 +384,105 @@ final class TalentHomeViewModel: ObservableObject {
             }
             self?.error = nil
             self?.success = false
+        }
+    }
+    
+    func onStartedFetchWithSection(isMore: Bool = false, section: TalentHomeSection) {
+        DispatchQueue.main.async {[weak self] in
+            self?.isError = false
+            if !isMore {
+                self?.isLoading = true
+            } else {
+                switch section {
+                case .scheduled:
+                    self?.isLoadingMoreScheduled = true
+                case .notConfirmed:
+                    break
+                case .pending:
+                    self?.isLoadingMorePending = true
+                case .canceled:
+                    self?.isLoadingMoreCancelled = true
+                case .completed:
+                    self?.isLoadingMoreEnded = true
+                }
+            }
+            self?.error = nil
+            self?.success = false
+        }
+    }
+    
+    func onChangeSortPending(isLatest: Bool) {
+        Task {
+            pendingRequest.take = 8
+            pendingRequest.skip = 0
+            pendingRequest.sort = isLatest ? "desc" : "asc"
+            
+            await getPendingMeeting(isMore: false)
+        }
+    }
+    
+    func onChangeSortEnded(isLatest: Bool) {
+        Task {
+            endedRequest.take = 8
+            endedRequest.skip = 0
+            endedRequest.sort = isLatest ? "desc" : "asc"
+            
+            await getEndedMeeting(isMore: false)
+        }
+    }
+    
+    func onChangeSortCanceled(isLatest: Bool) {
+        Task {
+            canceledRequest.take = 8
+            canceledRequest.skip = 0
+            canceledRequest.sort = isLatest ? "desc" : "asc"
+            
+            await getCancelledMeeting(isMore: false)
+        }
+    }
+    
+    func sortSelectionActionLatest() {
+        switch currentSection {
+        case .scheduled:
+            break
+        case .notConfirmed:
+            isSortByLatestNotConfirmed = true
+        case .pending:
+            isSortByLatestPending = true
+        case .canceled:
+            isSortByLatestCanceled = true
+        case .completed:
+            isSortByLatestEnded = true
+        }
+    }
+    
+    func sortSelectionActionEarliest() {
+        switch currentSection {
+        case .scheduled:
+            break
+        case .notConfirmed:
+            isSortByLatestNotConfirmed = false
+        case .pending:
+            isSortByLatestPending = false
+        case .canceled:
+            isSortByLatestCanceled = false
+        case .completed:
+            isSortByLatestEnded = false
+        }
+    }
+    
+    func sortSectionHiddenValue() -> Bool {
+        switch currentSection {
+        case .scheduled:
+            return false
+        case .notConfirmed:
+            return isSortByLatestNotConfirmed
+        case .pending:
+            return isSortByLatestPending
+        case .canceled:
+            return isSortByLatestCanceled
+        case .completed:
+            return isSortByLatestEnded
         }
     }
     
@@ -402,6 +520,122 @@ final class TalentHomeViewModel: ObservableObject {
     @objc private func onValueChangedAction(sender: UIRefreshControl) {
         Task.init {
             self.onValueChanged?(sender)
+        }
+    }
+    
+    func getScheduledMeeting(isMore: Bool) async {
+        onStartedFetchWithSection(isMore: isMore, section: .scheduled)
+        
+        let result = await getTalentMeetingWithStatusUseCase.execute(with: scheduledRequest)
+        
+        switch result {
+        case .failure(let error):
+            handleDefaultMeetingStatusError(error: error, isMore: isMore, section: .scheduled)
+        case .success(let response):
+            DispatchQueue.main.async {[weak self] in
+                if isMore {
+                    self?.scheduledData += response.data ?? []
+                    self?.isLoadingMoreScheduled = false
+                } else {
+                    self?.isLoading = false
+                    self?.scheduledData = response.data ?? []
+                }
+                
+                self?.scheduledCounter = response.counter
+            }
+        }
+    }
+    
+    func onGetScheduledMeeting(isMore: Bool) {
+        Task {
+            await getScheduledMeeting(isMore: isMore)
+        }
+    }
+    
+    func getPendingMeeting(isMore: Bool) async {
+        onStartedFetchWithSection(isMore: isMore, section: .pending)
+        
+        let result = await getTalentMeetingWithStatusUseCase.execute(with: pendingRequest)
+        
+        switch result {
+        case .failure(let error):
+            handleDefaultMeetingStatusError(error: error, isMore: isMore, section: .pending)
+        case .success(let response):
+            DispatchQueue.main.async {[weak self] in
+                if isMore {
+                    self?.pendingData += response.data ?? []
+                    self?.isLoadingMorePending = false
+                } else {
+                    self?.pendingData = response.data ?? []
+                    self?.isLoading = false
+                }
+                
+                self?.pendingCounter = response.counter
+            }
+        }
+    }
+    
+    func onGetPendingMeeting(isMore: Bool) {
+        Task {
+            await getPendingMeeting(isMore: isMore)
+        }
+    }
+    
+    func getCancelledMeeting(isMore: Bool) async {
+        onStartedFetchWithSection(isMore: isMore, section: .canceled)
+        
+        let result = await getTalentMeetingWithStatusUseCase.execute(with: canceledRequest)
+        
+        switch result {
+        case .failure(let error):
+            handleDefaultMeetingStatusError(error: error, isMore: isMore, section: .canceled)
+        case .success(let response):
+            DispatchQueue.main.async {[weak self] in
+                if isMore {
+                    self?.canceledData += response.data ?? []
+                    self?.isLoadingMoreCancelled = false
+                } else {
+                    self?.canceledData = response.data ?? []
+                    self?.isLoading = false
+                }
+                
+                self?.canceledCounter = response.counter
+            }
+        }
+    }
+    
+    func onGetCanceledMeeting(isMore: Bool) {
+        Task {
+            await getCancelledMeeting(isMore: isMore)
+        }
+    }
+    
+    func getEndedMeeting(isMore: Bool) async {
+        onStartedFetchWithSection(isMore: isMore, section: .completed)
+        
+        let result = await getTalentMeetingWithStatusUseCase.execute(with: endedRequest)
+        
+        switch result {
+        case .failure(let error):
+            handleDefaultMeetingStatusError(error: error, isMore: isMore, section: .completed)
+        case .success(let response):
+            DispatchQueue.main.async {[weak self] in
+                if isMore {
+                    self?.endedData += response.data ?? []
+                    self?.isLoadingMoreEnded = false
+                } else {
+                    self?.endedData = response.data ?? []
+                    self?.isLoading = false
+                }
+                
+                self?.endedCounter = response.counter
+            }
+        }
+    }
+    
+    func onGetEndedMeeting(isMore: Bool) {
+        Task {
+            await getEndedMeeting(isMore: isMore)
         }
     }
 
@@ -499,6 +733,42 @@ final class TalentHomeViewModel: ObservableObject {
             if isMore {
                 self?.isLoadingMore = false
                 self?.isLoadingMoreRequest = false
+            } else {
+                self?.isLoading = false
+            }
+
+            if let error = error as? ErrorResponse {
+
+                if error.statusCode.orZero() == 401 {
+                    self?.error = error.message.orEmpty()
+                    self?.isRefreshFailed.toggle()
+                } else {
+                    self?.error = error.message.orEmpty()
+                    self?.isError = true
+                }
+            } else {
+                self?.isError = true
+                self?.error = error.localizedDescription
+            }
+
+        }
+    }
+    
+    func handleDefaultMeetingStatusError(error: Error, isMore: Bool = false, section: TalentHomeSection) {
+        DispatchQueue.main.async { [weak self] in
+            if isMore {
+                switch section {
+                case .scheduled:
+                    self?.isLoadingMoreScheduled = false
+                case .notConfirmed:
+                    break
+                case .pending:
+                    self?.isLoadingMorePending = false
+                case .canceled:
+                    self?.isLoadingMoreCancelled = false
+                case .completed:
+                    self?.isLoadingMoreEnded = false
+                }
             } else {
                 self?.isLoading = false
             }

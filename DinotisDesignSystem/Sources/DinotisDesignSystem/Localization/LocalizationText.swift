@@ -2266,7 +2266,6 @@ public enum LocalizableText {
         bundle: .module,
         comment: "force ended"
     )
-    
     public static let homeCreatorWithdraw = NSLocalizedString(
         "home_creator_withdraw",
         bundle: .module,
