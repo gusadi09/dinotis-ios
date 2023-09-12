@@ -496,8 +496,17 @@ final class TalentHomeViewModel: ObservableObject {
     @MainActor
     func refreshList() async {
         Task {
-            self.meetingParam.skip = 0
-            self.meetingParam.take = 15
+            self.scheduledRequest.skip = 0
+            self.scheduledRequest.take = 8
+            
+            self.pendingRequest.skip = 0
+            self.pendingRequest.take = 8
+            
+            self.canceledRequest.skip = 0
+            self.canceledRequest.take = 8
+            
+            self.endedRequest.skip = 0
+            self.endedRequest.take = 8
             
             onAppearView()
         }
