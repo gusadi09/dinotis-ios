@@ -11,8 +11,9 @@ import Moya
 public enum MeetingsTargetType {
     case getRules
     case addMeeting(AddMeetingRequest)
-    case TalentMeeting(MeetingsPageRequest)
-    case TalentDetailMeeting(String, MeetingsPageRequest)
+    case talentMeeting(MeetingsPageRequest)
+    case talentMeetingWithStatus(MeetingsStatusPageRequest)
+    case talentDetailMeeting(String, MeetingsPageRequest)
     case detailMeetings(String)
     case endMeeting(String)
     case startMeeting(String)
@@ -33,7 +34,7 @@ extension MeetingsTargetType: DinotisTargetType, AccessTokenAuthorizable {
             ]
         case .addMeeting(let body):
             return body.toJSON()
-        case .TalentMeeting(let params):
+        case .talentMeeting(let params):
             if params.isAvailable.isEmpty && !params.isEnded.isEmpty {
                 return [
                     "skip" : params.skip,
@@ -63,8 +64,35 @@ extension MeetingsTargetType: DinotisTargetType, AccessTokenAuthorizable {
                     "is_ended" : params.isEnded
                 ]
             }
-
-        case .TalentDetailMeeting(_, let params):
+        
+        case .talentMeetingWithStatus(let params):
+            if params.status.isEmpty && !params.sort.isEmpty {
+                return [
+                    "skip" : params.skip,
+                    "take" : params.take,
+                    "sort" : params.sort
+                ]
+            } else if params.sort.isEmpty && !params.status.isEmpty {
+                return [
+                    "skip" : params.skip,
+                    "take" : params.take,
+                    "status" : params.status
+                ]
+            } else if params.sort.isEmpty && params.status.isEmpty {
+                return [
+                    "skip" : params.skip,
+                    "take" : params.take,
+                ]
+            } else {
+                return [
+                    "skip" : params.skip,
+                    "take" : params.take,
+                    "status" : params.status,
+                    "sort" : params.sort
+                ]
+            }
+            
+        case .talentDetailMeeting(_, let params):
             if params.isAvailable.isEmpty && !params.isEnded.isEmpty {
                 return [
                     "skip" : params.skip,
@@ -130,9 +158,11 @@ extension MeetingsTargetType: DinotisTargetType, AccessTokenAuthorizable {
         switch self {
         case .getRules:
             return URLEncoding.default
-        case .TalentMeeting:
+        case .talentMeeting:
             return URLEncoding.default
-        case .TalentDetailMeeting:
+        case .talentMeetingWithStatus:
+            return URLEncoding.default
+        case .talentDetailMeeting:
             return URLEncoding.default
         case .endMeeting(_):
             return URLEncoding.default
@@ -165,9 +195,11 @@ extension MeetingsTargetType: DinotisTargetType, AccessTokenAuthorizable {
         switch self {
         case .getRules:
             return "/meetings/rules"
-        case .TalentMeeting:
+        case .talentMeeting:
             return "/meetings"
-        case .TalentDetailMeeting(let userId, _):
+        case .talentMeetingWithStatus:
+            return "/meetings/status"
+        case .talentDetailMeeting(let userId, _):
             return "/meetings/\(userId)/talent/bookings"
         case .endMeeting(let meetingId):
             return "/meetings/\(meetingId)/end"
@@ -196,9 +228,11 @@ extension MeetingsTargetType: DinotisTargetType, AccessTokenAuthorizable {
         switch self {
         case .getRules:
             return .get
-        case .TalentMeeting:
+        case .talentMeeting:
             return .get
-        case .TalentDetailMeeting:
+        case .talentMeetingWithStatus:
+            return .get
+        case .talentDetailMeeting:
             return .get
         case .endMeeting(_):
             return .patch

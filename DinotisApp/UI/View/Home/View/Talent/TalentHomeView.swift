@@ -402,7 +402,6 @@ struct TalentHomeView: View {
                                                 .foregroundColor(.white)
                                                 .shadow(color: Color.dinotisShadow.opacity(0.08), radius: 8, x: 0, y: 0)
                                         )
-                                        .shadow(color: Color.dinotisShadow.opacity(0.08), radius: 8, x: 0, y: 0)
                                         .padding(.top, 10)
                                     }
                                     .listRowBackground(Color.clear)
@@ -557,6 +556,15 @@ struct TalentHomeView: View {
                         .cornerRadius(homeVM.translation.height > homeVM.getBottomSafeArea() ? 24 : 0, corners: [.topLeft, .topRight])
                         .ignoresSafeArea(edges: .bottom)
                         .frame(height: homeVM.getBottomSafeArea() + (homeVM.translation.height > homeVM.getBottomSafeArea() ? .zero : -homeVM.translation.height))
+                        .onChange(of: homeVM.isSortByLatestPending) { newValue in
+                            homeVM.onChangeSortPending(isLatest: newValue)
+                        }
+                        .onChange(of: homeVM.isSortByLatestEnded) { newValue in
+                            homeVM.onChangeSortEnded(isLatest: newValue)
+                        }
+                        .onChange(of: homeVM.isSortByLatestCanceled) { newValue in
+                            homeVM.onChangeSortCanceled(isLatest: newValue)
+                        }
                     
                     TalentHomeBottomSheet(viewModel: homeVM) {
                         Group {
@@ -593,31 +601,34 @@ struct TalentHomeView: View {
                                     Menu {
                                         Button {
                                             withAnimation {
-                                                homeVM.isSortByLatest = true
+                                                homeVM.sortSelectionActionLatest()
                                             }
                                         } label: {
                                             HStack {
                                                 Text(LocalizableText.sortLatest)
+                                                
                                                 Image(systemName: "checkmark")
-                                                    .isHidden(!homeVM.isSortByLatest)
+                                                    .isHidden(!homeVM.sortSectionHiddenValue())
+                                                
                                             }
                                         }
                                         
                                         Button {
                                             withAnimation {
-                                                homeVM.isSortByLatest = false
+                                                homeVM.sortSelectionActionEarliest()
                                             }
                                         } label: {
                                             HStack {
                                                 Text(LocalizableText.sortEarliest)
+                                                
                                                 Image(systemName: "checkmark")
-                                                    .isHidden(homeVM.isSortByLatest)
+                                                    .isHidden(homeVM.sortSectionHiddenValue())
                                             }
                                         }
                                         
                                     } label: {
                                         HStack(spacing: 4) {
-                                            Text(homeVM.isSortByLatest ? LocalizableText.sortLatest : LocalizableText.sortEarliest)
+                                            Text(homeVM.sortSectionHiddenValue() ? LocalizableText.sortLatest : LocalizableText.sortEarliest)
                                                 .font(.robotoMedium(size: 12))
                                             
                                             Image(systemName: "chevron.down")
@@ -757,14 +768,14 @@ extension TalentHomeView {
                                             
                                             switch tab {
                                             case .scheduled:
-                                                Text(viewModel.meetingCounter)
+                                                Text(viewModel.scheduledCounter.orEmpty())
                                                     .font(.robotoBold(size: 12))
                                                     .foregroundColor(.white)
                                                     .padding(4)
                                                     .frame(width: 28)
                                                     .background(Color.DinotisDefault.primary)
                                                     .cornerRadius(6)
-                                                    .isHidden(viewModel.meetingCounter.isEmpty || viewModel.meetingCounter == "0", remove: viewModel.meetingCounter.isEmpty || viewModel.meetingCounter == "0")
+                                                    .isHidden(viewModel.scheduledCounter == nil || viewModel.scheduledCounter.orEmpty() == "0", remove: viewModel.scheduledCounter == nil || viewModel.scheduledCounter.orEmpty() == "0")
                                             case .notConfirmed:
                                                 Text(viewModel.counterRequest)
                                                     .font(.robotoBold(size: 12))
@@ -775,16 +786,33 @@ extension TalentHomeView {
                                                     .cornerRadius(6)
                                                     .isHidden(viewModel.counterRequest.isEmpty || viewModel.counterRequest == "0", remove: viewModel.counterRequest.isEmpty || viewModel.counterRequest == "0")
                                             case .pending:
-                                                Text(viewModel.pendingCounter)
+                                                Text(viewModel.pendingCounter.orEmpty())
                                                     .font(.robotoBold(size: 12))
                                                     .foregroundColor(.white)
                                                     .padding(4)
                                                     .frame(width: 28)
                                                     .background(Color.DinotisDefault.primary)
                                                     .cornerRadius(6)
-                                                    .isHidden(viewModel.pendingCounter.isEmpty || viewModel.pendingCounter == "0", remove: viewModel.pendingCounter.isEmpty || viewModel.pendingCounter == "0")
-                                            default:
-                                                EmptyView()
+                                                    .isHidden(viewModel.pendingCounter == nil || viewModel.pendingCounter.orEmpty() == "0", remove: viewModel.pendingCounter == nil || viewModel.pendingCounter.orEmpty() == "0")
+                                            case .canceled:
+                                                Text(viewModel.canceledCounter.orEmpty())
+                                                    .font(.robotoBold(size: 12))
+                                                    .foregroundColor(.white)
+                                                    .padding(4)
+                                                    .frame(width: 28)
+                                                    .background(Color.DinotisDefault.primary)
+                                                    .cornerRadius(6)
+                                                    .isHidden(viewModel.canceledCounter == nil || viewModel.canceledCounter.orEmpty() == "0", remove: viewModel.canceledCounter == nil || viewModel.canceledCounter
+                                                        .orEmpty() == "0")
+                                            case .completed:
+                                                Text(viewModel.endedCounter.orEmpty())
+                                                    .font(.robotoBold(size: 12))
+                                                    .foregroundColor(.white)
+                                                    .padding(4)
+                                                    .frame(width: 28)
+                                                    .background(Color.DinotisDefault.primary)
+                                                    .cornerRadius(6)
+                                                    .isHidden(viewModel.endedCounter == nil || viewModel.endedCounter.orEmpty() == "0", remove: viewModel.endedCounter == nil || viewModel.endedCounter.orEmpty() == "0")
                                             }
                                         }
                                         .padding(12)
@@ -1141,8 +1169,8 @@ extension TalentHomeView {
         
         var body: some View {
             LazyVStack(alignment: .leading, spacing: 12) {
-                if !viewModel.creatorSessions.unique().isEmpty {
-                    ForEach(viewModel.creatorSessions.unique(), id: \.id) { meeting in
+                if !viewModel.scheduledData.unique().isEmpty {
+                    ForEach(viewModel.scheduledData.unique(), id: \.id) { meeting in
                         TalentScheduleCardView(
                             isShowMenu: true,
                             data: .constant(meeting),
@@ -1156,16 +1184,16 @@ extension TalentHomeView {
                                 viewModel.isShowDelete.toggle()
                             }
                             .onAppear {
-                                if (viewModel.meetingData.unique().last?.id).orEmpty() == meeting.id {
+                                if (viewModel.scheduledData.unique().last?.id).orEmpty() == meeting.id {
                                     Task {
-                                        viewModel.meetingParam.skip = viewModel.meetingParam.take
-                                        viewModel.meetingParam.take += 15
-                                        await viewModel.getTalentMeeting(isMore: true)
+                                        viewModel.scheduledRequest.skip = viewModel.scheduledRequest.take
+                                        viewModel.scheduledRequest.take += 8
+                                        await viewModel.getScheduledMeeting(isMore: true)
                                     }
                                 }
                             }
                     }
-                    if viewModel.isLoadingMore {
+                    if viewModel.isLoadingMoreScheduled {
                         HStack {
                             Spacer()
                             
@@ -1174,7 +1202,7 @@ extension TalentHomeView {
                             
                             Spacer()
                         }
-                        .animation(.spring(), value: viewModel.isLoadingMore)
+                        .animation(.spring(), value: viewModel.isLoadingMoreScheduled)
                     }
                     
                 } else {
@@ -1187,7 +1215,7 @@ extension TalentHomeView {
                 }
             }
             .padding(.vertical)
-            .animation(.spring(), value: viewModel.isLoadingMore)
+            .animation(.spring(), value: viewModel.isLoadingMoreScheduled)
         }
     }
     
@@ -1198,7 +1226,7 @@ extension TalentHomeView {
         var body: some View {
             LazyVStack(alignment: .leading, spacing: 12) {
                 if !viewModel.meetingRequestData.unique().isEmpty {
-                    ForEach(viewModel.meetingRequestData.sorted(by: { $0.createdAt?.compare($1.createdAt.orCurrentDate()) == (viewModel.isSortByLatest ? .orderedDescending : .orderedAscending) }).unique(), id: \.id) { item in
+                    ForEach(viewModel.meetingRequestData.sorted(by: { $0.createdAt?.compare($1.createdAt.orCurrentDate()) == (viewModel.isSortByLatestNotConfirmed ? .orderedDescending : .orderedAscending) }).unique(), id: \.id) { item in
                         RequestCardView(
                             user: item.user,
                             item: item,
@@ -1254,8 +1282,8 @@ extension TalentHomeView {
         
         var body: some View {
             LazyVStack(alignment: .leading, spacing: 12) {
-                if !viewModel.creatorSessions.unique().isEmpty {
-                    ForEach(viewModel.creatorSessions.unique(), id: \.id) { meeting in
+                if !viewModel.pendingData.unique().isEmpty {
+                    ForEach(viewModel.pendingData.unique(), id: \.id) { meeting in
                         TalentScheduleCardView(
                             isShowMenu: true,
                             data: .constant(meeting),
@@ -1270,16 +1298,16 @@ extension TalentHomeView {
                                 viewModel.isShowDelete.toggle()
                             }
                             .onAppear {
-                                if (viewModel.meetingData.unique().last?.id).orEmpty() == meeting.id {
+                                if (viewModel.pendingData.unique().last?.id).orEmpty() == meeting.id {
                                     Task {
-                                        viewModel.meetingParam.skip = viewModel.meetingParam.take
-                                        viewModel.meetingParam.take += 15
-                                        await viewModel.getTalentMeeting(isMore: true)
+                                        viewModel.pendingRequest.skip = viewModel.pendingRequest.take
+                                        viewModel.pendingRequest.take += 8
+                                        await viewModel.getPendingMeeting(isMore: true)
                                     }
                                 }
                             }
                     }
-                    if viewModel.isLoadingMore {
+                    if viewModel.isLoadingMorePending {
                         HStack {
                             Spacer()
                             
@@ -1288,7 +1316,7 @@ extension TalentHomeView {
                             
                             Spacer()
                         }
-                        .animation(.spring(), value: viewModel.isLoadingMore)
+                        .animation(.spring(), value: viewModel.isLoadingMorePending)
                     }
                     
                 } else {
@@ -1301,7 +1329,7 @@ extension TalentHomeView {
                 }
             }
             .padding(.vertical)
-            .animation(.spring(), value: viewModel.isLoadingMore)
+            .animation(.spring(), value: viewModel.isLoadingMorePending)
         }
     }
     
@@ -1311,8 +1339,8 @@ extension TalentHomeView {
         
         var body: some View {
             LazyVStack(alignment: .leading, spacing: 12) {
-                if !viewModel.creatorSessions.unique().isEmpty {
-                    ForEach(viewModel.creatorSessions.unique(), id: \.id) { meeting in
+                if !viewModel.canceledData.unique().isEmpty {
+                    ForEach(viewModel.canceledData.unique(), id: \.id) { meeting in
                         TalentScheduleCardView(
                             isShowMenu: true,
                             data: .constant(meeting),
@@ -1327,16 +1355,16 @@ extension TalentHomeView {
                                 viewModel.isShowDelete.toggle()
                             }
                             .onAppear {
-                                if (viewModel.meetingData.unique().last?.id).orEmpty() == meeting.id {
+                                if (viewModel.canceledData.unique().last?.id).orEmpty() == meeting.id {
                                     Task {
-                                        viewModel.meetingParam.skip = viewModel.meetingParam.take
-                                        viewModel.meetingParam.take += 15
-                                        await viewModel.getTalentMeeting(isMore: true)
+                                        viewModel.canceledRequest.skip = viewModel.canceledRequest.take
+                                        viewModel.canceledRequest.take += 8
+                                        await viewModel.getCancelledMeeting(isMore: true)
                                     }
                                 }
                             }
                     }
-                    if viewModel.isLoadingMore {
+                    if viewModel.isLoadingMoreCancelled {
                         HStack {
                             Spacer()
                             
@@ -1345,7 +1373,7 @@ extension TalentHomeView {
                             
                             Spacer()
                         }
-                        .animation(.spring(), value: viewModel.isLoadingMore)
+                        .animation(.spring(), value: viewModel.isLoadingMoreCancelled)
                     }
                     
                 } else {
@@ -1358,7 +1386,7 @@ extension TalentHomeView {
                 }
             }
             .padding(.vertical)
-            .animation(.spring(), value: viewModel.isLoadingMore)
+            .animation(.spring(), value: viewModel.isLoadingMoreCancelled)
         }
     }
     
@@ -1368,8 +1396,8 @@ extension TalentHomeView {
         
         var body: some View {
             LazyVStack(alignment: .leading, spacing: 12) {
-                if !viewModel.creatorSessions.unique().isEmpty {
-                    ForEach(viewModel.creatorSessions.unique(), id: \.id) { meeting in
+                if !viewModel.endedData.unique().isEmpty {
+                    ForEach(viewModel.endedData.unique(), id: \.id) { meeting in
                         TalentScheduleCardView(
                             isShowMenu: true,
                             data: .constant(meeting),
@@ -1384,16 +1412,16 @@ extension TalentHomeView {
                                 viewModel.isShowDelete.toggle()
                             }
                             .onAppear {
-                                if (viewModel.meetingData.unique().last?.id).orEmpty() == meeting.id {
+                                if (viewModel.endedData.unique().last?.id).orEmpty() == meeting.id {
                                     Task {
-                                        viewModel.meetingParam.skip = viewModel.meetingParam.take
-                                        viewModel.meetingParam.take += 15
-                                        await viewModel.getTalentMeeting(isMore: true)
+                                        viewModel.endedRequest.skip = viewModel.endedRequest.take
+                                        viewModel.endedRequest.take += 8
+                                        await viewModel.getEndedMeeting(isMore: true)
                                     }
                                 }
                             }
                     }
-                    if viewModel.isLoadingMore {
+                    if viewModel.isLoadingMoreEnded {
                         HStack {
                             Spacer()
                             
@@ -1402,7 +1430,7 @@ extension TalentHomeView {
                             
                             Spacer()
                         }
-                        .animation(.spring(), value: viewModel.isLoadingMore)
+                        .animation(.spring(), value: viewModel.isLoadingMoreEnded)
                     }
                     
                 } else {
@@ -1415,7 +1443,7 @@ extension TalentHomeView {
                 }
             }
             .padding(.vertical)
-            .animation(.spring(), value: viewModel.isLoadingMore)
+            .animation(.spring(), value: viewModel.isLoadingMoreEnded)
         }
     }
 }

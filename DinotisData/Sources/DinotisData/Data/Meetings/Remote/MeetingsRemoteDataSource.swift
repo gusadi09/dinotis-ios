@@ -11,6 +11,7 @@ public protocol MeetingsRemoteDataSource {
     func getMeetingRules() async throws -> MeetingRulesResponse
     func addMeeting(with body: AddMeetingRequest) async throws -> StartCreatorMeetingResponse
     func getTalentMeeting(params: MeetingsPageRequest) async throws -> TalentMeetingResponse
+    func getTalentMeetingWithStatus(params: MeetingsStatusPageRequest) async throws -> CreatorMeetingWithStatusResponse
     func getTalentDetailMeeting(userID: String, params: MeetingsPageRequest) async throws -> TalentMeetingResponse
     func patchEndMeeting(meetingId: String) async throws -> StartCreatorMeetingResponse
     func putEditMeeting(meetingId: String, body: AddMeetingRequest) async throws -> StartCreatorMeetingResponse
