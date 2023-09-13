@@ -116,6 +116,7 @@ struct ChangePhoneVerifyView: View {
                         }
                         .padding()
                         .presentationDetents([.fraction(0.34)])
+                        .dynamicTypeSize(.large)
 					} else {
 						SelectChannelView(channel: $viewModel.selectedChannel, geo: geo) {
 							withAnimation {
@@ -125,6 +126,7 @@ struct ChangePhoneVerifyView: View {
 						}
 							.padding()
 							.padding(.vertical)
+                            .dynamicTypeSize(.large)
 					}
 				}
 			)

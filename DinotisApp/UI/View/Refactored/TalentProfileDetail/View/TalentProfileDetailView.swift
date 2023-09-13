@@ -466,11 +466,13 @@ struct TalentProfileDetailView: View {
                             .padding(.vertical)
                             .padding(.top)
                             .presentationDetents([.fraction(0.8), .large])
+                            .dynamicTypeSize(.large)
                     } else {
                         SlideOverCardView(viewModel: viewModel, tab: $tabValue)
                             .padding()
                             .padding(.vertical)
                             .padding(.top)
+                            .dynamicTypeSize(.large)
                     }
                     
                 }
@@ -482,11 +484,13 @@ struct TalentProfileDetailView: View {
                         PaymentTypeOption(viewModel: viewModel)
                             .padding([.top, .horizontal])
                             .presentationDetents([.fraction(viewModel.totalPart > 1 ? 0.25 : 0.4), .large])
+                            .dynamicTypeSize(.large)
                     } else {
                         PaymentTypeOption(viewModel: viewModel)
                             .padding(.top)
                             .padding()
                             .padding(.vertical)
+                            .dynamicTypeSize(.large)
                     }
                 }
             )
@@ -501,10 +505,12 @@ struct TalentProfileDetailView: View {
                             .padding()
                             .padding(.vertical)
                             .presentationDetents([.fraction(0.8), .large])
+                            .dynamicTypeSize(.large)
                     } else {
                         CoinPaymentSheetView(viewModel: viewModel)
                             .padding()
                             .padding(.vertical)
+                            .dynamicTypeSize(.large)
                     }
                 }
             )
@@ -516,10 +522,12 @@ struct TalentProfileDetailView: View {
                             .padding()
                             .padding(.vertical)
                             .presentationDetents([.fraction(0.85), .large])
+                            .dynamicTypeSize(.large)
                     } else {
                         AddCoinSheetView(viewModel: viewModel, geo: geo)
                             .padding()
                             .padding(.vertical)
+                            .dynamicTypeSize(.large)
                     }
                 }
             )
@@ -531,10 +539,12 @@ struct TalentProfileDetailView: View {
                             .padding()
                             .padding(.vertical)
                             .presentationDetents([.fraction(0.5), .large])
+                            .dynamicTypeSize(.large)
                     } else {
                         CoinBuySucceed(geo: geo)
                             .padding()
                             .padding(.vertical)
+                            .dynamicTypeSize(.large)
                     }
                     
                 }
@@ -547,10 +557,12 @@ struct TalentProfileDetailView: View {
                             .padding()
                             .padding(.vertical)
                             .presentationDetents([.medium, .large])
+                            .dynamicTypeSize(.large)
                     } else {
                         RequestMenuView(viewModel: viewModel)
                             .padding()
                             .padding(.vertical)
+                            .dynamicTypeSize(.large)
                     }
                     
                 }
@@ -570,6 +582,7 @@ struct TalentProfileDetailView: View {
                       viewModel.routeToMyTalent(talent: item)
                     }
                     .presentationDetents([.medium, .large])
+                    .dynamicTypeSize(.large)
                 } else {
                   SelectedCollabCreatorView(
                     isEdit: false,
@@ -583,6 +596,7 @@ struct TalentProfileDetailView: View {
                       viewModel.isPresent = false
                       viewModel.routeToMyTalent(talent: item)
                     }
+                    .dynamicTypeSize(.large)
                 }
             })
         }
@@ -616,8 +630,10 @@ struct TalentProfileDetailView: View {
             if #available(iOS 16.0, *) {
                 ManagementBottomSheet(viewModel: viewModel)
                     .presentationDetents([.fraction(0.4), .fraction(0.6), .large])
+                    .dynamicTypeSize(.large)
             } else {
                 ManagementBottomSheet(viewModel: viewModel)
+                    .dynamicTypeSize(.large)
             }
         }
     }

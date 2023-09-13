@@ -606,6 +606,7 @@ struct TalentScheduleDetailView: View {
 			}) { viewModel in
 				ScheduleNegotiationChatView(viewModel: viewModel.wrappedValue)
 					.environmentObject(customerChatManager)
+                    .dynamicTypeSize(.large)
 			}
 			.onChange(of: viewModel.tokenConversation) { newValue in
 				customerChatManager.connect(accessToken: newValue, conversationName: (viewModel.dataMeeting?.meetingRequest?.id).orEmpty())
@@ -689,6 +690,7 @@ struct TalentScheduleDetailView: View {
 					.padding()
 					.padding(.vertical)
 					.presentationDetents([.height(450)])
+                    .dynamicTypeSize(.large)
 			} else {
 				VStack(spacing: 15) {
 					if viewModel.isLoadingStart {
@@ -758,6 +760,7 @@ struct TalentScheduleDetailView: View {
 				}
 					.padding()
 					.padding(.vertical)
+                    .dynamicTypeSize(.large)
 			}
 
         })
@@ -777,8 +780,10 @@ struct TalentScheduleDetailView: View {
 		.sheet(isPresented: $viewModel.confirmationSheet, content: {
 			if #available(iOS 16.0, *) {
 				DeclinedSheet(viewModel: viewModel, isOnSheet: true)
+                    .dynamicTypeSize(.large)
 			} else {
 				DeclinedSheet(viewModel: viewModel, isOnSheet: false)
+                    .dynamicTypeSize(.large)
 			}
 		})
         .sheet(isPresented: $viewModel.presentDelete, content: {
@@ -841,6 +846,7 @@ struct TalentScheduleDetailView: View {
 					.padding()
 					.padding(.vertical)
 					.presentationDetents([.fraction(0.8), .large])
+                    .dynamicTypeSize(.large)
 			} else {
 				VStack(spacing: 15) {
 					Image.Dinotis.removeUserImage
@@ -899,6 +905,7 @@ struct TalentScheduleDetailView: View {
 				}
 					.padding()
 					.padding(.vertical)
+                    .dynamicTypeSize(.large)
 			}
 
         })

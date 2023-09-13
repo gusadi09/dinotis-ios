@@ -268,6 +268,7 @@ struct UserScheduleDetail: View {
                 }) { viewModel in
                     ScheduleNegotiationChatView(viewModel: viewModel.wrappedValue)
                         .environmentObject(customerChatManager)
+                        .dynamicTypeSize(.large)
                 }
                 .onChange(of: viewModel.tokenConversation) { newValue in
                     customerChatManager.connect(accessToken: newValue, conversationName: (viewModel.dataBooking?.meeting?.meetingRequest?.id).orEmpty())
@@ -426,6 +427,7 @@ struct UserScheduleDetail: View {
                     }
                     .padding()
                     .presentationDetents([.height(450)])
+                    .dynamicTypeSize(.large)
                 } else {
                     VStack(spacing: 15) {
                         
@@ -502,6 +504,7 @@ struct UserScheduleDetail: View {
                     }
                     .padding()
                     .padding(.vertical)
+                    .dynamicTypeSize(.large)
                 }
                 
             })
@@ -509,23 +512,29 @@ struct UserScheduleDetail: View {
                 if #available(iOS 16.0, *) {
                     AttachmentBottomSheet(viewModel: viewModel)
                         .presentationDetents([.fraction(0.4), .fraction(0.6), .large])
+                        .dynamicTypeSize(.large)
                 } else {
                     AttachmentBottomSheet(viewModel: viewModel)
+                        .dynamicTypeSize(.large)
                 }
             }
             .sheet(isPresented: $viewModel.isShowWebView) {
                 if let url = URL(string: viewModel.attachmentURL) {
 #if os(iOS)
                     SafariViewWrapper(url: url)
+                        .dynamicTypeSize(.large)
 #else
                     WebView(url: url)
+                        .dynamicTypeSize(.large)
 #endif
                 } else {
                     if #available(iOS 16.0, *) {
                         EmptyURLView(viewModel: viewModel)
                             .presentationDetents([.fraction(0.6)])
+                            .dynamicTypeSize(.large)
                     } else {
                         EmptyURLView(viewModel: viewModel)
+                            .dynamicTypeSize(.large)
                     }
                 }
             }
@@ -543,6 +552,7 @@ struct UserScheduleDetail: View {
                             viewModel.routeToTalentProfile(username: item)
                         }
                         .presentationDetents([.medium, .large])
+                        .dynamicTypeSize(.large)
                 } else {
                     SelectedCollabCreatorView(
                         isEdit: false,
@@ -555,6 +565,7 @@ struct UserScheduleDetail: View {
                         } visitProfile: { item in
                             viewModel.routeToTalentProfile(username: item)
                         }
+                        .dynamicTypeSize(.large)
                 }
             })
         }
@@ -1551,8 +1562,10 @@ private extension UserScheduleDetail {
                     if #available(iOS 16.0, *) {
                         ReviewSheetView(viewModel: viewModel)
                             .presentationDetents([.fraction(0.65), .large])
+                            .dynamicTypeSize(.large)
                     } else {
                         ReviewSheetView(viewModel: viewModel)
+                            .dynamicTypeSize(.large)
                     }
                 }
             )

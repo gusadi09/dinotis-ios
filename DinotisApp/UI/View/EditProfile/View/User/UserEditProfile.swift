@@ -101,6 +101,7 @@ struct UserEditProfile: View {
 							})
 							.sheet(isPresented: $viewModel.isShowPhotoLibrary) {
 								ImagePicker(sourceType: .photoLibrary, selectedImage: self.$viewModel.image)
+                                    .dynamicTypeSize(.large)
 							}
 
 							VStack(spacing: 15) {

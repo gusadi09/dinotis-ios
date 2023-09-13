@@ -514,6 +514,7 @@ struct TwilioGroupVideoCallView: View {
                         .padding()
                         .padding(.vertical)
                         .presentationDetents([.fraction(0.6), .large])
+                        .dynamicTypeSize(.large)
                 } else {
                     LazyVStack(spacing: 15) {
                         LazyVStack(spacing: 10) {
@@ -574,6 +575,7 @@ struct TwilioGroupVideoCallView: View {
                     }
                         .padding()
                         .padding(.vertical)
+                        .dynamicTypeSize(.large)
                 }
 
             })
@@ -583,10 +585,12 @@ struct TwilioGroupVideoCallView: View {
                         .padding()
                         .padding(.vertical)
                         .presentationDetents([.fraction(viewModel.state.twilioRole == "host" ? 0.35 : 0.25), .large])
+                        .dynamicTypeSize(.large)
                 } else {
                     MoreMenuItems(viewModel: viewModel)
                         .padding()
                         .padding(.vertical)
+                        .dynamicTypeSize(.large)
                 }
 
             })
@@ -596,25 +600,30 @@ struct TwilioGroupVideoCallView: View {
                         .padding()
                         .padding(.vertical)
                         .presentationDetents([.fraction(0.25), .large])
+                        .dynamicTypeSize(.large)
                 } else {
                     VideoSettingView(viewModel: viewModel)
                         .padding()
                         .padding(.vertical)
+                        .dynamicTypeSize(.large)
                 }
 
             })
             .sheet(isPresented: $viewModel.isShowingParticipants) {
                 ParticipantView(twilioLiveVM: viewModel)
+                    .dynamicTypeSize(.large)
             }
             .sheet(isPresented: $viewModel.isShowingChat) {
                 ChatView(viewModel: viewModel)
                     .onAppear {
                         chatManager.hasUnreadMessage = false
                     }
+                    .dynamicTypeSize(.large)
             }
             .sheet(isPresented: $viewModel.isShowQuestionList, content: {
                 QuestionList(viewModel: viewModel)
                     .edgesIgnoringSafeArea(.bottom)
+                    .dynamicTypeSize(.large)
             })
         }
         .background(

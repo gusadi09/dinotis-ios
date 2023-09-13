@@ -21,6 +21,16 @@ public struct TalentMeetingResponse: Codable {
     }
 }
 
+public struct CreatorMeetingWithStatusResponse: Codable {
+    public let data: [MeetingDetailResponse]?
+    public let counter: String?
+    
+    public init(data: [MeetingDetailResponse]?, counter: String?) {
+        self.data = data
+        self.counter = counter
+    }
+}
+
 public struct TalentMeetingData: Codable {
     public let meetings: [MeetingDetailResponse]?
     public let bundles: [BundlingData]?
@@ -36,6 +46,14 @@ public struct FilterData: Codable {
     
     public init(options: [OptionQueryResponse]?) {
         self.options = options
+    }
+}
+
+public struct ClosestMeetingResponse: Codable {
+    public let data: [MeetingDetailResponse]?
+    
+    public init(data: [MeetingDetailResponse]?) {
+        self.data = data
     }
 }
 

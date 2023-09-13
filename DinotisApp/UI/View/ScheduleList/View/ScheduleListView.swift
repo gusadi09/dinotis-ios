@@ -188,8 +188,10 @@ struct ScheduleListView: View {
                 if #available(iOS 16.0, *) {
                     ReviewSheetView(viewModel: viewModel)
                         .presentationDetents([.fraction(0.65), .large])
+                        .dynamicTypeSize(.large)
                 } else {
                     ReviewSheetView(viewModel: viewModel)
+                        .dynamicTypeSize(.large)
                 }
             }
         )

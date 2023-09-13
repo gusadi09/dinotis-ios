@@ -152,17 +152,21 @@ struct GroupVideoCallView: View {
         }
         .sheet(isPresented: $viewModel.isShowAboutCallBottomSheet) {
             AboutCallBottomSheet(viewModel: viewModel)
+                .dynamicTypeSize(.large)
         }
         .sheet(isPresented: $viewModel.isShowingQnA) {
             QnAListBottomSheet(viewModel: viewModel)
+                .dynamicTypeSize(.large)
         }
         .sheet(isPresented: $viewModel.isShowQuestionBox) {
             if #available(iOS 16.0, *) {
                 QuestionBoxBottomSheet(viewModel: viewModel)
                     .presentationDetents([.height(350)])
                     .presentationDragIndicator(.hidden)
+                    .dynamicTypeSize(.large)
             } else {
                 QuestionBoxBottomSheet(viewModel: viewModel)
+                    .dynamicTypeSize(.large)
             }
         }
         .sheet(isPresented: $viewModel.showingMoreMenu, content: {
@@ -170,8 +174,10 @@ struct GroupVideoCallView: View {
                 MoreMenuSheet(viewModel: viewModel)
                     .presentationDetents([.height(230), .medium])
                     .presentationDragIndicator(.hidden)
+                    .dynamicTypeSize(.large)
             } else {
                 MoreMenuSheet(viewModel: viewModel)
+                    .dynamicTypeSize(.large)
             }
         })
         .sheet(isPresented: $viewModel.isShowSessionInfo) {
@@ -179,8 +185,10 @@ struct GroupVideoCallView: View {
                 SessionInfoBottomSheet(viewModel: viewModel)
                     .presentationDetents([.medium])
                     .presentationDragIndicator(.hidden)
+                    .dynamicTypeSize(.large)
             } else {
                 SessionInfoBottomSheet(viewModel: viewModel)
+                    .dynamicTypeSize(.large)
             }
         }
         .dinotisAlert(
