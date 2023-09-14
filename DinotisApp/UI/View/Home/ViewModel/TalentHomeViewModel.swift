@@ -493,6 +493,29 @@ final class TalentHomeViewModel: ObservableObject {
         self.error = nil
     }
     
+    func resetParameterQuery() {
+        self.scheduledRequest.skip = 0
+        self.scheduledRequest.take = 8
+        
+        self.pendingRequest.skip = 0
+        self.pendingRequest.take = 8
+        
+        self.canceledRequest.skip = 0
+        self.canceledRequest.take = 8
+        
+        self.endedRequest.skip = 0
+        self.endedRequest.take = 8
+        
+        self.rateCardQuery.skip = 0
+        self.rateCardQuery.take = 15
+        
+        self.scheduledData = []
+        self.canceledData = []
+        self.pendingData = []
+        self.endedData = []
+        self.meetingRequestData = []
+    }
+    
     @MainActor
     func refreshList() async {
         Task {

@@ -659,16 +659,10 @@ struct TalentHomeView: View {
                 .navigationBarTitle(Text(""))
                 .navigationBarHidden(true)
                 .onAppear(perform: {
-                    DispatchQueue.main.async {
-                        homeVM.meetingParam.skip = 0
-                        homeVM.meetingParam.take = 15
-                        homeVM.onAppearView()
-                    }
+                    homeVM.onAppearView()
                 })
                 .onDisappear {
-                    homeVM.meetingData = []
-                    homeVM.meetingParam.skip = 0
-                    homeVM.meetingParam.take = 15
+                    homeVM.resetParameterQuery()
                 }
                 .sheet(
                     item: $homeVM.confirmationSheet,
@@ -809,7 +803,7 @@ extension TalentHomeView {
                                                     .font(.robotoBold(size: 12))
                                                     .foregroundColor(.white)
                                                     .padding(4)
-                                                    .frame(width: 28)
+                                                    .frame(width: 32)
                                                     .background(Color.DinotisDefault.primary)
                                                     .cornerRadius(6)
                                                     .isHidden(viewModel.endedCounter == nil || viewModel.endedCounter.orEmpty() == "0", remove: viewModel.endedCounter == nil || viewModel.endedCounter.orEmpty() == "0")
