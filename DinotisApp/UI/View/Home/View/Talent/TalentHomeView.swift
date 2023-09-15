@@ -680,6 +680,7 @@ struct TalentHomeView: View {
                                     .dynamicTypeSize(.large)
                             } else {
                                 AcceptedSheet(viewModel: homeVM, isOnSheet: false)
+                                .padding(.horizontal)
                                     .dynamicTypeSize(.large)
                             }
                         case .declined:
@@ -1058,6 +1059,10 @@ extension TalentHomeView {
 
 		var body: some View {
 			VStack(spacing: 25) {
+                if !isOnSheet {
+                    Spacer()
+                }
+                
 				HStack {
 					Text(LocaleText.acceptanceConfirmationText)
 						.font(.robotoBold(size: 14))
@@ -1077,11 +1082,11 @@ extension TalentHomeView {
 					})
 				}
 
-				VStack(spacing: 15) {
-					Text(LocaleText.acceptanceDescriptionText)
-						.font(.robotoRegular(size: 12))
-						.multilineTextAlignment(.leading)
-						.foregroundColor(.black)
+                VStack(alignment: .leading, spacing: 15) {
+                    Text(LocaleText.acceptanceDescriptionText)
+                        .font(.robotoRegular(size: 12))
+                        .multilineTextAlignment(.leading)
+                        .foregroundColor(.black)
 
 					Button {
 						isAccepted.toggle()
@@ -1138,6 +1143,7 @@ extension TalentHomeView {
 							.foregroundColor(!isAccepted ? Color(.systemGray5) : .DinotisDefault.primary)
 					)
 				}
+                .padding(.top, !isOnSheet ? 10 : 0)
 				.disabled(!isAccepted)
 
 			}

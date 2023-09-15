@@ -1622,6 +1622,7 @@ fileprivate extension GroupVideoCallView {
                         
                         Text(" \(viewModel.meeting.localUser.name) \(viewModel.userType(preset: viewModel.meeting.localUser.presetName))")
                             .font(.robotoMedium(size: 10))
+                            .lineLimit(1)
                             .foregroundColor(.white)
                     }
                     .padding(5)
@@ -1730,12 +1731,14 @@ fileprivate extension GroupVideoCallView {
                     .frame(width: 12)
                     
                     if participant.isPinned {
-                        Text(" \(participant.name) \(viewModel.userType(preset: participant.presetName)) \(Image(systemName: "pin"))")
+                        Text(" \(Image(systemName: "pin")) \(participant.name) \(viewModel.userType(preset: participant.presetName))")
                             .font(.robotoMedium(size: 10))
+                            .lineLimit(1)
                             .foregroundColor(.white)
                     } else {
                         Text(" \(participant.name) \(viewModel.userType(preset: participant.presetName))")
                             .font(.robotoMedium(size: 10))
+                            .lineLimit(1)
                             .foregroundColor(.white)
                     }
                 }
@@ -1818,12 +1821,14 @@ fileprivate extension GroupVideoCallView {
                     .frame(width: 12)
                     
                     if participant?.isPinned ?? false {
-                        Text(" \((participant?.name).orEmpty()) \(viewModel.userType(preset: (participant?.presetName).orEmpty())) \(Image(systemName: "pin"))")
+                        Text(" \(Image(systemName: "pin")) \((participant?.name).orEmpty()) \(viewModel.userType(preset: (participant?.presetName).orEmpty()))")
                             .font(.robotoMedium(size: 10))
+                            .lineLimit(1)
                             .foregroundColor(.white)
                     } else {
                         Text(" \((participant?.name).orEmpty()) \(viewModel.userType(preset: (participant?.presetName).orEmpty()))")
                             .font(.robotoMedium(size: 10))
+                            .lineLimit(1)
                             .foregroundColor(.white)
                     }
                 }
@@ -1910,12 +1915,14 @@ fileprivate extension GroupVideoCallView {
                     .frame(width: 12)
                     
                     if participant.isPinned {
-                        Text(" \(participant.name) \(viewModel.userType(preset: participant.presetName)) \(Image(systemName: "pin"))")
+                        Text(" \(Image(systemName: "pin")) \(participant.name) \(viewModel.userType(preset: participant.presetName))")
                             .font(.robotoMedium(size: 10))
+                            .lineLimit(1)
                             .foregroundColor(.white)
                     } else {
                         Text(" \(participant.name) \(viewModel.userType(preset: participant.presetName))")
                             .font(.robotoMedium(size: 10))
+                            .lineLimit(1)
                             .foregroundColor(.white)
                     }
                 }
@@ -1967,6 +1974,7 @@ fileprivate extension GroupVideoCallView {
                     
                     Text(" \(participant?.name ?? "") (\(LocalizableText.videoCallScreenShareText)")
                         .font(.robotoMedium(size: 10))
+                        .lineLimit(1)
                         .foregroundColor(.white)
                 }
                 .padding(5)
