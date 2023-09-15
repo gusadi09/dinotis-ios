@@ -206,14 +206,15 @@ struct TalentTransactionWithdrawView: View {
 									
 									Text(LocaleText.successTitle)
 										.font(.robotoMedium(size: 12))
+                                        .foregroundColor(.DinotisDefault.black1)
 									
 									Spacer()
 								}
 								.padding()
-								.background(Color.completeGreen)
+                                .background(Color.DinotisDefault.brightGreen)
 								.cornerRadius(8)
 								.overlay(
-									RoundedRectangle(cornerRadius: 8).stroke(Color.primaryGreen, lineWidth: 1.0)
+                                    RoundedRectangle(cornerRadius: 8).stroke(Color.DinotisDefault.basicGreen, lineWidth: 1.0)
 								)
 							} else if viewModel.withdrawData?.isFailed ?? false {
 								HStack {
