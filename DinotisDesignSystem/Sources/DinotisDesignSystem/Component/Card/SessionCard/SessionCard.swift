@@ -21,6 +21,7 @@ public struct SessionCardModel {
 	let session: Int
     let price: String
     let participants: Int
+    let participantsImgUrl: [String]
 	let isActive: Bool
 	let type: SessionType
     let invoiceId: String
@@ -44,6 +45,7 @@ public struct SessionCardModel {
 		session: Int = 0,
         price: String = "",
         participants: Int = 0,
+        participantsImgUrl: [String],
 		isActive: Bool,
 		type: SessionType = .session,
         invoiceId: String = "",
@@ -65,6 +67,7 @@ public struct SessionCardModel {
         self.description = description
         self.price = price
         self.participants = participants
+        self.participantsImgUrl = participantsImgUrl
 		self.isActive = isActive
 		self.type = type
 		self.session = session
@@ -134,19 +137,72 @@ public struct SessionCard: View {
 					.padding(.bottom, data.type == .session ? 0 : 15)
 
 				if data.type == .session {
-					Text(data.isPrivate ? LocalizableText.privateSessionLabelWithEmoji : LocalizableText.groupSessionLabelWithEmoji)
-						.font(.robotoMedium(size: 10))
-						.foregroundColor(.DinotisDefault.primary)
-						.padding(.vertical, 6)
-						.padding(.horizontal, 8)
-						.background(
-							Capsule()
-								.foregroundColor(.white)
-						)
-						.overlay(
-							Capsule()
-								.stroke(data.color == nil ? Color.DinotisDefault.primary : .clear, lineWidth: 1)
-						)
+                    HStack(spacing: 0) {
+                        if !data.participantsImgUrl.isEmpty {
+                            HStack(spacing: -10) {
+                                ForEach(data.participantsImgUrl.prefix(4), id: \.self) {
+                                    item in
+                                    
+                                    DinotisImageLoader(
+                                        urlString: item,
+                                        width: 25,
+                                        height: 25
+                                    )
+                                    .clipShape(Circle())
+                                    .overlay(
+                                        Circle()
+                                            .stroke(Color.white, lineWidth: 1)
+                                            .frame(width: 25, height: 25)
+                                    )
+                                }
+                                
+                                if data.participantsImgUrl.count > 4 {
+                                    HStack(spacing: 2) {
+                                        Circle()
+                                            .scaledToFit()
+                                            .frame(height: 3)
+                                            .foregroundColor(.white)
+                                        
+                                        Circle()
+                                            .scaledToFit()
+                                            .frame(height: 3)
+                                            .foregroundColor(.white)
+                                        
+                                        Circle()
+                                            .scaledToFit()
+                                            .frame(height: 3)
+                                            .foregroundColor(.white)
+                                    }
+                                    .frame(width: 25, height: 25)
+                                    .background(
+                                        Circle()
+                                            .frame(width: 25, height: 25)
+                                            .foregroundColor(Color(hex: "#CD2DAD")?.opacity(0.75))
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(Color.white, lineWidth: 1)
+                                                    .frame(width: 25, height: 25)
+                                            )
+                                    )
+                                }
+                            }
+                        }
+                        
+                        Text(data.isPrivate ? LocalizableText.privateSessionLabelWithEmoji : LocalizableText.groupSessionLabelWithEmoji)
+                            .font(.robotoMedium(size: 10))
+                            .foregroundColor(.DinotisDefault.primary)
+                            .padding(.vertical, 6)
+                            .padding(.horizontal, 8)
+                            .background(
+                                Capsule()
+                                    .foregroundColor(.white)
+                            )
+                            .overlay(
+                                Capsule()
+                                    .stroke(data.color == nil ? Color.DinotisDefault.primary : .clear, lineWidth: 1)
+                            )
+                            .padding(.horizontal, data.participantsImgUrl.isEmpty ? 0 : 6)
+                    }
 				}
 
 				HStack(spacing: 5) {
@@ -290,7 +346,11 @@ struct PreviewSessionCard: View {
                             isVerified: false,
                             photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHXbffIPSvVpJ8Lyu-0MlD3YZCMIYBA5wstAiQlSZN&s",
                             name: "Habilia Aprilia Sukmajati Simatupang Mandasari",
-                            color: [""], isActive: true, isAlreadyBooked: true), {}, visitProfile: {}
+                            color: [""],
+                            participantsImgUrl: ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHXbffIPSvVpJ8Lyu-0MlD3YZCMIYBA5wstAiQlSZN&s"],
+                            isActive: true,
+                            isAlreadyBooked: true
+                        ), {}, visitProfile: {}
                         )
                     }
                 }

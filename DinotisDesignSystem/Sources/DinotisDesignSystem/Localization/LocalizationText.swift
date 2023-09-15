@@ -2352,6 +2352,12 @@ public enum LocalizableText {
         bundle: .module,
         comment: "nearest schedule title"
     )
+    
+    public static let requestCardSessionText = NSLocalizedString(
+        "request_card_session",
+        bundle: .module,
+        comment: "session"
+    )
 }
 
 

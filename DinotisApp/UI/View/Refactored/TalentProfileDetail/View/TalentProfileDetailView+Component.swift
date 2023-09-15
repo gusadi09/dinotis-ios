@@ -395,6 +395,7 @@ extension TalentProfileDetailView {
                             session: item.session.orZero(),
                             price: item.price.orEmpty(),
                             participants: 0,
+                            participantsImgUrl: [],
                             isActive: item.isActive.orFalse(),
                             type: .bundling,
                             isAlreadyBooked: item.isAlreadyBooked ?? false
@@ -433,6 +434,9 @@ extension TalentProfileDetailView {
                             photo: (items.user?.profilePhoto).orEmpty(),
                             name: (items.user?.name).orEmpty(),
                             color: items.background ?? [],
+                            participantsImgUrl: items.participantDetails?.compactMap({
+                                $0.profilePhoto.orEmpty()
+                            }) ?? [],
                             isActive: items.endAt.orCurrentDate() > Date(),
                             collaborationCount: (items.meetingCollaborations ?? []).count,
                             collaborationName: (items.meetingCollaborations ?? []).compactMap({

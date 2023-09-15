@@ -432,6 +432,9 @@ struct TalentHomeView: View {
                                                                     photo: (item.user?.profilePhoto).orEmpty(),
                                                                     name: (item.user?.name).orEmpty(),
                                                                     color: item.background,
+                                                                    participantsImgUrl: item.participantDetails?.compactMap({
+                                                                        $0.profilePhoto.orEmpty()
+                                                                    }) ?? [],
                                                                     isActive: item.endAt.orCurrentDate() > Date(),
                                                                     collaborationCount: (item.meetingCollaborations ?? []).count,
                                                                     collaborationName: (item.meetingCollaborations ?? []).compactMap({
@@ -752,6 +755,18 @@ extension TalentHomeView {
                                             viewModel.currentSection = tab
                                             scrollView.scrollTo(tab, anchor: .center)
                                             viewModel.offsetY = .zero
+                                            switch tab {
+                                            case .scheduled:
+                                                viewModel.onGetScheduledMeeting(isMore: false)
+                                            case .notConfirmed:
+                                                viewModel.onGetMeetingRequest(isMore: false)
+                                            case .pending:
+                                                viewModel.onGetPendingMeeting(isMore: false)
+                                            case .canceled:
+                                                viewModel.onGetCanceledMeeting(isMore: false)
+                                            case .completed:
+                                                viewModel.onGetEndedMeeting(isMore: false)
+                                            }
                                         }
                                     } label: {
                                         HStack(spacing: 8) {

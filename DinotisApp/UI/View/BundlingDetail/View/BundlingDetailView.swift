@@ -128,6 +128,9 @@ struct BundlingDetailView: View {
                                                 photo: (viewModel.detailData?.user?.profilePhoto).orEmpty(),
                                                 name: (viewModel.detailData?.user?.name).orEmpty(),
                                                 color: item.background,
+                                                participantsImgUrl: item.participantDetails?.compactMap({
+                                                    $0.profilePhoto.orEmpty()
+                                                }) ?? [],
                                                 isActive: item.endAt.orCurrentDate() > Date(),
                                                 collaborationCount: (item.meetingCollaborations ?? []).count,
                                                 collaborationName: (item.meetingCollaborations ?? []).compactMap({
