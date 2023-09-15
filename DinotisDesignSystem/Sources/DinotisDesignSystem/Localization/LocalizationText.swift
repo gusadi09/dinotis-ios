@@ -38,6 +38,11 @@ public enum LocalizableText {
 		bundle: .module,
 		comment: "This string usage for description on role selection"
 	)
+    public static let generalSuccess = NSLocalizedString(
+        "general_success",
+        bundle: .module,
+        comment: "success"
+    )
 
 	public static let skipLabel = NSLocalizedString(
 		"label_skip",
@@ -2357,6 +2362,12 @@ public enum LocalizableText {
         "request_card_session",
         bundle: .module,
         comment: "session"
+    )
+    
+    public static let withdrawSuccessSubtitle = NSLocalizedString(
+        "withdraw_success_subtitle",
+        bundle: .module,
+        comment: "success subtitle"
     )
 }
 

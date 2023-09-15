@@ -30,6 +30,7 @@ final class TalentWithdrawalViewModel: ObservableObject {
 	@Published var isError = false
 	@Published var success = false
 	@Published var error: String?
+    @Published var isLoadingWithdraw = false
 
 	@Published var isRefreshFailed = false
 
@@ -102,9 +103,13 @@ final class TalentWithdrawalViewModel: ObservableObject {
 		}
 	}
 
-	func onStartRequest() {
+    func onStartRequest(isWithdraw: Bool = false) {
 		DispatchQueue.main.async {[weak self] in
-			self?.isLoading = true
+            if !isWithdraw {
+                self?.isLoading = true
+            } else {
+                self?.isLoadingWithdraw = true
+            }
 			self?.isError = false
 			self?.error = nil
 			self?.success = false
@@ -129,9 +134,14 @@ final class TalentWithdrawalViewModel: ObservableObject {
         }
 	}
     
-    func handleDefaultError(error: Error) {
+    func handleDefaultError(error: Error, isWithdraw: Bool = false) {
         DispatchQueue.main.async { [weak self] in
-            self?.isLoading = false
+            if !isWithdraw {
+                self?.isLoading = false
+            } else {
+                self?.isLoadingWithdraw = false
+                self?.isPresent = false
+            }
             
             if let error = error as? ErrorResponse {
                 
@@ -179,7 +189,7 @@ final class TalentWithdrawalViewModel: ObservableObject {
 
 	func withdraw() async {
 		
-		onStartRequest()
+		onStartRequest(isWithdraw: true)
 
 		let body = WithdrawalRequest(amount: Int(inputAmount.orZero()), bankId: (bankData.first?.id).orZero(), accountName: (bankData.first?.accountName).orEmpty(), accountNumber: (bankData.first?.accountNumber).orEmpty())
         
@@ -188,11 +198,11 @@ final class TalentWithdrawalViewModel: ObservableObject {
         switch result {
         case .success(_):
             DispatchQueue.main.async { [weak self] in
-                self?.isLoading = false
+                self?.isLoadingWithdraw = false
                 self?.success = true
             }
         case .failure(let failure):
-            handleDefaultError(error: failure)
+            handleDefaultError(error: failure, isWithdraw: true)
         }
 	}
 }
