@@ -63,13 +63,9 @@ struct TalentScheduleCardView: View {
                     
                     switch status {
                     case .canceled:
-                        Text(countHourTime(time: (data.createdAt).orCurrentDate()))
-                            .foregroundColor(.DinotisDefault.black1)
-                            .font(.robotoRegular(size: 10))
+                        EmptyView()
                     case .completed:
-                        Text(countHourTime(time: (data.createdAt).orCurrentDate()))
-                            .foregroundColor(.DinotisDefault.black1)
-                            .font(.robotoRegular(size: 10))
+                        EmptyView()
                     default:
                         if data.endedAt != nil {
                             Text(NSLocalizedString("ended_meeting_card_label", comment: ""))
@@ -243,7 +239,8 @@ struct TalentScheduleCardView: View {
                         if !(data.isPrivate ?? false) && !(data.isLiveStreaming ?? false) {
                             Text(LocalizableText.groupSessionLabelWithEmoji)
                                 .font(.robotoRegular(size: 12))
-                                .foregroundColor(.black)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.DinotisDefault.darkPrimary)
                                 .padding(.vertical, 5)
                                 .padding(.horizontal)
                                 .background(Color.DinotisDefault.lightPrimary)
@@ -256,7 +253,8 @@ struct TalentScheduleCardView: View {
                         } else if data.isLiveStreaming ?? false {
                             Text(LocaleText.liveStreamText)
                                 .font(.robotoRegular(size: 12))
-                                .foregroundColor(.black)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.DinotisDefault.darkPrimary)
                                 .padding(.vertical, 5)
                                 .padding(.horizontal)
                                 .background(Color.DinotisDefault.lightPrimary)
@@ -268,7 +266,8 @@ struct TalentScheduleCardView: View {
                         } else {
                             Text(LocalizableText.privateSessionLabelWithEmoji)
                                 .font(.robotoRegular(size: 12))
-                                .foregroundColor(.black)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.DinotisDefault.darkPrimary)
                                 .padding(.vertical, 5)
                                 .padding(.horizontal)
                                 .background(Color.DinotisDefault.lightPrimary)

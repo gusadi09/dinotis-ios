@@ -424,7 +424,7 @@ struct TalentHomeView: View {
                                                             SessionCard(
                                                                 with: SessionCardModel(
                                                                     title: (item.title).orEmpty(),
-                                                                    date: DateUtils.dateFormatter((item.startAt).orCurrentDate(), forFormat: .ddMMMMyyyy),
+                                                                    date: DateUtils.dateFormatter((item.startAt).orCurrentDate(), forFormat: .EEEEddMMMMyyyy),
                                                                     startAt: DateUtils.dateFormatter((item.startAt).orCurrentDate(), forFormat: .HHmm),
                                                                     endAt: DateUtils.dateFormatter((item.endAt).orCurrentDate(), forFormat: .HHmm),
                                                                     isPrivate: (item.isPrivate) ?? false,
@@ -675,7 +675,7 @@ struct TalentHomeView: View {
                             if #available(iOS 16.0, *) {
                                 AcceptedSheet(viewModel: homeVM, isOnSheet: true)
                                     .padding()
-                                    .presentationDetents([.medium])
+                                    .presentationDetents([.height(250)])
                                     .presentationDragIndicator(.hidden)
                                     .dynamicTypeSize(.large)
                             } else {
@@ -757,14 +757,24 @@ extension TalentHomeView {
                                             viewModel.offsetY = .zero
                                             switch tab {
                                             case .scheduled:
+                                                viewModel.scheduledRequest.skip = 0
+                                                viewModel.scheduledRequest.take = 8
                                                 viewModel.onGetScheduledMeeting(isMore: false)
                                             case .notConfirmed:
+                                                viewModel.rateCardQuery.skip = 0
+                                                viewModel.rateCardQuery.take = 15
                                                 viewModel.onGetMeetingRequest(isMore: false)
                                             case .pending:
+                                                viewModel.pendingRequest.skip = 0
+                                                viewModel.pendingRequest.take = 8
                                                 viewModel.onGetPendingMeeting(isMore: false)
                                             case .canceled:
+                                                viewModel.canceledRequest.skip = 0
+                                                viewModel.canceledRequest.take = 8
                                                 viewModel.onGetCanceledMeeting(isMore: false)
                                             case .completed:
+                                                viewModel.endedRequest.skip = 0
+                                                viewModel.endedRequest.take = 8
                                                 viewModel.onGetEndedMeeting(isMore: false)
                                             }
                                         }

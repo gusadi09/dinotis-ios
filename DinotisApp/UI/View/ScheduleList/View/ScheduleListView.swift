@@ -229,7 +229,7 @@ private extension ScheduleListView {
                                     SessionCard(
                                         with: SessionCardModel(
                                             title: (item.meeting?.title).orEmpty(),
-                                            date: DateUtils.dateFormatter((item.meeting?.startAt).orCurrentDate(), forFormat: .ddMMMMyyyy),
+                                            date: DateUtils.dateFormatter((item.meeting?.startAt).orCurrentDate(), forFormat: .EEEEddMMMMyyyy),
                                             startAt: DateUtils.dateFormatter((item.meeting?.startAt).orCurrentDate(), forFormat: .HHmm),
                                             endAt: DateUtils.dateFormatter((item.meeting?.endAt).orCurrentDate(), forFormat: .HHmm),
                                             isPrivate: (item.meeting?.isPrivate) ?? false,

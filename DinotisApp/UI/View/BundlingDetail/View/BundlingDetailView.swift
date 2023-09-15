@@ -120,7 +120,7 @@ struct BundlingDetailView: View {
                                         SessionCard(
                                             with: SessionCardModel(
                                                 title: item.title.orEmpty(),
-                                                date: DateUtils.dateFormatter(item.startAt.orCurrentDate(), forFormat: .ddMMMMyyyy),
+                                                date: DateUtils.dateFormatter(item.startAt.orCurrentDate(), forFormat: .EEEEddMMMMyyyy),
                                                 startAt: DateUtils.dateFormatter(item.startAt.orCurrentDate(), forFormat: .HHmm),
                                                 endAt: DateUtils.dateFormatter(item.endAt.orCurrentDate(), forFormat: .HHmm),
                                                 isPrivate: item.isPrivate ?? false,

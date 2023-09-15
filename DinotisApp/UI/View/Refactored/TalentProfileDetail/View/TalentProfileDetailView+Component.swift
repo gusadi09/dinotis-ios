@@ -426,7 +426,7 @@ extension TalentProfileDetailView {
                     SessionCard(
                         with: SessionCardModel(
                             title: items.title.orEmpty(),
-                            date: DateUtils.dateFormatter(items.startAt.orCurrentDate(), forFormat: .ddMMMMyyyy),
+                            date: DateUtils.dateFormatter(items.startAt.orCurrentDate(), forFormat: .EEEEddMMMMyyyy),
                             startAt: DateUtils.dateFormatter(items.startAt.orCurrentDate(), forFormat: .HHmm),
                             endAt: DateUtils.dateFormatter(items.endAt.orCurrentDate(), forFormat: .HHmm),
                             isPrivate: items.isPrivate ?? false,

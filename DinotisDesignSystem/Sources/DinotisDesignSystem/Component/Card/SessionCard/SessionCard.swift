@@ -105,10 +105,10 @@ public struct SessionCard: View {
 		ZStack(alignment: .topTrailing) {
 			VStack(alignment: .leading, spacing: 12) {
 				HStack(spacing: 5) {
-					Image(systemName: "calendar")
+                    Image.sessionCardDateIcon
 						.resizable()
 						.scaledToFit()
-						.frame(width: 14)
+						.frame(width: 20)
 
 					if data.type == .bundling {
 						Text(LocalizableText.sessionValueText(with: data.session))
