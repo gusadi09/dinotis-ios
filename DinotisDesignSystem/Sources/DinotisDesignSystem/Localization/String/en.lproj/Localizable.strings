@@ -12,6 +12,7 @@
 "description_boarding_second" = "Are you satisfied just hearing the sound? \nIf you chat here, you can see each other!";
 "title_role_type" = "Various interesting sessions for you";
 "description_role_type" = "Please choose the type of account that suits for you!";
+"general_success" = "Success";
 
 "tab_explore" = "Explore";
 "tab_search" = "Search";
@@ -522,3 +523,5 @@
 "home_creator_nearest_title" = "Your Nearest Schedule";
 
 "request_card_session" = "Session";
+
+"withdraw_success_subtitle" = "Success to withdraw your balance, please check your dinotis and bank account balance carefully";

@@ -12,6 +12,7 @@
 "description_boarding_second" = "Denger suara doang emang puas? \nKalau ngobrol di sini bisa sambil tatap-tatapan!";
 "title_role_type" = "Berbagai sesi menarik untukmu";
 "description_role_type" = "Silahkan pilih tipe akun yang sesuai untukmu!";
+"general_success" = "Berhasil";
 
 "tab_explore" = "Eksplor";
 "tab_search" = "Cari";
@@ -522,3 +523,5 @@
 "home_creator_nearest_title" = "Jadwal Terdekat Kamu";
 
 "request_card_session" = "Sesi";
+
+"withdraw_success_subtitle" = "Berhasil menarik saldo, Silahkan cek saldo dinotis dan akun bank kamu secara hati-hati";
