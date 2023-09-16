@@ -133,6 +133,7 @@ struct ChangePhoneView: View {
             }
             .sheet(isPresented: $viewModel.isShowingCountryPicker, content: {
                 CountryPicker(country: $viewModel.countrySelected)
+                    .dynamicTypeSize(.large)
             })
 			.sheet(
 				isPresented: $viewModel.isShowSelectChannel,
@@ -150,6 +151,7 @@ struct ChangePhoneView: View {
 						}
 							.padding()
                             .presentationDetents([.fraction(0.34)])
+                            .dynamicTypeSize(.large)
 					} else {
                         ScrollView {
                             SelectChannelView(channel: $viewModel.selectedChannel, geo: geo) {
@@ -161,6 +163,7 @@ struct ChangePhoneView: View {
                             }
                             .padding()
                             .padding(.vertical)
+                            .dynamicTypeSize(.large)
                         }
 					}
 				}

@@ -12,6 +12,7 @@
 "description_boarding_second" = "Are you satisfied just hearing the sound? \nIf you chat here, you can see each other!";
 "title_role_type" = "Various interesting sessions for you";
 "description_role_type" = "Please choose the type of account that suits for you!";
+"general_success" = "Success";
 
 "tab_explore" = "Explore";
 "tab_search" = "Search";
@@ -498,3 +499,29 @@
 "session_detail_rating_tooltip" = "Don't forget to provide a review for the session you have attended, okay!";
 
 "video_call_force_end" = "Meeting is ended because time is up.";
+
+"home_creator_withdraw" = "Withdraw";
+"creator_empty_session_title" = "No video call schedule yet";
+"creator_empty_session_desc" = "Let's schedule your video call now, your audience is waiting!";
+"creator_create_session_label" = "Create Session";
+
+"filter_scheduled" = "Scheduled";
+"filter_unconfirmed" = "Not Confirmed";
+"filter_pending" = "Pending";
+"filter_canceled" = "Canceled";
+"filter_session_completed" = "Session Completed";
+
+"sort_label" = "Sort by";
+"sort_latest" = "Latest";
+"sort_earliest" = "Earliest";
+
+"status_waiting_new_session" = "Waiting for a new schedule";
+"status_unconfirmed_session" = "Schedule not confirmed";
+"status_canceled_session" = "Schedule canceled";
+"status_completed_session" = "Session completed";
+
+"home_creator_nearest_title" = "Your Nearest Schedule";
+
+"request_card_session" = "Session";
+
+"withdraw_success_subtitle" = "Success to withdraw your balance, please check your dinotis and bank account balance carefully";

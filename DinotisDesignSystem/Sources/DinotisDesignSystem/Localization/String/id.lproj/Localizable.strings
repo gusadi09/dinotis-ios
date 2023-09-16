@@ -12,6 +12,7 @@
 "description_boarding_second" = "Denger suara doang emang puas? \nKalau ngobrol di sini bisa sambil tatap-tatapan!";
 "title_role_type" = "Berbagai sesi menarik untukmu";
 "description_role_type" = "Silahkan pilih tipe akun yang sesuai untukmu!";
+"general_success" = "Berhasil";
 
 "tab_explore" = "Eksplor";
 "tab_search" = "Cari";
@@ -498,3 +499,29 @@
 "session_detail_rating_tooltip" = "Jangan lupa berikan ulasan untuk sesi yang telah kamu ikuti ya!";
 
 "video_call_force_end" = "Meeting telah berakhir karena waktu telah habis.";
+
+"home_creator_withdraw" = "Penarikan";
+"creator_empty_session_title" = "Belum ada jadwal video call nih";
+"creator_empty_session_desc" = "Yuk atur jadwal video call mu sekarang, Audiensmu sudah menunggu loh!";
+"creator_create_session_label" = "Buat Jadwal Sesi";
+
+"filter_scheduled" = "Terjadwal";
+"filter_unconfirmed" = "Belum Konfirmasi";
+"filter_pending" = "Pending";
+"filter_canceled" = "Dibatalkan";
+"filter_session_completed" = "Sesi Selesai";
+
+"sort_label" = "Urutkan";
+"sort_latest" = "Terbaru";
+"sort_earliest" = "Terlama";
+
+"status_waiting_new_session" = "Menunggu jadwal baru";
+"status_unconfirmed_session" = "Jadwal belum diatur";
+"status_canceled_session" = "Jadwal dibatalkan";
+"status_completed_session" = "Sesi selesai";
+
+"home_creator_nearest_title" = "Jadwal Terdekat Kamu";
+
+"request_card_session" = "Sesi";
+
+"withdraw_success_subtitle" = "Berhasil menarik saldo, Silahkan cek saldo dinotis dan akun bank kamu secara hati-hati";

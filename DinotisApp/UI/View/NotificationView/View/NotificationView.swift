@@ -289,9 +289,11 @@ struct NotificationView: View {
                 DetailCollaborationSheet(viewModel: viewModel)
                     .padding()
                     .presentationDetents([.medium, .large])
+                    .dynamicTypeSize(.large)
             } else {
                 DetailCollaborationSheet(viewModel: viewModel)
                     .padding()
+                    .dynamicTypeSize(.large)
             }
         })
         .dinotisAlert(

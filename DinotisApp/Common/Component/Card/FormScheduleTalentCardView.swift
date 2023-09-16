@@ -934,16 +934,19 @@ struct FormScheduleTalentCardView: View {
                         isShowSelectedTalent = false
                     }
                     .presentationDetents([.medium, .large])
+                    .dynamicTypeSize(.large)
                 } else {
                     SelectedCollabCreatorView(arrUsername: $meetingForm.collaborations, arrTalent: isEdit ? $collab : $talent) {
                         isShowSelectedTalent = false
                     }
+                    .dynamicTypeSize(.large)
                 }
             })
             .sheet(isPresented: $presentTalentPicker, content: {
                 CreatorPickerView(arrUsername: $meetingForm.collaborations, arrTalent: isEdit ? $collab : $talent) {
                     presentTalentPicker = false
                 }
+                .dynamicTypeSize(.large)
             })
             .sheet(isPresented: $showsDatePicker) {
                 if #available(iOS 16.0, *) {
@@ -980,6 +983,7 @@ struct FormScheduleTalentCardView: View {
                         }
                     }
                     .presentationDetents([.medium])
+                    .dynamicTypeSize(.large)
                 } else {
                     ZStack {
                         VStack(alignment: .center, spacing: 0) {
@@ -1011,6 +1015,7 @@ struct FormScheduleTalentCardView: View {
                             changedTimeStart = timeStart ?? Date().addingTimeInterval(3600)
                         }
                     }
+                    .dynamicTypeSize(.large)
                 }
             }
             .sheet(isPresented: $showsTimePicker) {
@@ -1056,6 +1061,7 @@ struct FormScheduleTalentCardView: View {
                         .padding()
                     }
                     .presentationDetents([.medium])
+                    .dynamicTypeSize(.large)
                 } else {
                     ZStack {
                         VStack(alignment: .leading) {
@@ -1095,6 +1101,7 @@ struct FormScheduleTalentCardView: View {
                         }
                         .padding()
                     }
+                    .dynamicTypeSize(.large)
                 }
                 
             }
@@ -1147,6 +1154,7 @@ struct FormScheduleTalentCardView: View {
                         }
                     }
                     .presentationDetents([.medium])
+                    .dynamicTypeSize(.large)
                 } else {
                     ZStack {
                         VStack(alignment: .leading) {
@@ -1192,6 +1200,7 @@ struct FormScheduleTalentCardView: View {
                             }
                         }
                     }
+                    .dynamicTypeSize(.large)
                 }
                 
             }

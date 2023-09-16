@@ -449,6 +449,7 @@ struct DetailPaymentView: View {
 						.padding()
 						.padding(.vertical)
 						.presentationDetents([.fraction(0.5), .large])
+                        .dynamicTypeSize(.large)
 				} else {
 					VStack(spacing: 10) {
 						HStack {
@@ -492,6 +493,7 @@ struct DetailPaymentView: View {
 					}
 						.padding()
 						.padding(.vertical)
+                        .dynamicTypeSize(.large)
 				}
             }
         )
@@ -566,6 +568,7 @@ struct DetailPaymentView: View {
 						.padding()
 						.padding(.vertical)
 						.presentationDetents([.fraction(0.35), .large])
+                        .dynamicTypeSize(.large)
 				} else {
 					VStack(spacing: 24) {
 						HStack {
@@ -633,6 +636,7 @@ struct DetailPaymentView: View {
 					}
 						.padding()
 						.padding(.vertical)
+                        .dynamicTypeSize(.large)
 				}
 
             }

@@ -80,6 +80,7 @@ extension TalentEditProfile {
 							})
 							.sheet(isPresented: $viewModel.isShowPhotoLibraryHG[item]) {
 								ImagePicker(sourceType: .photoLibrary, selectedImage: $viewModel.userHighlightsImage[item])
+                                    .dynamicTypeSize(.large)
 							}
 
 							Text("\(LocaleText.photo) \(item+1)")
@@ -164,6 +165,7 @@ extension TalentEditProfile {
 					})
 					.sheet(isPresented: $viewModel.isShowPhotoLibrary) {
 						ImagePicker(sourceType: .photoLibrary, selectedImage: $viewModel.image)
+                            .dynamicTypeSize(.large)
 					}
 					Spacer()
 				}

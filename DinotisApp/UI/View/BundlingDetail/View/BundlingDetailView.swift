@@ -120,7 +120,7 @@ struct BundlingDetailView: View {
                                         SessionCard(
                                             with: SessionCardModel(
                                                 title: item.title.orEmpty(),
-                                                date: DateUtils.dateFormatter(item.startAt.orCurrentDate(), forFormat: .ddMMMMyyyy),
+                                                date: DateUtils.dateFormatter(item.startAt.orCurrentDate(), forFormat: .EEEEddMMMMyyyy),
                                                 startAt: DateUtils.dateFormatter(item.startAt.orCurrentDate(), forFormat: .HHmm),
                                                 endAt: DateUtils.dateFormatter(item.endAt.orCurrentDate(), forFormat: .HHmm),
                                                 isPrivate: item.isPrivate ?? false,
@@ -128,6 +128,9 @@ struct BundlingDetailView: View {
                                                 photo: (viewModel.detailData?.user?.profilePhoto).orEmpty(),
                                                 name: (viewModel.detailData?.user?.name).orEmpty(),
                                                 color: item.background,
+                                                participantsImgUrl: item.participantDetails?.compactMap({
+                                                    $0.profilePhoto.orEmpty()
+                                                }) ?? [],
                                                 isActive: item.endAt.orCurrentDate() > Date(),
                                                 collaborationCount: (item.meetingCollaborations ?? []).count,
                                                 collaborationName: (item.meetingCollaborations ?? []).compactMap({
@@ -239,11 +242,13 @@ struct BundlingDetailView: View {
 							.padding(.vertical)
 							.padding(.top)
 							.presentationDetents([.fraction(0.6), .large])
+                            .dynamicTypeSize(.large)
 					} else {
 						SlideOverCardView(viewModel: viewModel)
 							.padding()
 							.padding(.vertical)
 							.padding(.top)
+                            .dynamicTypeSize(.large)
 					}
 
 				}
@@ -257,12 +262,14 @@ struct BundlingDetailView: View {
                             .padding()
                             .padding(.vertical)
                             .presentationDetents([.height(130)])
+                            .dynamicTypeSize(.large)
 					} else {
 						ScrollView {
 							PaymentTypeOption(viewModel: viewModel)
 								.padding(.top)
 								.padding()
 								.padding(.vertical)
+                                .dynamicTypeSize(.large)
 						}
 						.padding(.top)
 					}
@@ -279,10 +286,12 @@ struct BundlingDetailView: View {
 							.padding()
 							.padding(.vertical)
 							.presentationDetents([.fraction(0.8), .large])
+                            .dynamicTypeSize(.large)
 					} else {
                         CoinPaymentSheetView(viewModel: viewModel, tabValue: $tabValue)
 							.padding()
 							.padding(.vertical)
+                            .dynamicTypeSize(.large)
 					}
 				}
 			)
@@ -294,10 +303,12 @@ struct BundlingDetailView: View {
 							.padding()
 							.padding(.vertical)
 							.presentationDetents([.fraction(0.85), .large])
+                            .dynamicTypeSize(.large)
 					} else {
 						AddCoinSheetView(viewModel: viewModel, geo: geo)
 							.padding()
 							.padding(.vertical)
+                            .dynamicTypeSize(.large)
 					}
 				}
 			)
@@ -309,10 +320,12 @@ struct BundlingDetailView: View {
 							.padding()
 							.padding(.vertical)
 							.presentationDetents([.fraction(0.5), .large])
+                            .dynamicTypeSize(.large)
 					} else {
 						CoinBuySucceed(geo: geo)
 							.padding()
 							.padding(.vertical)
+                            .dynamicTypeSize(.large)
 					}
 
 				}

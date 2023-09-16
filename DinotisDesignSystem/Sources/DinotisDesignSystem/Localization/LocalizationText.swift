@@ -38,6 +38,11 @@ public enum LocalizableText {
 		bundle: .module,
 		comment: "This string usage for description on role selection"
 	)
+    public static let generalSuccess = NSLocalizedString(
+        "general_success",
+        bundle: .module,
+        comment: "success"
+    )
 
 	public static let skipLabel = NSLocalizedString(
 		"label_skip",
@@ -2265,6 +2270,104 @@ public enum LocalizableText {
         "video_call_force_end",
         bundle: .module,
         comment: "force ended"
+    )
+    public static let homeCreatorWithdraw = NSLocalizedString(
+        "home_creator_withdraw",
+        bundle: .module,
+        comment: "withdraw"
+    )
+    public static let creatorEmptySessionTitle = NSLocalizedString(
+        "creator_empty_session_title",
+        bundle: .module,
+        comment: "creator empty session title"
+    )
+    public static let creatorEmptySessionDesc = NSLocalizedString(
+        "creator_empty_session_desc",
+        bundle: .module,
+        comment: "creator empty session description"
+    )
+    public static let filterScheduled = NSLocalizedString(
+        "filter_scheduled",
+        bundle: .module,
+        comment: "filter scheduled"
+    )
+    public static let filterUnconfirmed = NSLocalizedString(
+        "filter_unconfirmed",
+        bundle: .module,
+        comment: "filter not confirmed"
+    )
+    public static let filterPending = NSLocalizedString(
+        "filter_pending",
+        bundle: .module,
+        comment: "filter pending"
+    )
+    public static let filterCanceled = NSLocalizedString(
+        "filter_canceled",
+        bundle: .module,
+        comment: "filter canceled"
+    )
+    public static let filterSessionCompleted = NSLocalizedString(
+        "filter_session_completed",
+        bundle: .module,
+        comment: "filter session completed"
+    )
+    public static let sortLabel = NSLocalizedString(
+        "sort_label",
+        bundle: .module,
+        comment: "sort label"
+    )
+    public static let sortLatest = NSLocalizedString(
+        "sort_latest",
+        bundle: .module,
+        comment: "sort latest"
+    )
+    public static let sortEarliest = NSLocalizedString(
+        "sort_earliest",
+        bundle: .module,
+        comment: "sort earliest"
+    )
+    public static let statusWaitingNewSession = NSLocalizedString(
+        "status_waiting_new_session",
+        bundle: .module,
+        comment: "status waiting new session"
+    )
+    public static let statusUnconfirmedSession = NSLocalizedString(
+        "status_unconfirmed_session",
+        bundle: .module,
+        comment: "status unconfirmed session"
+    )
+    public static let statusCanceledSession = NSLocalizedString(
+        "status_canceled_session",
+        bundle: .module,
+        comment: "status canceled session"
+    )
+    public static let statusCompletedSession = NSLocalizedString(
+        "status_completed_session",
+        bundle: .module,
+        comment: "status completed session"
+    )
+    public static let creatorCreateSessionLabel = NSLocalizedString(
+        "creator_create_session_label",
+        bundle: .module,
+        comment: "creator create session label"
+    )
+    
+    public static let homeCreatorNearestTitle = NSLocalizedString(
+        "home_creator_nearest_title",
+        bundle: .module,
+        comment: "nearest schedule title"
+    )
+    
+    public static let requestCardSessionText = NSLocalizedString(
+        "request_card_session",
+        bundle: .module,
+        comment: "session"
+    )
+    
+    public static let withdrawSuccessSubtitle = NSLocalizedString(
+        "withdraw_success_subtitle",
+        bundle: .module,
+        comment: "success subtitle"
     )
 }
 

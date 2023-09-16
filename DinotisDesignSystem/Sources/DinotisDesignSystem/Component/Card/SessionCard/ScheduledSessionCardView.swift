@@ -167,7 +167,7 @@ struct ScheduledSessionCardView_Previews: PreviewProvider {
                     color: [""],
                     session: 8,
                     price: "Rp250.000",
-                    isActive: true,
+                    participantsImgUrl: [], isActive: true,
                     type: .bundling,
                     invoiceId: "DINO0123456789",
                     status: "Akan Datang", isAlreadyBooked: true), buttonLabel: "Bayar Sekarang", {}, visitProfile: {}

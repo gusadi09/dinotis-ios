@@ -119,6 +119,7 @@ struct ForgotPasswordView: View {
             }
             .sheet(isPresented: $viewModel.isShowingCountryPicker, content: {
                 CountryPicker(country: $viewModel.countrySelected)
+                    .dynamicTypeSize(.large)
 			})
 			.sheet(
 				isPresented: $viewModel.isShowSelectChannel,
@@ -135,6 +136,7 @@ struct ForgotPasswordView: View {
                         }
                         .padding()
                         .presentationDetents([.fraction(0.34)])
+                        .dynamicTypeSize(.large)
                     } else {
                         SelectChannelView(channel: $viewModel.selectedChannel, geo: geo) {
                             withAnimation {
@@ -144,6 +146,7 @@ struct ForgotPasswordView: View {
 						}
 							.padding()
 							.padding(.vertical)
+                            .dynamicTypeSize(.large)
 					}
 				}
 			)

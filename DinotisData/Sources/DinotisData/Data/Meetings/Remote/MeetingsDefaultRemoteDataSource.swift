@@ -25,11 +25,15 @@ public final class MeetingsDefaultRemoteDataSource: MeetingsRemoteDataSource {
     }
     
     public func getTalentMeeting(params: MeetingsPageRequest) async throws -> TalentMeetingResponse {
-        try await self.provider.request(.TalentMeeting(params), model: TalentMeetingResponse.self)
+        try await self.provider.request(.talentMeeting(params), model: TalentMeetingResponse.self)
+    }
+    
+    public func getTalentMeetingWithStatus(params: MeetingsStatusPageRequest) async throws -> CreatorMeetingWithStatusResponse {
+        try await self.provider.request(.talentMeetingWithStatus(params), model: CreatorMeetingWithStatusResponse.self)
     }
     
     public func getTalentDetailMeeting(userID: String, params: MeetingsPageRequest) async throws -> TalentMeetingResponse {
-        try await self.provider.request(.TalentDetailMeeting(userID, params), model: TalentMeetingResponse.self)
+        try await self.provider.request(.talentDetailMeeting(userID, params), model: TalentMeetingResponse.self)
     }
     
     public func patchEndMeeting(meetingId: String) async throws -> StartCreatorMeetingResponse {
@@ -62,5 +66,9 @@ public final class MeetingsDefaultRemoteDataSource: MeetingsRemoteDataSource {
     
     public func approveInvitation(with isApprove: Bool, for meetingId: String) async throws -> SuccessResponse {
         try await self.provider.request(.approveInvitation(isApprove, meetingId), model: SuccessResponse.self)
+    }
+    
+    public func getClosestSession() async throws -> ClosestMeetingResponse {
+        try await self.provider.request(.closestSession, model: ClosestMeetingResponse.self)
     }
 }

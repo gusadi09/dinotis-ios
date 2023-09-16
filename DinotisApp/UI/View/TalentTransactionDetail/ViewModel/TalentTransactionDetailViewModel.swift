@@ -121,6 +121,7 @@ final class TalentTransactionDetailViewModel: ObservableObject {
             DispatchQueue.main.async { [weak self] in
                 self?.isLoading = false
                 self?.withdrawData = success
+                print(success)
             }
         case .failure(let failure):
             handleDefaultError(error: failure)
