@@ -38,6 +38,11 @@ public enum LocalizableText {
 		bundle: .module,
 		comment: "This string usage for description on role selection"
 	)
+    public static let generalSuccess = NSLocalizedString(
+        "general_success",
+        bundle: .module,
+        comment: "success"
+    )
 
 	public static let skipLabel = NSLocalizedString(
 		"label_skip",
@@ -2352,6 +2357,49 @@ public enum LocalizableText {
         bundle: .module,
         comment: "nearest schedule title"
     )
+    
+    public static let requestCardSessionText = NSLocalizedString(
+        "request_card_session",
+        bundle: .module,
+        comment: "session"
+    )
+    
+    public static let withdrawSuccessSubtitle = NSLocalizedString(
+        "withdraw_success_subtitle",
+        bundle: .module,
+        comment: "success subtitle"
+    )
+    public static let tippingGiftTitle = NSLocalizedString(
+        "tipping_gift_title",
+        bundle: .module,
+        comment: "give gift to creator title"
+    )
+    public static let tippingYourBalance = NSLocalizedString(
+        "tipping_your_balance",
+        bundle: .module,
+        comment: "your balance text"
+    )
+    public static let tippingTopUpNow = NSLocalizedString(
+        "tipping_top_up_now",
+        bundle: .module,
+        comment: "top up now text"
+    )
+    public static let tippingNotEnoughBalance = NSLocalizedString(
+        "tipping_not_enough_balance",
+        bundle: .module,
+        comment: "not enough balance error when tipping"
+    )
+    public static let tippingYourCurrentCoin = NSLocalizedString(
+        "tipping_your_current_coin",
+        bundle: .module,
+        comment: "your current coin text on add coin bottom sheet"
+    )
+    public static let tippingSuccessDesc = NSLocalizedString(
+        "tipping_success_desc",
+        bundle: .module,
+        comment: "tipping success description"
+    )
+    
 }
 
 

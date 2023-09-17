@@ -61,62 +61,70 @@ struct TalentScheduleCardView: View {
                     
                     Spacer()
                     
-                    if data.endedAt != nil {
-                        Text(NSLocalizedString("ended_meeting_card_label", comment: ""))
-                            .font(.robotoRegular(size: 12))
-                            .foregroundColor(.black)
-                            .padding(.vertical, 3)
-                            .padding(.horizontal, 8)
-                            .background(Color(.systemGray5))
-                            .clipShape(Capsule())
-					} else if data.meetingRequest == nil && data.endedAt == nil {
-                        Menu {
-                            Button(action: {
-                                onTapEdit()
-                            }, label: {
-                                HStack {
-                                    Image("ic-menu-edit")
-                                        .renderingMode(.template)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .foregroundColor(.white)
-                                        .frame(height: 15)
+                    switch status {
+                    case .canceled:
+                        EmptyView()
+                    case .completed:
+                        EmptyView()
+                    default:
+                        if data.endedAt != nil {
+                            Text(NSLocalizedString("ended_meeting_card_label", comment: ""))
+                                .font(.robotoRegular(size: 12))
+                                .foregroundColor(.black)
+                                .padding(.vertical, 3)
+                                .padding(.horizontal, 8)
+                                .background(Color(.systemGray5))
+                                .clipShape(Capsule())
+                        } else if data.meetingRequest == nil && data.endedAt == nil {
+                            Menu {
+                                Button(action: {
+                                    onTapEdit()
+                                }, label: {
+                                    HStack {
+                                        Image("ic-menu-edit")
+                                            .renderingMode(.template)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .foregroundColor(.white)
+                                            .frame(height: 15)
 
-                                    Text(NSLocalizedString("edit_schedule", comment: ""))
-                                        .font(.robotoMedium(size: 12))
-                                        .foregroundColor(.black)
+                                        Text(NSLocalizedString("edit_schedule", comment: ""))
+                                            .font(.robotoMedium(size: 12))
+                                            .foregroundColor(.black)
+                                    }
+                                })
+
+                                if data.startedAt == nil {
+
+                                    if !isBundle {
+                                        Button(action: {
+                                            onTapDelete()
+                                        }, label: {
+                                            HStack {
+                                                Image("ic-menu-delete")
+                                                    .renderingMode(.template)
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .foregroundColor(.white)
+                                                    .frame(height: 15)
+
+                                                Text(NSLocalizedString("delete_schedule", comment: ""))
+                                                    .font(.robotoMedium(size: 12))
+                                                    .foregroundColor(.black)
+                                            }
+                                        })
+                                    }
                                 }
-                            })
-
-                            if data.startedAt == nil {
-
-								if !isBundle {
-									Button(action: {
-										onTapDelete()
-									}, label: {
-										HStack {
-											Image("ic-menu-delete")
-												.renderingMode(.template)
-												.resizable()
-												.scaledToFit()
-												.foregroundColor(.white)
-												.frame(height: 15)
-
-											Text(NSLocalizedString("delete_schedule", comment: ""))
-                                                .font(.robotoMedium(size: 12))
-												.foregroundColor(.black)
-										}
-									})
-								}
+                            } label: {
+                                Image(systemName: "ellipsis")
+                                    .foregroundColor(.DinotisDefault.primary)
+                                    .imageScale(.large)
+                                    .padding()
                             }
-                        } label: {
-                            Image(systemName: "ellipsis")
-                                .foregroundColor(.DinotisDefault.primary)
-                                .imageScale(.large)
-                                .padding()
-                        }
 
+                        }
                     }
+                    
                 }
                 
                 Text(data.title.orEmpty())
@@ -228,10 +236,11 @@ struct TalentScheduleCardView: View {
                             .font(.robotoRegular(size: 12))
                             .foregroundColor(.black)
                         
-                        if data.slots.orZero() > 1 && !(data.isLiveStreaming ?? false) {
-                            Text(NSLocalizedString("group", comment: ""))
+                        if !(data.isPrivate ?? false) && !(data.isLiveStreaming ?? false) {
+                            Text(LocalizableText.groupSessionLabelWithEmoji)
                                 .font(.robotoRegular(size: 12))
-                                .foregroundColor(.black)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.DinotisDefault.darkPrimary)
                                 .padding(.vertical, 5)
                                 .padding(.horizontal)
                                 .background(Color.DinotisDefault.lightPrimary)
@@ -244,7 +253,8 @@ struct TalentScheduleCardView: View {
                         } else if data.isLiveStreaming ?? false {
                             Text(LocaleText.liveStreamText)
                                 .font(.robotoRegular(size: 12))
-                                .foregroundColor(.black)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.DinotisDefault.darkPrimary)
                                 .padding(.vertical, 5)
                                 .padding(.horizontal)
                                 .background(Color.DinotisDefault.lightPrimary)
@@ -254,9 +264,10 @@ struct TalentScheduleCardView: View {
                                         .stroke(Color.DinotisDefault.primary, lineWidth: 1.0)
                                 )
                         } else {
-                            Text(NSLocalizedString("private", comment: ""))
+                            Text(LocalizableText.privateSessionLabelWithEmoji)
                                 .font(.robotoRegular(size: 12))
-                                .foregroundColor(.black)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.DinotisDefault.darkPrimary)
                                 .padding(.vertical, 5)
                                 .padding(.horizontal)
                                 .background(Color.DinotisDefault.lightPrimary)
@@ -283,12 +294,12 @@ struct TalentScheduleCardView: View {
                     if data.price == "0" {
                         Text(NSLocalizedString("free_text", comment: ""))
                             .font(.robotoBold(size: 14))
-                            .foregroundColor(.DinotisDefault.primary)
+                            .foregroundColor(.black)
                             .multilineTextAlignment(.center)
                     } else {
-                        Text(data.price.orEmpty().toCurrency())
+                        Text(data.price.orEmpty().toPriceFormat())
                             .font(.robotoBold(size: 14))
-                            .foregroundColor(.DinotisDefault.primary)
+                            .foregroundColor(.black)
                     }
                     
                     Spacer()
@@ -375,6 +386,13 @@ struct TalentScheduleCardView: View {
         default:
             return .DinotisDefault.primary
         }
+    }
+    
+    private func countHourTime(time: Date) -> String {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .full
+        formatter.locale = Locale.current
+        return formatter.localizedString(for: time, relativeTo: Date())
     }
 }
 

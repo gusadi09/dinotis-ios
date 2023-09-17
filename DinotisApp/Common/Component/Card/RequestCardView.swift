@@ -41,7 +41,7 @@ struct RequestCardView: View {
                     }
                     .padding(.bottom, 4)
                     
-                    Text((item?.rateCard?.title).orEmpty())
+                    Text("\(LocalizableText.requestCardSessionText): \((item?.rateCard?.title).orEmpty())")
                         .foregroundColor(.DinotisDefault.black2)
                         .font(.robotoMedium(size: 12))
                     

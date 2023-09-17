@@ -120,7 +120,7 @@ struct BundlingDetailView: View {
                                         SessionCard(
                                             with: SessionCardModel(
                                                 title: item.title.orEmpty(),
-                                                date: DateUtils.dateFormatter(item.startAt.orCurrentDate(), forFormat: .ddMMMMyyyy),
+                                                date: DateUtils.dateFormatter(item.startAt.orCurrentDate(), forFormat: .EEEEddMMMMyyyy),
                                                 startAt: DateUtils.dateFormatter(item.startAt.orCurrentDate(), forFormat: .HHmm),
                                                 endAt: DateUtils.dateFormatter(item.endAt.orCurrentDate(), forFormat: .HHmm),
                                                 isPrivate: item.isPrivate ?? false,
@@ -128,6 +128,9 @@ struct BundlingDetailView: View {
                                                 photo: (viewModel.detailData?.user?.profilePhoto).orEmpty(),
                                                 name: (viewModel.detailData?.user?.name).orEmpty(),
                                                 color: item.background,
+                                                participantsImgUrl: item.participantDetails?.compactMap({
+                                                    $0.profilePhoto.orEmpty()
+                                                }) ?? [],
                                                 isActive: item.endAt.orCurrentDate() > Date(),
                                                 collaborationCount: (item.meetingCollaborations ?? []).count,
                                                 collaborationName: (item.meetingCollaborations ?? []).compactMap({

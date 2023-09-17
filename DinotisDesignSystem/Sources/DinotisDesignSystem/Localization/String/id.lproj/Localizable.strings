@@ -12,6 +12,7 @@
 "description_boarding_second" = "Denger suara doang emang puas? \nKalau ngobrol di sini bisa sambil tatap-tatapan!";
 "title_role_type" = "Berbagai sesi menarik untukmu";
 "description_role_type" = "Silahkan pilih tipe akun yang sesuai untukmu!";
+"general_success" = "Berhasil";
 
 "tab_explore" = "Eksplor";
 "tab_search" = "Cari";
@@ -520,3 +521,13 @@
 "status_completed_session" = "Sesi selesai";
 
 "home_creator_nearest_title" = "Jadwal Terdekat Kamu";
+
+"request_card_session" = "Sesi";
+
+"withdraw_success_subtitle" = "Berhasil menarik saldo, Silahkan cek saldo dinotis dan akun bank kamu secara hati-hati";
+"tipping_gift_title" = "Kamu bisa kasih Gift ke Kreator loh!";
+"tipping_your_balance" = "Saldo kamu";
+"tipping_top_up_now" = "Top up sekarang";
+"tipping_not_enough_balance" = "Saldo kamu tidak cukup, silakan top up coin terlebih dahulu";
+"tipping_your_current_coin" = "Koin kamu saat ini,";
+"tipping_success_desc" = "Kamu telah memberikan ulasan untuk kreator ini!";

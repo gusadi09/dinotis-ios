@@ -12,6 +12,7 @@
 "description_boarding_second" = "Are you satisfied just hearing the sound? \nIf you chat here, you can see each other!";
 "title_role_type" = "Various interesting sessions for you";
 "description_role_type" = "Please choose the type of account that suits for you!";
+"general_success" = "Success";
 
 "tab_explore" = "Explore";
 "tab_search" = "Search";
@@ -113,7 +114,7 @@
 
 "label_your_coin" = "Your Coins";
 "label_add_coin" = "Add Coins";
-"description_add_coin" = "Coin ini hanya dapat digunakan untuk melakukan transaksi di dalam aplikasi DINOTIS dan tidak bisa ditarik tunai";
+"description_add_coin" = "This coin can only be used to make transactions in the DINOTIS application and cannot be withdrawn for cash";
 
 "tab_profile" = "Profile";
 "description_setup_account" = "Account settings";
@@ -520,3 +521,13 @@
 "status_completed_session" = "Session completed";
 
 "home_creator_nearest_title" = "Your Nearest Schedule";
+
+"request_card_session" = "Session";
+
+"withdraw_success_subtitle" = "Success to withdraw your balance, please check your dinotis and bank account balance carefully";
+"tipping_gift_title" = "You can give gifts to creators!";
+"tipping_your_balance" = "Your balance";
+"tipping_top_up_now" = "Top up now";
+"tipping_not_enough_balance" = "Your balance is not enough, please top up coins first";
+"tipping_your_current_coin" = "Your current coins,";
+"tipping_success_desc" = "You've given a review for this creator!";

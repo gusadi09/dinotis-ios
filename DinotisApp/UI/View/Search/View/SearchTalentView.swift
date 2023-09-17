@@ -476,7 +476,7 @@ private extension SearchTalentView {
 										SessionCard(
 											with: SessionCardModel(
 											title: item.title.orEmpty(),
-                                            date: DateUtils.dateFormatter(item.startAt.orCurrentDate(), forFormat: .ddMMMMyyyy),
+                                            date: DateUtils.dateFormatter(item.startAt.orCurrentDate(), forFormat: .EEEEddMMMMyyyy),
                                             startAt: DateUtils.dateFormatter(item.startAt.orCurrentDate(), forFormat: .HHmm),
                                             endAt: DateUtils.dateFormatter(item.endAt.orCurrentDate(), forFormat: .HHmm),
 											isPrivate: item.isPrivate ?? false,
@@ -485,6 +485,9 @@ private extension SearchTalentView {
 											name: (item.user?.name).orEmpty(),
 											// MARK: - Change the color when backend done
 											color: item.background,
+                                            participantsImgUrl: item.participantDetails?.compactMap({
+                                                $0.profilePhoto.orEmpty()
+                                            }) ?? [],
 											isActive: item.endAt.orCurrentDate() > Date(),
                                             collaborationCount: (item.meetingCollaborations ?? []).count,
                                             collaborationName: (item.meetingCollaborations ?? []).compactMap({
@@ -554,7 +557,7 @@ private extension SearchTalentView {
 								SessionCard(
 									with: SessionCardModel(
 										title: item.title.orEmpty(),
-                                        date: DateUtils.dateFormatter(item.startAt.orCurrentDate(), forFormat: .ddMMMMyyyy),
+                                        date: DateUtils.dateFormatter(item.startAt.orCurrentDate(), forFormat: .EEEEddMMMMyyyy),
                                         startAt: DateUtils.dateFormatter(item.startAt.orCurrentDate(), forFormat: .HHmm),
                                         endAt: DateUtils.dateFormatter(item.endAt.orCurrentDate(), forFormat: .HHmm),
 										isPrivate: item.isPrivate ?? false,
@@ -563,6 +566,9 @@ private extension SearchTalentView {
 										name: (item.user?.name).orEmpty(),
 										// MARK: - Change the color when backend done
 										color: item.background,
+                                        participantsImgUrl: item.participantDetails?.compactMap({
+                                            $0.profilePhoto.orEmpty()
+                                        }) ?? [],
 										isActive: item.endAt.orCurrentDate() > Date(),
                                         collaborationCount: (item.meetingCollaborations ?? []).count,
                                         collaborationName: (item.meetingCollaborations ?? []).compactMap({

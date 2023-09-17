@@ -23,12 +23,15 @@ public struct ChipModel: Identifiable {
 public struct ChipView: View {
     
     @Binding private var chip: ChipModel
+    var withNumber: Bool = false
     
     public init(
-        chip: Binding<ChipModel>
+        chip: Binding<ChipModel>,
+        withNumber: Bool = false
     ) {
 //        FontInjector.registerFonts()
         self._chip = chip
+        self.withNumber = withNumber
     }
     
     public var body: some View {
@@ -40,8 +43,8 @@ public struct ChipView: View {
             (chip.action ?? {})()
             
         } label: {
-            Text(chip.text)
-                .font(.robotoBold(size: 10))
+            Text(withNumber ? chip.text.toDecimal() : chip.text)
+                .font(.robotoBold(size: 12))
                 .foregroundColor(
                     chip.isSelected.orFalse() ?
                         .DinotisDefault.white : .DinotisDefault.black1

@@ -197,3 +197,19 @@ public struct ReviewReasons: Codable {
         self.data = data
     }
 }
+
+public struct TipAmounts: Codable {
+    public let data: [Amount]?
+    
+    public init(data: [Amount]?) {
+        self.data = data
+    }
+}
+
+public struct Amount: Codable {
+    public let amount: Int?
+    
+    public init(amount: Int?) {
+        self.amount = amount
+    }
+}

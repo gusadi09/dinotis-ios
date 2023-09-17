@@ -424,7 +424,7 @@ struct TalentHomeView: View {
                                                             SessionCard(
                                                                 with: SessionCardModel(
                                                                     title: (item.title).orEmpty(),
-                                                                    date: DateUtils.dateFormatter((item.startAt).orCurrentDate(), forFormat: .ddMMMMyyyy),
+                                                                    date: DateUtils.dateFormatter((item.startAt).orCurrentDate(), forFormat: .EEEEddMMMMyyyy),
                                                                     startAt: DateUtils.dateFormatter((item.startAt).orCurrentDate(), forFormat: .HHmm),
                                                                     endAt: DateUtils.dateFormatter((item.endAt).orCurrentDate(), forFormat: .HHmm),
                                                                     isPrivate: (item.isPrivate) ?? false,
@@ -432,6 +432,9 @@ struct TalentHomeView: View {
                                                                     photo: (item.user?.profilePhoto).orEmpty(),
                                                                     name: (item.user?.name).orEmpty(),
                                                                     color: item.background,
+                                                                    participantsImgUrl: item.participantDetails?.compactMap({
+                                                                        $0.profilePhoto.orEmpty()
+                                                                    }) ?? [],
                                                                     isActive: item.endAt.orCurrentDate() > Date(),
                                                                     collaborationCount: (item.meetingCollaborations ?? []).count,
                                                                     collaborationName: (item.meetingCollaborations ?? []).compactMap({
@@ -659,16 +662,10 @@ struct TalentHomeView: View {
                 .navigationBarTitle(Text(""))
                 .navigationBarHidden(true)
                 .onAppear(perform: {
-                    DispatchQueue.main.async {
-                        homeVM.meetingParam.skip = 0
-                        homeVM.meetingParam.take = 15
-                        homeVM.onAppearView()
-                    }
+                    homeVM.onAppearView()
                 })
                 .onDisappear {
-                    homeVM.meetingData = []
-                    homeVM.meetingParam.skip = 0
-                    homeVM.meetingParam.take = 15
+                    homeVM.resetParameterQuery()
                 }
                 .sheet(
                     item: $homeVM.confirmationSheet,
@@ -678,11 +675,12 @@ struct TalentHomeView: View {
                             if #available(iOS 16.0, *) {
                                 AcceptedSheet(viewModel: homeVM, isOnSheet: true)
                                     .padding()
-                                    .presentationDetents([.medium])
+                                    .presentationDetents([.height(250)])
                                     .presentationDragIndicator(.hidden)
                                     .dynamicTypeSize(.large)
                             } else {
                                 AcceptedSheet(viewModel: homeVM, isOnSheet: false)
+                                .padding(.horizontal)
                                     .dynamicTypeSize(.large)
                             }
                         case .declined:
@@ -758,6 +756,28 @@ extension TalentHomeView {
                                             viewModel.currentSection = tab
                                             scrollView.scrollTo(tab, anchor: .center)
                                             viewModel.offsetY = .zero
+                                            switch tab {
+                                            case .scheduled:
+                                                viewModel.scheduledRequest.skip = 0
+                                                viewModel.scheduledRequest.take = 8
+                                                viewModel.onGetScheduledMeeting(isMore: false)
+                                            case .notConfirmed:
+                                                viewModel.rateCardQuery.skip = 0
+                                                viewModel.rateCardQuery.take = 15
+                                                viewModel.onGetMeetingRequest(isMore: false)
+                                            case .pending:
+                                                viewModel.pendingRequest.skip = 0
+                                                viewModel.pendingRequest.take = 8
+                                                viewModel.onGetPendingMeeting(isMore: false)
+                                            case .canceled:
+                                                viewModel.canceledRequest.skip = 0
+                                                viewModel.canceledRequest.take = 8
+                                                viewModel.onGetCanceledMeeting(isMore: false)
+                                            case .completed:
+                                                viewModel.endedRequest.skip = 0
+                                                viewModel.endedRequest.take = 8
+                                                viewModel.onGetEndedMeeting(isMore: false)
+                                            }
                                         }
                                     } label: {
                                         HStack(spacing: 8) {
@@ -809,7 +829,7 @@ extension TalentHomeView {
                                                     .font(.robotoBold(size: 12))
                                                     .foregroundColor(.white)
                                                     .padding(4)
-                                                    .frame(width: 28)
+                                                    .frame(width: 32)
                                                     .background(Color.DinotisDefault.primary)
                                                     .cornerRadius(6)
                                                     .isHidden(viewModel.endedCounter == nil || viewModel.endedCounter.orEmpty() == "0", remove: viewModel.endedCounter == nil || viewModel.endedCounter.orEmpty() == "0")
@@ -1039,6 +1059,10 @@ extension TalentHomeView {
 
 		var body: some View {
 			VStack(spacing: 25) {
+                if !isOnSheet {
+                    Spacer()
+                }
+                
 				HStack {
 					Text(LocaleText.acceptanceConfirmationText)
 						.font(.robotoBold(size: 14))
@@ -1058,11 +1082,11 @@ extension TalentHomeView {
 					})
 				}
 
-				VStack(spacing: 15) {
-					Text(LocaleText.acceptanceDescriptionText)
-						.font(.robotoRegular(size: 12))
-						.multilineTextAlignment(.leading)
-						.foregroundColor(.black)
+                VStack(alignment: .leading, spacing: 15) {
+                    Text(LocaleText.acceptanceDescriptionText)
+                        .font(.robotoRegular(size: 12))
+                        .multilineTextAlignment(.leading)
+                        .foregroundColor(.black)
 
 					Button {
 						isAccepted.toggle()
@@ -1119,6 +1143,7 @@ extension TalentHomeView {
 							.foregroundColor(!isAccepted ? Color(.systemGray5) : .DinotisDefault.primary)
 					)
 				}
+                .padding(.top, !isOnSheet ? 10 : 0)
 				.disabled(!isAccepted)
 
 			}

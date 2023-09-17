@@ -12,6 +12,8 @@ import SwiftUINavigation
 import OneSignal
 import DinotisDesignSystem
 import DinotisData
+import QGrid
+import StoreKit
 
 struct UserScheduleDetail: View {
     @StateObject private var streamViewModel = StreamViewModel()
@@ -147,6 +149,7 @@ struct UserScheduleDetail: View {
                         .onAppear {
                             stateObservable.spotlightedIdentity = ""
                             viewModel.onAppearView()
+                            viewModel.getProductOnAppear()
                             StateObservable.shared.cameraPositionUsed = .front
                             StateObservable.shared.twilioRole = ""
                             StateObservable.shared.twilioUserIdentity = ""
@@ -568,6 +571,32 @@ struct UserScheduleDetail: View {
                         .dynamicTypeSize(.large)
                 }
             })
+            .sheet(
+                isPresented: $viewModel.showReviewSheet,
+                content: {
+                    if #available(iOS 16.0, *) {
+                        ReviewSheetView(viewModel: viewModel)
+                            .presentationDetents([.height(610), .large])
+                            .presentationDragIndicator(.hidden)
+                            .dynamicTypeSize(.large)
+                    } else {
+                        ReviewSheetView(viewModel: viewModel)
+                            .dynamicTypeSize(.large)
+                    }
+                }
+            )
+            .sheet(isPresented: $viewModel.showAddCoin) {
+                if #available(iOS 16.0, *) {
+                    AddCoinBottomSheet(viewModel: viewModel)
+                        .presentationDetents([.height(450)])
+                } else {
+                    AddCoinBottomSheet(viewModel: viewModel)
+                }
+            }
+            .overlay {
+                ReviewSuccessPopUp(viewModel: viewModel)
+                    .isHidden(!viewModel.isReviewSuccess, remove: !viewModel.isReviewSuccess)
+            }
         }
     }
     
@@ -1255,28 +1284,51 @@ private extension UserScheduleDetail {
                             }
                         }
                         
-                        VStack(alignment: .leading) {
+                        VStack(alignment: .leading, spacing: 20) {
+                            if detail.meeting?.endedAt != nil {
+                                Text(LocalizableText.stepSessionDone)
+                                    .multilineTextAlignment(.center)
+                                    .font(.robotoBold(size: 12))
+                                    .foregroundColor(.DinotisDefault.black2)
+                                    .padding(10)
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    .background(
+                                        Capsule()
+                                            .foregroundColor(.DinotisDefault.black2.opacity(0.3))
+                                    )
+                            }
+                            
                             HStack(spacing: 15) {
-                                DinotisImageLoader(
-                                    urlString: (viewModel.dataBooking?.meeting?.user?.profilePhoto).orEmpty(),
-                                    width: 40,
-                                    height: 40
-                                )
-                                .clipShape(Circle())
+                                DinotisImageLoader(urlString: (viewModel.dataBooking?.meeting?.user?.profilePhoto).orEmpty())
+                                    .scaledToFill()
+                                    .frame(width: 48, height: 48)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
                                 
-                                if viewModel.dataBooking?.meeting?.user?.isVerified ?? false {
-                                    Text("\((viewModel.dataBooking?.meeting?.user?.name).orEmpty()) \(Image.sessionCardVerifiedIcon)")
-                                        .font(.robotoBold(size: 14))
-                                        .foregroundColor(.black)
-                                } else {
-                                    Text("\((viewModel.dataBooking?.meeting?.user?.name).orEmpty())")
-                                        .font(.robotoBold(size: 14))
-                                        .foregroundColor(.black)
+                                VStack(alignment: .leading, spacing: 4) {
+                                    if viewModel.dataBooking?.meeting?.user?.isVerified ?? false {
+                                        Text("\((viewModel.dataBooking?.meeting?.user?.name).orEmpty()) \(Image.sessionCardVerifiedIcon)")
+                                            .font(.robotoBold(size: 14))
+                                            .foregroundColor(.black)
+                                    } else {
+                                        Text("\((viewModel.dataBooking?.meeting?.user?.name).orEmpty())")
+                                            .font(.robotoBold(size: 14))
+                                            .foregroundColor(.black)
+                                    }
+                                    
+                                    HStack {
+                                        Image.talentProfileManagementIcon
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(height: 13)
+                                        
+                                        Text((viewModel.dataBooking?.meeting?.user?.stringProfessions?.joined(separator: ", ")).orEmpty())
+                                            .font(.robotoRegular(size: 12))
+                                            .foregroundColor(.DinotisDefault.black1)
+                                    }
                                 }
                                 
                                 Spacer()
                             }
-                            .padding(.vertical, 10)
                             
                             VStack(alignment:.leading, spacing: 5) {
                                 Text((detail.meeting?.title).orEmpty())
@@ -1308,50 +1360,51 @@ private extension UserScheduleDetail {
                                         remove: (detail.meeting?.meetingDescription).orEmpty().count < 150
                                     )
                                 }
-                                .padding(.bottom, 10)
                             }
                             
-                            HStack(spacing: 10) {
-                                Image.sessionCardDateIcon
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: 18)
-                                
-                                if let dateStart = detail.meeting?.startAt {
-                                    Text(DateUtils.dateFormatter(dateStart, forFormat: .EEEEddMMMMyyyy))
-                                        .font(.robotoRegular(size: 12))
-                                        .foregroundColor(.black)
-                                } else {
-                                    Text(LocaleText.unconfirmedText)
-                                        .font(.robotoRegular(size: 12))
-                                        .foregroundColor(.black)
+                            Divider()
+                            
+                            VStack(alignment: .leading, spacing: 12) {
+                                HStack(spacing: 10) {
+                                    Image.sessionCardDateIcon
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 20)
+                                    
+                                    if let dateStart = detail.meeting?.startAt {
+                                        Text(DateUtils.dateFormatter(dateStart, forFormat: .EEEEddMMMMyyyy))
+                                            .font(.robotoRegular(size: 12))
+                                            .foregroundColor(.black)
+                                    } else {
+                                        Text(LocaleText.unconfirmedText)
+                                            .font(.robotoRegular(size: 12))
+                                            .foregroundColor(.black)
+                                    }
                                 }
-                            }
-                            
-                            HStack(spacing: 10) {
-                                Image.sessionCardTimeSolidIcon
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: 18)
                                 
-                                if let timeStart = viewModel.dataBooking?.meeting?.startAt,
-                                   let timeEnd = viewModel.dataBooking?.meeting?.endAt {
-                                    Text("\(DateUtils.dateFormatter(timeStart, forFormat: .HHmm)) - \(DateUtils.dateFormatter(timeEnd, forFormat: .HHmm))")
-                                        .font(.robotoRegular(size: 12))
-                                        .foregroundColor(.black)
-                                } else {
-                                    Text(LocalizableText.unconfirmedText)
-                                        .font(.robotoRegular(size: 12))
-                                        .foregroundColor(.black)
+                                HStack(spacing: 10) {
+                                    Image.sessionCardTimeSolidIcon
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 18)
+                                    
+                                    if let timeStart = viewModel.dataBooking?.meeting?.startAt,
+                                       let timeEnd = viewModel.dataBooking?.meeting?.endAt {
+                                        Text("\(DateUtils.dateFormatter(timeStart, forFormat: .HHmm)) - \(DateUtils.dateFormatter(timeEnd, forFormat: .HHmm))")
+                                            .font(.robotoRegular(size: 12))
+                                            .foregroundColor(.black)
+                                    } else {
+                                        Text(LocalizableText.unconfirmedText)
+                                            .font(.robotoRegular(size: 12))
+                                            .foregroundColor(.black)
+                                    }
                                 }
-                            }
-                            
-                            VStack(alignment: .leading, spacing: 20) {
+                                
                                 HStack(spacing: 10) {
                                     Image.sessionCardPersonSolidIcon
                                         .resizable()
                                         .scaledToFit()
-                                        .frame(height: 18)
+                                        .frame(height: 20)
                                     
                                     if let data = viewModel.dataBooking {
                                         Text("\(String.init(participantCount))/\(String.init((data.meeting?.slots).orZero())) \(LocalizableText.participant)")
@@ -1380,33 +1433,10 @@ private extension UserScheduleDetail {
                                 }
                             }
                             
-                            Capsule()
-                                .frame(height: 1)
-                                .foregroundColor(.gray)
-                                .opacity(0.2)
-                                .padding(.top)
-                            
                             CollaboratorView(viewModel: viewModel)
+                                .isHidden((viewModel.dataBooking?.meeting?.meetingCollaborations ?? []).isEmpty, remove: (viewModel.dataBooking?.meeting?.meetingCollaborations ?? []).isEmpty)
                             
                             ParticipantView(viewModel: viewModel)
-                                .padding(.vertical, 8)
-                            
-                            if detail.meeting?.endedAt != nil {
-                                HStack {
-                                    Spacer()
-                                    
-                                    Text(LocalizableText.stepSessionDone)
-                                        .font(.robotoMedium(size: 12))
-                                        .foregroundColor(.white)
-                                    
-                                    Spacer()
-                                }
-                                .padding(.vertical, 4)
-                                .background(
-                                    Capsule()
-                                        .foregroundColor(.DinotisDefault.secondary)
-                                )
-                            }
                         }
                         .padding()
                         .background(Color.white)
@@ -1556,19 +1586,6 @@ private extension UserScheduleDetail {
                     }
                 })
             }
-            .sheet(
-                isPresented: $viewModel.showReviewSheet,
-                content: {
-                    if #available(iOS 16.0, *) {
-                        ReviewSheetView(viewModel: viewModel)
-                            .presentationDetents([.fraction(0.65), .large])
-                            .dynamicTypeSize(.large)
-                    } else {
-                        ReviewSheetView(viewModel: viewModel)
-                            .dynamicTypeSize(.large)
-                    }
-                }
-            )
         }
     }
     
@@ -1603,17 +1620,17 @@ private extension UserScheduleDetail {
                 } else {
                     HStack(spacing: 14) {
                         DinotisImageLoader(urlString: (viewModel.dataBooking?.meeting?.user?.profilePhoto).orEmpty())
-                            .frame(width: 50, height: 50)
+                            .frame(width: 56, height: 56)
                             .cornerRadius(8)
                         
-                        VStack(alignment: .leading, spacing: 6) {
+                        VStack(alignment: .leading, spacing: 4) {
                             Text((viewModel.dataBooking?.meeting?.user?.name).orEmpty())
-                                .font(.robotoMedium(size: 10))
+                                .font(.robotoMedium(size: 12))
                                 .foregroundColor(.DinotisDefault.black3)
                                 .lineLimit(1)
                             
                             Text((viewModel.dataBooking?.meeting?.title).orEmpty())
-                                .font(.robotoBold(size: 12))
+                                .font(.robotoBold(size: 14))
                                 .foregroundColor(.DinotisDefault.black2)
                                 .lineLimit(2)
                         }
@@ -1640,14 +1657,97 @@ private extension UserScheduleDetail {
                     .padding(.horizontal)
                     .padding(.bottom)
                     
-                    VStack(alignment: .leading, spacing: 8) {
-                        DinotisTextEditor(
-                            LocalizableText.yourCommentPlaceholder,
-                            label: LocalizableText.yourCommentTitle,
-                            text: $viewModel.reviewMessage,
-                            errorText: .constant(nil)
-                        )
+                    Divider()
+                    
+                    VStack(alignment: .leading, spacing: 20) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(LocalizableText.tippingGiftTitle)
+                                .font(.robotoBold(size: 16))
+                                .foregroundColor(.black)
+                            
+                            HStack(spacing: 6) {
+                                Text(LocalizableText.tippingYourBalance)
+                                    .font(.robotoRegular(size: 14))
+                                    .foregroundColor(.DinotisDefault.black3)
+                                
+                                Text((viewModel.user?.coinBalance?.current).orEmpty().toDecimal())
+                                    .font(.robotoMedium(size: 14))
+                                    .foregroundColor(.DinotisDefault.black1)
+                                
+                                Button {
+                                    viewModel.showReviewSheet = false
+                                    
+                                    DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                                        viewModel.showAddCoin = true
+                                    }
+                                } label: {
+                                    Text("\(Image(systemName: "plus")) \(LocalizableText.tippingTopUpNow)")
+                                        .font(.robotoBold(size: 12))
+                                        .foregroundColor(.DinotisDefault.primary)
+                                        .padding(.vertical, 4)
+                                        .padding(.horizontal, 12)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 6)
+                                                .fill(Color.DinotisDefault.primary.opacity(0.3))
+                                        )
+                                }
+                                
+                                Spacer()
+                            }
+                        }
+                        
+                        Text(LocalizableText.tippingNotEnoughBalance)
+                            .multilineTextAlignment(.leading)
+                            .font(.robotoRegular(size: 12))
+                            .foregroundColor(.DinotisDefault.black1)
+                            .padding(8)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .foregroundColor(.DinotisDefault.red.opacity(0.1))
+                            )
+                            .isHidden(!viewModel.showNotEnoughBalance(), remove: !viewModel.showNotEnoughBalance())
+                        
+                        HStack(spacing: 8) {
+                            ForEach(viewModel.tips, id: \.self) { data in
+                                Button {
+                                    viewModel.selectTipAmount(data: data)
+                                } label: {
+                                    Text(data.toDecimal())
+                                        .font(.robotoBold(size: 12))
+                                        .foregroundColor(
+                                            viewModel.tipAmount == data ?
+                                                .DinotisDefault.white : .DinotisDefault.black1
+                                        )
+                                        .padding(.horizontal, 8)
+                                        .padding(.vertical, 6)
+                                        .background(
+                                            viewModel.tipAmount == data ?
+                                            Color.DinotisDefault.primary : Color.DinotisDefault.smokeWhite
+                                        )
+                                        .cornerRadius(5)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 5)
+                                                .inset(by: -0.5)
+                                                .stroke(viewModel.tipAmount == data ? Color.DinotisDefault.primary : Color.DinotisDefault.black3, lineWidth: 1)
+                                        )
+                                }
+                            }
+                        }
                     }
+                    .padding(.vertical)
+                    .isHidden(viewModel.tips.isEmpty, remove: viewModel.tips.isEmpty)
+                    
+                    Divider()
+                        .isHidden(viewModel.tips.isEmpty, remove: viewModel.tips.isEmpty)
+                    
+                    DinotisTextEditor(
+                        LocalizableText.yourCommentPlaceholder,
+                        label: LocalizableText.yourCommentTitle,
+                        text: $viewModel.reviewMessage,
+                        errorText: .constant(nil)
+                    )
+                    .padding(.top)
                 }
                 
                 Spacer()
@@ -1655,18 +1755,19 @@ private extension UserScheduleDetail {
                 DinotisPrimaryButton(
                     text: LocalizableText.sendReviewLabel,
                     type: .adaptiveScreen,
-                    textColor: .white,
-                    bgColor: (viewModel.reviewRating == 0 || !viewModel.reviewMessage.isStringContainWhitespaceAndText()) || viewModel.isLoadingReview ? .DinotisDefault.lightPrimary : .DinotisDefault.primary) {
+                    textColor: viewModel.disableReviewButton() ? .DinotisDefault.black3 : .white,
+                    bgColor: viewModel.disableReviewButton() ? .DinotisDefault.lightPrimary : .DinotisDefault.primary) {
                         Task {
                             await viewModel.giveReview()
                         }
                     }
-                    .disabled(viewModel.reviewRating == 0 || !viewModel.reviewMessage.isStringContainWhitespaceAndText() || viewModel.isLoadingReview)
+                    .disabled(viewModel.disableReviewButton())
             }
             .padding()
             .onDisappear {
                 viewModel.reviewRating = 0
                 viewModel.reviewMessage = ""
+                viewModel.tipAmount = nil
             }
         }
     }
@@ -1774,12 +1875,10 @@ private extension UserScheduleDetail {
                 ForEach(viewModel.participantDetail.reversed().prefix(4), id: \.id) { item in
                     VStack {
                         HStack {
-                            DinotisImageLoader(
-                                urlString: item.profilePhoto.orEmpty(),
-                                width: 40,
-                                height: 40
-                            )
-                            .clipShape(Circle())
+                            DinotisImageLoader(urlString: item.profilePhoto.orEmpty())
+                                .scaledToFill()
+                                .frame(width: 48, height: 48)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
                             
                             Text((item.name).orEmpty())
                                 .font(.robotoBold(size: 14))
@@ -1915,6 +2014,177 @@ private extension UserScheduleDetail {
                     }
             }
             .padding()
+        }
+    }
+    
+    struct AddCoinBottomSheet: View {
+        
+        @ObservedObject var viewModel: ScheduleDetailViewModel
+        
+        var body: some View {
+            VStack {
+                HStack {
+                    Spacer()
+
+                    Button {
+                        viewModel.showAddCoin.toggle()
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 20)
+                            .foregroundColor(Color(UIColor.systemGray4))
+                    }
+                }
+                
+                VStack(spacing: 20) {
+                    VStack {
+                        Text(LocalizableText.tippingYourCurrentCoin)
+                            .font(.robotoBold(size: 14))
+                            .foregroundColor(.DinotisDefault.primary)
+                        
+                        HStack(alignment: .top) {
+                            Image.sessionCardCoinYellowPurpleIcon
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 20)
+                            
+                            Text((viewModel.user?.coinBalance?.current).orEmpty().toDecimal())
+                                .font(.robotoBold(size: 24))
+                                .foregroundColor(.DinotisDefault.primary)
+                        }
+                        .multilineTextAlignment(.center)
+                        
+                        Text(LocalizableText.descriptionAddCoin)
+                            .font(.robotoRegular(size: 12))
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.black)
+                    }
+                    
+                    Group {
+                        if viewModel.isLoadingTrx {
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                        } else {
+                            QGrid(viewModel.myProducts, columns: 4, vSpacing: 10, hSpacing: 10, vPadding: 5, hPadding: 5, isScrollable: false, showScrollIndicators: false) { item in
+                                
+                                Button {
+                                    viewModel.productSelected = item
+                                } label: {
+                                    HStack {
+                                        Spacer()
+                                        
+                                        Text(item.priceToString())
+                                            .font(.robotoMedium(size: 12))
+                                            .foregroundColor(.DinotisDefault.primary)
+                                        
+                                        Spacer()
+                                    }
+                                    .padding(.vertical, 10)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .foregroundColor((viewModel.productSelected ?? SKProduct()).id == item.id ? .DinotisDefault.lightPrimary : .clear)
+                                    )
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .stroke(Color.DinotisDefault.primary, lineWidth: 1)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    .frame(height: 90)
+                    
+                    Spacer()
+                    
+                    VStack {
+                        DinotisPrimaryButton(
+                            text: LocalizableText.addCoinLabel,
+                            type: .adaptiveScreen,
+                            textColor: viewModel.isLoadingTrx || viewModel.productSelected == nil ? .DinotisDefault.lightPrimaryActive : .white,
+                            bgColor: viewModel.isLoadingTrx || viewModel.productSelected == nil ? .DinotisDefault.lightPrimary : .DinotisDefault.primary
+                        ) {
+                            if let product = viewModel.productSelected {
+                                viewModel.purchaseProduct(product: product)
+                            }
+                        }
+                        .disabled(viewModel.isLoadingTrx || viewModel.productSelected == nil)
+                        
+                        DinotisSecondaryButton(
+                            text: LocalizableText.helpLabel,
+                            type: .adaptiveScreen,
+                            textColor: viewModel.isLoadingTrx ? .white : .DinotisDefault.primary,
+                            bgColor: viewModel.isLoadingTrx ? Color(UIColor.systemGray3) : .DinotisDefault.lightPrimary,
+                            strokeColor: .DinotisDefault.primary) {
+                                viewModel.openWhatsApp()
+                            }
+                            .disabled(viewModel.isLoadingTrx)
+                    }
+                }
+            }
+            .padding()
+            .dynamicTypeSize(.large)
+            .onDisappear {
+                viewModel.onDisappear()
+                viewModel.productSelected = nil
+            }
+        }
+    }
+    
+    struct ReviewSuccessPopUp: View {
+        
+        @ObservedObject var viewModel: ScheduleDetailViewModel
+        
+        var body: some View {
+            ZStack {
+                Color.black.opacity(0.3).ignoresSafeArea()
+                
+                VStack(spacing: 10) {
+                    Image.feedbackSuccessImage
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxHeight: 200)
+                    
+                    VStack(spacing: 18) {
+                        VStack(spacing: 8) {
+                            HStack {
+                                ForEach(1...5, id: \.self) { index in
+                                    (index <= viewModel.reviewStars() ?
+                                     Image.feedbackStarYellow : Image.feedbackStarGray
+                                    )
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 36)
+                                }
+                            }
+                            
+                            Text(LocalizableText.tippingSuccessDesc)
+                                .font(.robotoRegular(size: 12))
+                                .foregroundColor(.DinotisDefault.black2)
+                                .multilineTextAlignment(.center)
+                        }
+                        
+                        DinotisPrimaryButton(
+                            text: LocalizableText.closeLabel,
+                            type: .adaptiveScreen,
+                            textColor: .white,
+                            bgColor: .DinotisDefault.primary) {
+                                withAnimation {
+                                    viewModel.isReviewSuccess = false
+                                }
+                            }
+                    }
+                }
+                .padding(20)
+                .padding(.vertical, 4)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .foregroundColor(.white)
+                )
+                .scaleEffect(viewModel.isReviewSuccess ? 1 : 0)
+                .animation(.spring(response: 0.4, dampingFraction: 0.6), value: viewModel.isReviewSuccess)
+                .padding()
+            }
         }
     }
 }

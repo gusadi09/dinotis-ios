@@ -229,7 +229,7 @@ private extension ScheduleListView {
                                     SessionCard(
                                         with: SessionCardModel(
                                             title: (item.meeting?.title).orEmpty(),
-                                            date: DateUtils.dateFormatter((item.meeting?.startAt).orCurrentDate(), forFormat: .ddMMMMyyyy),
+                                            date: DateUtils.dateFormatter((item.meeting?.startAt).orCurrentDate(), forFormat: .EEEEddMMMMyyyy),
                                             startAt: DateUtils.dateFormatter((item.meeting?.startAt).orCurrentDate(), forFormat: .HHmm),
                                             endAt: DateUtils.dateFormatter((item.meeting?.endAt).orCurrentDate(), forFormat: .HHmm),
                                             isPrivate: (item.meeting?.isPrivate) ?? false,
@@ -237,6 +237,9 @@ private extension ScheduleListView {
                                             photo: (item.meeting?.user?.profilePhoto).orEmpty(),
                                             name: (item.meeting?.user?.name).orEmpty(),
                                             color: item.meeting?.background,
+                                            participantsImgUrl: item.meeting?.participantDetails?.compactMap({
+                                                $0.profilePhoto.orEmpty()
+                                            }) ?? [],
                                             isActive: item.meeting?.endAt.orCurrentDate() ?? Date() > Date(),
                                             collaborationCount: (item.meeting?.meetingCollaborations ?? []).count,
                                             collaborationName: (item.meeting?.meetingCollaborations ?? []).compactMap({
@@ -716,9 +719,10 @@ private extension ScheduleListView {
                                     isVerified: (item.meeting?.user?.isVerified) ?? false,
                                     photo: (item.meeting?.user?.profilePhoto).orEmpty(),
                                     name: (item.meeting?.user?.name).orEmpty(),
-                                    color: [""],
-                                    session: (item.meetingBundle?.session).orZero(),
-                                    price: (item.meeting?.price).orEmpty() == "0" ? LocalizableText.freeText : (item.meeting?.price).orEmpty().toCurrency(),
+                                    color: item.meeting?.background ?? [],
+                                    session: (item.meetingBundle?.session).orZero(), price: (item.meeting?.price).orEmpty() == "0" ? LocalizableText.freeText : (item.meeting?.price).orEmpty().toCurrency(), participantsImgUrl: item.meeting?.participantDetails?.compactMap({
+                                        $0.profilePhoto.orEmpty()
+                                    }) ?? [],
                                     isActive: item.meeting?.endedAt == nil ? true : false,
                                     type: item.meetingBundle?.id == nil ? .session : .bundling,
                                     invoiceId: item.invoiceId.orEmpty(),
@@ -763,8 +767,10 @@ private extension ScheduleListView {
                                 photo: (item.meeting?.user?.profilePhoto).orEmpty(),
                                 name: (item.meeting?.user?.name).orEmpty(),
                                 color: [""],
-                                session: (item.meetingBundle?.session).orZero(),
-                                price: (item.meeting?.price).orEmpty() == "0" ? LocalizableText.freeText : (item.meeting?.price).orEmpty().toCurrency(),
+                                session: (item.meetingBundle?.session).orZero(), price: (item.meeting?.price).orEmpty() == "0" ? LocalizableText.freeText : (item.meeting?.price).orEmpty().toCurrency(),
+                                participantsImgUrl: item.meeting?.participantDetails?.compactMap({
+                                    $0.profilePhoto.orEmpty()
+                                }) ?? [],
                                 isActive: item.meeting?.endedAt == nil ? true : false,
                                 type: item.meetingBundle?.id == nil ? .session : .bundling,
                                 invoiceId: item.invoiceId.orEmpty(),
