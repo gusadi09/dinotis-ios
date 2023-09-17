@@ -12,6 +12,7 @@ public enum ReviewsTargetType {
 	case getReviews(String, GeneralParameterRequest)
     case giveReview(ReviewRequestBody)
     case getReasons(Int?)
+    case getTipAmounts
 }
 
 extension ReviewsTargetType: DinotisTargetType, AccessTokenAuthorizable {
@@ -24,6 +25,8 @@ extension ReviewsTargetType: DinotisTargetType, AccessTokenAuthorizable {
         case .getReasons(let rating):
             guard let rating = rating else { return [:] }
             return ["rating" : rating]
+        default:
+            return [:]
         }
 	}
 
@@ -43,6 +46,8 @@ extension ReviewsTargetType: DinotisTargetType, AccessTokenAuthorizable {
             return JSONEncoding.default
         case .getReasons:
             return URLEncoding.queryString
+        case .getTipAmounts:
+            return URLEncoding.default
         }
 	}
 
@@ -58,16 +63,16 @@ extension ReviewsTargetType: DinotisTargetType, AccessTokenAuthorizable {
             return "/reviews"
         case .getReasons:
             return "/reviews/reasons"
+        case .getTipAmounts:
+            return "/reviews/tip-amounts"
         }
 	}
 
 	public var method: Moya.Method {
 		switch self {
-		case .getReviews(_, _):
-			return .get
         case .giveReview:
             return .post
-        case .getReasons:
+        default:
             return .get
         }
 	}
@@ -80,6 +85,8 @@ extension ReviewsTargetType: DinotisTargetType, AccessTokenAuthorizable {
             return ReviewSuccessResponse.sampleData
         case .getReasons:
             return [String]().toJSONData()
+        case .getTipAmounts:
+            return [Int]().toJSONData()
         }
 	}
 }

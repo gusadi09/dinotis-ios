@@ -10,6 +10,7 @@ import Combine
 import SwiftUI
 import DinotisData
 import DinotisDesignSystem
+import StoreKit
 
 enum ScheduleDetailTooltip {
     case review
@@ -24,42 +25,64 @@ extension ScheduleDetailTooltip {
     }
 }
 
-final class ScheduleDetailViewModel: ObservableObject {
-
+final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsRequestDelegate, SKPaymentTransactionObserver {
+    
     private let getRulesUseCase: GetRulesUseCase
     private let meetingsRepo: MeetingsRepository
     private let getBookingDetailUseCase: GetBookingDetailUseCase
     private let getUserUseCase: GetUserUseCase
     private let authRepo: AuthenticationRepository
-	private let confirmationUseCase: RequestConfirmationUseCase
-	private let conversationTokenUseCase: ConversationTokenUseCase
+    private let confirmationUseCase: RequestConfirmationUseCase
+    private let conversationTokenUseCase: ConversationTokenUseCase
     private let giveReviewUseCase: GiveReviewUseCase
     private let stateObservable = StateObservable.shared
     private var cancellables = Set<AnyCancellable>()
-	private let isActiveBooking: Bool
+    private let isActiveBooking: Bool
     private let startMeetingUseCase: StartCreatorMeetingUseCase
     private let getDetailMeetingUseCase: GetMeetingDetailUseCase
     private let endMeetingUseCase: EndCreatorMeetingUseCase
     private let deleteMeetingUseCase: DeleteCreatorMeetingUseCase
-
+    private let coinVerificationUseCase: CoinVerificationUseCase
+    private let getTipAmountsUseCase: GetTipAmountsUseCase
+    
     @Published var currentTooltip: ScheduleDetailTooltip?
-	@Published var confirmationSheet = false
-
+    @Published var confirmationSheet = false
+    
     @Published var goToEdit = false
-
+    
     @Published var isRestricted = false
-
+    
     @Published var totalPrice = 0
-
+    
     @Published var isDeleteShow = false
-
+    
     @Published var isEndShow = false
-
+    
     @Published var startPresented = false
-
+    
     @Published var participantDetail = [UserResponse]()
     
     @Published var meetingForm = MeetingForm(id: String.random(), title: "", description: "", price: 10000, startAt: "", endAt: "", isPrivate: true, slots: 0, urls: [])
+    
+    @Published var myProducts = [SKProduct]()
+    @Published var productSelected: SKProduct? = nil
+    @Published var transactionState: SKPaymentTransactionState?
+    
+    @Published var productIDs = [
+        "dinotisapp.coin01",
+        "dinotisapp.coin02",
+        "dinotisapp.coin03",
+        "dinotisapp.coin04",
+        "dinotisapp.coin05",
+        "dinotisapp.coin06",
+        "dinotisapp.coin07",
+        "dinotisapp.coin08"
+    ]
+
+    var request: SKProductsRequest?
+    
+    @Published var tips = [Int]()
+    @Published var tipAmount: Int?
     
     @Published var randomId = UInt.random(in: .init(1...99999999))
 
@@ -89,13 +112,17 @@ final class ScheduleDetailViewModel: ObservableObject {
 	@Published var expiredData = Date()
 
     @Published var isRefreshFailed = false
-
+    @Published var isLoadingTrx = false
+    @Published var isTransactionSucceed = false
+    
+    @Published var showAddCoin = false
     @Published var isShowingRules = false
     @Published var isShowCollabList = false
     @Published var isNotApproved = false
     @Published var isShowAttachments = false
     @Published var isShowWebView = false
     @Published var isTextComplete = false
+    @Published var isReviewSuccess = false
     @Published var attachmentURL = ""
     
     @Published var showAlreadyReview = false
@@ -136,6 +163,8 @@ final class ScheduleDetailViewModel: ObservableObject {
         getDetailMeetingUseCase: GetMeetingDetailUseCase = GetMeetingDetailDefaultUseCase(),
         endMeetingUseCase: EndCreatorMeetingUseCase = EndCreatorMeetingDefaultUseCase(),
         deleteMeetingUseCase: DeleteCreatorMeetingUseCase = DeleteCreatorMeetingDefaultUseCase(),
+        coinVerificationUseCase: CoinVerificationUseCase = CoinVerificationDefaultUseCase(),
+        getTipAmountsUseCase: GetTipAmountsUseCase = GetTipAmountsDefaultUseCase(),
         bookingId: String,
         backToHome: @escaping (() -> Void),
         talentName: String = "",
@@ -160,6 +189,8 @@ final class ScheduleDetailViewModel: ObservableObject {
         self.getDetailMeetingUseCase = getDetailMeetingUseCase
         self.endMeetingUseCase = endMeetingUseCase
         self.deleteMeetingUseCase = deleteMeetingUseCase
+        self.coinVerificationUseCase = coinVerificationUseCase
+        self.getTipAmountsUseCase = getTipAmountsUseCase
     }
     
     func onStartRequestReview() {
@@ -169,6 +200,7 @@ final class ScheduleDetailViewModel: ObservableObject {
                 self?.isLoadingReview = true
                 self?.error = nil
                 self?.isRefreshFailed = false
+                self?.isReviewSuccess = false
             }
         }
     }
@@ -176,7 +208,12 @@ final class ScheduleDetailViewModel: ObservableObject {
     func giveReview() async {
         onStartRequestReview()
         
-        let body = ReviewRequestBody(rating: self.reviewRating, review: self.reviewMessage, meetingId: (self.dataBooking?.meeting?.id).orEmpty())
+        let body = ReviewRequestBody(
+            rating: self.reviewRating,
+            review: self.reviewMessage,
+            meetingId: (self.dataBooking?.meeting?.id).orEmpty(),
+            tip: tipAmount
+        )
         let result = await giveReviewUseCase.execute(with: body)
         
         switch result {
@@ -187,6 +224,7 @@ final class ScheduleDetailViewModel: ObservableObject {
                     self?.isLoadingReview = false
                     self?.error = nil
                     self?.showReviewSheet = false
+                    self?.isReviewSuccess = true
                 }
             }
             
@@ -214,6 +252,197 @@ final class ScheduleDetailViewModel: ObservableObject {
             }
         }
     }
+    
+    func openWhatsApp() {
+        if let waurl = URL(string: "https://wa.me/6281318506068") {
+            if UIApplication.shared.canOpenURL(waurl) {
+                UIApplication.shared.open(waurl, options: [:], completionHandler: nil)
+            }
+        }
+    }
+    
+    func verifyCoin(receipt: String, queue: SKPaymentQueue, transaction: SKPaymentTransaction) async {
+
+        let result = await coinVerificationUseCase.execute(with: receipt)
+
+        switch result {
+        case .success(_):
+            DispatchQueue.main.async {[weak self] in
+                self?.showAddCoin = false
+                self?.isLoadingTrx = false
+                self?.isError = false
+                self?.error = nil
+
+                queue.finishTransaction(transaction)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    self?.isTransactionSucceed.toggle()
+                }
+
+                self?.productSelected = nil
+            }
+            
+            await self.getUser()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                self.showReviewSheet = true
+            }
+        case .failure(let failure):
+            handleDefaultErrorCoinVerify(error: failure)
+        }
+
+    }
+
+    func handleDefaultErrorCoinVerify(error: Error) {
+        DispatchQueue.main.async { [weak self] in
+            self?.isLoadingTrx = false
+            self?.productSelected = nil
+
+            if let error = error as? ErrorResponse {
+                self?.error = error.message.orEmpty()
+
+
+                if error.statusCode.orZero() == 401 {
+                    self?.isRefreshFailed.toggle()
+                } else {
+                    self?.isError = true
+                }
+            } else {
+                self?.isError = true
+                self?.error = error.localizedDescription
+            }
+
+        }
+    }
+
+    func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
+        for transaction in transactions {
+            switch transaction.transactionState {
+            case .purchasing:
+                DispatchQueue.main.async {[weak self] in
+                    self?.isLoadingTrx = true
+                    self?.isError = false
+                    self?.error = nil
+                }
+                transactionState = .purchasing
+            case .purchased:
+
+                transactionState = .purchased
+
+                if let appStoreReceiptURL = Bundle.main.appStoreReceiptURL,
+                   FileManager.default.fileExists(atPath: appStoreReceiptURL.path) {
+
+                    Task {
+                        do {
+                            let receiptData = try Data(contentsOf: appStoreReceiptURL, options: .alwaysMapped)
+                            print(receiptData)
+
+                            let receiptString = receiptData.base64EncodedString(options: [])
+
+                            await self.verifyCoin(receipt: receiptString, queue: queue, transaction: transaction)
+                        }
+                        catch {
+                            DispatchQueue.main.async {[weak self] in
+                                self?.isLoadingTrx = false
+                                self?.isError.toggle()
+                                self?.error = error.localizedDescription
+                            }
+                        }
+                    }
+                }
+            case .restored:
+                DispatchQueue.main.async {[weak self] in
+                    self?.isLoadingTrx = false
+                    self?.isError = false
+                    self?.error = nil
+                }
+                transactionState = .restored
+                queue.finishTransaction(transaction)
+                isTransactionSucceed.toggle()
+                showAddCoin = false
+                productSelected = nil
+            case .failed, .deferred:
+                transactionState = .failed
+                DispatchQueue.main.async {[weak self] in
+                    self?.isLoadingTrx = false
+                    self?.isError.toggle()
+                    self?.error = LocaleText.inAppsPurchaseTrx
+                }
+            default:
+                queue.finishTransaction(transaction)
+            }
+        }
+    }
+    
+    func purchaseProduct(product: SKProduct) {
+        SKPaymentQueue.default().add(self)
+
+        if SKPaymentQueue.canMakePayments() {
+            let payment = SKPayment(product: product)
+            SKPaymentQueue.default().add(payment)
+
+        } else {
+            DispatchQueue.main.async {[weak self] in
+                self?.isError.toggle()
+                self?.error = LocaleText.inAppsPurchaseTrx
+            }
+
+        }
+    }
+    
+    func request(_ request: SKRequest, didFailWithError error: Error) {
+        DispatchQueue.main.async {[weak self] in
+            self?.isError.toggle()
+            self?.error = error.localizedDescription
+        }
+    }
+
+    func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
+        DispatchQueue.main.async {[weak self] in
+            self?.isError = false
+            self?.error = nil
+        }
+
+        if !response.products.isEmpty {
+            for fetchedProduct in response.products {
+                DispatchQueue.main.async {
+                    self.myProducts.append(fetchedProduct)
+                }
+            }
+        }
+    }
+
+    func getProducts(productIDs: [String]) {
+        let request = SKProductsRequest(productIdentifiers: Set(productIDs))
+        request.delegate = self
+        request.start()
+    }
+
+    func getProductOnAppear() {
+        if myProducts.isEmpty {
+            getProducts(productIDs: productIDs)
+        }
+    }
+
+    func onDisappear() {
+        SKPaymentQueue.default().remove(self)
+    }
+    
+    func disableReviewButton() -> Bool {
+        reviewRating == 0 ||
+        !reviewMessage.isStringContainWhitespaceAndText() ||
+        isLoadingReview ||
+        showNotEnoughBalance()
+    }
+    
+    func showNotEnoughBalance() -> Bool {
+        Int((user?.coinBalance?.current).orEmpty()).orZero() < tipAmount.orZero()
+    }
+    
+    func onGetTipAmounts() {
+        Task {
+            await getTipAmounts()
+        }
+    }
 
     func onGetMeetingRules() {
         Task {
@@ -236,6 +465,7 @@ final class ScheduleDetailViewModel: ObservableObject {
         onGetMeetingRules()
         onGetUser()
         onGetDetailBooking()
+        onGetTipAmounts()
     }
     
     @MainActor
@@ -312,6 +542,26 @@ final class ScheduleDetailViewModel: ObservableObject {
 				self.error = error.localizedDescription
 			}
 	}
+    
+    @MainActor
+    func getTipAmounts() async {
+        onStartFetch()
+        
+        let result = await getTipAmountsUseCase.execute()
+        
+        switch result {
+        case .success(let response):
+            DispatchQueue.main.async { [weak self] in
+                withAnimation {
+                    self?.tips = response.data?.compactMap({ $0.amount.orZero() }) ?? []
+                    self?.isLoading = false
+                }
+            }
+            
+        case .failure(let error):
+            handleDefaultError(error: error)
+        }
+    }
 
     @MainActor
 	func getDetailBookingUser() async {
@@ -696,4 +946,10 @@ final class ScheduleDetailViewModel: ObservableObject {
             handleDefaultError(error: failure)
         }
 	}
+    
+    func selectTipAmount(data: Int) {
+        withAnimation {
+            self.tipAmount = data == self.tipAmount ? nil : data
+        }
+    }
 }

@@ -27,4 +27,8 @@ public final class ReviewsDefaultRemoteDataSource: ReviewsRemoteDataSource {
     public func getReasons(rating: Int?) async throws -> ReviewReasons {
         try await self.provider.request(.getReasons(rating), model: ReviewReasons.self)
     }
+    
+    public func getTipAmounts() async throws -> TipAmounts {
+        try await self.provider.request(.getTipAmounts, model: TipAmounts.self)
+    }
 }
