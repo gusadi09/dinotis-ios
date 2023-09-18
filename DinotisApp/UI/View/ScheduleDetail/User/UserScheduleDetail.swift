@@ -634,7 +634,7 @@ private extension UserScheduleDetail {
                             }
                         }
                         
-                        Text("Kamu telah memberikan ulasan untuk kreator ini!")
+                        Text(LocalizableText.tippingSuccessDesc)
                             .font(.robotoRegular(size: 12))
                             .foregroundColor(.DinotisDefault.black3)
                             .multilineTextAlignment(.center)
