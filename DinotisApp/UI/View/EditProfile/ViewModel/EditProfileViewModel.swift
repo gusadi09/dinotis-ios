@@ -41,6 +41,8 @@ final class EditProfileViewModel: ObservableObject {
     @Published var error: String?
     @Published var success: Bool = false
     
+    @Published var isLoadingUserName = false
+    
     @Published var alert = AlertAttribute()
     
     @Published var professionData: ProfessionResponse?
@@ -148,8 +150,10 @@ final class EditProfileViewModel: ObservableObject {
     
     func handleDefaultErrorUsernameChecking(error: Error) {
         DispatchQueue.main.async { [weak self] in
+            self?.isLoadingUserName = false
             
             if let error = error as? ErrorResponse {
+                self?.isUsernameAvail = error.statusCode.orZero() == 409
                 
                 if error.statusCode.orZero() == 401 {
                     self?.error = error.message.orEmpty()
@@ -169,7 +173,7 @@ final class EditProfileViewModel: ObservableObject {
                         }
                     )
                     self?.isShowAlert = true
-                } else {
+                } else if error.statusCode != 409 {
                     self?.isUsernameAvail = false
                 }
             } else {
@@ -186,6 +190,7 @@ final class EditProfileViewModel: ObservableObject {
     func onStartCheckingUsername() {
         DispatchQueue.main.async { [weak self] in
             self?.success = false
+            self?.isLoadingUserName = true
             self?.isError = false
             self?.error = nil
             self?.isUsernameAvail = false
@@ -213,6 +218,7 @@ final class EditProfileViewModel: ObservableObject {
         switch result {
         case .success(let success):
             DispatchQueue.main.async { [weak self] in
+                self?.isLoadingUserName = false
                 self?.isUsernameAvail = true
                 self?.isUsernameAvail = !success.message.orEmpty().isEmpty
             }
@@ -240,7 +246,7 @@ final class EditProfileViewModel: ObservableObject {
     
     func isAvailableToSaveUser() -> Bool {
         if stateObservable.userType == 2 {
-            return !names.isEmpty && (!username.isEmpty && (!usernameInvalid && isUsernameAvail)) || username == userData?.username
+            return !names.isEmpty && !bio.isEmpty && (!username.isEmpty && (!usernameInvalid && isUsernameAvail))
             
         } else {
             return !names.isEmpty

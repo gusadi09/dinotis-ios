@@ -531,3 +531,8 @@
 "tipping_not_enough_balance" = "Your balance is not enough, please top up coins first";
 "tipping_your_current_coin" = "Your current coins,";
 "tipping_success_desc" = "You've given a review for this creator!";
+
+"edit_profile_name_empty_error" = "Please fill your name, this field can't be empty";
+"edit_profile_username_empty_error" = "Please fill your username, this field can't be empty";
+"edit_profile_bio_empty_error" = "Please fill your bio, this field can't be empty";
+"edit_profile_profession_empty_error" = "Please select your profession, this field can't be empty";

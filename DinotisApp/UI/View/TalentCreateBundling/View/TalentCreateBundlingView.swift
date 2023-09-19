@@ -173,6 +173,16 @@ struct TalentCreateBundlingView: View {
         }
 		.navigationBarTitle(Text(""))
 		.navigationBarHidden(true)
+        .dinotisAlert(
+            isPresent: $viewModel.isShowAlert,
+            type: .general,
+            title: viewModel.alertTitle(),
+            isError: viewModel.type == .error || viewModel.type == .refresh,
+            message: viewModel.alertContent(),
+            primaryButton: .init(text: viewModel.alertButtonText(), action: {
+                viewModel.alertAction()
+            })
+        )
     }
 }
 
