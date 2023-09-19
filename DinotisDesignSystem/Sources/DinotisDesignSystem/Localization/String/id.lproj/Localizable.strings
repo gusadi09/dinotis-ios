@@ -531,3 +531,8 @@
 "tipping_not_enough_balance" = "Saldo kamu tidak cukup, silakan top up coin terlebih dahulu";
 "tipping_your_current_coin" = "Koin kamu saat ini,";
 "tipping_success_desc" = "Kamu telah memberikan ulasan untuk kreator ini!";
+
+"edit_profile_name_empty_error" = "Mohon isi nama kamu, kolom ini tidak boleh kosong";
+"edit_profile_username_empty_error" = "Mohon isi username kamu, kolom ini tidak boleh kosong";
+"edit_profile_bio_empty_error" = "Mohon isi bio kamu, kolom ini tidak boleh kosong";
+"edit_profile_profession_empty_error" = "Mohon isi profesi kamu, kolom ini tidak boleh kosong";

@@ -16,29 +16,10 @@ struct TalentCardListView: View {
     var body: some View {
         ZStack {
             Color.secondaryBackground.edgesIgnoringSafeArea(.all)
-				.alert(isPresented: $viewModel.isRefreshFailed) {
-					Alert(
-						title: Text(LocaleText.attention),
-						message: Text(LocaleText.sessionExpireText),
-						dismissButton: .default(
-							Text(LocaleText.returnText),
-							action: {
-								viewModel.routeToRoot()
-							}
-						)
-					)
-				}
 
             ZStack(alignment: .bottomTrailing) {
                 VStack(spacing: 0) {
                     HeaderView(viewModel: viewModel)
-						.alert(isPresented: $viewModel.isError) {
-							Alert(
-								title: Text(LocaleText.attention),
-								message: Text(viewModel.error.orEmpty()),
-								dismissButton: .default(Text(LocaleText.returnText))
-							)
-						}
 
                     DinotisList(
                         refreshAction: {
@@ -115,6 +96,8 @@ struct TalentCardListView: View {
 												viewModel.deleteId = item.id.orEmpty()
 
 												viewModel.isShowDeleteAlert.toggle()
+                                                viewModel.isShowAlert = true
+                                                viewModel.typeAlert = .deleteSelector
 											},
 											onTapEdit: {
 												viewModel.routeToCreateRateCardForm(isEdit: true, id: item.id.orEmpty())
@@ -166,18 +149,6 @@ struct TalentCardListView: View {
                 })
                 .shadow(color: .black.opacity(0.2), radius: 10, x: 0, y: 0)
                 .padding()
-				.alert(isPresented: $viewModel.isShowDeleteAlert) {
-					Alert(
-						title: Text(LocaleText.attention),
-						message: Text(LocaleText.deleteMessageRateCardText),
-						primaryButton: .default(Text(LocaleText.noText)),
-						secondaryButton: .destructive(Text(LocaleText.yesDeleteText)) {
-							withAnimation {
-								viewModel.onDeleteCard()
-							}
-						}
-					)
-				}
                 
 				NavigationLink(
 					unwrapping: $viewModel.route,
@@ -198,6 +169,17 @@ struct TalentCardListView: View {
 		}
         .navigationBarHidden(true)
         .navigationBarTitle("")
+        .dinotisAlert(
+            isPresent: $viewModel.isShowAlert,
+            type: .general,
+            title: viewModel.alertTitle(),
+            isError: viewModel.typeAlert == .refreshFailed || viewModel.typeAlert == .error,
+            message: viewModel.alertContent(),
+            primaryButton: .init(text: viewModel.alertButtonText(), action: {
+                viewModel.alertAction()
+            }),
+            secondaryButton: viewModel.typeAlert == .deleteSelector ? .init(text: LocaleText.noText, action: {}) : nil
+        )
     }
 }
 

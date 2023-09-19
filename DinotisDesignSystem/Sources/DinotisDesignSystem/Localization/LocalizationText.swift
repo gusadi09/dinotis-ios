@@ -2400,6 +2400,26 @@ public enum LocalizableText {
         comment: "tipping success description"
     )
     
+    public static let editProfileNameEmptyError = NSLocalizedString(
+        "edit_profile_name_empty_error",
+        bundle: .module,
+        comment: "empty error for name field"
+    )
+    public static let editProfileUsernameEmptyError = NSLocalizedString(
+        "edit_profile_username_empty_error",
+        bundle: .module,
+        comment: "error empty for username field"
+    )
+    public static let editProfileBioEmptyError = NSLocalizedString(
+        "edit_profile_bio_empty_error",
+        bundle: .module,
+        comment: "bio empty error"
+    )
+    public static let editProfileProfessionEmptyError = NSLocalizedString(
+        "edit_profile_profession_empty_error",
+        bundle: .module,
+        comment: "profession empty error"
+    )
 }
 
 

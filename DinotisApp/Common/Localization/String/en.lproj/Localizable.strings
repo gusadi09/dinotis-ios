@@ -76,7 +76,7 @@
 "new_password" = "New password";
 "confirm_new_pass" ="Confirm new password";
 "exit" = "Log out";
-"return" = "Return";
+"return" = "Back";
 "send" = "Send";
 "resend_label %lld" = "Resend (%lld seconds)";
 "resend" = "Resend";

@@ -56,13 +56,6 @@ struct BundlingView: View {
             
             ZStack(alignment: .bottomTrailing) {
                 Color.homeBgColor.ignoresSafeArea()
-                    .alert(isPresented: $viewModel.isError) {
-                        Alert(
-                            title: Text(LocaleText.attention),
-                            message: Text(viewModel.error.orEmpty()),
-                            dismissButton: .default(Text(LocaleText.okText))
-                        )
-                    }
                 
                 ZStack(alignment: .bottomTrailing) {
                     VStack {
@@ -202,6 +195,8 @@ struct BundlingView: View {
 											},
 											onTapDelete: {
                                                 viewModel.isShowConfirmAlert = true
+                                                viewModel.isShowAlert = true
+                                                viewModel.typeAlert = .deleteSelector
                                                 viewModel.idToDelete = item.id.orEmpty()
 											},
 											item: item
@@ -218,18 +213,6 @@ struct BundlingView: View {
 										}
 										.buttonStyle(.plain)
 										.listRowBackground(Color.clear)
-                                        .alert(isPresented: $viewModel.isShowConfirmAlert) {
-                                            Alert(
-                                                title: Text(LocaleText.attention),
-                                                message: Text(LocaleText.deleteBundleAlert),
-                                                primaryButton: .default(Text(LocaleText.noText)),
-                                                secondaryButton: .destructive(Text(LocaleText.yesDeleteText)) {
-                                                    withAnimation {
-                                                        viewModel.defaultDeleteBundling(bundleId: viewModel.idToDelete)
-                                                    }
-                                                }
-                                            )
-                                        }
 									}
 								}
 
@@ -273,6 +256,17 @@ struct BundlingView: View {
         }
 		.navigationBarTitle(Text(""))
 		.navigationBarHidden(true)
+        .dinotisAlert(
+            isPresent: $viewModel.isShowAlert,
+            type: .general,
+            title: viewModel.alertTitle(),
+            isError: viewModel.typeAlert == .error || viewModel.typeAlert == .refreshFailed,
+            message: viewModel.alertContent(),
+            primaryButton: .init(text: viewModel.alertButtonText(), action: {
+                viewModel.alertAction()
+            }),
+            secondaryButton: viewModel.typeAlert == .deleteSelector ? .init(text: LocaleText.noText, action: {}) : nil
+        )
     }
 }
 
