@@ -9,6 +9,12 @@ import Foundation
 import Combine
 import UIKit
 import DinotisData
+import OneSignal
+
+enum CreatorCreateBundlingAlert {
+    case error
+    case refresh
+}
 
 final class TalentCreateBundlingViewModel: ObservableObject {
     
@@ -28,6 +34,8 @@ final class TalentCreateBundlingViewModel: ObservableObject {
     private var stateObservable = StateObservable.shared
 	private let bundleId: String
 
+    @Published var isShowAlert = false
+    @Published var type: CreatorCreateBundlingAlert = .error
 	@Published var isEdit: Bool
     
     @Published var isLoading = false
@@ -64,21 +72,78 @@ final class TalentCreateBundlingViewModel: ObservableObject {
             self?.isLoading = true
             self?.isError = false
             self?.error = nil
+            self?.isShowAlert = false
             self?.isRefreshFailed = false
         }
     }
     
     func handleDefaultError(error: Error) {
-        guard let error = error as? ErrorResponse else { return }
         DispatchQueue.main.async { [weak self] in
-            if error.statusCode.orZero() == 401 {
-                
-            } else {
-                self?.isLoading = false
-                self?.isError = true
+            self?.isLoading = false
+            self?.isShowAlert = true
 
+            if let error = error as? ErrorResponse {
                 self?.error = error.message.orEmpty()
+
+                if error.statusCode.orZero() == 401 {
+                    self?.isRefreshFailed.toggle()
+                    self?.type = .refresh
+                } else {
+                    self?.isError = true
+                    self?.type = .error
+                }
+            } else {
+                self?.isError = true
+                self?.type = .error
+                self?.error = error.localizedDescription
             }
+
+        }
+    }
+    
+    func routeToRoot() {
+        NavigationUtil.popToRootView()
+        self.stateObservable.userType = 0
+        self.stateObservable.isVerified = ""
+        self.stateObservable.refreshToken = ""
+        self.stateObservable.accessToken = ""
+        self.stateObservable.isAnnounceShow = false
+        OneSignal.setExternalUserId("")
+    }
+    
+    func alertTitle() -> String {
+        switch type {
+        case .refresh:
+            return LocaleText.attention
+        case .error:
+            return LocaleText.attention
+        }
+    }
+    
+    func alertContent() -> String {
+        switch type {
+        case .refresh:
+            return LocaleText.sessionExpireText
+        case .error:
+            return error.orEmpty()
+        }
+    }
+    
+    func alertButtonText() -> String {
+        switch type {
+        case .refresh:
+            return LocaleText.returnText
+        case .error:
+            return LocaleText.okText
+        }
+    }
+    
+    func alertAction() {
+        switch type {
+        case .refresh:
+            routeToRoot()
+        case .error:
+            break
         }
     }
     

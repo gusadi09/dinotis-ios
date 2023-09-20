@@ -11,6 +11,12 @@ import OneSignal
 import SwiftUI
 import DinotisData
 
+enum CreatorRateCardListAlertType {
+    case deleteSelector
+    case refreshFailed
+    case error
+}
+
 final class TalentCardListViewModel: ObservableObject {
 
 	private let deleteRateCardUseCase: DeleteRateCardUseCase
@@ -22,6 +28,9 @@ final class TalentCardListViewModel: ObservableObject {
     
     var backToHome: () -> Void
 
+    @Published var isShowAlert = false
+    @Published var typeAlert: CreatorRateCardListAlertType = .error
+    
 	@Published var isLoading = false
 	@Published var isLoadingDelete = false
 	@Published var isError = false
@@ -68,6 +77,50 @@ final class TalentCardListViewModel: ObservableObject {
         self.stateObservable.isAnnounceShow = false
         OneSignal.setExternalUserId("")
 	}
+    
+    func alertTitle() -> String {
+        switch typeAlert {
+        case .deleteSelector:
+            return LocaleText.attention
+        case .refreshFailed:
+            return LocaleText.attention
+        case .error:
+            return LocaleText.attention
+        }
+    }
+    
+    func alertContent() -> String {
+        switch typeAlert {
+        case .deleteSelector:
+            return LocaleText.deleteMessageRateCardText
+        case .refreshFailed:
+            return LocaleText.sessionExpireText
+        case .error:
+            return error.orEmpty()
+        }
+    }
+    
+    func alertButtonText() -> String {
+        switch typeAlert {
+        case .deleteSelector:
+            return LocaleText.yesDeleteText
+        case .refreshFailed:
+            return LocaleText.returnText
+        case .error:
+            return LocaleText.okText
+        }
+    }
+    
+    func alertAction() {
+        switch typeAlert {
+        case .deleteSelector:
+            onDeleteCard()
+        case .refreshFailed:
+            routeToRoot()
+        case .error:
+            break
+        }
+    }
 
 	func onStartRequest(isDelete: Bool) {
 		DispatchQueue.main.async {[weak self] in
@@ -75,6 +128,7 @@ final class TalentCardListViewModel: ObservableObject {
 			if isDelete {
 				self?.isLoadingDelete = true
 			}
+            self?.isShowAlert = false
 			self?.isError = false
 			self?.error = nil
 			self?.success = false
@@ -86,18 +140,22 @@ final class TalentCardListViewModel: ObservableObject {
 	func handleDefaultError(error: Error) {
 		DispatchQueue.main.async { [weak self] in
 			self?.isLoading = false
+            self?.isShowAlert = true
 
 			if let error = error as? ErrorResponse {
 
 				if error.statusCode.orZero() == 401 {
 					self?.error = error.message.orEmpty()
 					self?.isRefreshFailed.toggle()
+                    self?.typeAlert = .refreshFailed
 				} else {
 					self?.error = error.message.orEmpty()
 					self?.isError = true
+                    self?.typeAlert = .error
 				}
 			} else {
 				self?.isError = true
+                self?.typeAlert = .error
 				self?.error = error.localizedDescription
 			}
 
@@ -131,18 +189,21 @@ final class TalentCardListViewModel: ObservableObject {
 	func handleDefaultErrorDelete(error: Error) {
 		DispatchQueue.main.async { [weak self] in
 			self?.isLoadingDelete = false
-
+            self?.isShowAlert = true
 			if let error = error as? ErrorResponse {
 
 				if error.statusCode.orZero() == 401 {
 					self?.error = error.message.orEmpty()
 					self?.isRefreshFailed.toggle()
+                    self?.typeAlert = .refreshFailed
 				} else {
 					self?.error = error.message.orEmpty()
 					self?.isError = true
+                    self?.typeAlert = .error
 				}
 			} else {
 				self?.isError = true
+                self?.typeAlert = .error
 				self?.error = error.localizedDescription
 			}
 
