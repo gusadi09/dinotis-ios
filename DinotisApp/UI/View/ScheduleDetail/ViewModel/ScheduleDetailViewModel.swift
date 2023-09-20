@@ -11,6 +11,7 @@ import SwiftUI
 import DinotisData
 import DinotisDesignSystem
 import StoreKit
+import OneSignal
 
 enum ScheduleDetailTooltip {
     case review
@@ -23,6 +24,17 @@ extension ScheduleDetailTooltip {
             return "review"
         }
     }
+}
+
+enum ScheduleDetailAlert {
+    case error
+    case successEnded
+    case deleteSelector
+    case refreshFailed
+    case deleteSuccess
+    case successConfirm
+    case oneHourRestricted
+    case endSelector
 }
 
 final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsRequestDelegate, SKPaymentTransactionObserver {
@@ -45,6 +57,8 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
     private let coinVerificationUseCase: CoinVerificationUseCase
     private let getTipAmountsUseCase: GetTipAmountsUseCase
     
+    @Published var typeAlert: ScheduleDetailAlert = .error
+    @Published var isShowAlert = false
     @Published var currentTooltip: ScheduleDetailTooltip?
     @Published var confirmationSheet = false
     
@@ -193,12 +207,111 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
         self.getTipAmountsUseCase = getTipAmountsUseCase
     }
     
+    func routeToRoot() {
+        NavigationUtil.popToRootView()
+        self.stateObservable.userType = 0
+        self.stateObservable.isVerified = ""
+        self.stateObservable.refreshToken = ""
+        self.stateObservable.accessToken = ""
+        self.stateObservable.isAnnounceShow = false
+        OneSignal.setExternalUserId("")
+    }
+    
+    func alertTitle() -> String {
+        switch typeAlert {
+        case .error:
+            return LocaleText.errorText
+        case .successEnded:
+            return LocaleText.successTitle
+        case .deleteSelector:
+            return LocaleText.attention
+        case .refreshFailed:
+            return LocaleText.attention
+        case .deleteSuccess:
+            return LocaleText.successTitle
+        case .successConfirm:
+            return LocaleText.successTitle
+        case .oneHourRestricted:
+            return LocaleText.attention
+        case .endSelector:
+            return LocaleText.attention
+        }
+    }
+    
+    func alertContent() -> String {
+        switch typeAlert {
+        case .error:
+            return error.orEmpty()
+        case .successEnded:
+            return LocaleText.successEndedMeetingText
+        case .deleteSelector:
+            return LocaleText.deleteAlertText
+        case .refreshFailed:
+            return LocaleText.sessionExpireText
+        case .deleteSuccess:
+            return LocaleText.successDeleteMeetingText
+        case .successConfirm:
+            return LocaleText.successConfirmRequestText
+        case .oneHourRestricted:
+            return LocaleText.oneHourRestrictText
+        case .endSelector:
+            return LocaleText.endedMeetingLabelText
+        }
+    }
+    
+    func alertButtonText() -> String {
+        switch typeAlert {
+        case .error:
+            return LocaleText.returnText
+        case .successEnded:
+            return LocaleText.returnText
+        case .deleteSelector:
+            return LocaleText.yesDeleteText
+        case .refreshFailed:
+            return LocaleText.returnText
+        case .deleteSuccess:
+            return LocaleText.returnText
+        case .successConfirm:
+            return LocaleText.okText
+        case .oneHourRestricted:
+            return LocaleText.okText
+        case .endSelector:
+            return LocaleText.yesDeleteText
+        }
+    }
+    
+    func alertAction(_ completion: () -> Void) {
+        switch typeAlert {
+        case .error:
+            break
+        case .successEnded:
+            completion()
+        case .deleteSelector:
+            Task {
+                await deleteMeeting()
+            }
+        case .refreshFailed:
+            routeToRoot()
+        case .deleteSuccess:
+            completion()
+        case .successConfirm:
+            completion()
+        case .oneHourRestricted:
+            break
+        case .endSelector:
+            Task {
+                await endMeeting()
+            }
+        }
+    }
+    
     func onStartRequestReview() {
         DispatchQueue.main.async {[weak self] in
             withAnimation(.spring()) {
                 self?.isError = false
                 self?.isLoadingReview = true
                 self?.error = nil
+                self?.isShowAlert = false
                 self?.isRefreshFailed = false
                 self?.isReviewSuccess = false
             }
@@ -233,11 +346,22 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
         case .failure(let failure):
             if let failure = failure as? ErrorResponse {
                 DispatchQueue.main.async { [weak self] in
-                    withAnimation(.spring()) {
-                        self?.isError = true
-                        self?.isLoadingReview = false
-                        self?.error = failure.message.orEmpty()
-                        self?.showReviewSheet = false
+                    if failure.statusCode.orZero() == 401 {
+                        withAnimation(.spring()) {
+                            self?.isRefreshFailed = true
+                            self?.isShowAlert = true
+                            self?.typeAlert = .refreshFailed
+                            self?.isLoadingReview = false
+                        }
+                    } else {
+                        withAnimation(.spring()) {
+                            self?.isError = true
+                            self?.isShowAlert = true
+                            self?.typeAlert = .error
+                            self?.isLoadingReview = false
+                            self?.error = failure.message.orEmpty()
+                            self?.showReviewSheet = false
+                        }
                     }
                 }
             } else {
@@ -245,6 +369,8 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
                     withAnimation(.spring()) {
                         self?.isError = true
                         self?.isLoadingReview = false
+                        self?.isShowAlert = true
+                        self?.typeAlert = .error
                         self?.error = failure.localizedDescription
                         self?.showReviewSheet = false
                     }
@@ -296,6 +422,7 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
         DispatchQueue.main.async { [weak self] in
             self?.isLoadingTrx = false
             self?.productSelected = nil
+            self?.isShowAlert = true
 
             if let error = error as? ErrorResponse {
                 self?.error = error.message.orEmpty()
@@ -303,11 +430,14 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
 
                 if error.statusCode.orZero() == 401 {
                     self?.isRefreshFailed.toggle()
+                    self?.typeAlert = .refreshFailed
                 } else {
                     self?.isError = true
+                    self?.typeAlert = .error
                 }
             } else {
                 self?.isError = true
+                self?.typeAlert = .error
                 self?.error = error.localizedDescription
             }
 
@@ -344,6 +474,8 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
                             DispatchQueue.main.async {[weak self] in
                                 self?.isLoadingTrx = false
                                 self?.isError.toggle()
+                                self?.isShowAlert = true
+                                self?.typeAlert = .error
                                 self?.error = error.localizedDescription
                             }
                         }
@@ -365,6 +497,8 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
                 DispatchQueue.main.async {[weak self] in
                     self?.isLoadingTrx = false
                     self?.isError.toggle()
+                    self?.isShowAlert = true
+                    self?.typeAlert = .error
                     self?.error = LocaleText.inAppsPurchaseTrx
                 }
             default:
@@ -383,6 +517,8 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
         } else {
             DispatchQueue.main.async {[weak self] in
                 self?.isError.toggle()
+                self?.isShowAlert = true
+                self?.typeAlert = .error
                 self?.error = LocaleText.inAppsPurchaseTrx
             }
 
@@ -392,6 +528,8 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
     func request(_ request: SKRequest, didFailWithError error: Error) {
         DispatchQueue.main.async {[weak self] in
             self?.isError.toggle()
+            self?.isShowAlert = true
+            self?.typeAlert = .error
             self?.error = error.localizedDescription
         }
     }
@@ -473,6 +611,7 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
         self.error = nil
         self.success = false
         self.isError = false
+        self.isShowAlert = false
         self.isLoading = true
         self.isEndSuccess = false
         self.isDeleteSuccess = false
@@ -503,6 +642,7 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
         self.error = nil
         self.successDetail = false
         self.isError = false
+        self.isShowAlert = false
         self.isLoadingDetail = true
     }
 
@@ -525,23 +665,27 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
     }
 
     @MainActor
-	func handleDefaultError(error: Error) {
-            self.isLoading = false
-			self.isLoadingDetail = false
-
-			if let error = error as? ErrorResponse {
-				self.error = error.message.orEmpty()
-
-				if error.statusCode.orZero() == 401 {
-					self.isRefreshFailed.toggle()
-				} else {
-					self.isError = true
-				}
-			} else {
-				self.isError = true
-				self.error = error.localizedDescription
-			}
-	}
+    func handleDefaultError(error: Error) {
+        self.isLoading = false
+        self.isLoadingDetail = false
+        self.isShowAlert = true
+        
+        if let error = error as? ErrorResponse {
+            self.error = error.message.orEmpty()
+            
+            if error.statusCode.orZero() == 401 {
+                self.isRefreshFailed.toggle()
+                self.typeAlert = .refreshFailed
+            } else {
+                self.isError = true
+                self.typeAlert = .error
+            }
+        } else {
+            self.isError = true
+            self.typeAlert = .error
+            self.error = error.localizedDescription
+        }
+    }
     
     @MainActor
     func getTipAmounts() async {
@@ -625,10 +769,12 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
         let result = await endMeetingUseCase.execute(for: bookingId)
         
         switch result {
-        case .success(let success):
+        case .success(_):
             DispatchQueue.main.async { [weak self] in
                 self?.isEndSuccess = true
                 self?.isLoading = false
+                self?.typeAlert = .successEnded
+                self?.isShowAlert = true
             }
         case .failure(let failure):
             await handleDefaultError(error: failure)
@@ -641,10 +787,12 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
         let result = await deleteMeetingUseCase.execute(for: bookingId)
         
         switch result {
-        case .success(let success):
+        case .success(_):
             DispatchQueue.main.async { [weak self] in
                 self?.isDeleteSuccess = true
                 self?.isLoading = false
+                self?.typeAlert = .deleteSuccess
+                self?.isShowAlert = true
             }
         case .failure(let failure):
             await handleDefaultError(error: failure)
@@ -671,6 +819,7 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
     func onStartRefresh() {
         DispatchQueue.main.async { [weak self] in
             self?.isRefreshFailed = false
+            self?.isShowAlert = false
             self?.isLoading = true
             self?.success = false
             self?.error = nil
@@ -858,6 +1007,7 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
 	func onStartConfirm() {
 		DispatchQueue.main.async {[weak self] in
 			self?.isError = false
+            self?.isShowAlert = false
 			self?.isLoadingConfirm = true
 			self?.error = nil
 			self?.successConfirm = false
@@ -869,17 +1019,21 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
 		DispatchQueue.main.async { [weak self] in
 			self?.isLoadingConfirm = false
 			self?.confirmationSheet = false
+            self?.isShowAlert = true
 
 			if let error = error as? ErrorResponse {
 				self?.error = error.message.orEmpty()
 
 				if error.statusCode.orZero() == 401 {
 					self?.isRefreshFailed.toggle()
+                    self?.typeAlert = .refreshFailed
 				} else {
 					self?.isError = true
+                    self?.typeAlert = .error
 				}
 			} else {
 				self?.isError = true
+                self?.typeAlert = .error
 				self?.error = error.localizedDescription
 			}
 
@@ -897,6 +1051,8 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
 		case .success(_):
 			DispatchQueue.main.async { [weak self] in
 				self?.successConfirm = true
+                self?.typeAlert = .successConfirm
+                self?.isShowAlert = true
 				self?.isLoadingConfirm = false
 			}
 		case .failure(let failure):
@@ -912,6 +1068,7 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
     func onStartMeeting() {
         self.error = nil
         self.isError = false
+        self.isShowAlert = false
         self.isLoadingStart = true
     }
 
