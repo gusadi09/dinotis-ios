@@ -204,7 +204,11 @@
 "private_video_call_label" = "Private Video Call";
 "price_label" = "Harga";
 "note_for_creator_placeholder" = "Masukkan pesan untuk kreator di sini...";
-"note_for_creator_title" = "Pesan";
+"note_for_creator_title" = "Tinggalkan pesan untuk creator!";
+"note_for_creator_time_title" = "Sarankan jadwal kamu kepada creator :";
+"note_for_creator_time_subtitle" = "*jadwal belum tentu dikonfirmasi creator";
+"note_for_creator_date_title" = "Tanggal";
+"note_for_creator_time_title" = "Waktu";
 "next_label" = "Lanjut";
 "limited_quota_label" = "🔥 Kuota terbatas";
 "cancel_label" = "Batalkan";

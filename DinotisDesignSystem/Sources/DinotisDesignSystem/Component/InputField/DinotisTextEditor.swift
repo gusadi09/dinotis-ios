@@ -11,6 +11,7 @@ public struct DinotisTextEditor: View {
 
 	@Binding var text: String
 	@Binding var errorText: [String]?
+    let stroke: Color
 	let label: String?
 	let placeholder: String
 	let onSubmit: () -> Void
@@ -20,12 +21,14 @@ public struct DinotisTextEditor: View {
 		label: String?,
 		text: Binding<String>,
 		errorText: Binding<[String]?>,
+        stroke: Color = Color(red: 0.792, green: 0.8, blue: 0.812),
 		onSubmit: @escaping () -> Void = {}
 	) {
 		self.placeholder = placeholder
 		self.label = label
 		self._text = text
 		self._errorText = errorText
+        self.stroke = stroke
 		self.onSubmit = onSubmit
 	}
 
@@ -61,7 +64,7 @@ public struct DinotisTextEditor: View {
 			)
 			.overlay(
 				RoundedRectangle(cornerRadius: 8)
-					.stroke(Color(red: 0.792, green: 0.8, blue: 0.812), lineWidth: 1)
+					.stroke(stroke, lineWidth: 1)
 			)
 
 			if let error = errorText {
