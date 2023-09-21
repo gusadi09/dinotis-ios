@@ -203,8 +203,12 @@
 "minute_in_duration" = "%lld Minutes";
 "private_video_call_label" = "Private Video Call";
 "price_label" = "Price";
-"note_for_creator_placeholder" = "Masukkan pesan untuk kreator di sini...";
-"note_for_creator_title" = "Pesan";
+"note_for_creator_placeholder" = "Enter message for creator here...";
+"note_for_creator_title" = "Leave message for creator!";
+"note_for_creator_suggest_time_title" = "Suggest your schedule to the creator: ";
+"note_for_creator_suggest_time_subtitle" = "*The schedule is not necessarily confirmed by the creator";
+"note_for_creator_date_title" = "Date";
+"note_for_creator_time_title" = "Time";
 "next_label" = "Next";
 "limited_quota_label" = "🔥 Limited quota";
 "cancel_label" = "Cancel";

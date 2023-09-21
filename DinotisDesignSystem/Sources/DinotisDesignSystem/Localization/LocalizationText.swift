@@ -858,6 +858,26 @@ public enum LocalizableText {
         bundle: .module,
         comment: "usage for note for creator title in rate card"
     )
+    public static let noteForCreatorSuggestTimeTitle = NSLocalizedString(
+        "note_for_creator_suggest_time_title",
+        bundle: .module,
+        comment: "suggest time title"
+    )
+    public static let noteForCreatorSuggestTimeSubtitle = NSLocalizedString(
+        "note_for_creator_suggest_time_subtitle",
+        bundle: .module,
+        comment: "suggest time for creator"
+    )
+    public static let noteForCreatorDateTitle = NSLocalizedString(
+        "note_for_creator_date_title",
+        bundle: .module,
+        comment: "date"
+    )
+    public static let noteForCreatorTimeTitle = NSLocalizedString(
+        "note_for_creator_time_title",
+        bundle: .module,
+        comment: "time"
+    )
     public static let nextLabel = NSLocalizedString(
         "next_label",
         bundle: .module,

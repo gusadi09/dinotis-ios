@@ -22,6 +22,7 @@ public struct DinotisPrimaryButton: View {
 	private let bgColor: Color
 	private let text: String
 	private let type: ButtonType
+    @Binding var isLoading: Bool
 
 	public init(
 		text: String,
@@ -29,6 +30,7 @@ public struct DinotisPrimaryButton: View {
         height: CGFloat? = nil,
 		textColor: Color,
 		bgColor: Color,
+        isLoading: Binding<Bool> = .constant(false),
 		_ action: @escaping () -> Void
 	) {
 		self.text = text
@@ -37,6 +39,7 @@ public struct DinotisPrimaryButton: View {
 		self.textColor = textColor
 		self.action = action
 		self.type = type
+        self._isLoading = isLoading
 	}
 
 	public var body: some View {
@@ -44,27 +47,37 @@ public struct DinotisPrimaryButton: View {
 		case .wrappedContent:
             if let height = height {
                 Button(action: action) {
-                    Text(text)
-                        .font(.robotoBold(size: 14))
-                        .foregroundColor(textColor)
-                        .padding(.horizontal)
-                        .frame(height: height)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .foregroundColor(bgColor)
-                        )
+                    if isLoading {
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                    } else {
+                        Text(text)
+                            .font(.robotoBold(size: 14))
+                            .foregroundColor(textColor)
+                            .padding(.horizontal)
+                            .frame(height: height)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .foregroundColor(bgColor)
+                            )
+                    }
                 }
                 .buttonStyle(.plain)
             } else {
                 Button(action: action) {
-                    Text(text)
-                        .font(.robotoBold(size: 14))
-                        .foregroundColor(textColor)
-                        .padding()
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .foregroundColor(bgColor)
-                        )
+                    if isLoading {
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                    } else {
+                        Text(text)
+                            .font(.robotoBold(size: 14))
+                            .foregroundColor(textColor)
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .foregroundColor(bgColor)
+                            )
+                    }
                 }
                 .buttonStyle(.plain)
             }
@@ -75,9 +88,14 @@ public struct DinotisPrimaryButton: View {
                     HStack {
                         Spacer()
                         
-                        Text(text)
-                            .font(.robotoBold(size: 14))
-                            .foregroundColor(textColor)
+                        if isLoading {
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                        } else {
+                            Text(text)
+                                .font(.robotoBold(size: 14))
+                                .foregroundColor(textColor)
+                        }
                         
                         Spacer()
                     }
@@ -94,9 +112,14 @@ public struct DinotisPrimaryButton: View {
                     HStack {
                         Spacer()
                         
-                        Text(text)
-                            .font(.robotoBold(size: 14))
-                            .foregroundColor(textColor)
+                        if isLoading {
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                        } else {
+                            Text(text)
+                                .font(.robotoBold(size: 14))
+                                .foregroundColor(textColor)
+                        }
                         
                         Spacer()
                     }
@@ -112,27 +135,37 @@ public struct DinotisPrimaryButton: View {
 		case .mini:
             if let height = height {
                 Button(action: action) {
-                    Text(text)
-                        .font(.robotoBold(size: 12))
-                        .foregroundColor(textColor)
-                        .padding(.horizontal, 10)
-                        .frame(height: height)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .foregroundColor(bgColor)
-                        )
+                    if isLoading {
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                    } else {
+                        Text(text)
+                            .font(.robotoBold(size: 12))
+                            .foregroundColor(textColor)
+                            .padding(.horizontal, 10)
+                            .frame(height: height)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .foregroundColor(bgColor)
+                            )
+                    }
                 }
                 .buttonStyle(.plain)
             } else {
                 Button(action: action) {
-                    Text(text)
-                        .font(.robotoBold(size: 12))
-                        .foregroundColor(textColor)
-                        .padding(10)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .foregroundColor(bgColor)
-                        )
+                    if isLoading {
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                    } else {
+                        Text(text)
+                            .font(.robotoBold(size: 12))
+                            .foregroundColor(textColor)
+                            .padding(10)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .foregroundColor(bgColor)
+                            )
+                    }
                 }
                 .buttonStyle(.plain)
             }
@@ -140,27 +173,37 @@ public struct DinotisPrimaryButton: View {
 		case .fixed(let width):
             if let height = height {
                 Button(action: action) {
-                    Text(text)
-                        .font(.robotoBold(size: 14))
-                        .foregroundColor(textColor)
-                        .frame(width: width, height: height)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .foregroundColor(bgColor)
-                        )
+                    if isLoading {
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                    } else {
+                        Text(text)
+                            .font(.robotoBold(size: 14))
+                            .foregroundColor(textColor)
+                            .frame(width: width, height: height)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .foregroundColor(bgColor)
+                            )
+                    }
                 }
                 .buttonStyle(.plain)
             } else {
                 Button(action: action) {
-                    Text(text)
-                        .font(.robotoBold(size: 14))
-                        .foregroundColor(textColor)
-                        .padding(.vertical)
-                        .frame(width: width)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .foregroundColor(bgColor)
-                        )
+                    if isLoading {
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                    } else {
+                        Text(text)
+                            .font(.robotoBold(size: 14))
+                            .foregroundColor(textColor)
+                            .padding(.vertical)
+                            .frame(width: width)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .foregroundColor(bgColor)
+                            )
+                    }
                 }
                 .buttonStyle(.plain)
             }

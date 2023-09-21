@@ -156,7 +156,7 @@ final class SearchTalentViewModel: NSObject, ObservableObject, SKProductsRequest
 	}
     
     func routeToPaymentMethod() {
-		let viewModel = PaymentMethodsViewModel(price: sessionCard.price.orEmpty(), meetingId: sessionCard.id.orEmpty(), rateCardMessage: "", isRateCard: false, backToHome: {self.route = nil})
+        let viewModel = PaymentMethodsViewModel(price: sessionCard.price.orEmpty(), meetingId: sessionCard.id.orEmpty(), rateCardMessage: "", requestTime: "", isRateCard: false, backToHome: {self.route = nil})
 
         DispatchQueue.main.async { [weak self] in
             self?.route = .paymentMethod(viewModel: viewModel)
