@@ -537,6 +537,7 @@
 "tipping_not_enough_balance" = "Your balance is not enough, please top up coins first";
 "tipping_your_current_coin" = "Your current coins,";
 "tipping_success_desc" = "You've given a review for this creator!";
+"review_success_with_tip_desc" = "Thank you for your gift! Every gift you give is a contribution to helping our community become better.";
 
 "edit_profile_name_empty_error" = "Please fill your name, this field can't be empty";
 "edit_profile_username_empty_error" = "Please fill your username, this field can't be empty";
@@ -547,3 +548,4 @@
 "ratecard_request_explanation" = "Requested time is just a suggestion, you can negotiate the time through discussion";
 
 "anytime_label" = "Anytime";
+"gift_label" = "Gift";

@@ -2458,7 +2458,6 @@ public enum LocalizableText {
         bundle: .module,
         comment: "profession empty error"
     )
-    
     public static let ratecardRequestExplanation = NSLocalizedString(
         "ratecard_request_explanation",
         bundle: .module,
@@ -2468,6 +2467,17 @@ public enum LocalizableText {
         "anytime_label",
         bundle: .module,
         comment: "anytime label"
+    )
+    
+    public static let giftLabel = NSLocalizedString(
+        "gift_label",
+        bundle: .module,
+        comment: "gift label"
+    )
+    public static let reviewSuccessWithTipDesc = NSLocalizedString(
+        "review_success_with_tip_desc",
+        bundle: .module,
+        comment: "review success with tip description"
     )
     
 }
