@@ -557,65 +557,67 @@ struct TalentHomeView: View {
                             case .scheduled:
                                 EmptyView()
                             default:
-                                HStack {
-                                    HStack(spacing: 12) {
-                                        Image(systemName: "slider.horizontal.3")
-                                        
-                                        Text(LocalizableText.sortLabel)
+                                VStack(spacing: 0) {
+                                    Text(LocalizableText.ratecardRequestExplanation)
+                                        .font(.robotoRegular(size: 12))
+                                        .foregroundColor(.DinotisDefault.black3)
+                                        .multilineTextAlignment(.center)
+                                        .padding([.bottom, .horizontal])
+                                        .isHidden(homeVM.currentSection != .notConfirmed, remove: homeVM.currentSection != .notConfirmed)
+                                    
+                                    HStack {
+                                        Text(LocalizableText.sortByLabel)
                                             .font(.robotoBold(size: 12))
-                                    }
-                                    .foregroundColor(.DinotisDefault.primary)
-                                    
-                                    Spacer()
-                                    
-                                    Menu {
-                                        Button {
-                                            withAnimation {
-                                                homeVM.sortSelectionActionLatest()
-                                            }
-                                        } label: {
-                                            HStack {
-                                                Text(LocalizableText.sortLatest)
-                                                
-                                                Image(systemName: "checkmark")
-                                                    .isHidden(!homeVM.sortSectionHiddenValue())
-                                                
-                                            }
-                                        }
+                                            .foregroundColor(.DinotisDefault.black2)
                                         
-                                        Button {
-                                            withAnimation {
-                                                homeVM.sortSelectionActionEarliest()
-                                            }
-                                        } label: {
-                                            HStack {
-                                                Text(LocalizableText.sortEarliest)
-                                                
-                                                Image(systemName: "checkmark")
-                                                    .isHidden(homeVM.sortSectionHiddenValue())
-                                            }
-                                        }
+                                        Spacer()
                                         
-                                    } label: {
-                                        HStack(spacing: 4) {
-                                            Text(homeVM.sortSectionHiddenValue() ? LocalizableText.sortLatest : LocalizableText.sortEarliest)
-                                                .font(.robotoMedium(size: 12))
+                                        Menu {
+                                            Button {
+                                                withAnimation {
+                                                    homeVM.sortSelectionActionLatest()
+                                                }
+                                            } label: {
+                                                HStack {
+                                                    Text(LocalizableText.sortLatest)
+                                                    
+                                                    Image(systemName: "checkmark")
+                                                        .isHidden(!homeVM.sortSectionHiddenValue())
+                                                    
+                                                }
+                                            }
                                             
-                                            Image(systemName: "chevron.down")
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: 10, height: 5)
+                                            Button {
+                                                withAnimation {
+                                                    homeVM.sortSelectionActionEarliest()
+                                                }
+                                            } label: {
+                                                HStack {
+                                                    Text(LocalizableText.sortEarliest)
+                                                    
+                                                    Image(systemName: "checkmark")
+                                                        .isHidden(homeVM.sortSectionHiddenValue())
+                                                }
+                                            }
+                                            
+                                        } label: {
+                                            HStack(spacing: 8) {
+                                                Image(systemName: "slider.horizontal.3")
+                                                
+                                                Text("\(homeVM.sortSectionHiddenValue() ? LocalizableText.sortLatest : LocalizableText.sortEarliest) \(Image(systemName: "chevron.down"))")
+                                                    .font(.robotoMedium(size: 12))
+                                            }
+                                            .foregroundColor(.DinotisDefault.primary)
+                                            .padding(.horizontal, 18)
+                                            .padding(.vertical, 9)
+                                            .background(Color.DinotisDefault.lightPrimary)
+                                            .cornerRadius(8)
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 8)
+                                                    .inset(by: 0.5)
+                                                    .stroke(Color.DinotisDefault.primary, lineWidth: 1)
+                                            )
                                         }
-                                        .foregroundColor(.DinotisDefault.primary)
-                                        .padding(.horizontal, 18)
-                                        .padding(.vertical, 9)
-                                        .background(Color.DinotisDefault.lightPrimary)
-                                        .cornerRadius(8)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 8)
-                                                .inset(by: 0.5)
-                                                .stroke(Color.DinotisDefault.primary, lineWidth: 1)
-                                        )
                                     }
                                 }
                             }
