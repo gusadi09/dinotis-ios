@@ -1633,6 +1633,12 @@ public enum LocalizableText {
         comment: "general decline text"
     )
     
+    public static let accept = NSLocalizedString(
+        "accept",
+        bundle: .module,
+        comment: "general accept text"
+    )
+    
     public static let acceptInvitation = NSLocalizedString(
         "accept_invitation",
         bundle: .module,
@@ -2336,6 +2342,13 @@ public enum LocalizableText {
         bundle: .module,
         comment: "sort label"
     )
+    
+    public static let sortByLabel = NSLocalizedString(
+        "sort_by_label",
+        bundle: .module,
+        comment: "sort by label"
+    )
+    
     public static let sortLatest = NSLocalizedString(
         "sort_latest",
         bundle: .module,
@@ -2419,6 +2432,11 @@ public enum LocalizableText {
         bundle: .module,
         comment: "tipping success description"
     )
+    public static let ratecardRequestedTime = NSLocalizedString(
+        "ratecard_requested_time",
+        bundle: .module,
+        comment: "requested time text"
+    )
     
     public static let editProfileNameEmptyError = NSLocalizedString(
         "edit_profile_name_empty_error",
@@ -2440,6 +2458,28 @@ public enum LocalizableText {
         bundle: .module,
         comment: "profession empty error"
     )
+    public static let ratecardRequestExplanation = NSLocalizedString(
+        "ratecard_request_explanation",
+        bundle: .module,
+        comment: "explanation for reqested time in rate card"
+    )
+    public static let anytimeLabel = NSLocalizedString(
+        "anytime_label",
+        bundle: .module,
+        comment: "anytime label"
+    )
+    
+    public static let giftLabel = NSLocalizedString(
+        "gift_label",
+        bundle: .module,
+        comment: "gift label"
+    )
+    public static let reviewSuccessWithTipDesc = NSLocalizedString(
+        "review_success_with_tip_desc",
+        bundle: .module,
+        comment: "review success with tip description"
+    )
+    
 }
 
 

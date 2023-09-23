@@ -1593,7 +1593,10 @@ private extension UserScheduleDetail {
         @ObservedObject var viewModel: ScheduleDetailViewModel
         
         var body: some View {
-            VStack {
+            var width = CGFloat.zero
+            var height = CGFloat.zero
+            
+            return VStack {
                 HStack {
                     Text(LocalizableText.giveReviewLabel)
                         .font(.robotoBold(size: 14))
@@ -1612,145 +1615,171 @@ private extension UserScheduleDetail {
                     }
                 }
                 
-                Spacer()
-                
-                if viewModel.isLoadingReview {
-                    ProgressView()
-                        .progressViewStyle(.circular)
-                } else {
-                    HStack(spacing: 14) {
-                        DinotisImageLoader(urlString: (viewModel.dataBooking?.meeting?.user?.profilePhoto).orEmpty())
-                            .frame(width: 56, height: 56)
-                            .cornerRadius(8)
-                        
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text((viewModel.dataBooking?.meeting?.user?.name).orEmpty())
-                                .font(.robotoMedium(size: 12))
-                                .foregroundColor(.DinotisDefault.black3)
-                                .lineLimit(1)
+                ScrollView(showsIndicators: false) {
+                    
+                    if viewModel.isLoadingReview {
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                    } else {
+                        HStack(spacing: 14) {
+                            DinotisImageLoader(urlString: (viewModel.dataBooking?.meeting?.user?.profilePhoto).orEmpty())
+                                .frame(width: 56, height: 56)
+                                .cornerRadius(8)
                             
-                            Text((viewModel.dataBooking?.meeting?.title).orEmpty())
-                                .font(.robotoBold(size: 14))
-                                .foregroundColor(.DinotisDefault.black2)
-                                .lineLimit(2)
-                        }
-                        
-                        Spacer()
-                    }
-                    .padding(.bottom)
-                    
-                    HStack(spacing: 32) {
-                        ForEach(1...5, id: \.self) { index in
-                            Button {
-                                withAnimation {
-                                    viewModel.reviewRating = index
-                                }
-                            } label: {
-                                Image(systemName: "star.fill")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 40)
-                                    .foregroundColor(viewModel.reviewRating >= index ? .DinotisDefault.orange : Color(UIColor.systemGray3))
-                            }
-                        }
-                    }
-                    .padding(.horizontal)
-                    .padding(.bottom)
-                    
-                    Divider()
-                    
-                    VStack(alignment: .leading, spacing: 20) {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(LocalizableText.tippingGiftTitle)
-                                .font(.robotoBold(size: 16))
-                                .foregroundColor(.black)
-                            
-                            HStack(spacing: 6) {
-                                Text(LocalizableText.tippingYourBalance)
-                                    .font(.robotoRegular(size: 14))
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text((viewModel.dataBooking?.meeting?.user?.name).orEmpty())
+                                    .font(.robotoMedium(size: 12))
                                     .foregroundColor(.DinotisDefault.black3)
+                                    .lineLimit(1)
                                 
-                                Text((viewModel.user?.coinBalance?.current).orEmpty().toDecimal())
-                                    .font(.robotoMedium(size: 14))
-                                    .foregroundColor(.DinotisDefault.black1)
-                                
+                                Text((viewModel.dataBooking?.meeting?.title).orEmpty())
+                                    .font(.robotoBold(size: 14))
+                                    .foregroundColor(.DinotisDefault.black2)
+                                    .lineLimit(2)
+                            }
+                            
+                            Spacer()
+                        }
+                        .padding(.bottom)
+                        
+                        HStack(spacing: 32) {
+                            ForEach(1...5, id: \.self) { index in
                                 Button {
-                                    viewModel.showReviewSheet = false
-                                    
-                                    DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
-                                        viewModel.showAddCoin = true
+                                    withAnimation {
+                                        viewModel.reviewRating = index
                                     }
                                 } label: {
-                                    Text("\(Image(systemName: "plus")) \(LocalizableText.tippingTopUpNow)")
-                                        .font(.robotoBold(size: 12))
-                                        .foregroundColor(.DinotisDefault.primary)
-                                        .padding(.vertical, 4)
-                                        .padding(.horizontal, 12)
-                                        .background(
-                                            RoundedRectangle(cornerRadius: 6)
-                                                .fill(Color.DinotisDefault.primary.opacity(0.3))
-                                        )
+                                    Image(systemName: "star.fill")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 40)
+                                        .foregroundColor(viewModel.reviewRating >= index ? .DinotisDefault.orange : Color(UIColor.systemGray3))
                                 }
+                            }
+                        }
+                        .padding(.horizontal)
+                        .padding(.bottom)
+                        
+                        Divider()
+                        
+                        VStack(alignment: .leading, spacing: 20) {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text(LocalizableText.tippingGiftTitle)
+                                    .font(.robotoBold(size: 16))
+                                    .foregroundColor(.black)
                                 
-                                Spacer()
-                            }
-                        }
-                        
-                        Text(LocalizableText.tippingNotEnoughBalance)
-                            .multilineTextAlignment(.leading)
-                            .font(.robotoRegular(size: 12))
-                            .foregroundColor(.DinotisDefault.black1)
-                            .padding(8)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .foregroundColor(.DinotisDefault.red.opacity(0.1))
-                            )
-                            .isHidden(!viewModel.showNotEnoughBalance(), remove: !viewModel.showNotEnoughBalance())
-                        
-                        HStack(spacing: 8) {
-                            ForEach(viewModel.tips, id: \.self) { data in
-                                Button {
-                                    viewModel.selectTipAmount(data: data)
-                                } label: {
-                                    Text(data.toDecimal())
-                                        .font(.robotoBold(size: 12))
-                                        .foregroundColor(
-                                            viewModel.tipAmount == data ?
-                                                .DinotisDefault.white : .DinotisDefault.black1
-                                        )
-                                        .padding(.horizontal, 8)
-                                        .padding(.vertical, 6)
-                                        .background(
-                                            viewModel.tipAmount == data ?
-                                            Color.DinotisDefault.primary : Color.DinotisDefault.smokeWhite
-                                        )
-                                        .cornerRadius(5)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 5)
-                                                .inset(by: -0.5)
-                                                .stroke(viewModel.tipAmount == data ? Color.DinotisDefault.primary : Color.DinotisDefault.black3, lineWidth: 1)
-                                        )
+                                HStack(spacing: 6) {
+                                    Text(LocalizableText.tippingYourBalance)
+                                        .font(.robotoRegular(size: 14))
+                                        .foregroundColor(.DinotisDefault.black3)
+                                    
+                                    Text((viewModel.user?.coinBalance?.current).orEmpty().toDecimal())
+                                        .font(.robotoMedium(size: 14))
+                                        .foregroundColor(.DinotisDefault.black1)
+                                    
+                                    Button {
+                                        viewModel.showReviewSheet = false
+                                        
+                                        DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                                            viewModel.showAddCoin = true
+                                        }
+                                    } label: {
+                                        Text("\(Image(systemName: "plus")) \(LocalizableText.tippingTopUpNow)")
+                                            .font(.robotoBold(size: 12))
+                                            .foregroundColor(.DinotisDefault.primary)
+                                            .padding(.vertical, 6)
+                                            .padding(.horizontal, 12)
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 6)
+                                                    .fill(Color.DinotisDefault.primary.opacity(0.3))
+                                            )
+                                    }
+                                    
+                                    Spacer()
                                 }
                             }
+                            
+                            Text(LocalizableText.tippingNotEnoughBalance)
+                                .multilineTextAlignment(.leading)
+                                .font(.robotoRegular(size: 12))
+                                .foregroundColor(.DinotisDefault.black1)
+                                .padding(8)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .foregroundColor(.DinotisDefault.red.opacity(0.1))
+                                )
+                                .isHidden(!viewModel.showNotEnoughBalance(), remove: !viewModel.showNotEnoughBalance())
+                            
+                            HStack(spacing: 8) {
+                                GeometryReader { geo in
+                                    ZStack(alignment: .topLeading, content: {
+                                        ForEach(viewModel.tips, id: \.self) { data in
+                                            Button {
+                                                viewModel.selectTipAmount(data: data)
+                                            } label: {
+                                                Text(data.toDecimal())
+                                                    .font(.robotoBold(size: 12))
+                                                    .foregroundColor(
+                                                        viewModel.tipAmount == data ?
+                                                            .DinotisDefault.white : .DinotisDefault.black1
+                                                    )
+                                                    .padding(.horizontal, 8)
+                                                    .padding(.vertical, 6)
+                                                    .background(
+                                                        viewModel.tipAmount == data ?
+                                                        Color.DinotisDefault.primary : Color.DinotisDefault.smokeWhite
+                                                    )
+                                                    .cornerRadius(5)
+                                                    .overlay(
+                                                        RoundedRectangle(cornerRadius: 5)
+                                                            .inset(by: -0.5)
+                                                            .stroke(viewModel.tipAmount == data ? Color.DinotisDefault.primary : Color.DinotisDefault.black3, lineWidth: 1)
+                                                    )
+                                                    .padding(4)
+                                                    .alignmentGuide(.leading) { dimension in
+                                                        if (abs(width - dimension.width) > geo.size.width) {
+                                                            width = 0
+                                                            height -= dimension.height
+                                                        }
+                                                        let result = width
+                                                        if data == viewModel.tips.last {
+                                                            width = 0
+                                                        } else {
+                                                            width -= dimension.width
+                                                        }
+                                                        return result
+                                                    }
+                                                    .alignmentGuide(.top) { dimension in
+                                                        let result = height
+                                                        if data == viewModel.tips.last {
+                                                            height = 0
+                                                        }
+                                                        return result
+                                                    }
+                                            }
+                                        }
+                                    })
+                                }
+                                .frame(height: 60)
+                            }
                         }
-                    }
-                    .padding(.vertical)
-                    .isHidden(viewModel.tips.isEmpty, remove: viewModel.tips.isEmpty)
-                    
-                    Divider()
+                        .padding(.vertical)
                         .isHidden(viewModel.tips.isEmpty, remove: viewModel.tips.isEmpty)
+                        
+                        Divider()
+                            .isHidden(viewModel.tips.isEmpty, remove: viewModel.tips.isEmpty)
+                        
+                        DinotisTextEditor(
+                            LocalizableText.yourCommentPlaceholder,
+                            label: LocalizableText.yourCommentTitle,
+                            text: $viewModel.reviewMessage,
+                            errorText: .constant(nil)
+                        )
+                        .padding(.top)
+                    }
                     
-                    DinotisTextEditor(
-                        LocalizableText.yourCommentPlaceholder,
-                        label: LocalizableText.yourCommentTitle,
-                        text: $viewModel.reviewMessage,
-                        errorText: .constant(nil)
-                    )
-                    .padding(.top)
                 }
-                
-                Spacer()
                 
                 DinotisPrimaryButton(
                     text: LocalizableText.sendReviewLabel,
@@ -2158,10 +2187,19 @@ private extension UserScheduleDetail {
                                 }
                             }
                             
-                            Text(LocalizableText.tippingSuccessDesc)
-                                .font(.robotoRegular(size: 12))
-                                .foregroundColor(.DinotisDefault.black2)
-                                .multilineTextAlignment(.center)
+                            if let tipAmount = viewModel.successTipAmount {
+                                Text("+ \(tipAmount.toDecimal()) \(LocalizableText.giftLabel)")
+                                    .font(.robotoBold(size: 12))
+                                    .foregroundColor(.DinotisDefault.green)
+                                    .multilineTextAlignment(.center)
+                            }
+                            
+                            Text(viewModel.successTipAmount != nil ?
+                                 LocalizableText.reviewSuccessWithTipDesc : LocalizableText.tippingSuccessDesc
+                            )
+                            .font(.robotoRegular(size: 12))
+                            .foregroundColor(.DinotisDefault.black3)
+                            .multilineTextAlignment(.center)
                         }
                         
                         DinotisPrimaryButton(
@@ -2171,6 +2209,7 @@ private extension UserScheduleDetail {
                             bgColor: .DinotisDefault.primary) {
                                 withAnimation {
                                     viewModel.isReviewSuccess = false
+                                    viewModel.successTipAmount = nil
                                 }
                             }
                     }

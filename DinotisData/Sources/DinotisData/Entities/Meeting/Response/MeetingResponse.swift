@@ -229,7 +229,8 @@ public struct MeetingRequestData: Codable, Hashable {
 	public let rateCard: RateCardResponse?
 	public let createdAt: Date?
 	public let updatedAt: Date?
-	public let expiredAt: Date?
+    public let expiredAt: Date?
+	public let requestAt: Date?
 
 	public static func == (lhs: MeetingRequestData, rhs: MeetingRequestData) -> Bool {
 		lhs.id == rhs.id
@@ -250,7 +251,8 @@ public struct MeetingRequestData: Codable, Hashable {
 		rateCard: RateCardResponse?,
 		createdAt: Date?,
 		updatedAt: Date?,
-		expiredAt: Date?
+        expiredAt: Date?,
+        requestAt: Date?
 	) {
 		self.id = id
 		self.message = message
@@ -262,6 +264,7 @@ public struct MeetingRequestData: Codable, Hashable {
 		self.rateCard = rateCard
 		self.createdAt = createdAt
 		self.updatedAt = updatedAt
-		self.expiredAt = expiredAt
+        self.expiredAt = expiredAt
+		self.requestAt = requestAt
 	}
 }

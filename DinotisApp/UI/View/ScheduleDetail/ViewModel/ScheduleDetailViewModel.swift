@@ -97,6 +97,7 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
     
     @Published var tips = [Int]()
     @Published var tipAmount: Int?
+    @Published var successTipAmount: Int?
     
     @Published var randomId = UInt.random(in: .init(1...99999999))
 
@@ -330,14 +331,17 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
         let result = await giveReviewUseCase.execute(with: body)
         
         switch result {
-        case .success(_):
+        case .success(let response):
             DispatchQueue.main.async { [weak self] in
                 withAnimation(.spring()) {
+                    self?.successTipAmount = response.tip
                     self?.isError = false
                     self?.isLoadingReview = false
                     self?.error = nil
                     self?.showReviewSheet = false
                     self?.isReviewSuccess = true
+                    print(response)
+                    print("TIP RESPONSE: \(self?.successTipAmount)")
                 }
             }
             
