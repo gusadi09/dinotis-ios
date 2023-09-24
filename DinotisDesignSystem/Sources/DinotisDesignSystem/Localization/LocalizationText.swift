@@ -2479,6 +2479,11 @@ public enum LocalizableText {
         bundle: .module,
         comment: "review success with tip description"
     )
+    public static let createSessionMinimumParticipantAlert = NSLocalizedString(
+        "create_session_minimum_participant_alert",
+        bundle: .module,
+        comment: "create session minimum participant alert"
+    )
     
 }
 
