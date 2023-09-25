@@ -549,3 +549,5 @@
 
 "anytime_label" = "Kapan saja";
 "gift_label" = "Gift";
+
+"create_session_minimum_participant_alert" = "Participant untuk sesi Group Call harus lebih dari 0";

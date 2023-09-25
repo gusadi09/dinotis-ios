@@ -549,3 +549,5 @@
 
 "anytime_label" = "Anytime";
 "gift_label" = "Gift";
+
+"create_session_minimum_participant_alert" = "Participants for Group call must more than 0";
