@@ -166,7 +166,8 @@ final class PrivateVideoCallViewModel: ObservableObject {
 			self.routeToAfterCall()
 		}
 	}
-
+    
+    @MainActor
 	func checkMeetingEnd() async {
         onStartFetch(sendReport: false)
 
