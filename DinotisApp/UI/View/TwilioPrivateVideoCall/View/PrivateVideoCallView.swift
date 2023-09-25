@@ -494,9 +494,9 @@ struct PrivateVideoCallView : View {
 						.edgesIgnoringSafeArea(.all)
 
 					VStack(spacing: 20) {
-						LottieView(name: "close-to-end", loopMode: .loop)
+						LottieView(name: "session-close-to-end", loopMode: .loop)
 							.scaledToFit()
-							.frame(height: proxy.size.width/2)
+							.frame(height: 250)
 
 						VStack(spacing: 10) {
 							Text(LocaleText.fiveMinuteEndTitle)
