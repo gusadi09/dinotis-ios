@@ -614,12 +614,6 @@ struct TalentHomeView: View {
                                         }
                                     }
                                     
-                                    Text(LocalizableText.ratecardRequestExplanation)
-                                        .font(.robotoRegular(size: 12))
-                                        .foregroundColor(.DinotisDefault.black3)
-                                        .multilineTextAlignment(.center)
-                                        .padding([.top, .horizontal])
-                                        .isHidden(homeVM.currentSection != .notConfirmed, remove: homeVM.currentSection != .notConfirmed)
                                 }
                             }
                         }
@@ -1221,6 +1215,12 @@ extension TalentHomeView {
         
         var body: some View {
             LazyVStack(alignment: .leading, spacing: 12) {
+                Text(LocalizableText.ratecardRequestExplanation)
+                    .font(.robotoRegular(size: 12))
+                    .foregroundColor(.DinotisDefault.black3)
+                    .multilineTextAlignment(.center)
+                    .padding(.bottom, 10)
+                
                 if !viewModel.meetingRequestData.unique().isEmpty {
                     ForEach(viewModel.meetingRequestData.sorted(by: { $0.createdAt?.compare($1.createdAt.orCurrentDate()) == (viewModel.isSortByLatestNotConfirmed ? .orderedDescending : .orderedAscending) }).unique(), id: \.id) { item in
                         RequestCardView(
