@@ -544,8 +544,9 @@
 "edit_profile_bio_empty_error" = "Please fill your bio, this field can't be empty";
 "edit_profile_profession_empty_error" = "Please select your profession, this field can't be empty";
 
-"ratecard_requested_time" = "Suggested Time";
+"ratecard_requested_time" = "Audience Request";
 "ratecard_request_explanation" = "Requested time is just a suggestion, you can negotiate the time through discussion";
+"pending_card_set_time" = "Set Time";
 
 "anytime_label" = "Anytime";
 "gift_label" = "Gift";

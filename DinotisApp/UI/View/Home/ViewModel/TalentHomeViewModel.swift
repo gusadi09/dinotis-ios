@@ -160,6 +160,7 @@ final class TalentHomeViewModel: ObservableObject {
 	@Published var isLoadingConfirm = false
 
 	@Published var requestId = ""
+    @Published var requestMeetingId = ""
 
     @Published var announceData = [AnnouncementData]()
     @Published var announceIndex = 0
@@ -757,17 +758,19 @@ final class TalentHomeViewModel: ObservableObject {
 
         switch result {
         case .success(_):
-            self.scheduledRequest.skip = 0
-            self.scheduledRequest.take = 8
-            
-            await self.getScheduledMeeting(isMore: false)
             
             DispatchQueue.main.async { [weak self] in
                 self?.alertType = .deleteSuccess
                 self?.isSuccessDelete = true
                 self?.isShowAlert = true
                 self?.isLoading = false
+                
+                self?.scheduledRequest.skip = 0
+                self?.scheduledRequest.take = 8
             }
+            
+            await self.getScheduledMeeting(isMore: false)
+            await self.getClosestSession()
 
         case .failure(let failure):
             handleDefaultErrorDelete(error: failure)
@@ -1086,7 +1089,6 @@ final class TalentHomeViewModel: ObservableObject {
 			if let error = error as? ErrorResponse {
 				self?.error = error.message.orEmpty()
 
-
 				if error.statusCode.orZero() == 401 {
                     self?.alertType = .refreshFailed
 					self?.isRefreshFailed.toggle()
@@ -1103,7 +1105,7 @@ final class TalentHomeViewModel: ObservableObject {
 		}
 	}
 
-	func confirmRequest(isAccepted: Bool, reasons: [Int]?, otherReason: String?) async {
+    func confirmRequest(isAccepted: Bool, reasons: [Int]?, otherReason: String?) async {
 		onStartConfirm()
 
 		let body = ConfirmationRateCardRequest(isAccepted: isAccepted, reasons: reasons, otherReason: otherReason)
@@ -1116,7 +1118,6 @@ final class TalentHomeViewModel: ObservableObject {
                 self?.alertType = .confirmationSuccess
 				self?.successConfirm = true
 				self?.isLoadingConfirm = false
-                self?.isShowAlert = true
 
 				self?.meetingRequestData.removeAll()
 				self?.scheduledData.removeAll()
@@ -1125,9 +1126,13 @@ final class TalentHomeViewModel: ObservableObject {
 				self?.scheduledRequest.skip = 0
 				self?.scheduledRequest.take = 8
 
+                if isAccepted {
+                    self?.routeToTalentDetailSchedule(meetingId: (self?.requestMeetingId).orEmpty())
+                }
 			}
 
 			Task {
+                await self.getMeetingRequest(isMore: false)
                 await self.getTalentMeeting(isMore: false)
                 await self.getScheduledMeeting(isMore: false)
 			}

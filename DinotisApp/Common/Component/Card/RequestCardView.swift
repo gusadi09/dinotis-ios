@@ -71,33 +71,35 @@ struct RequestCardView: View {
                             .foregroundColor(.DinotisDefault.black2)
                     }
                     
-                    VStack(alignment: .leading) {
-                        VStack(alignment: .leading, spacing: 0) {
-                            Text(LocalizableText.noteForCreatorTitle)
-                                .font(.robotoMedium(size: 10))
-                                .foregroundColor(.DinotisDefault.black3)
-                                .multilineTextAlignment(.leading)
-                            
-                            Text((item?.message).orEmpty())
-                                .multilineTextAlignment(.leading)
-                                .font(.robotoRegular(size: 12))
-                                .foregroundColor(.DinotisDefault.black2)
-                                .lineLimit(isShowMore ? nil : 3)
-                        }
-                        
-                        Button {
-                            withAnimation {
-                                isShowMore.toggle()
+                    if item?.message != nil {
+                        VStack(alignment: .leading) {
+                            VStack(alignment: .leading, spacing: 0) {
+                                Text(LocalizableText.noteForCreatorTitle)
+                                    .font(.robotoMedium(size: 10))
+                                    .foregroundColor(.DinotisDefault.black3)
+                                    .multilineTextAlignment(.leading)
+                                
+                                Text((item?.message).orEmpty())
+                                    .multilineTextAlignment(.leading)
+                                    .font(.robotoRegular(size: 12))
+                                    .foregroundColor(.DinotisDefault.black2)
+                                    .lineLimit(isShowMore ? nil : 3)
                             }
-                        } label: {
-                            Text(isShowMore ?
-                                 LocalizableText.bookingRateCardHideFullText : LocalizableText.bookingRateCardShowFullText
-                            )
-                            .multilineTextAlignment(.leading)
-                            .font(.robotoBold(size: 12))
-                            .foregroundColor(.DinotisDefault.primary)
+                            
+                            Button {
+                                withAnimation {
+                                    isShowMore.toggle()
+                                }
+                            } label: {
+                                Text(isShowMore ?
+                                     LocalizableText.bookingRateCardHideFullText : LocalizableText.bookingRateCardShowFullText
+                                )
+                                .multilineTextAlignment(.leading)
+                                .font(.robotoBold(size: 12))
+                                .foregroundColor(.DinotisDefault.primary)
+                            }
+                            .isHidden((item?.message).orEmpty().count < 150, remove: (item?.message).orEmpty().count < 150)
                         }
-                        .isHidden((item?.message).orEmpty().count < 150, remove: (item?.message).orEmpty().count < 150)
                     }
                 }
                 

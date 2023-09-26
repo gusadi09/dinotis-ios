@@ -2485,6 +2485,11 @@ public enum LocalizableText {
         comment: "create session minimum participant alert"
     )
     
+    public static let pendingCardSetTime = NSLocalizedString(
+        "pending_card_set_time",
+        bundle: .module,
+        comment: "set time"
+    )
 }
 
 

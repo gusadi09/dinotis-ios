@@ -558,12 +558,6 @@ struct TalentHomeView: View {
                                 EmptyView()
                             default:
                                 VStack(spacing: 0) {
-                                    Text(LocalizableText.ratecardRequestExplanation)
-                                        .font(.robotoRegular(size: 12))
-                                        .foregroundColor(.DinotisDefault.black3)
-                                        .multilineTextAlignment(.center)
-                                        .padding([.bottom, .horizontal])
-                                        .isHidden(homeVM.currentSection != .notConfirmed, remove: homeVM.currentSection != .notConfirmed)
                                     
                                     HStack {
                                         Text(LocalizableText.sortByLabel)
@@ -619,6 +613,13 @@ struct TalentHomeView: View {
                                             )
                                         }
                                     }
+                                    
+                                    Text(LocalizableText.ratecardRequestExplanation)
+                                        .font(.robotoRegular(size: 12))
+                                        .foregroundColor(.DinotisDefault.black3)
+                                        .multilineTextAlignment(.center)
+                                        .padding([.top, .horizontal])
+                                        .isHidden(homeVM.currentSection != .notConfirmed, remove: homeVM.currentSection != .notConfirmed)
                                 }
                             }
                         }
@@ -1227,10 +1228,12 @@ extension TalentHomeView {
                             item: item,
                             onTapDecline: {
                                 viewModel.requestId = item.id.orEmpty()
+                                viewModel.requestMeetingId = item.meetingId.orEmpty()
                                 viewModel.confirmationSheet = .declined
                             },
                             onTapAccept: {
                                 viewModel.requestId = item.id.orEmpty()
+                                viewModel.requestMeetingId = item.meetingId.orEmpty()
                                 viewModel.confirmationSheet = .accepted
                             }
                         )

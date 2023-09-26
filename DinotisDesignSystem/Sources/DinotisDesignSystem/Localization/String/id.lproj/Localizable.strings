@@ -544,8 +544,9 @@
 "edit_profile_bio_empty_error" = "Mohon isi bio kamu, kolom ini tidak boleh kosong";
 "edit_profile_profession_empty_error" = "Mohon isi profesi kamu, kolom ini tidak boleh kosong";
 
-"ratecard_requested_time" = "Waktu Permintaan";
+"ratecard_requested_time" = "Permintaan Audiens";
 "ratecard_request_explanation" = "Waktu permintaan hanyalah saran, kamu bisa bernegosiasi waktu melalui diskusi";
+"pending_card_set_time" = "Atur Waktu";
 
 "anytime_label" = "Kapan saja";
 "gift_label" = "Gift";

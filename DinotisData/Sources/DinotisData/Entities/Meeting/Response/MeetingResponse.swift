@@ -221,6 +221,7 @@ public struct GeneralMeetingData: Codable, Hashable {
 public struct MeetingRequestData: Codable, Hashable {
 	public let id: String?
 	public let message: String?
+    public let meetingId: String?
 	public let isAccepted: Bool?
 	public let isConfirmed: Bool?
 	public let userId: String?
@@ -242,6 +243,7 @@ public struct MeetingRequestData: Codable, Hashable {
 
 	public init(
 		id: String?,
+        meetingId: String?,
 		message: String?,
 		isAccepted: Bool?,
 		isConfirmed: Bool?,
@@ -255,6 +257,7 @@ public struct MeetingRequestData: Codable, Hashable {
         requestAt: Date?
 	) {
 		self.id = id
+        self.meetingId = meetingId
 		self.message = message
 		self.isAccepted = isAccepted
 		self.isConfirmed = isConfirmed
