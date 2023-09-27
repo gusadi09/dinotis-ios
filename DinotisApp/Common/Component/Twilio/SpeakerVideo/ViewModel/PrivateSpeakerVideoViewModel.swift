@@ -27,7 +27,7 @@ struct PrivateSpeakerVideoViewModel {
         isYou = true
         isMuted = !participant.isMicOn
         
-        if let cameraTrack = participant.cameraTrack, cameraTrack.isEnabled {
+        if let cameraTrack = participant.cameraTrack {
             self.cameraTrack = cameraTrack
         } else {
             cameraTrack = nil

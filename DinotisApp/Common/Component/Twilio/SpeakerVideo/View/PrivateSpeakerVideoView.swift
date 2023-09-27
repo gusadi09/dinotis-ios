@@ -10,6 +10,7 @@ import SwiftUI
 struct PrivateSpeakerVideoView: View {
 	@EnvironmentObject var streamManager: PrivateStreamManager
 	@Binding var speaker: PrivateSpeakerVideoViewModel
+    @Binding var isCamEnabled: Bool
 
 	let isMainView: Bool
 	let isLocal: Bool
@@ -39,9 +40,9 @@ struct PrivateSpeakerVideoView: View {
 
 			}
 
-			if speaker.cameraTrack != nil {
+            if isCamEnabled {
 				SwiftUIVideoView(videoTrack: $speaker.cameraTrack, shouldMirror: $speaker.shouldMirrorCameraVideo)
-			}
+            }
 
 			if !isLocal {
 				VStack {
