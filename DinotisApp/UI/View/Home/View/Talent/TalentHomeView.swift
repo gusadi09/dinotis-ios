@@ -21,9 +21,31 @@ struct TalentHomeView: View {
     var body: some View {
         if homeVM.isFromUserType {
             MainView(homeVM: homeVM, state: state)
+                .dinotisAlert(
+                    isPresent: $homeVM.isShowAlert,
+                    type: .general,
+                    title: homeVM.alertContentTitle(),
+                    isError: homeVM.alertType == .error || homeVM.alertType == .refreshFailed,
+                    message: homeVM.alertContent(),
+                    primaryButton: .init(text: homeVM.alertButtonText(), action: { 
+                        homeVM.alertAction()
+                    }),
+                    secondaryButton: homeVM.alertType != .deleteSelector ? nil : .init(text: LocaleText.noText, action: {})
+                )
         } else {
             NavigationView {
                 MainView(homeVM: homeVM, state: state)
+                    .dinotisAlert(
+                        isPresent: $homeVM.isShowAlert,
+                        type: .general,
+                        title: homeVM.alertContentTitle(),
+                        isError: homeVM.alertType == .error || homeVM.alertType == .refreshFailed,
+                        message: homeVM.alertContent(),
+                        primaryButton: .init(text: homeVM.alertButtonText(), action: {
+                            homeVM.alertAction()
+                        }),
+                        secondaryButton: homeVM.alertType != .deleteSelector ? nil : .init(text: LocaleText.noText, action: {})
+                    )
             }
             .navigationViewStyle(StackNavigationViewStyle())
             .navigationBarTitle(Text(""))
@@ -44,7 +66,7 @@ struct TalentHomeView: View {
 
         private var columns: [GridItem] {
             [GridItem](
-                repeating: GridItem(.flexible(), spacing: 20),
+                repeating: GridItem(.flexible(), spacing: 30),
                 count: 3
             )
         }
@@ -73,210 +95,212 @@ struct TalentHomeView: View {
                         EmptyView()
                     }
                 )
-                .alert(isPresented: $homeVM.isShowDelete) {
-                    Alert(
-                        title: Text(LocaleText.attention),
-                        message: Text(LocaleText.deleteAlertText),
-                        primaryButton: .default(
-                            Text(LocaleText.noText)
-                        ),
-                        secondaryButton: .destructive(
-                            Text(LocaleText.yesDeleteText),
-                            action: {
-                                Task {
-                                    await homeVM.deleteMeeting()
-                                }
-                            }
-                        )
-                    )
-                }
                 
-                ZStack(alignment: .center) {
+                ZStack(alignment: .bottom) {
                     
                     ZStack(alignment: .bottomTrailing) {
                         VStack {
                             LinearGradient(colors: [.secondaryBackground, .white, .white], startPoint: .top, endPoint: .bottom)
                                 .edgesIgnoringSafeArea([.top, .horizontal])
-                                .alert(isPresented: $homeVM.isError) {
-                                    Alert(
-                                        title: Text(LocaleText.attention),
-                                        message: Text(homeVM.error.orEmpty()),
-                                        dismissButton: .cancel(Text(LocaleText.returnText))
-                                    )
-                                }
                         }
                         
-                        VStack(spacing: 0) {
-                            HStack {
-                                Button(action: {
-                                    homeVM.routeToProfile()
-                                }, label: {
-                                    HStack(spacing: 15) {
-                                        ProfileImageContainer(
-                                            profilePhoto: $homeVM.photoProfile,
-                                            name: $homeVM.nameOfUser,
-                                            width: 48,
-                                            height: 48
-                                        )
-                                        
-                                        VStack(alignment: .leading, spacing: 14) {
-                                            Text(LocaleText.helloText)
-                                                .font(.robotoRegular(size: 12))
-                                                .foregroundColor(.black)
+                        VStack {
+                            VStack(spacing: 0) {
+                                HStack {
+                                    Button(action: {
+                                        homeVM.routeToProfile()
+                                    }, label: {
+                                        HStack(spacing: 15) {
+                                            ProfileImageContainer(
+                                                profilePhoto: $homeVM.photoProfile,
+                                                name: $homeVM.nameOfUser,
+                                                width: 48,
+                                                height: 48
+                                            )
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(Color.white, lineWidth: 2)
+                                            )
+                                            .shadow(color: Color(red: 0.22, green: 0.29, blue: 0.41).opacity(0.06), radius: 20, x: 0, y: 0)
                                             
-                                            Text((homeVM.userData?.name).orEmpty())
-                                                .font(.robotoBold(size: 14))
-                                                .foregroundColor(.black)
-                                        }
-                                    }
-                                    
-                                })
-                                
-                                NavigationLink(
-                                    unwrapping: $homeVM.route,
-                                    case: /HomeRouting.talentProfile) { viewModel in
-                                        TalentProfileView()
-                                            .environmentObject(viewModel.wrappedValue)
-                                    } onNavigate: { _ in
-                                        
-                                    } label: {
-                                        EmptyView()
-                                    }
-                                
-                                NavigationLink(
-                                    unwrapping: $homeVM.route,
-                                    case: /HomeRouting.talentRateCardList) { viewModel in
-                                        TalentCardListView(viewModel: viewModel.wrappedValue)
-                                    } onNavigate: { _ in
-                                        
-                                    } label: {
-                                        EmptyView()
-                                    }
-                                
-                                Spacer()
-                                
-                                Button {
-                                    homeVM.routeToNotification()
-                                } label: {
-                                    ZStack(alignment: .topTrailing) {
-                                        Image(systemName: "bell.fill")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: 20)
-                                            .foregroundColor(.dinotisStrokeSecondary)
-                                            .padding(9)
-                                            .background(Color.white)
-                                            .clipShape(Circle())
-                                        
-                                        Circle()
-                                            .scaledToFit()
-                                            .frame(width: 10)
-                                            .foregroundColor(.red)
-                                    }
-                                }
-                            }
-                            .padding()
-                            .padding(.top, 10)
-                            .alert(isPresented: $homeVM.isSuccessDelete) {
-                                Alert(
-                                    title: Text(LocaleText.successTitle),
-                                    message: Text(LocaleText.meetingDeleted),
-                                    dismissButton: .default(Text(LocaleText.returnText), action: {
-                                        
-                                    }))
-                            }
-                            
-                            DinotisList {
-                                Task {
-                                    await homeVM.refreshList()
-                                }
-                                
-                            } introspectConfig: { view in
-                                view.separatorStyle = .none
-                                view.showsVerticalScrollIndicator = false
-                                homeVM.use(for: view) { refresh in
-                                    Task {
-                                        await homeVM.refreshList()
-                                        refresh.endRefreshing()
-                                    }
-                                }
-                            } content: {
-                                Section {
-                                    HStack(spacing: 15) {
-                                        VStack(alignment: .leading, spacing: 15) {
-                                            Text(LocaleText.walletBalance)
-                                                .font(.robotoRegular(size: 12))
-                                                .foregroundColor(.black)
-                                            
-                                            Text(homeVM.currentBalances.toCurrency())
-                                                .font(.robotoBold(size: 18))
-                                                .foregroundColor(.black)
-                                        }
-                                        
-                                        Spacer()
-                                        
-                                        Button(action: {
-                                            homeVM.routeToWallet()
-                                        }, label: {
-                                            VStack {
-                                                Image.Dinotis.walletButtonIcon
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .frame(height: 34)
-                                                
-                                                Text(LocaleText.withdrawBalance)
-                                                    .font(.robotoBold(size: 12))
+                                            VStack(alignment: .leading, spacing: 0) {
+                                                Text(LocaleText.helloText)
+                                                    .font(.robotoRegular(size: 12))
                                                     .foregroundColor(.black)
-                                                    .fixedSize(horizontal: true, vertical: false)
+                                                    .padding(.bottom, 6)
+                                                
+                                                Text((homeVM.userData?.name).orEmpty())
+                                                    .font(.robotoBold(size: 14))
+                                                    .foregroundColor(.black)
                                             }
-                                        })
-                                        .buttonStyle(.plain)
-                                    }
-                                    .padding(.vertical, 20)
-                                    .padding(.horizontal, 15)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 12)
-                                            .foregroundColor(.white)
-                                    )
-                                    .shadow(color: Color.dinotisShadow.opacity(0.08), radius: 8, x: 0, y: 0)
-                                    .padding(.top, 10)
-                                    
-                                    HStack {
-                                        Spacer()
+                                        }
                                         
-                                        LazyVGrid(columns: columns) {
-                                            Button {
-                                                homeVM.routeToTalentFormSchedule()
-                                            } label: {
-                                                VStack {
-                                                    Image.Dinotis.redCameraVideoIcon
+                                    })
+                                    
+                                    NavigationLink(
+                                        unwrapping: $homeVM.route,
+                                        case: /HomeRouting.talentProfile) { viewModel in
+                                            TalentProfileView()
+                                                .environmentObject(viewModel.wrappedValue)
+                                        } onNavigate: { _ in
+                                            
+                                        } label: {
+                                            EmptyView()
+                                        }
+                                    
+                                    NavigationLink(
+                                        unwrapping: $homeVM.route,
+                                        case: /HomeRouting.talentRateCardList) { viewModel in
+                                            TalentCardListView(viewModel: viewModel.wrappedValue)
+                                        } onNavigate: { _ in
+                                            
+                                        } label: {
+                                            EmptyView()
+                                        }
+                                    
+                                    Spacer()
+                                    
+                                    Button {
+                                        
+                                    } label: {
+                                        ZStack(alignment: .topTrailing) {
+                                            
+                                            Circle()
+                                                .scaledToFit()
+                                                .frame(height: 48)
+                                                .foregroundColor(Color.white)
+                                                .overlay(
+                                                    Image.homeTalentChatPrimaryIcon
                                                         .resizable()
                                                         .scaledToFit()
-                                                        .frame(width: 24)
-                                                        .padding(8)
-                                                        .background(Color.secondaryViolet)
-                                                        .frame(width: 36, height: 36)
-                                                        .cornerRadius(8)
-                                                        .overlay(
-                                                            RoundedRectangle(cornerRadius: 8)
-                                                                .stroke(Color.DinotisDefault.primary, lineWidth: 1)
-                                                                .frame(width: 36, height: 36)
-                                                        )
-                                                    
-                                                    Text(LocaleText.createSessionSchedule)
-                                                        .foregroundColor(.black)
-                                                        .font(.robotoRegular(size: 10))
-                                                        .multilineTextAlignment(.center)
-                                                }
-                                            }
-                                            .buttonStyle(.plain)
+                                                        .frame(height: 21)
+                                                )
+                                                .shadow(color: Color(red: 0.22, green: 0.29, blue: 0.41).opacity(0.06), radius: 20, x: 0, y: 0)
                                             
-                                            Button {
-                                                homeVM.routeToBundling()
-                                            } label: {
-                                                VStack {
-                                                    ZStack(alignment: .topTrailing) {
-                                                        Image.Dinotis.redPricetagIcon
+                                            //                                        if homeVM.hasNewNotif {
+                                            Text("9+")
+                                                .font(.robotoMedium(size: 12))
+                                                .foregroundColor(.white)
+                                                .padding(.horizontal, 3)
+                                                .padding(.vertical, 1)
+                                                .background(
+                                                    RoundedRectangle(cornerRadius: 4)
+                                                        .foregroundColor(.red)
+                                                )
+                                            
+                                            //                                        }
+                                        }
+                                    }
+                                    .isHidden(true, remove: true)
+                                    
+                                    Button {
+                                        homeVM.routeToNotification()
+                                    } label: {
+                                        ZStack(alignment: .topTrailing) {
+                                            
+                                            Circle()
+                                                .scaledToFit()
+                                                .frame(height: 48)
+                                                .foregroundColor(Color.white)
+                                                .overlay(
+                                                    Image.homeTalentNotificationIcon
+                                                        .resizable()
+                                                        .scaledToFit()
+                                                        .frame(height: 20)
+                                                )
+                                                .shadow(color: Color(red: 0.22, green: 0.29, blue: 0.41).opacity(0.06), radius: 20, x: 0, y: 0)
+                                            
+                                            if homeVM.hasNewNotif {
+                                                Text(homeVM.notificationBadgeCountStr)
+                                                    .font(.robotoMedium(size: 12))
+                                                    .foregroundColor(.white)
+                                                    .padding(.horizontal, 3)
+                                                    .padding(.vertical, 1)
+                                                    .background(
+                                                        RoundedRectangle(cornerRadius: 4)
+                                                            .foregroundColor(.red)
+                                                    )
+                                                
+                                            }
+                                        }
+                                    }
+                                }
+                                .padding()
+                                .padding(.top, 10)
+                                
+                                DinotisList {
+                                    Task {
+                                        homeVM.isShowAdditionalContent.toggle()
+                                        await homeVM.refreshList()
+                                    }
+                                    
+                                } introspectConfig: { view in
+                                    view.separatorStyle = .none
+                                    view.showsVerticalScrollIndicator = false
+                                    homeVM.use(for: view) { refresh in
+                                        Task {
+                                            await homeVM.refreshList()
+                                            refresh.endRefreshing()
+                                        }
+                                    }
+                                } content: {
+                                    Section {
+                                        VStack(spacing: 12) {
+                                            HStack(spacing: 15) {
+                                                VStack(alignment: .leading, spacing: 8) {
+                                                    Text(LocaleText.walletBalance)
+                                                        .font(.robotoRegular(size: 12))
+                                                        .foregroundColor(.black)
+                                                    
+                                                    Text(homeVM.currentBalances.toCurrency())
+                                                        .font(.robotoBold(size: 18))
+                                                        .foregroundColor(.black)
+                                                        .lineLimit(1)
+                                                }
+                                                
+                                                Spacer()
+                                                
+                                                Button(action: {
+                                                    homeVM.routeToWallet()
+                                                }, label: {
+                                                    HStack(spacing: 8) {
+                                                        Image.homeTalentWalletIcon
+                                                            .resizable()
+                                                            .scaledToFit()
+                                                            .frame(height: 16)
+                                                        
+                                                        Text(LocalizableText.homeCreatorWithdraw)
+                                                            .font(.robotoBold(size: 14))
+                                                            .foregroundColor(.black)
+                                                            .fixedSize(horizontal: true, vertical: false)
+                                                    }
+                                                    .padding(.horizontal, 10)
+                                                    .padding(.vertical, 8)
+                                                    .background(
+                                                        RoundedRectangle(cornerRadius: 8)
+                                                            .foregroundColor(.DinotisDefault.lightPrimary)
+                                                    )
+                                                    .overlay(
+                                                        RoundedRectangle(cornerRadius: 8)
+                                                            .inset(by: 0.5)
+                                                            .stroke(Color.DinotisDefault.primary, lineWidth: 1)
+                                                    )
+                                                })
+                                                .buttonStyle(.plain)
+                                            }
+                                            .padding(.vertical, 24)
+                                            .overlay(
+                                                Divider()
+                                                    .foregroundColor(Color.DinotisDefault.smokeWhite),
+                                                alignment: .bottom
+                                            )
+                                            
+                                            LazyVGrid(columns: columns) {
+                                                Button {
+                                                    homeVM.routeToTalentFormSchedule()
+                                                } label: {
+                                                    VStack {
+                                                        Image.Dinotis.redCameraVideoIcon
                                                             .resizable()
                                                             .scaledToFit()
                                                             .frame(width: 24)
@@ -573,123 +597,153 @@ struct TalentHomeView: View {
                                                                     homeVM.confirmationSheet = .accepted
                                                                 }
                                                             )
-                                                            .listRowInsets(EdgeInsets(top: 10, leading: 20, bottom: 5, trailing: 20))
-                                                        }
+                                                        
+                                                        Text(LocaleText.createSessionSchedule)
+                                                            .foregroundColor(.black)
+                                                            .font(.robotoRegular(size: 10))
+                                                            .multilineTextAlignment(.center)
                                                     }
                                                 }
-                                        }
-                                    }
-                                    .buttonStyle(.plain)
-                                } header: {
-                                    VStack(spacing: 10) {
-                                        HStack(spacing: 0) {
-                                            Button {
-                                                homeVM.tabNumb = 0
-                                            } label: {
-                                                VStack(spacing: 25) {
-                                                    HStack(alignment: .center) {
-                                                        Text(LocaleText.scheduledSession)
-                                                            .font(homeVM.tabNumb == 0 ? .robotoBold(size: 12) : .robotoRegular(size: 12))
-                                                            .foregroundColor(.black)
-                                                        
-                                                        if !homeVM.meetingCounter.isEmpty {
-                                                            Text(homeVM.meetingCounter)
-                                                                .font(.robotoMedium(size: 10))
-                                                                .foregroundColor(.white)
-                                                                .padding(5)
-                                                                .background(
+                                                .buttonStyle(.plain)
+                                                
+                                                Button {
+                                                    homeVM.routeToBundling()
+                                                } label: {
+                                                    VStack {
+                                                        ZStack(alignment: .topTrailing) {
+                                                            Image.Dinotis.redPricetagIcon
+                                                                .resizable()
+                                                                .scaledToFit()
+                                                                .frame(width: 24)
+                                                                .padding(8)
+                                                                .background(Color.secondaryViolet)
+                                                                .frame(width: 36, height: 36)
+                                                                .cornerRadius(8)
+                                                                .overlay(
                                                                     RoundedRectangle(cornerRadius: 8)
-                                                                        .foregroundColor(.DinotisDefault.primary)
+                                                                        .stroke(Color.DinotisDefault.primary, lineWidth: 1)
+                                                                        .frame(width: 36, height: 36)
                                                                 )
+                                                            
+                                                            Image.Dinotis.newBadgeIcon
+                                                                .resizable()
+                                                                .scaledToFit()
+                                                                .frame(width: 18, height: 10)
+                                                                .padding(.top, -5)
+                                                                .padding(.trailing, -9)
                                                         }
-                                                    }
-                                                    .background(Color.clear)
-                                                    .padding(.bottom, !homeVM.meetingCounter.isEmpty ? -12 : -5)
-                                                    
-                                                    Rectangle()
-                                                        .frame(height: 1.5, alignment: .center)
-                                                        .foregroundColor(homeVM.tabNumb == 0 ? .DinotisDefault.primary : .DinotisDefault.primary.opacity(0.3))
-                                                        .padding(.leading, 5)
-                                                }
-                                            }
-                                            .buttonStyle(.plain)
-                                            
-                                            Button {
-                                                homeVM.tabNumb = 1
-                                            } label: {
-                                                VStack(spacing: 25) {
-                                                    HStack(alignment: .center) {
-                                                        Text(LocaleText.scheduleRequest)
-                                                            .font(homeVM.tabNumb == 1 ? .robotoBold(size: 12) : .robotoRegular(size: 12))
-                                                            .foregroundColor(.black)
                                                         
-                                                        if !homeVM.counterRequest.isEmpty {
-                                                            Text(homeVM.counterRequest)
-                                                                .font(.robotoMedium(size: 10))
-                                                                .foregroundColor(.white)
-                                                                .padding(5)
-                                                                .background(
-                                                                    RoundedRectangle(cornerRadius: 10)
-                                                                        .foregroundColor(.DinotisDefault.primary)
-                                                                )
-                                                        }
+                                                        Text(LocaleText.talentHomeBundlingMenu)
+                                                            .foregroundColor(.black)
+                                                            .font(.robotoRegular(size: 10))
+                                                            .multilineTextAlignment(.center)
                                                     }
-                                                    .background(Color.clear)
-                                                    .padding(.bottom, !homeVM.counterRequest.isEmpty ? -12 : -5)
+                                                }
+                                                .buttonStyle(.plain)
+                                                
+                                                Button {
+                                                    homeVM.routeToTalentRateCardList()
+                                                } label: {
+                                                    VStack {
+                                                        ZStack(alignment: .topTrailing) {
+                                                            Image.Dinotis.rateCardIcon
+                                                                .resizable()
+                                                                .scaledToFit()
+                                                                .frame(width: 36, height: 36)
+                                                            
+                                                            Image.Dinotis.newBadgeIcon
+                                                                .resizable()
+                                                                .scaledToFit()
+                                                                .frame(width: 18, height: 10)
+                                                                .padding(.top, -5)
+                                                                .padding(.trailing, -9)
+                                                        }
+                                                        
+                                                        Text(LocaleText.rateCardMenu)
+                                                            .foregroundColor(.black)
+                                                            .font(.robotoRegular(size: 10))
+                                                            .multilineTextAlignment(.center)
+                                                    }
+                                                }
+                                                .buttonStyle(.plain)
+                                            }
+                                            .padding(.vertical, 12)
+                                        }
+                                        .padding(.vertical, 8)
+                                        .padding(.horizontal, 25)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 11)
+                                                .foregroundColor(.white)
+                                                .shadow(color: Color.dinotisShadow.opacity(0.08), radius: 5, x: 0, y: 0)
+                                        )
+                                    }
+                                    .listRowBackground(Color.clear)
+                                    .listRowInsets(EdgeInsets(top: 6, leading: 15, bottom: 8, trailing: 15))
+                                    
+                                    if !homeVM.closestSessions.isEmpty {
+                                        Section {
+                                            VStack {
+                                                HStack {
+                                                    Text(LocalizableText.homeCreatorNearestTitle)
+                                                        .font(.robotoRegular(size: 16))
+                                                        .fontWeight(.semibold)
                                                     
-                                                    Rectangle()
-                                                        .frame(height: 1.5, alignment: .center)
-                                                        .foregroundColor(homeVM.tabNumb == 1 ? .DinotisDefault.primary : .DinotisDefault.primary.opacity(0.4))
-                                                        .padding(.trailing, 5)
+                                                    Spacer()
+                                                }
+                                                .padding(.horizontal)
+                                                
+                                                ScrollView(.horizontal, showsIndicators: false) {
+                                                    LazyHStack {
+                                                        ForEach(homeVM.closestSessions, id: \.id) { item in
+                                                            SessionCard(
+                                                                with: SessionCardModel(
+                                                                    title: (item.title).orEmpty(),
+                                                                    date: DateUtils.dateFormatter((item.startAt).orCurrentDate(), forFormat: .EEEEddMMMMyyyy),
+                                                                    startAt: DateUtils.dateFormatter((item.startAt).orCurrentDate(), forFormat: .HHmm),
+                                                                    endAt: DateUtils.dateFormatter((item.endAt).orCurrentDate(), forFormat: .HHmm),
+                                                                    isPrivate: (item.isPrivate) ?? false,
+                                                                    isVerified: (item.user?.isVerified) ?? false,
+                                                                    photo: (item.user?.profilePhoto).orEmpty(),
+                                                                    name: (item.user?.name).orEmpty(),
+                                                                    color: item.background,
+                                                                    participantsImgUrl: item.participantDetails?.compactMap({
+                                                                        $0.profilePhoto.orEmpty()
+                                                                    }) ?? [],
+                                                                    isActive: item.endAt.orCurrentDate() > Date(),
+                                                                    collaborationCount: (item.meetingCollaborations ?? []).count,
+                                                                    collaborationName: (item.meetingCollaborations ?? []).compactMap({
+                                                                        (
+                                                                            $0.user?.name
+                                                                        ).orEmpty()
+                                                                    }).joined(separator: ", "),
+                                                                    isAlreadyBooked: false
+                                                                )
+                                                            ) {
+                                                                homeVM.routeToTalentDetailSchedule(meetingId: item.id.orEmpty())
+                                                            } visitProfile: {
+                                                                
+                                                            }
+                                                            .frame(width: 310)
+                                                        }
+                                                        .padding(.bottom, 5)
+                                                    }
+                                                    .padding(.horizontal)
                                                 }
                                             }
-                                            .buttonStyle(.plain)
-                                            
+                                            .padding(.vertical, 10)
                                         }
-                                        .padding([.leading, .trailing, .top])
+                                        .listRowBackground(Color.clear)
+                                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
                                     }
-                                    .background(
-                                        RoundedCorner(radius: 20, corners: [.topLeft, .topRight])
-                                            .foregroundColor(.white)
-                                            .shadow(color: .black.opacity(0.035), radius: 3, x: 0, y: -5)
-                                    )
-                                    .padding(.horizontal, -20)
                                 }
-                                .listRowBackground(Color.white)
-                                .background(
-                                    Color.white
-                                )
+                                
                                 
                             }
-                            .alert(isPresented: $homeVM.isRefreshFailed) {
-                                Alert(
-                                    title: Text(LocaleText.attention),
-                                    message: Text(LocaleText.sessionExpireText),
-                                    dismissButton: .default(Text(LocaleText.returnText), action: {
-                                        
-                                        homeVM.routeBack()
-                                    }))
-                            }
+                            .frame(height: !homeVM.closestSessions.isEmpty ? 570 : 340)
                             
+                            Spacer()
                         }
                         
-                        if !(homeVM.meetingData.filter({ query in
-                            !(query.isLiveStreaming ?? false)
-                        }).isEmpty) {
-                            Button(action: {
-                                homeVM.routeToTalentFormSchedule()
-                            }, label: {
-                                Image.Dinotis.plusIcon
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: 22)
-                                    .padding()
-                                    .background(Color.DinotisDefault.primary)
-                                    .clipShape(Circle())
-                                    .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 0)
-                            })
-                            .padding()
-                        }
                     }
                     
                     NavigationLink(
@@ -703,13 +757,6 @@ struct TalentHomeView: View {
                             EmptyView()
                         }
                     )
-                    .alert(isPresented: $homeVM.successConfirm) {
-                        Alert(
-                            title: Text(LocaleText.successTitle),
-                            message: Text(LocaleText.successConfirmRequestText),
-                            dismissButton: .default(Text(LocaleText.okText))
-                        )
-                    }
                     
                     NavigationLink(
                         unwrapping: $homeVM.route,
@@ -746,13 +793,6 @@ struct TalentHomeView: View {
                             EmptyView()
                         }
                     )
-                    .alert(isPresented: $homeVM.isErrorAdditionalShow) {
-                        Alert(
-                            title: Text(LocaleText.errorText),
-                            message: Text(homeVM.error.orEmpty()),
-                            dismissButton: .cancel(Text(LocaleText.returnText))
-                        )
-                    }
                     
                     if !homeVM.announceData.isEmpty {
                         AnnouncementView(
@@ -766,6 +806,104 @@ struct TalentHomeView: View {
                             }
                         )
                     }
+                    
+                    Color.white
+                        .cornerRadius(homeVM.translation.height > homeVM.getBottomSafeArea() ? 24 : 0, corners: [.topLeft, .topRight])
+                        .ignoresSafeArea(edges: .bottom)
+                        .frame(height: homeVM.getBottomSafeArea() + (homeVM.translation.height > homeVM.getBottomSafeArea() ? .zero : -homeVM.translation.height))
+                        .onChange(of: homeVM.isSortByLatestPending) { newValue in
+                            homeVM.onChangeSortPending(isLatest: newValue)
+                        }
+                        .onChange(of: homeVM.isSortByLatestEnded) { newValue in
+                            homeVM.onChangeSortEnded(isLatest: newValue)
+                        }
+                        .onChange(of: homeVM.isSortByLatestCanceled) { newValue in
+                            homeVM.onChangeSortCanceled(isLatest: newValue)
+                        }
+                    
+                    TalentHomeBottomSheet(viewModel: homeVM) {
+                        Group {
+                            switch homeVM.currentSection {
+                            case .scheduled:
+                                ScheduledSessionView(viewModel: homeVM)
+                            case .notConfirmed:
+                                RequestedSessionView(viewModel: homeVM)
+                            case .pending:
+                                PendingSessionView(viewModel: homeVM)
+                            case .canceled:
+                                CanceledSessionView(viewModel: homeVM)
+                            case .completed:
+                                CompletedSessionView(viewModel: homeVM)
+                            }
+                        }
+                    } header: {
+                        Group {
+                            switch homeVM.currentSection {
+                            case .scheduled:
+                                EmptyView()
+                            default:
+                                VStack(spacing: 0) {
+                                    
+                                    HStack {
+                                        Text(LocalizableText.sortByLabel)
+                                            .font(.robotoBold(size: 12))
+                                            .foregroundColor(.DinotisDefault.black2)
+                                        
+                                        Spacer()
+                                        
+                                        Menu {
+                                            Button {
+                                                withAnimation {
+                                                    homeVM.sortSelectionActionLatest()
+                                                }
+                                            } label: {
+                                                HStack {
+                                                    Text(LocalizableText.sortLatest)
+                                                    
+                                                    Image(systemName: "checkmark")
+                                                        .isHidden(!homeVM.sortSectionHiddenValue())
+                                                    
+                                                }
+                                            }
+                                            
+                                            Button {
+                                                withAnimation {
+                                                    homeVM.sortSelectionActionEarliest()
+                                                }
+                                            } label: {
+                                                HStack {
+                                                    Text(LocalizableText.sortEarliest)
+                                                    
+                                                    Image(systemName: "checkmark")
+                                                        .isHidden(homeVM.sortSectionHiddenValue())
+                                                }
+                                            }
+                                            
+                                        } label: {
+                                            HStack(spacing: 8) {
+                                                Image(systemName: "slider.horizontal.3")
+                                                
+                                                Text("\(homeVM.sortSectionHiddenValue() ? LocalizableText.sortLatest : LocalizableText.sortEarliest) \(Image(systemName: "chevron.down"))")
+                                                    .font(.robotoMedium(size: 12))
+                                            }
+                                            .foregroundColor(.DinotisDefault.primary)
+                                            .padding(.horizontal, 18)
+                                            .padding(.vertical, 9)
+                                            .background(Color.DinotisDefault.lightPrimary)
+                                            .cornerRadius(8)
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 8)
+                                                    .inset(by: 0.5)
+                                                    .stroke(Color.DinotisDefault.primary, lineWidth: 1)
+                                            )
+                                        }
+                                    }
+                                    
+                                }
+                            }
+                        }
+                    }
+                    
                     DinotisLoadingView(.fullscreen, hide: !homeVM.isLoading)
                     
                     DinotisLoadingView(.fullscreen, hide: !homeVM.isLoadingConfirm)
@@ -773,16 +911,10 @@ struct TalentHomeView: View {
                 .navigationBarTitle(Text(""))
                 .navigationBarHidden(true)
                 .onAppear(perform: {
-                    DispatchQueue.main.async {
-                        homeVM.meetingParam.skip = 0
-                        homeVM.meetingParam.take = 15
-                        homeVM.onAppearView()
-                    }
+                    homeVM.onAppearView()
                 })
                 .onDisappear {
-                    homeVM.meetingData = []
-                    homeVM.meetingParam.skip = 0
-                    homeVM.meetingParam.take = 15
+                    homeVM.resetParameterQuery()
                 }
                 .sheet(
                     item: $homeVM.confirmationSheet,
@@ -792,18 +924,23 @@ struct TalentHomeView: View {
                             if #available(iOS 16.0, *) {
                                 AcceptedSheet(viewModel: homeVM, isOnSheet: true)
                                     .padding()
-                                    .presentationDetents([.medium])
+                                    .presentationDetents([.height(250)])
                                     .presentationDragIndicator(.hidden)
+                                    .dynamicTypeSize(.large)
                             } else {
                                 AcceptedSheet(viewModel: homeVM, isOnSheet: false)
+                                .padding(.horizontal)
+                                    .dynamicTypeSize(.large)
                             }
                         case .declined:
                             if #available(iOS 16.0, *) {
                                 DeclinedSheet(viewModel: homeVM, isOnSheet: true)
                                     .padding()
                                     .presentationDetents([.medium])
+                                    .dynamicTypeSize(.large)
                             } else {
                                 DeclinedSheet(viewModel: homeVM, isOnSheet: false)
+                                    .dynamicTypeSize(.large)
                             }
                         }
                     }
@@ -817,12 +954,229 @@ struct TalentHomeView: View {
                 NotificationCenter.default.addObserver(forName: .creatorHome, object: nil, queue: .main) { _ in
                     homeVM.route = nil
                 }
+                
+                withAnimation {
+                    homeVM.offsetY = !homeVM.closestSessions.isEmpty ? 562 : 344
+                }
+            }
+            .onChange(of: homeVM.closestSessions.isEmpty) { newValue in
+                withAnimation {
+                    homeVM.offsetY = !homeVM.closestSessions.isEmpty ? 562 : 344
+                }
             }
         }
     }
 }
 
 extension TalentHomeView {
+    
+    struct TalentHomeBottomSheet<Content: View, Header: View>: View {
+        var content: Content
+        var header: Header
+        @ObservedObject var viewModel: TalentHomeViewModel
+        
+        init(viewModel: TalentHomeViewModel, content: @escaping () -> Content, header: @escaping () -> Header) {
+            self.content = content()
+            self.header = header()
+            self.viewModel = viewModel
+        }
+        
+        var body: some View {
+            VStack(alignment: .leading, spacing: 0) {
+                HStack {
+                    Spacer()
+                    Rectangle()
+                        .foregroundColor(.clear)
+                        .frame(width: 119, height: 4)
+                        .background(Color(red: 0.91, green: 0.91, blue: 0.91))
+                        .cornerRadius(36)
+                    
+                    Spacer()
+                }
+                .padding(.vertical)
+                
+                VStack(spacing: 16) {
+                    ScrollViewReader { scrollView in
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 4) {
+                                ForEach(viewModel.tabSections, id: \.self) { tab in
+                                    Button {
+                                        withAnimation {
+                                            viewModel.currentSection = tab
+                                            scrollView.scrollTo(tab, anchor: .center)
+                                            viewModel.offsetY = .zero
+                                            switch tab {
+                                            case .scheduled:
+                                                viewModel.scheduledRequest.skip = 0
+                                                viewModel.scheduledRequest.take = 8
+                                                viewModel.onGetScheduledMeeting(isMore: false)
+                                            case .notConfirmed:
+                                                viewModel.rateCardQuery.skip = 0
+                                                viewModel.rateCardQuery.take = 15
+                                                viewModel.onGetMeetingRequest(isMore: false)
+                                            case .pending:
+                                                viewModel.pendingRequest.skip = 0
+                                                viewModel.pendingRequest.take = 8
+                                                viewModel.onGetPendingMeeting(isMore: false)
+                                            case .canceled:
+                                                viewModel.canceledRequest.skip = 0
+                                                viewModel.canceledRequest.take = 8
+                                                viewModel.onGetCanceledMeeting(isMore: false)
+                                            case .completed:
+                                                viewModel.endedRequest.skip = 0
+                                                viewModel.endedRequest.take = 8
+                                                viewModel.onGetEndedMeeting(isMore: false)
+                                            }
+                                        }
+                                    } label: {
+                                        HStack(spacing: 8) {
+                                            Text(headerText(for: tab))
+                                                .font(tab == viewModel.currentSection ? .robotoBold(size: 14) : .robotoRegular(size: 14))
+                                                .foregroundColor(tab == viewModel.currentSection ? .DinotisDefault.primary : .DinotisDefault.black1)
+                                                .frame(maxWidth: .infinity)
+                                            
+                                            switch tab {
+                                            case .scheduled:
+                                                Text(viewModel.scheduledCounter.orEmpty())
+                                                    .font(.robotoBold(size: 12))
+                                                    .foregroundColor(.white)
+                                                    .padding(4)
+                                                    .frame(width: 28)
+                                                    .background(Color.DinotisDefault.primary)
+                                                    .cornerRadius(6)
+                                                    .isHidden(viewModel.scheduledCounter == nil || viewModel.scheduledCounter.orEmpty() == "0", remove: viewModel.scheduledCounter == nil || viewModel.scheduledCounter.orEmpty() == "0")
+                                            case .notConfirmed:
+                                                Text(viewModel.counterRequest)
+                                                    .font(.robotoBold(size: 12))
+                                                    .foregroundColor(.white)
+                                                    .padding(4)
+                                                    .frame(width: 28)
+                                                    .background(Color.DinotisDefault.primary)
+                                                    .cornerRadius(6)
+                                                    .isHidden(viewModel.counterRequest.isEmpty || viewModel.counterRequest == "0", remove: viewModel.counterRequest.isEmpty || viewModel.counterRequest == "0")
+                                            case .pending:
+                                                Text(viewModel.pendingCounter.orEmpty())
+                                                    .font(.robotoBold(size: 12))
+                                                    .foregroundColor(.white)
+                                                    .padding(4)
+                                                    .frame(width: 28)
+                                                    .background(Color.DinotisDefault.primary)
+                                                    .cornerRadius(6)
+                                                    .isHidden(viewModel.pendingCounter == nil || viewModel.pendingCounter.orEmpty() == "0", remove: viewModel.pendingCounter == nil || viewModel.pendingCounter.orEmpty() == "0")
+                                            case .canceled:
+                                                Text(viewModel.canceledCounter.orEmpty())
+                                                    .font(.robotoBold(size: 12))
+                                                    .foregroundColor(.white)
+                                                    .padding(4)
+                                                    .frame(width: 28)
+                                                    .background(Color.DinotisDefault.primary)
+                                                    .cornerRadius(6)
+                                                    .isHidden(viewModel.canceledCounter == nil || viewModel.canceledCounter.orEmpty() == "0", remove: viewModel.canceledCounter == nil || viewModel.canceledCounter
+                                                        .orEmpty() == "0")
+                                            case .completed:
+                                                Text(viewModel.endedCounter.orEmpty())
+                                                    .font(.robotoBold(size: 12))
+                                                    .foregroundColor(.white)
+                                                    .padding(4)
+                                                    .frame(width: 32)
+                                                    .background(Color.DinotisDefault.primary)
+                                                    .cornerRadius(6)
+                                                    .isHidden(viewModel.endedCounter == nil || viewModel.endedCounter.orEmpty() == "0", remove: viewModel.endedCounter == nil || viewModel.endedCounter.orEmpty() == "0")
+                                            }
+                                        }
+                                        .padding(12)
+                                        .frame(maxHeight: 38)
+                                        .cornerRadius(20)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 20)
+                                                .fill(tab == viewModel.currentSection ? Color.DinotisDefault.lightPrimary : .white)
+                                        )
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 20)
+                                                .inset(by: 0.5)
+                                                .stroke(Color.DinotisDefault.lightPrimary, lineWidth: 1)
+                                        )
+                                    }
+                                    .id(tab)
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
+                    }
+                    
+                    Rectangle()
+                        .fill(Color.DinotisDefault.lightPrimary)
+                        .frame(height: 1)
+                    
+                    header
+                        .padding([.bottom, .horizontal])
+                }
+                
+                ScrollView(showsIndicators: false) {
+                    content
+                        .padding(.horizontal)
+                        .offset("SCROLL") { scroll in
+                            withAnimation(.spring(response: 0.4)) {
+                                if viewModel.offsetY < viewModel.sheetHeight {
+                                    if scroll > 60 {
+                                        viewModel.offsetY = viewModel.sheetHeight
+                                    }
+                                } else {
+                                    if scroll < -60 {
+                                        viewModel.offsetY = .zero
+                                    }
+                                }
+                            }
+                        }
+                }
+                .coordinateSpace(name: "SCROLL")
+            }
+            .background(
+                VStack(spacing: 0) {
+                    Color.white
+                        .cornerRadius(20, corners: [.topLeft, .topRight])
+                        .shadow(color: Color(red: 0.61, green: 0.69, blue: 0.81).opacity(0.32), radius: 13.5, x: 0, y: 0)
+                    Color.white
+                }
+            )
+            .ignoresSafeArea(edges: .bottom)
+            .offset(y: viewModel.translation.height + viewModel.offsetY)
+            .gesture(
+                DragGesture()
+                    .onChanged({ value in
+                        if viewModel.offsetY < viewModel.sheetHeight+20 {
+                            viewModel.translation = value.translation
+                        }
+                    })
+                    .onEnded({ value in
+                        withAnimation(.spring(response: 0.5)) {
+                            if value.translation.height < -80 {
+                                viewModel.offsetY = .zero
+                            } else {
+                                viewModel.offsetY = viewModel.sheetHeight
+                            }
+                            viewModel.translation = .zero
+                            
+                        }
+                    })
+            )
+        }
+        
+        private func headerText(for tab: TalentHomeSection) -> String {
+            switch tab {
+            case .scheduled:
+                return LocalizableText.filterScheduled
+            case .notConfirmed:
+                return LocalizableText.filterUnconfirmed
+            case .pending:
+                return LocalizableText.filterPending
+            case .canceled:
+                return LocalizableText.filterCanceled
+            case .completed:
+                return LocalizableText.filterSessionCompleted
+            }
+        }
+    }
 
 	struct DeclinedSheet: View {
 
@@ -954,6 +1308,10 @@ extension TalentHomeView {
 
 		var body: some View {
 			VStack(spacing: 25) {
+                if !isOnSheet {
+                    Spacer()
+                }
+                
 				HStack {
 					Text(LocaleText.acceptanceConfirmationText)
 						.font(.robotoBold(size: 14))
@@ -973,11 +1331,11 @@ extension TalentHomeView {
 					})
 				}
 
-				VStack(spacing: 15) {
-					Text(LocaleText.acceptanceDescriptionText)
-						.font(.robotoRegular(size: 12))
-						.multilineTextAlignment(.leading)
-						.foregroundColor(.black)
+                VStack(alignment: .leading, spacing: 15) {
+                    Text(LocaleText.acceptanceDescriptionText)
+                        .font(.robotoRegular(size: 12))
+                        .multilineTextAlignment(.leading)
+                        .foregroundColor(.black)
 
 					Button {
 						isAccepted.toggle()
@@ -1034,6 +1392,7 @@ extension TalentHomeView {
 							.foregroundColor(!isAccepted ? Color(.systemGray5) : .DinotisDefault.primary)
 					)
 				}
+                .padding(.top, !isOnSheet ? 10 : 0)
 				.disabled(!isAccepted)
 
 			}
@@ -1064,28 +1423,320 @@ extension TalentHomeView {
 					.font(.robotoRegular(size: 12))
 					.multilineTextAlignment(.center)
 					.foregroundColor(.black)
-
-				Button(action: {
-					primaryAction()
-				}, label: {
-					HStack {
-						Spacer()
-						Text(buttonText)
-							.font(.robotoBold(size: 12))
-							.foregroundColor(.white)
-							.padding()
-						Spacer()
-					}
-					.background(Color.DinotisDefault.primary)
-					.cornerRadius(8)
-					.padding()
-				})
+                    .padding(.bottom, 20)
+                
+                DinotisPrimaryButton(
+                    text: buttonText,
+                    type: .adaptiveScreen,
+                    textColor: .white,
+                    bgColor: .DinotisDefault.primary
+                ) {
+                    primaryAction()
+                }
 			}
-			.padding()
-			.background(Color.white)
-			.cornerRadius(12)
-			.shadow(color: Color.dinotisShadow.opacity(0.1), radius: 10, x: 0.0, y: 0.0)
-			.padding(.vertical)
 		}
 	}
+    
+    struct ScheduledSessionView: View {
+        
+        @ObservedObject var viewModel: TalentHomeViewModel
+        
+        var body: some View {
+            LazyVStack(alignment: .leading, spacing: 12) {
+                if !viewModel.scheduledData.unique().isEmpty {
+                    ForEach(viewModel.scheduledData.unique(), id: \.id) { meeting in
+                        TalentScheduleCardView(
+                            isShowMenu: true,
+                            data: .constant(meeting),
+                            isShowCollabList: false,
+                            isBundle: false) {
+                                viewModel.routeToTalentDetailSchedule(meetingId: meeting.id.orEmpty())
+                            } onTapEdit: {
+                                viewModel.routeToEditSchedule(id: meeting.id.orEmpty())
+                            } onTapDelete: {
+                                viewModel.meetingId = meeting.id.orEmpty()
+                                viewModel.alertType = .deleteSelector
+                                viewModel.isShowAlert = true
+                            }
+                            .onAppear {
+                                if (viewModel.scheduledData.unique().last?.id).orEmpty() == meeting.id {
+                                    Task {
+                                        viewModel.scheduledRequest.skip = viewModel.scheduledRequest.take
+                                        viewModel.scheduledRequest.take += 8
+                                        await viewModel.getScheduledMeeting(isMore: true)
+                                    }
+                                }
+                            }
+                    }
+                    if viewModel.isLoadingMoreScheduled {
+                        HStack {
+                            Spacer()
+                            
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                            
+                            Spacer()
+                        }
+                        .animation(.spring(), value: viewModel.isLoadingMoreScheduled)
+                    }
+                    
+                } else {
+                    EmptyStateView(
+                        title: LocalizableText.creatorEmptySessionTitle,
+                        description: LocalizableText.creatorEmptySessionDesc,
+                        buttonText: LocalizableText.creatorCreateSessionLabel) {
+                            viewModel.routeToTalentFormSchedule()
+                        }
+                }
+            }
+            .padding(.vertical)
+            .animation(.spring(), value: viewModel.isLoadingMoreScheduled)
+        }
+    }
+    
+    struct RequestedSessionView: View {
+        
+        @ObservedObject var viewModel: TalentHomeViewModel
+        
+        var body: some View {
+            LazyVStack(alignment: .leading, spacing: 12) {
+                Text(LocalizableText.ratecardRequestExplanation)
+                    .font(.robotoRegular(size: 12))
+                    .foregroundColor(.DinotisDefault.black3)
+                    .multilineTextAlignment(.center)
+                    .padding(.bottom, 10)
+                
+                if !viewModel.meetingRequestData.unique().isEmpty {
+                    ForEach(viewModel.meetingRequestData.sorted(by: { $0.createdAt?.compare($1.createdAt.orCurrentDate()) == (viewModel.isSortByLatestNotConfirmed ? .orderedDescending : .orderedAscending) }).unique(), id: \.id) { item in
+                        RequestCardView(
+                            user: item.user,
+                            item: item,
+                            onTapDecline: {
+                                viewModel.requestId = item.id.orEmpty()
+                                viewModel.requestMeetingId = item.meetingId.orEmpty()
+                                viewModel.confirmationSheet = .declined
+                            },
+                            onTapAccept: {
+                                viewModel.requestId = item.id.orEmpty()
+                                viewModel.requestMeetingId = item.meetingId.orEmpty()
+                                viewModel.confirmationSheet = .accepted
+                            }
+                        )
+                        .onAppear {
+                            Task {
+                                if item.id == viewModel.meetingRequestData.unique().last?.id {
+                                    viewModel.rateCardQuery.skip = viewModel.rateCardQuery.take
+                                    viewModel.rateCardQuery.take += 15
+                                    await viewModel.getMeetingRequest(isMore: true)
+                                }
+                            }
+                        }
+                    }
+                    
+                    if viewModel.isLoadingMoreRequest {
+                        HStack {
+                            Spacer()
+                            
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                            
+                            Spacer()
+                        }
+                        .animation(.spring(), value: viewModel.isLoadingMoreRequest)
+                    }
+                    
+                } else {
+                    EmptyStateView(
+                        title: LocalizableText.creatorEmptySessionTitle,
+                        description: LocalizableText.creatorEmptySessionDesc,
+                        buttonText: LocalizableText.creatorCreateSessionLabel) {
+                            viewModel.routeToTalentFormSchedule()
+                        }
+                }
+            }
+            .padding(.vertical)
+            .animation(.spring(), value: viewModel.isLoadingMoreRequest)
+        }
+    }
+    
+    struct PendingSessionView: View {
+        
+        @ObservedObject var viewModel: TalentHomeViewModel
+        
+        var body: some View {
+            LazyVStack(alignment: .leading, spacing: 12) {
+                if !viewModel.pendingData.unique().isEmpty {
+                    ForEach(viewModel.pendingData.unique(), id: \.id) { meeting in
+                        TalentScheduleCardView(
+                            isShowMenu: true,
+                            data: .constant(meeting),
+                            status: viewModel.pendingStatus(of: meeting),
+                            isShowCollabList: false,
+                            isBundle: false) {
+                                viewModel.routeToTalentDetailSchedule(meetingId: meeting.id.orEmpty())
+                            } onTapEdit: {
+                                viewModel.routeToEditSchedule(id: meeting.id.orEmpty())
+                            } onTapDelete: {
+                                viewModel.meetingId = meeting.id.orEmpty()
+                                viewModel.alertType = .deleteSelector
+                                viewModel.isShowDelete.toggle()
+                            }
+                            .onAppear {
+                                if (viewModel.pendingData.unique().last?.id).orEmpty() == meeting.id {
+                                    Task {
+                                        viewModel.pendingRequest.skip = viewModel.pendingRequest.take
+                                        viewModel.pendingRequest.take += 8
+                                        await viewModel.getPendingMeeting(isMore: true)
+                                    }
+                                }
+                            }
+                    }
+                    if viewModel.isLoadingMorePending {
+                        HStack {
+                            Spacer()
+                            
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                            
+                            Spacer()
+                        }
+                        .animation(.spring(), value: viewModel.isLoadingMorePending)
+                    }
+                    
+                } else {
+                    EmptyStateView(
+                        title: LocalizableText.creatorEmptySessionTitle,
+                        description: LocalizableText.creatorEmptySessionDesc,
+                        buttonText: LocalizableText.creatorCreateSessionLabel) {
+                            viewModel.routeToTalentFormSchedule()
+                        }
+                }
+            }
+            .padding(.vertical)
+            .animation(.spring(), value: viewModel.isLoadingMorePending)
+        }
+    }
+    
+    struct CanceledSessionView: View {
+        
+        @ObservedObject var viewModel: TalentHomeViewModel
+        
+        var body: some View {
+            LazyVStack(alignment: .leading, spacing: 12) {
+                if !viewModel.canceledData.unique().isEmpty {
+                    ForEach(viewModel.canceledData.unique(), id: \.id) { meeting in
+                        TalentScheduleCardView(
+                            isShowMenu: true,
+                            data: .constant(meeting),
+                            status: .canceled,
+                            isShowCollabList: false,
+                            isBundle: false) {
+                                viewModel.routeToTalentDetailSchedule(meetingId: meeting.id.orEmpty())
+                            } onTapEdit: {
+                                viewModel.routeToEditSchedule(id: meeting.id.orEmpty())
+                            } onTapDelete: {
+                                viewModel.meetingId = meeting.id.orEmpty()
+                                viewModel.alertType = .deleteSelector
+                                viewModel.isShowDelete.toggle()
+                            }
+                            .onAppear {
+                                if (viewModel.canceledData.unique().last?.id).orEmpty() == meeting.id {
+                                    Task {
+                                        viewModel.canceledRequest.skip = viewModel.canceledRequest.take
+                                        viewModel.canceledRequest.take += 8
+                                        await viewModel.getCancelledMeeting(isMore: true)
+                                    }
+                                }
+                            }
+                    }
+                    if viewModel.isLoadingMoreCancelled {
+                        HStack {
+                            Spacer()
+                            
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                            
+                            Spacer()
+                        }
+                        .animation(.spring(), value: viewModel.isLoadingMoreCancelled)
+                    }
+                    
+                } else {
+                    EmptyStateView(
+                        title: LocalizableText.creatorEmptySessionTitle,
+                        description: LocalizableText.creatorEmptySessionDesc,
+                        buttonText: LocalizableText.creatorCreateSessionLabel) {
+                            viewModel.routeToTalentFormSchedule()
+                        }
+                }
+            }
+            .padding(.vertical)
+            .animation(.spring(), value: viewModel.isLoadingMoreCancelled)
+        }
+    }
+    
+    struct CompletedSessionView: View {
+        
+        @ObservedObject var viewModel: TalentHomeViewModel
+        
+        var body: some View {
+            LazyVStack(alignment: .leading, spacing: 12) {
+                if !viewModel.endedData.unique().isEmpty {
+                    ForEach(viewModel.endedData.unique(), id: \.id) { meeting in
+                        TalentScheduleCardView(
+                            isShowMenu: true,
+                            data: .constant(meeting),
+                            status: .completed,
+                            isShowCollabList: false,
+                            isBundle: false) {
+                                viewModel.routeToTalentDetailSchedule(meetingId: meeting.id.orEmpty())
+                            } onTapEdit: {
+                                viewModel.routeToEditSchedule(id: meeting.id.orEmpty())
+                            } onTapDelete: {
+                                viewModel.meetingId = meeting.id.orEmpty()
+                                viewModel.alertType = .deleteSelector
+                                viewModel.isShowDelete.toggle()
+                            }
+                            .onAppear {
+                                if (viewModel.endedData.unique().last?.id).orEmpty() == meeting.id {
+                                    Task {
+                                        viewModel.endedRequest.skip = viewModel.endedRequest.take
+                                        viewModel.endedRequest.take += 8
+                                        await viewModel.getEndedMeeting(isMore: true)
+                                    }
+                                }
+                            }
+                    }
+                    if viewModel.isLoadingMoreEnded {
+                        HStack {
+                            Spacer()
+                            
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                            
+                            Spacer()
+                        }
+                        .animation(.spring(), value: viewModel.isLoadingMoreEnded)
+                    }
+                    
+                } else {
+                    EmptyStateView(
+                        title: LocalizableText.creatorEmptySessionTitle,
+                        description: LocalizableText.creatorEmptySessionDesc,
+                        buttonText: LocalizableText.creatorCreateSessionLabel) {
+                            viewModel.routeToTalentFormSchedule()
+                        }
+                }
+            }
+            .padding(.vertical)
+            .animation(.spring(), value: viewModel.isLoadingMoreEnded)
+        }
+    }
+}
+
+struct TalentHomeView_Previews: PreviewProvider {
+    static var previews: some View {
+        TalentHomeView()
+            .environmentObject(TalentHomeViewModel(isFromUserType: false))
+    }
 }

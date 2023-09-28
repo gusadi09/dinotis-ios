@@ -56,7 +56,7 @@ struct PrivateVideoCallView : View {
 				ZStack {
 
 					if viewModel.isSwitchCanvas {
-						PrivateSpeakerVideoView(speaker: $speakerGridViewModel.localSpeaker, isMainView: true, isLocal: true)
+                        PrivateSpeakerVideoView(speaker: $speakerGridViewModel.localSpeaker, isCamEnabled: $speakerGridViewModel.camAvailable, isMainView: true, isLocal: true)
 							.rotationEffect(.degrees(0))
 							.rotation3DEffect(.degrees(StateObservable.shared.cameraPositionUsed == .back ? 180 : 0), axis: (0, 1, 0))
 					} else {
@@ -69,14 +69,14 @@ struct PrivateVideoCallView : View {
                                         title: LocaleText.waitingOtherToJoin,
                                         geo: geo
                                     )
-										.padding()
-								}
-							}
-						} else {
-							PrivateSpeakerVideoView(speaker: $speakerGridViewModel.remoteSpeakers, isMainView: true, isLocal: false)
-						}
-					}
-				}
+                                    .padding()
+                                }
+                            }
+                        } else {
+                            PrivateSpeakerVideoView(speaker: $speakerGridViewModel.remoteSpeakers, isCamEnabled: $speakerGridViewModel.remoteCamAvailable, isMainView: true, isLocal: false)
+                        }
+                    }
+                }
 				.edgesIgnoringSafeArea(.bottom)
 
 				VStack {
@@ -85,9 +85,9 @@ struct PrivateVideoCallView : View {
 						ZStack {
 							Group {
 								if viewModel.isSwitchCanvas {
-									PrivateSpeakerVideoView(speaker: $speakerGridViewModel.remoteSpeakers, isMainView: false, isLocal: false)
+                                    PrivateSpeakerVideoView(speaker: $speakerGridViewModel.remoteSpeakers, isCamEnabled: $speakerGridViewModel.remoteCamAvailable, isMainView: false, isLocal: false)
 								} else {
-									PrivateSpeakerVideoView(speaker: $speakerGridViewModel.localSpeaker, isMainView: false, isLocal: true)
+                                    PrivateSpeakerVideoView(speaker: $speakerGridViewModel.localSpeaker, isCamEnabled: $speakerGridViewModel.camAvailable, isMainView: false, isLocal: true)
 										.rotationEffect(.degrees(0))
 										.rotation3DEffect(.degrees(StateObservable.shared.cameraPositionUsed == .back ? 180 : 0), axis: (0, 1, 0))
 								}
@@ -494,9 +494,9 @@ struct PrivateVideoCallView : View {
 						.edgesIgnoringSafeArea(.all)
 
 					VStack(spacing: 20) {
-						LottieView(name: "close-to-end", loopMode: .loop)
+						LottieView(name: "session-close-to-end", loopMode: .loop)
 							.scaledToFit()
-							.frame(height: proxy.size.width/2)
+							.frame(height: 250)
 
 						VStack(spacing: 10) {
 							Text(LocaleText.fiveMinuteEndTitle)
@@ -548,6 +548,7 @@ struct PrivateVideoCallView : View {
     })
     .dinotisAlert(
       isPresent: $streamViewModel.isShowAlert,
+      type: .videoCall,
       title: streamViewModel.alert.title,
       isError: streamViewModel.alert.isError,
       message: streamViewModel.alert.message,
@@ -556,6 +557,7 @@ struct PrivateVideoCallView : View {
     )
     .dinotisAlert(
       isPresent: $viewModel.isShowEnd,
+      type: .videoCall,
       title: LocaleText.attention,
       isError: false,
       message: LocaleText.sureEndCallSubtitle,

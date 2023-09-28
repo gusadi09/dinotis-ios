@@ -12,6 +12,7 @@
 "description_boarding_second" = "Are you satisfied just hearing the sound? \nIf you chat here, you can see each other!";
 "title_role_type" = "Various interesting sessions for you";
 "description_role_type" = "Please choose the type of account that suits for you!";
+"general_success" = "Success";
 
 "tab_explore" = "Explore";
 "tab_search" = "Search";
@@ -113,7 +114,7 @@
 
 "label_your_coin" = "Your Coins";
 "label_add_coin" = "Add Coins";
-"description_add_coin" = "Coin ini hanya dapat digunakan untuk melakukan transaksi di dalam aplikasi DINOTIS dan tidak bisa ditarik tunai";
+"description_add_coin" = "This coin can only be used to make transactions in the DINOTIS application and cannot be withdrawn for cash";
 
 "tab_profile" = "Profile";
 "description_setup_account" = "Account settings";
@@ -202,8 +203,12 @@
 "minute_in_duration" = "%lld Minutes";
 "private_video_call_label" = "Private Video Call";
 "price_label" = "Price";
-"note_for_creator_placeholder" = "Masukkan pesan untuk kreator di sini...";
-"note_for_creator_title" = "Pesan";
+"note_for_creator_placeholder" = "Enter message for creator here...";
+"note_for_creator_title" = "Leave message for creator!";
+"note_for_creator_suggest_time_title" = "Suggest your schedule to the creator: ";
+"note_for_creator_suggest_time_subtitle" = "*The schedule is not necessarily confirmed by the creator";
+"note_for_creator_date_title" = "Date";
+"note_for_creator_time_title" = "Time";
 "next_label" = "Next";
 "limited_quota_label" = "🔥 Limited quota";
 "cancel_label" = "Cancel";
@@ -382,6 +387,7 @@
 
 "see_invitation" = "See Invitation";
 "decline" = "Decline";
+"accept" = "Accept";
 "accept_invitation" = "Accept Invitation";
 
 "accepted_invitation_title" = "Yay! You have accepted a collaboration invitation.";
@@ -498,3 +504,51 @@
 "session_detail_rating_tooltip" = "Don't forget to provide a review for the session you have attended, okay!";
 
 "video_call_force_end" = "Meeting is ended because time is up.";
+
+"home_creator_withdraw" = "Withdraw";
+"creator_empty_session_title" = "No video call schedule yet";
+"creator_empty_session_desc" = "Let's schedule your video call now, your audience is waiting!";
+"creator_create_session_label" = "Create Session";
+
+"filter_scheduled" = "Scheduled";
+"filter_unconfirmed" = "Not Confirmed";
+"filter_pending" = "Pending";
+"filter_canceled" = "Canceled";
+"filter_session_completed" = "Session Completed";
+
+"sort_label" = "Sort";
+"sort_latest" = "Latest";
+"sort_earliest" = "Earliest";
+"sort_by_label" = "Sort By";
+
+"status_waiting_new_session" = "Waiting for a new schedule";
+"status_unconfirmed_session" = "Schedule not confirmed";
+"status_canceled_session" = "Schedule canceled";
+"status_completed_session" = "Session completed";
+
+"home_creator_nearest_title" = "Your Nearest Schedule";
+
+"request_card_session" = "Session";
+
+"withdraw_success_subtitle" = "Success to withdraw your balance, please check your dinotis and bank account balance carefully";
+"tipping_gift_title" = "You can give gifts to creators!";
+"tipping_your_balance" = "Your balance";
+"tipping_top_up_now" = "Top up now";
+"tipping_not_enough_balance" = "Your balance is not enough, please top up coins first";
+"tipping_your_current_coin" = "Your current coins,";
+"tipping_success_desc" = "You've given a review for this creator!";
+"review_success_with_tip_desc" = "Thank you for your gift! Every gift you give is a contribution to helping our community become better.";
+
+"edit_profile_name_empty_error" = "Please fill your name, this field can't be empty";
+"edit_profile_username_empty_error" = "Please fill your username, this field can't be empty";
+"edit_profile_bio_empty_error" = "Please fill your bio, this field can't be empty";
+"edit_profile_profession_empty_error" = "Please select your profession, this field can't be empty";
+
+"ratecard_requested_time" = "Audience Request";
+"ratecard_request_explanation" = "Requested time is just a suggestion, you can negotiate the time through discussion";
+"pending_card_set_time" = "Set Time";
+
+"anytime_label" = "Anytime";
+"gift_label" = "Gift";
+
+"create_session_minimum_participant_alert" = "Participants for Group call must more than 0";

@@ -10,6 +10,13 @@ import Combine
 import UIKit
 import SwiftUI
 import DinotisData
+import OneSignal
+
+enum BundlingListAlertType {
+    case deleteSelector
+    case refreshFailed
+    case error
+}
 
 final class BundlingViewModel: ObservableObject {
 
@@ -24,6 +31,8 @@ final class BundlingViewModel: ObservableObject {
     
     var backToHome: () -> Void
 
+    @Published var isShowAlert = false
+    @Published var typeAlert: BundlingListAlertType = .error
 	@Published var query = BundlingListFilter(take: 15, skip: 0)
 
 	@Published var isLoading = false
@@ -85,20 +94,88 @@ final class BundlingViewModel: ObservableObject {
 			self?.isError = false
 			self?.error = nil
 			self?.isRefreshFailed = false
+            self?.isShowAlert = false
 		}
 
 	}
     
-    func handleDefaultError(error: ErrorResponse) {
-        DispatchQueue.main.async {[weak self] in
-            if error.statusCode.orZero() == 401 {
-                
-            } else {
-                self?.isLoading = false
-                self?.isError = true
+    func handleDefaultError(error: Error) {
+        DispatchQueue.main.async { [weak self] in
+            self?.isLoading = false
+            self?.isShowAlert = true
 
+            if let error = error as? ErrorResponse {
                 self?.error = error.message.orEmpty()
+
+                if error.statusCode.orZero() == 401 {
+                    self?.isRefreshFailed.toggle()
+                    self?.typeAlert = .refreshFailed
+                } else {
+                    self?.isError = true
+                    self?.typeAlert = .error
+                }
+            } else {
+                self?.isError = true
+                self?.typeAlert = .error
+                self?.error = error.localizedDescription
             }
+
+        }
+    }
+    
+    func routeToRoot() {
+        NavigationUtil.popToRootView()
+        self.stateObservable.userType = 0
+        self.stateObservable.isVerified = ""
+        self.stateObservable.refreshToken = ""
+        self.stateObservable.accessToken = ""
+        self.stateObservable.isAnnounceShow = false
+        OneSignal.setExternalUserId("")
+    }
+    
+    func alertTitle() -> String {
+        switch typeAlert {
+        case .deleteSelector:
+            return LocaleText.attention
+        case .refreshFailed:
+            return LocaleText.attention
+        case .error:
+            return LocaleText.attention
+        }
+    }
+    
+    func alertContent() -> String {
+        switch typeAlert {
+        case .deleteSelector:
+            return LocaleText.deleteBundleAlert
+        case .refreshFailed:
+            return LocaleText.sessionExpireText
+        case .error:
+            return error.orEmpty()
+        }
+    }
+    
+    func alertButtonText() -> String {
+        switch typeAlert {
+        case .deleteSelector:
+            return LocaleText.yesDeleteText
+        case .refreshFailed:
+            return LocaleText.returnText
+        case .error:
+            return LocaleText.okText
+        }
+    }
+    
+    func alertAction() {
+        switch typeAlert {
+        case .deleteSelector:
+            withAnimation {
+                defaultDeleteBundling(bundleId: idToDelete)
+            }
+        case .refreshFailed:
+            routeToRoot()
+        case .error:
+            break
         }
     }
     
@@ -126,7 +203,6 @@ final class BundlingViewModel: ObservableObject {
                 }
             }
         case .failure(let error):
-            guard let error = error as? ErrorResponse else { return }
             handleDefaultError(error: error)
         }
     }

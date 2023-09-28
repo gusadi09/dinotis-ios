@@ -9,7 +9,6 @@ import SwiftUI
 import SwiftUITrackableScrollView
 import CurrencyFormatter
 import SwiftUINavigation
-import OneSignal
 import DinotisData
 import DinotisDesignSystem
 
@@ -48,13 +47,6 @@ struct TalentScheduleDetailView: View {
                 Image.Dinotis.userTypeBackground
                     .resizable()
                     .edgesIgnoringSafeArea(.all)
-                    .alert(isPresented: $viewModel.isError) {
-                        Alert(
-                            title: Text(LocaleText.errorText),
-                            message: Text(viewModel.error.orEmpty()),
-                            dismissButton: .cancel(Text(LocaleText.returnText))
-                        )
-                    }
                 
                 VStack(spacing: 0) {
 
@@ -68,14 +60,6 @@ struct TalentScheduleDetailView: View {
                             Spacer()
                         }
                         .padding()
-                        .alert(isPresented: $viewModel.isEndSuccess) {
-                            Alert(
-                                title: Text(LocaleText.successTitle),
-                                message: Text(LocaleText.successEndedMeetingText),
-                                dismissButton: .default(Text(LocaleText.returnText), action: {
-                                    dismiss()
-                                }))
-                        }
                         
                         HStack {
                             Button(action: {
@@ -89,23 +73,6 @@ struct TalentScheduleDetailView: View {
                             .padding(.leading)
                             
                             Spacer()
-                        }
-                        .alert(isPresented: $viewModel.isDeleteShow) {
-                            Alert(
-                                title: Text(LocaleText.attention),
-                                message: Text(LocaleText.deleteAlertText),
-                                primaryButton: .default(
-                                    Text(LocaleText.noText)
-                                ),
-                                secondaryButton: .destructive(
-                                    Text(LocaleText.yesDeleteText),
-                                    action: {
-                                        Task {
-                                            await viewModel.deleteMeeting()
-                                        }
-                                    }
-                                )
-                            )
                         }
                         
                     }
@@ -142,26 +109,16 @@ struct TalentScheduleDetailView: View {
                                         }
                                     }, onTapDelete: {
                                         viewModel.isDeleteShow.toggle()
+                                        viewModel.typeAlert = .deleteSelector
+                                        viewModel.isShowAlert = true
                                     }, onTapEnd: {
                                         viewModel.isEndShow.toggle()
+                                        viewModel.typeAlert = .endSelector
+                                        viewModel.isShowAlert = true
                                     }
                                 )
                                 .valueChanged(value: viewModel.conteOffset) { val in
                                     viewModel.tabColor = val > 0 ? Color.white : Color.clear
-                                }
-                                .alert(isPresented: $viewModel.isRefreshFailed) {
-                                    Alert(
-                                        title: Text(LocaleText.attention),
-                                        message: Text(LocaleText.sessionExpireText),
-                                        dismissButton: .default(Text(LocaleText.returnText), action: {
-                                            NavigationUtil.popToRootView()
-                                            self.stateObservable.userType = 0
-                                            self.stateObservable.isVerified = ""
-                                            self.stateObservable.refreshToken = ""
-                                            self.stateObservable.accessToken = ""
-                                            self.stateObservable.isAnnounceShow = false
-                                            OneSignal.setExternalUserId("")
-                                        }))
                                 }
                                 
                                 if data.endedAt != nil {
@@ -408,14 +365,6 @@ struct TalentScheduleDetailView: View {
                                 }
                             }
                         }
-						.alert(isPresented: $viewModel.isDeleteSuccess) {
-							Alert(
-								title: Text(LocaleText.successTitle),
-								message: Text(LocaleText.successDeleteMeetingText),
-								dismissButton: .default(Text(LocaleText.returnText), action: {
-									dismiss()
-								}))
-						}
 
 						if let meetId = viewModel.dataMeeting?.id {
 							NavigationLink(
@@ -437,15 +386,6 @@ struct TalentScheduleDetailView: View {
 									EmptyView()
 								}
 							)
-							.alert(isPresented: $viewModel.successConfirm) {
-								Alert(
-									title: Text(LocaleText.successTitle),
-									message: Text(LocaleText.successConfirmRequestText),
-									dismissButton: .default(Text(LocaleText.okText), action: {
-										dismiss()
-                                    })
-                                )
-                            }
                             
                             NavigationLink(
                                 unwrapping: $viewModel.route,
@@ -481,13 +421,6 @@ struct TalentScheduleDetailView: View {
 									EmptyView()
 								}
 							)
-							.alert(isPresented: $viewModel.isRestricted) {
-								Alert(
-									title: Text(LocaleText.attention),
-									message: Text(LocaleText.oneHourRestrictText),
-									dismissButton: .default(Text(LocaleText.okText))
-								)
-							}
 						}
 
 						NavigationLink(
@@ -582,23 +515,6 @@ struct TalentScheduleDetailView: View {
 						EmptyView()
 					}
 				)
-				.alert(isPresented: $viewModel.isEndShow) {
-					Alert(
-						title: Text(LocaleText.attention),
-						message: Text(LocaleText.endedMeetingLabelText),
-						primaryButton: .default(
-							Text(LocaleText.noText)
-						),
-						secondaryButton: .destructive(
-							Text(LocaleText.yesDeleteText),
-							action: {
-                                Task {
-                                    await viewModel.endMeeting()
-                                }
-							}
-						)
-					)
-				}
                 
             }
 			.sheet(unwrapping: $viewModel.route, case: /HomeRouting.scheduleNegotiationChat, onDismiss: {
@@ -606,6 +522,7 @@ struct TalentScheduleDetailView: View {
 			}) { viewModel in
 				ScheduleNegotiationChatView(viewModel: viewModel.wrappedValue)
 					.environmentObject(customerChatManager)
+                    .dynamicTypeSize(.large)
 			}
 			.onChange(of: viewModel.tokenConversation) { newValue in
 				customerChatManager.connect(accessToken: newValue, conversationName: (viewModel.dataMeeting?.meetingRequest?.id).orEmpty())
@@ -689,6 +606,7 @@ struct TalentScheduleDetailView: View {
 					.padding()
 					.padding(.vertical)
 					.presentationDetents([.height(450)])
+                    .dynamicTypeSize(.large)
 			} else {
 				VStack(spacing: 15) {
 					if viewModel.isLoadingStart {
@@ -758,6 +676,7 @@ struct TalentScheduleDetailView: View {
 				}
 					.padding()
 					.padding(.vertical)
+                    .dynamicTypeSize(.large)
 			}
 
         })
@@ -777,8 +696,10 @@ struct TalentScheduleDetailView: View {
 		.sheet(isPresented: $viewModel.confirmationSheet, content: {
 			if #available(iOS 16.0, *) {
 				DeclinedSheet(viewModel: viewModel, isOnSheet: true)
+                    .dynamicTypeSize(.large)
 			} else {
 				DeclinedSheet(viewModel: viewModel, isOnSheet: false)
+                    .dynamicTypeSize(.large)
 			}
 		})
         .sheet(isPresented: $viewModel.presentDelete, content: {
@@ -841,6 +762,7 @@ struct TalentScheduleDetailView: View {
 					.padding()
 					.padding(.vertical)
 					.presentationDetents([.fraction(0.8), .large])
+                    .dynamicTypeSize(.large)
 			} else {
 				VStack(spacing: 15) {
 					Image.Dinotis.removeUserImage
@@ -899,9 +821,23 @@ struct TalentScheduleDetailView: View {
 				}
 					.padding()
 					.padding(.vertical)
+                    .dynamicTypeSize(.large)
 			}
 
         })
+        .dinotisAlert(
+            isPresent: $viewModel.isShowAlert,
+            type: .general,
+            title: viewModel.alertTitle(),
+            isError: viewModel.typeAlert == .error || viewModel.typeAlert == .refreshFailed || viewModel.typeAlert == .oneHourRestricted,
+            message: viewModel.alertContent(),
+            primaryButton: .init(text: viewModel.alertButtonText(), action: {
+                viewModel.alertAction {
+                    dismiss()
+                }
+            }),
+            secondaryButton: viewModel.typeAlert == .deleteSelector || viewModel.typeAlert == .endSelector ? .init(text: LocaleText.noText, action: {}) : nil
+        )
     }
     
     private func refreshList() {

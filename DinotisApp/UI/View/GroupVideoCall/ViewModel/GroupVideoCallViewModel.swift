@@ -1080,7 +1080,9 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
 
 extension GroupVideoCallViewModel: DyteSelfEventsListener {
     func onStageStatusUpdated(stageStatus: StageStatus) {
-        
+        if stageStatus == .offStage {
+            madeToSpeaker()
+        }
     }
     
     func onRoomMessage(message: String) {
@@ -1215,7 +1217,20 @@ extension GroupVideoCallViewModel: DyteWaitlistEventsListener {
 
 extension GroupVideoCallViewModel: DyteStageEventListener {
     func onParticipantRemovedFromStage(participant: DyteJoinedMeetingParticipant) {
-        
+        if participant.id == meeting.localUser.id {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.alert = .init(
+                    title: LocalizableText.videoCallMoveToViewerAlertTitle,
+                    primaryButton: .init(
+                        text: LocalizableText.understoodText,
+                        action: { self.alert = .init() }
+                    )
+                )
+                self.isShowAlert = true
+                self.isRaised = false
+            }
+        }
     }
     
     func onAddedToStage() {
@@ -1256,18 +1271,7 @@ extension GroupVideoCallViewModel: DyteStageEventListener {
     }
     
     func onRemovedFromStage() {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.alert = .init(
-                title: LocalizableText.videoCallMoveToViewerAlertTitle,
-                primaryButton: .init(
-                    text: LocalizableText.understoodText,
-                    action: { self.alert = .init() }
-                )
-            )
-            self.isShowAlert = true
-            self.isRaised = false
-        }
+        
     }
     
     func onStageRequestsUpdated(accessRequests: [DyteJoinedMeetingParticipant]) {

@@ -179,8 +179,10 @@ struct SearchTalentView: View {
                 if #available(iOS 16.0, *) {
                     SessionDetailView(viewModel: viewModel)
                         .presentationDetents([.fraction(0.8), .large])
+                        .dynamicTypeSize(.large)
                 } else {
                     SessionDetailView(viewModel: viewModel)
+                        .dynamicTypeSize(.large)
                 }
             }
         )
@@ -190,8 +192,10 @@ struct SearchTalentView: View {
                 if #available(iOS 16.0, *) {
                     PaymentTypeOption(viewModel: viewModel)
                     .presentationDetents([.fraction(viewModel.sessionCard.isPrivate.orFalse() ? 0.44 : 0.33)])
+                    .dynamicTypeSize(.large)
                 } else {
                     PaymentTypeOption(viewModel: viewModel)
+                        .dynamicTypeSize(.large)
                 }
             }
         )
@@ -204,8 +208,10 @@ struct SearchTalentView: View {
                 if #available(iOS 16.0, *) {
                     CoinPaymentSheetView(viewModel: viewModel)
                         .presentationDetents([.fraction(0.85), .large])
+                        .dynamicTypeSize(.large)
                 } else {
                     CoinPaymentSheetView(viewModel: viewModel)
+                        .dynamicTypeSize(.large)
                 }
             }
         )
@@ -215,8 +221,10 @@ struct SearchTalentView: View {
                 if #available(iOS 16.0, *) {
                     AddCoinSheetView(viewModel: viewModel)
                         .presentationDetents([.fraction(0.67), .large])
+                        .dynamicTypeSize(.large)
                 } else {
                     AddCoinSheetView(viewModel: viewModel)
+                        .dynamicTypeSize(.large)
                 }
             }
         )
@@ -235,6 +243,7 @@ struct SearchTalentView: View {
                   viewModel.routeToTalentProfile(username: item)
                 }
                 .presentationDetents([.medium, .large])
+                .dynamicTypeSize(.large)
             } else {
               SelectedCollabCreatorView(
                 isEdit: false,
@@ -248,6 +257,7 @@ struct SearchTalentView: View {
                   viewModel.isShowSessionDetail = false
                   viewModel.routeToTalentProfile(username: item)
                 }
+                .dynamicTypeSize(.large)
             }
         })
 	}
@@ -466,7 +476,7 @@ private extension SearchTalentView {
 										SessionCard(
 											with: SessionCardModel(
 											title: item.title.orEmpty(),
-                                            date: DateUtils.dateFormatter(item.startAt.orCurrentDate(), forFormat: .ddMMMMyyyy),
+                                            date: DateUtils.dateFormatter(item.startAt.orCurrentDate(), forFormat: .EEEEddMMMMyyyy),
                                             startAt: DateUtils.dateFormatter(item.startAt.orCurrentDate(), forFormat: .HHmm),
                                             endAt: DateUtils.dateFormatter(item.endAt.orCurrentDate(), forFormat: .HHmm),
 											isPrivate: item.isPrivate ?? false,
@@ -475,6 +485,9 @@ private extension SearchTalentView {
 											name: (item.user?.name).orEmpty(),
 											// MARK: - Change the color when backend done
 											color: item.background,
+                                            participantsImgUrl: item.participantDetails?.compactMap({
+                                                $0.profilePhoto.orEmpty()
+                                            }) ?? [],
 											isActive: item.endAt.orCurrentDate() > Date(),
                                             collaborationCount: (item.meetingCollaborations ?? []).count,
                                             collaborationName: (item.meetingCollaborations ?? []).compactMap({
@@ -544,7 +557,7 @@ private extension SearchTalentView {
 								SessionCard(
 									with: SessionCardModel(
 										title: item.title.orEmpty(),
-                                        date: DateUtils.dateFormatter(item.startAt.orCurrentDate(), forFormat: .ddMMMMyyyy),
+                                        date: DateUtils.dateFormatter(item.startAt.orCurrentDate(), forFormat: .EEEEddMMMMyyyy),
                                         startAt: DateUtils.dateFormatter(item.startAt.orCurrentDate(), forFormat: .HHmm),
                                         endAt: DateUtils.dateFormatter(item.endAt.orCurrentDate(), forFormat: .HHmm),
 										isPrivate: item.isPrivate ?? false,
@@ -553,6 +566,9 @@ private extension SearchTalentView {
 										name: (item.user?.name).orEmpty(),
 										// MARK: - Change the color when backend done
 										color: item.background,
+                                        participantsImgUrl: item.participantDetails?.compactMap({
+                                            $0.profilePhoto.orEmpty()
+                                        }) ?? [],
 										isActive: item.endAt.orCurrentDate() > Date(),
                                         collaborationCount: (item.meetingCollaborations ?? []).count,
                                         collaborationName: (item.meetingCollaborations ?? []).compactMap({
@@ -627,53 +643,51 @@ private extension SearchTalentView {
                     if !viewModel.searchedCreator.isEmpty {
                         LazyVGrid(columns: [GridItem(.adaptive(minimum: 164))], spacing: 13) {
                             ForEach(viewModel.searchedCreator, id: \.id) { item in
-								if let profession = item.professions?[0].profession?.name {
-                                    Button {
-                                        viewModel.routeToTalentProfile(username: item.username.orEmpty())
-                                    } label: {
-										CreatorCard(
-											with: CreatorCardModel(
-												name: item.name.orEmpty(),
-												isVerified: item.isVerified ?? false,
-												professions: profession,
-												photo: item.profilePhoto.orEmpty()
-											), size: 170, type: .withDesc
-										) {
-											HStack(spacing: 4) {
-                                                (
-                                                Text("\(item.meetingCount.orZero()) ")
-                                                    .font(.robotoBold(size: 13))
-                                                    .foregroundColor(.DinotisDefault.black2)
-                                                +
-                                                Text(LocalizableText.sessionCompleted)
-                                                    .font(.robotoRegular(size: 13))
-                                                    .foregroundColor(.DinotisDefault.black3)
-                                                )
-                                                .multilineTextAlignment(.leading)
-                                                
-                                                Spacer()
-                                                
-                                                Image(systemName: "star.fill")
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .foregroundColor(.orange)
-                                                    .frame(width: 13)
-                                                
-                                                Text(item.rating.orEmpty())
-                                                    .font(.robotoRegular(size: 13))
-                                                    .foregroundColor(.DinotisDefault.black2)
-                                                
-                                            }
+                                Button {
+                                    viewModel.routeToTalentProfile(username: item.username.orEmpty())
+                                } label: {
+                                    CreatorCard(
+                                        with: CreatorCardModel(
+                                            name: item.name.orEmpty(),
+                                            isVerified: item.isVerified ?? false,
+                                            professions: (item.stringProfessions?.joined(separator: ", ")).orEmpty(),
+                                            photo: item.profilePhoto.orEmpty()
+                                        ), size: 170, type: .withDesc
+                                    ) {
+                                        HStack(spacing: 4) {
+                                            (
+                                            Text("\(item.meetingCount.orZero()) ")
+                                                .font(.robotoBold(size: 13))
+                                                .foregroundColor(.DinotisDefault.black2)
+                                            +
+                                            Text(LocalizableText.sessionCompleted)
+                                                .font(.robotoRegular(size: 13))
+                                                .foregroundColor(.DinotisDefault.black3)
+                                            )
+                                            .multilineTextAlignment(.leading)
+                                            
+                                            Spacer()
+                                            
+                                            Image(systemName: "star.fill")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .foregroundColor(.orange)
+                                                .frame(width: 13)
+                                            
+                                            Text(item.rating.orEmpty())
+                                                .font(.robotoRegular(size: 13))
+                                                .foregroundColor(.DinotisDefault.black2)
+                                            
                                         }
                                     }
-									.onAppear {
-										if item.id == viewModel.searchedCreator.last?.id && viewModel.creatorNextCursor != nil {
-											Task {
-												viewModel.takeItem += 30
-												await viewModel.getSearchedData(isMore: true)
-											}
-										}
-									}
+                                }
+                                .onAppear {
+                                    if item.id == viewModel.searchedCreator.last?.id && viewModel.creatorNextCursor != nil {
+                                        Task {
+                                            viewModel.takeItem += 30
+                                            await viewModel.getSearchedData(isMore: true)
+                                        }
+                                    }
                                 }
                             }
                         }

@@ -58,24 +58,30 @@ struct TalentEditRateCardScheduleView: View {
                     DateSheet(viewModel: viewModel, isTime: false)
                         .padding()
                         .presentationDetents([.medium, .large])
+                        .dynamicTypeSize(.large)
                 } else {
                     DateSheet(viewModel: viewModel, isTime: false)
+                        .dynamicTypeSize(.large)
                 }
             case .startTime:
                 if #available(iOS 16.0, *) {
                     DateSheet(viewModel: viewModel, isTime: true)
                         .padding()
                         .presentationDetents([.medium, .large])
+                        .dynamicTypeSize(.large)
                 } else {
                     DateSheet(viewModel: viewModel, isTime: true)
+                        .dynamicTypeSize(.large)
                 }
             case .endTime:
                 if #available(iOS 16.0, *) {
                     TimeEndSheet(viewModel: viewModel)
                         .padding()
                         .presentationDetents([.medium, .large])
+                        .dynamicTypeSize(.large)
                 } else {
                     TimeEndSheet(viewModel: viewModel)
+                        .dynamicTypeSize(.large)
                 }
             }
         }

@@ -22,3 +22,17 @@ public struct MeetingsPageRequest: Codable {
         self.isAvailable = isAvailable
     }
 }
+
+public struct MeetingsStatusPageRequest: Codable {
+    public var take: Int
+    public var skip: Int
+    public var status: String
+    public var sort: String
+    
+    public init(take: Int = 15, skip: Int = 0, status: String = "", sort: String = "desc") {
+        self.take = take
+        self.skip = skip
+        self.status = status
+        self.sort = sort
+    }
+}

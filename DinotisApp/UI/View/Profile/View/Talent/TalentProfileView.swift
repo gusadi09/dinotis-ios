@@ -558,6 +558,7 @@ struct TalentProfileView: View {
 						.padding()
 						.padding(.vertical)
 						.presentationDetents([.height(360)])
+                        .dynamicTypeSize(.large)
 				} else {
 					VStack(spacing: 16) {
                         
@@ -601,6 +602,7 @@ struct TalentProfileView: View {
 					}
 						.padding()
 						.padding(.vertical)
+                        .dynamicTypeSize(.large)
 				}
 
 			}
@@ -666,6 +668,7 @@ struct TalentProfileView: View {
 						.padding()
 						.padding(.vertical)
 						.presentationDetents([.height(380)])
+                        .dynamicTypeSize(.large)
 				} else {
 					VStack(spacing: 10) {
                         Spacer()
@@ -723,6 +726,7 @@ struct TalentProfileView: View {
 					}
 						.padding()
 						.padding(.vertical)
+                        .dynamicTypeSize(.large)
 				}
 
 			}
@@ -773,6 +777,7 @@ struct TalentProfileView: View {
 						.padding()
 						.padding(.vertical)
 						.presentationDetents([.height(380)])
+                        .dynamicTypeSize(.large)
 				} else {
 					VStack(spacing: 10) {
                         Spacer()
@@ -814,6 +819,7 @@ struct TalentProfileView: View {
 					}
 						.padding()
 						.padding(.vertical)
+                        .dynamicTypeSize(.large)
 				}
 
 			}

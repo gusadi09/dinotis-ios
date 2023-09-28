@@ -69,6 +69,7 @@ final class PaymentMethodsViewModel: ObservableObject {
 	@Published var meetingId: String
     @Published var isRateCard: Bool
     @Published var rateCardMessage: String
+    @Published var requestTime: String
 	
 	@Published var bookData: UserBookingData?
 	
@@ -89,6 +90,7 @@ final class PaymentMethodsViewModel: ObservableObject {
 		price: String,
 		meetingId: String,
         rateCardMessage: String,
+        requestTime: String,
         isRateCard: Bool,
 		backToHome: @escaping (() -> Void),
 		coinPaymentUseCase: CoinPaymentUseCase = CoinPaymentDefaultUseCase(),
@@ -103,6 +105,7 @@ final class PaymentMethodsViewModel: ObservableObject {
 		self.meetingId = meetingId
         self.isRateCard = isRateCard
 		self.backToHome = backToHome
+        self.requestTime = requestTime
 		self.paymentMethodUseCase = paymentMethodUseCase
 		self.coinPaymentUseCase = coinPaymentUseCase
 		self.promoCodeCheckingUseCase = promoCodeCheckingUseCase
@@ -435,7 +438,8 @@ final class PaymentMethodsViewModel: ObservableObject {
             let body = RequestSessionRequest(
                 paymentMethod: selectItem,
                 rateCardId: meetingId,
-                message: rateCardMessage
+                message: rateCardMessage.isEmpty ? nil : rateCardMessage,
+                requestAt: requestTime
             )
 
 			let result = await requestSessionUseCase.execute(with: body)
@@ -457,9 +461,17 @@ final class PaymentMethodsViewModel: ObservableObject {
 						self?.openURL(url: (success.bookingPayment?.redirectUrl).orEmpty())
 
 					} else if (self?.total).orZero() == 0 {
-						self?.routeToSuccess(id: (success.bookingPayment?.bookingID).orEmpty())
+                        if self?.isRateCard ?? false  {
+                            self?.routeToSuccess(id: (success.id).orEmpty())
+                        } else {
+                            self?.routeToSuccess(id: (success.bookingPayment?.bookingID).orEmpty())
+                        }
 					} else {
-						self?.routeToInvoice(id: (success.bookingPayment?.bookingID).orEmpty())
+                        if self?.isRateCard ?? false  {
+                            self?.routeToInvoice(id: (success.id).orEmpty())
+                        } else {
+                            self?.routeToInvoice(id: (success.bookingPayment?.bookingID).orEmpty())
+                        }
 					}
 				}
 			case .failure(let failure):

@@ -38,6 +38,11 @@ public enum LocalizableText {
 		bundle: .module,
 		comment: "This string usage for description on role selection"
 	)
+    public static let generalSuccess = NSLocalizedString(
+        "general_success",
+        bundle: .module,
+        comment: "success"
+    )
 
 	public static let skipLabel = NSLocalizedString(
 		"label_skip",
@@ -853,6 +858,26 @@ public enum LocalizableText {
         bundle: .module,
         comment: "usage for note for creator title in rate card"
     )
+    public static let noteForCreatorSuggestTimeTitle = NSLocalizedString(
+        "note_for_creator_suggest_time_title",
+        bundle: .module,
+        comment: "suggest time title"
+    )
+    public static let noteForCreatorSuggestTimeSubtitle = NSLocalizedString(
+        "note_for_creator_suggest_time_subtitle",
+        bundle: .module,
+        comment: "suggest time for creator"
+    )
+    public static let noteForCreatorDateTitle = NSLocalizedString(
+        "note_for_creator_date_title",
+        bundle: .module,
+        comment: "date"
+    )
+    public static let noteForCreatorTimeTitle = NSLocalizedString(
+        "note_for_creator_time_title",
+        bundle: .module,
+        comment: "time"
+    )
     public static let nextLabel = NSLocalizedString(
         "next_label",
         bundle: .module,
@@ -1608,6 +1633,12 @@ public enum LocalizableText {
         comment: "general decline text"
     )
     
+    public static let accept = NSLocalizedString(
+        "accept",
+        bundle: .module,
+        comment: "general accept text"
+    )
+    
     public static let acceptInvitation = NSLocalizedString(
         "accept_invitation",
         bundle: .module,
@@ -2265,6 +2296,199 @@ public enum LocalizableText {
         "video_call_force_end",
         bundle: .module,
         comment: "force ended"
+    )
+    public static let homeCreatorWithdraw = NSLocalizedString(
+        "home_creator_withdraw",
+        bundle: .module,
+        comment: "withdraw"
+    )
+    public static let creatorEmptySessionTitle = NSLocalizedString(
+        "creator_empty_session_title",
+        bundle: .module,
+        comment: "creator empty session title"
+    )
+    public static let creatorEmptySessionDesc = NSLocalizedString(
+        "creator_empty_session_desc",
+        bundle: .module,
+        comment: "creator empty session description"
+    )
+    public static let filterScheduled = NSLocalizedString(
+        "filter_scheduled",
+        bundle: .module,
+        comment: "filter scheduled"
+    )
+    public static let filterUnconfirmed = NSLocalizedString(
+        "filter_unconfirmed",
+        bundle: .module,
+        comment: "filter not confirmed"
+    )
+    public static let filterPending = NSLocalizedString(
+        "filter_pending",
+        bundle: .module,
+        comment: "filter pending"
+    )
+    public static let filterCanceled = NSLocalizedString(
+        "filter_canceled",
+        bundle: .module,
+        comment: "filter canceled"
+    )
+    public static let filterSessionCompleted = NSLocalizedString(
+        "filter_session_completed",
+        bundle: .module,
+        comment: "filter session completed"
+    )
+    public static let sortLabel = NSLocalizedString(
+        "sort_label",
+        bundle: .module,
+        comment: "sort label"
+    )
+    
+    public static let sortByLabel = NSLocalizedString(
+        "sort_by_label",
+        bundle: .module,
+        comment: "sort by label"
+    )
+    
+    public static let sortLatest = NSLocalizedString(
+        "sort_latest",
+        bundle: .module,
+        comment: "sort latest"
+    )
+    public static let sortEarliest = NSLocalizedString(
+        "sort_earliest",
+        bundle: .module,
+        comment: "sort earliest"
+    )
+    public static let statusWaitingNewSession = NSLocalizedString(
+        "status_waiting_new_session",
+        bundle: .module,
+        comment: "status waiting new session"
+    )
+    public static let statusUnconfirmedSession = NSLocalizedString(
+        "status_unconfirmed_session",
+        bundle: .module,
+        comment: "status unconfirmed session"
+    )
+    public static let statusCanceledSession = NSLocalizedString(
+        "status_canceled_session",
+        bundle: .module,
+        comment: "status canceled session"
+    )
+    public static let statusCompletedSession = NSLocalizedString(
+        "status_completed_session",
+        bundle: .module,
+        comment: "status completed session"
+    )
+    public static let creatorCreateSessionLabel = NSLocalizedString(
+        "creator_create_session_label",
+        bundle: .module,
+        comment: "creator create session label"
+    )
+    
+    public static let homeCreatorNearestTitle = NSLocalizedString(
+        "home_creator_nearest_title",
+        bundle: .module,
+        comment: "nearest schedule title"
+    )
+    
+    public static let requestCardSessionText = NSLocalizedString(
+        "request_card_session",
+        bundle: .module,
+        comment: "session"
+    )
+    
+    public static let withdrawSuccessSubtitle = NSLocalizedString(
+        "withdraw_success_subtitle",
+        bundle: .module,
+        comment: "success subtitle"
+    )
+    public static let tippingGiftTitle = NSLocalizedString(
+        "tipping_gift_title",
+        bundle: .module,
+        comment: "give gift to creator title"
+    )
+    public static let tippingYourBalance = NSLocalizedString(
+        "tipping_your_balance",
+        bundle: .module,
+        comment: "your balance text"
+    )
+    public static let tippingTopUpNow = NSLocalizedString(
+        "tipping_top_up_now",
+        bundle: .module,
+        comment: "top up now text"
+    )
+    public static let tippingNotEnoughBalance = NSLocalizedString(
+        "tipping_not_enough_balance",
+        bundle: .module,
+        comment: "not enough balance error when tipping"
+    )
+    public static let tippingYourCurrentCoin = NSLocalizedString(
+        "tipping_your_current_coin",
+        bundle: .module,
+        comment: "your current coin text on add coin bottom sheet"
+    )
+    public static let tippingSuccessDesc = NSLocalizedString(
+        "tipping_success_desc",
+        bundle: .module,
+        comment: "tipping success description"
+    )
+    public static let ratecardRequestedTime = NSLocalizedString(
+        "ratecard_requested_time",
+        bundle: .module,
+        comment: "requested time text"
+    )
+    
+    public static let editProfileNameEmptyError = NSLocalizedString(
+        "edit_profile_name_empty_error",
+        bundle: .module,
+        comment: "empty error for name field"
+    )
+    public static let editProfileUsernameEmptyError = NSLocalizedString(
+        "edit_profile_username_empty_error",
+        bundle: .module,
+        comment: "error empty for username field"
+    )
+    public static let editProfileBioEmptyError = NSLocalizedString(
+        "edit_profile_bio_empty_error",
+        bundle: .module,
+        comment: "bio empty error"
+    )
+    public static let editProfileProfessionEmptyError = NSLocalizedString(
+        "edit_profile_profession_empty_error",
+        bundle: .module,
+        comment: "profession empty error"
+    )
+    public static let ratecardRequestExplanation = NSLocalizedString(
+        "ratecard_request_explanation",
+        bundle: .module,
+        comment: "explanation for reqested time in rate card"
+    )
+    public static let anytimeLabel = NSLocalizedString(
+        "anytime_label",
+        bundle: .module,
+        comment: "anytime label"
+    )
+    
+    public static let giftLabel = NSLocalizedString(
+        "gift_label",
+        bundle: .module,
+        comment: "gift label"
+    )
+    public static let reviewSuccessWithTipDesc = NSLocalizedString(
+        "review_success_with_tip_desc",
+        bundle: .module,
+        comment: "review success with tip description"
+    )
+    public static let createSessionMinimumParticipantAlert = NSLocalizedString(
+        "create_session_minimum_participant_alert",
+        bundle: .module,
+        comment: "create session minimum participant alert"
+    )
+    
+    public static let pendingCardSetTime = NSLocalizedString(
+        "pending_card_set_time",
+        bundle: .module,
+        comment: "set time"
     )
 }
 

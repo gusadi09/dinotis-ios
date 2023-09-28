@@ -12,6 +12,7 @@
 "description_boarding_second" = "Denger suara doang emang puas? \nKalau ngobrol di sini bisa sambil tatap-tatapan!";
 "title_role_type" = "Berbagai sesi menarik untukmu";
 "description_role_type" = "Silahkan pilih tipe akun yang sesuai untukmu!";
+"general_success" = "Berhasil";
 
 "tab_explore" = "Eksplor";
 "tab_search" = "Cari";
@@ -203,7 +204,11 @@
 "private_video_call_label" = "Private Video Call";
 "price_label" = "Harga";
 "note_for_creator_placeholder" = "Masukkan pesan untuk kreator di sini...";
-"note_for_creator_title" = "Pesan";
+"note_for_creator_title" = "Tinggalkan pesan untuk creator!";
+"note_for_creator_time_title" = "Sarankan jadwal kamu kepada creator :";
+"note_for_creator_time_subtitle" = "*jadwal belum tentu dikonfirmasi creator";
+"note_for_creator_date_title" = "Tanggal";
+"note_for_creator_time_title" = "Waktu";
 "next_label" = "Lanjut";
 "limited_quota_label" = "🔥 Kuota terbatas";
 "cancel_label" = "Batalkan";
@@ -382,6 +387,7 @@
 
 "see_invitation" = "Lihat Ajakan";
 "decline" = "Tolak";
+"accept" = "Terima";
 "accept_invitation" = "Terima Ajakan";
 
 "accepted_invitation_title" = "Yeay! Kamu Menerima Ajakan Kolaborasi";
@@ -498,3 +504,51 @@
 "session_detail_rating_tooltip" = "Jangan lupa berikan ulasan untuk sesi yang telah kamu ikuti ya!";
 
 "video_call_force_end" = "Meeting telah berakhir karena waktu telah habis.";
+
+"home_creator_withdraw" = "Penarikan";
+"creator_empty_session_title" = "Belum ada jadwal video call nih";
+"creator_empty_session_desc" = "Yuk atur jadwal video call mu sekarang, Audiensmu sudah menunggu loh!";
+"creator_create_session_label" = "Buat Jadwal Sesi";
+
+"filter_scheduled" = "Terjadwal";
+"filter_unconfirmed" = "Belum Konfirmasi";
+"filter_pending" = "Pending";
+"filter_canceled" = "Dibatalkan";
+"filter_session_completed" = "Sesi Selesai";
+
+"sort_label" = "Urutkan";
+"sort_latest" = "Terbaru";
+"sort_earliest" = "Terlama";
+"sort_by_label" = "Urutkan Berdasarkan";
+
+"status_waiting_new_session" = "Menunggu jadwal baru";
+"status_unconfirmed_session" = "Jadwal belum diatur";
+"status_canceled_session" = "Jadwal dibatalkan";
+"status_completed_session" = "Sesi selesai";
+
+"home_creator_nearest_title" = "Jadwal Terdekat Kamu";
+
+"request_card_session" = "Sesi";
+
+"withdraw_success_subtitle" = "Berhasil menarik saldo, Silahkan cek saldo dinotis dan akun bank kamu secara hati-hati";
+"tipping_gift_title" = "Kamu bisa kasih Gift ke Kreator loh!";
+"tipping_your_balance" = "Saldo kamu";
+"tipping_top_up_now" = "Top up sekarang";
+"tipping_not_enough_balance" = "Saldo kamu tidak cukup, silakan top up coin terlebih dahulu";
+"tipping_your_current_coin" = "Koin kamu saat ini,";
+"tipping_success_desc" = "Kamu telah memberikan ulasan untuk kreator ini!";
+"review_success_with_tip_desc" = "Terima kasih atas gift anda! Setiap gift yang anda berikan merupakan kontribusi untuk membantu komunitas kami menjadi lebih baik.";
+
+"edit_profile_name_empty_error" = "Mohon isi nama kamu, kolom ini tidak boleh kosong";
+"edit_profile_username_empty_error" = "Mohon isi username kamu, kolom ini tidak boleh kosong";
+"edit_profile_bio_empty_error" = "Mohon isi bio kamu, kolom ini tidak boleh kosong";
+"edit_profile_profession_empty_error" = "Mohon isi profesi kamu, kolom ini tidak boleh kosong";
+
+"ratecard_requested_time" = "Permintaan Audiens";
+"ratecard_request_explanation" = "Waktu permintaan hanyalah saran, kamu bisa bernegosiasi waktu melalui diskusi";
+"pending_card_set_time" = "Atur Waktu";
+
+"anytime_label" = "Kapan saja";
+"gift_label" = "Gift";
+
+"create_session_minimum_participant_alert" = "Participant untuk sesi Group Call harus lebih dari 0";

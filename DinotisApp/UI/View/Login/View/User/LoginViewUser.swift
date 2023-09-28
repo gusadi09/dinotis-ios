@@ -249,10 +249,12 @@ struct LoginViewUser: View {
 						.padding()
 						.padding(.vertical)
 						.presentationDetents([.fraction(0.8), .large])
+                        .dynamicTypeSize(.large)
 				} else {
 					CountryPicker(country: $loginVM.countrySelected)
 						.padding()
 						.padding(.vertical)
+                        .dynamicTypeSize(.large)
 				}
 
 			}
@@ -265,12 +267,14 @@ struct LoginViewUser: View {
 						}
 							.padding()
                             .presentationDetents([.fraction(0.34)])
+                            .dynamicTypeSize(.large)
 					} else {
 						SelectChannelView(channel: $loginVM.selectedChannel, geo: geo) {
 							loginVM.doRegister()
 						}
 							.padding()
 							.padding(.vertical)
+                            .dynamicTypeSize(.large)
 					}
 
 				}
@@ -278,15 +282,19 @@ struct LoginViewUser: View {
 			.sheet(isPresented: $loginVM.isShowRequestInvitation) {
 #if os(iOS)
 				SafariViewWrapper(url: loginVM.invitationURL())
+                    .dynamicTypeSize(.large)
 #else
 				WebView(url: loginVM.invitationURL())
+                    .dynamicTypeSize(.large)
 #endif
 			}
 			.sheet(isPresented: $loginVM.isShowTerms) {
 #if os(iOS)
 				SafariViewWrapper(url: loginVM.termsURL())
+                    .dynamicTypeSize(.large)
 #else
 				WebView(url: loginVM.termsURL())
+                    .dynamicTypeSize(.large)
 #endif
 			}
 			.dinotisAlert(

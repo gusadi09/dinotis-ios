@@ -101,17 +101,36 @@ struct UserEditProfile: View {
 							})
 							.sheet(isPresented: $viewModel.isShowPhotoLibrary) {
 								ImagePicker(sourceType: .photoLibrary, selectedImage: self.$viewModel.image)
+                                    .dynamicTypeSize(.large)
 							}
 
 							VStack(spacing: 15) {
-								DinotisTextField(
-									LocalizableText.hintFormName,
-									label: LocalizableText.labelFormName,
-									text: $viewModel.names,
-									errorText: .constant(nil)
-								)
-								.autocapitalization(.words)
-								.disableAutocorrection(true)
+                                VStack {
+                                    DinotisTextField(
+                                        LocalizableText.hintFormName,
+                                        label: LocalizableText.labelFormName,
+                                        text: $viewModel.names,
+                                        errorText: .constant(nil)
+                                    )
+                                    .autocapitalization(.words)
+                                    .disableAutocorrection(true)
+                                    
+                                    if viewModel.names.isEmpty {
+                                        HStack {
+                                            Image.Dinotis.exclamationCircleIcon
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(height: 10)
+                                                .foregroundColor(.red)
+                                            Text(LocalizableText.editProfileNameEmptyError)
+                                                .font(.robotoRegular(size: 10))
+                                                .foregroundColor(.red)
+                                                .multilineTextAlignment(.leading)
+                                            
+                                            Spacer()
+                                        }
+                                    }
+                                }
 
 								DinotisTextField(
 									LocalizableText.phoneHint,

@@ -8,6 +8,14 @@
 import Foundation
 import Combine
 import DinotisData
+import OneSignal
+
+enum BundleAlertType {
+    case error
+    case refreshFailed
+    case created
+    case updated
+}
 
 final class BundlingFormViewModel: ObservableObject {
     
@@ -48,6 +56,9 @@ final class BundlingFormViewModel: ObservableObject {
 	@Published var desc = ""
 	@Published var price = ""
     
+    @Published var isShowAlert = false
+    @Published var type: BundleAlertType = .error
+    
     init(
 		bundleId: String = "",
         meetingIdArray: [String],
@@ -75,9 +86,72 @@ final class BundlingFormViewModel: ObservableObject {
         DispatchQueue.main.async { [weak self] in
             self?.isLoading = true
             self?.isError = false
+            self?.isShowAlert = false
             self?.error = nil
             self?.isRefreshFailed = false
 			self?.isBundleUpdated = false
+        }
+    }
+    
+    func alertTitle() -> String {
+        switch type {
+        case .error:
+            return LocaleText.attention
+        case .created:
+            return LocaleText.bundleSuccessTitle
+        case .updated:
+            return LocaleText.successTitle
+        case .refreshFailed:
+            return LocaleText.attention
+        }
+    }
+    
+    func alertContent() -> String {
+        switch type {
+        case .error:
+            return error.orEmpty()
+        case .created:
+            return LocaleText.bundleSuccessDesc
+        case .updated:
+            return LocaleText.successUpdateBundle
+        case .refreshFailed:
+            return LocaleText.sessionExpireText
+        }
+    }
+    
+    func alertButtonText() -> String {
+        switch type {
+        case .error:
+            return LocaleText.okText
+        case .created:
+            return LocaleText.okText
+        case .updated:
+            return LocaleText.okText
+        case .refreshFailed:
+            return LocaleText.returnText
+        }
+    }
+    
+    func routeToRoot() {
+        NavigationUtil.popToRootView()
+        self.stateObservable.userType = 0
+        self.stateObservable.isVerified = ""
+        self.stateObservable.refreshToken = ""
+        self.stateObservable.accessToken = ""
+        self.stateObservable.isAnnounceShow = false
+        OneSignal.setExternalUserId("")
+    }
+    
+    func alertAction(completion: () -> Void) {
+        switch type {
+        case .error:
+            break
+        case .created:
+            backToBundlingList()
+        case .updated:
+            completion()
+        case .refreshFailed:
+            routeToRoot()
         }
     }
     
@@ -98,13 +172,16 @@ final class BundlingFormViewModel: ObservableObject {
             DispatchQueue.main.async { [weak self] in
                 self?.isLoading = false
                 self?.isBundleCreated = true
+                self?.isShowAlert = true
+                self?.type = .created
             }
             
         case .failure(let error):
             guard let error = error as? ErrorResponse else { return }
             DispatchQueue.main.async { [weak self] in
                 if error.statusCode.orZero() == 401 {
-                    
+                    self?.type = .refreshFailed
+                    self?.isShowAlert = true
                 } else if error.statusCode.orZero() == 422 {
                     if let titleError = error.fields?.filter({
                         $0.name == "title"
@@ -121,6 +198,8 @@ final class BundlingFormViewModel: ObservableObject {
                 } else {
                     self?.isLoading = false
                     self?.isError = true
+                    self?.isShowAlert = true
+                    self?.type = .error
                     self?.isBundleCreated = false
                     self?.error = error.message.orEmpty()
                 }
@@ -145,12 +224,15 @@ final class BundlingFormViewModel: ObservableObject {
             DispatchQueue.main.async { [weak self] in
                 self?.isLoading = false
                 self?.isBundleUpdated = true
+                self?.isShowAlert = true
+                self?.type = .updated
             }
         case .failure(let error):
             guard let error = error as? ErrorResponse else { return }
             DispatchQueue.main.async { [weak self] in
                 if error.statusCode.orZero() == 401 {
-                    
+                    self?.isRefreshFailed = true
+                    self?.type = .refreshFailed
                 } else if error.statusCode.orZero() == 422 {
                     print(body)
                     print(error)
@@ -169,6 +251,8 @@ final class BundlingFormViewModel: ObservableObject {
                 } else {
                     self?.isLoading = false
                     self?.isError = true
+                    self?.isShowAlert = true
+                    self?.type = .error
                     self?.isBundleUpdated = false
                     self?.error = error.message.orEmpty()
                 }

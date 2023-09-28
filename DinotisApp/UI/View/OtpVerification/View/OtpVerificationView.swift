@@ -160,6 +160,7 @@ struct OtpVerificationView: View {
 							.padding()
 							.padding(.vertical)
 							.presentationDetents([.fraction(0.45), .large])
+                            .dynamicTypeSize(.large)
 					} else {
 						SelectChannelView(channel: $viewModel.selectedChannel, geo: geo) {
 							withAnimation {
@@ -169,6 +170,7 @@ struct OtpVerificationView: View {
 						}
 							.padding()
 							.padding(.vertical)
+                            .dynamicTypeSize(.large)
 					}
 				}
 			)

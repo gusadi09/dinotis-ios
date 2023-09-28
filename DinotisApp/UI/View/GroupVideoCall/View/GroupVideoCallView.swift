@@ -152,17 +152,21 @@ struct GroupVideoCallView: View {
         }
         .sheet(isPresented: $viewModel.isShowAboutCallBottomSheet) {
             AboutCallBottomSheet(viewModel: viewModel)
+                .dynamicTypeSize(.large)
         }
         .sheet(isPresented: $viewModel.isShowingQnA) {
             QnAListBottomSheet(viewModel: viewModel)
+                .dynamicTypeSize(.large)
         }
         .sheet(isPresented: $viewModel.isShowQuestionBox) {
             if #available(iOS 16.0, *) {
                 QuestionBoxBottomSheet(viewModel: viewModel)
                     .presentationDetents([.height(350)])
                     .presentationDragIndicator(.hidden)
+                    .dynamicTypeSize(.large)
             } else {
                 QuestionBoxBottomSheet(viewModel: viewModel)
+                    .dynamicTypeSize(.large)
             }
         }
         .sheet(isPresented: $viewModel.showingMoreMenu, content: {
@@ -170,8 +174,10 @@ struct GroupVideoCallView: View {
                 MoreMenuSheet(viewModel: viewModel)
                     .presentationDetents([.height(230), .medium])
                     .presentationDragIndicator(.hidden)
+                    .dynamicTypeSize(.large)
             } else {
                 MoreMenuSheet(viewModel: viewModel)
+                    .dynamicTypeSize(.large)
             }
         })
         .sheet(isPresented: $viewModel.isShowSessionInfo) {
@@ -179,8 +185,10 @@ struct GroupVideoCallView: View {
                 SessionInfoBottomSheet(viewModel: viewModel)
                     .presentationDetents([.medium])
                     .presentationDragIndicator(.hidden)
+                    .dynamicTypeSize(.large)
             } else {
                 SessionInfoBottomSheet(viewModel: viewModel)
+                    .dynamicTypeSize(.large)
             }
         }
         .dinotisAlert(
@@ -1614,6 +1622,7 @@ fileprivate extension GroupVideoCallView {
                         
                         Text(" \(viewModel.meeting.localUser.name) \(viewModel.userType(preset: viewModel.meeting.localUser.presetName))")
                             .font(.robotoMedium(size: 10))
+                            .lineLimit(1)
                             .foregroundColor(.white)
                     }
                     .padding(5)
@@ -1722,12 +1731,14 @@ fileprivate extension GroupVideoCallView {
                     .frame(width: 12)
                     
                     if participant.isPinned {
-                        Text(" \(participant.name) \(viewModel.userType(preset: participant.presetName)) \(Image(systemName: "pin"))")
+                        Text(" \(Image(systemName: "pin")) \(participant.name) \(viewModel.userType(preset: participant.presetName))")
                             .font(.robotoMedium(size: 10))
+                            .lineLimit(1)
                             .foregroundColor(.white)
                     } else {
                         Text(" \(participant.name) \(viewModel.userType(preset: participant.presetName))")
                             .font(.robotoMedium(size: 10))
+                            .lineLimit(1)
                             .foregroundColor(.white)
                     }
                 }
@@ -1810,12 +1821,14 @@ fileprivate extension GroupVideoCallView {
                     .frame(width: 12)
                     
                     if participant?.isPinned ?? false {
-                        Text(" \((participant?.name).orEmpty()) \(viewModel.userType(preset: (participant?.presetName).orEmpty())) \(Image(systemName: "pin"))")
+                        Text(" \(Image(systemName: "pin")) \((participant?.name).orEmpty()) \(viewModel.userType(preset: (participant?.presetName).orEmpty()))")
                             .font(.robotoMedium(size: 10))
+                            .lineLimit(1)
                             .foregroundColor(.white)
                     } else {
                         Text(" \((participant?.name).orEmpty()) \(viewModel.userType(preset: (participant?.presetName).orEmpty()))")
                             .font(.robotoMedium(size: 10))
+                            .lineLimit(1)
                             .foregroundColor(.white)
                     }
                 }
@@ -1902,12 +1915,14 @@ fileprivate extension GroupVideoCallView {
                     .frame(width: 12)
                     
                     if participant.isPinned {
-                        Text(" \(participant.name) \(viewModel.userType(preset: participant.presetName)) \(Image(systemName: "pin"))")
+                        Text(" \(Image(systemName: "pin")) \(participant.name) \(viewModel.userType(preset: participant.presetName))")
                             .font(.robotoMedium(size: 10))
+                            .lineLimit(1)
                             .foregroundColor(.white)
                     } else {
                         Text(" \(participant.name) \(viewModel.userType(preset: participant.presetName))")
                             .font(.robotoMedium(size: 10))
+                            .lineLimit(1)
                             .foregroundColor(.white)
                     }
                 }
@@ -1959,6 +1974,7 @@ fileprivate extension GroupVideoCallView {
                     
                     Text(" \(participant?.name ?? "") (\(LocalizableText.videoCallScreenShareText)")
                         .font(.robotoMedium(size: 10))
+                        .lineLimit(1)
                         .foregroundColor(.white)
                 }
                 .padding(5)
@@ -2871,7 +2887,8 @@ fileprivate extension GroupVideoCallView {
         @ObservedObject var viewModel: GroupVideoCallViewModel
         @State var shouldShowImagePicker = false
         @State var image: UIImage?
-        
+        @State private var previousHeader: (author: String, date: String)? = nil
+
         var body: some View {
             VStack {
                 //                MARK: Uncomment when the feature is ready
@@ -2904,42 +2921,68 @@ fileprivate extension GroupVideoCallView {
                 ScrollViewReader { scrollView in
                     VStack(spacing: 0) {
                         ScrollView {
-                            LazyVStack {
+                            VStack {
                                 ForEach(viewModel.meeting.chat.messages, id: \.self) { message in
-                                    VStack(alignment: .leading, spacing: 9) {
-                                        ChatHeaderView(
-                                            author: message.displayName,
-                                            isAuthorYou: message.userId == viewModel.localUserId,
-                                            date: message.time
-                                        )
-                                        switch message.type {
-                                        case .text:
-                                            if let chat = message as? DyteTextMessage {
-                                                ChatBubbleView(
-                                                    messageBody: chat.message,
-                                                    isAuthorYou: message.userId == viewModel.localUserId
-                                                )
-                                                /// Pin chat is not available in Dyte SDK
-                                                //                                                .contextMenu {
-                                                //                                                    Button {
-                                                //                                                        withAnimation(.spring(response: 0.4, dampingFraction: 0.4)) {
-                                                //
-                                                //                                                        }
-                                                //                                                    } label: {
-                                                //                                                        Label("Pin this chat", systemImage: "pin.fill")
-                                                //                                                    }
-                                                //                                                }
+//                                    let currentHeader = (author: message.displayName, date: message.time)
+//                                    if let prevHeader = previousHeader, prevHeader == currentHeader {
+//                                        VStack {
+//                                            switch message.type {
+//                                            case .text:
+//                                                if let chat = message as? DyteTextMessage {
+//                                                    ChatBubbleView(
+//                                                        messageBody: chat.message,
+//                                                        isAuthorYou: message.userId == viewModel.localUserId
+//                                                    )
+//                                                }
+//
+//                                            default:
+//                                                EmptyView()
+//                                            }
+//                                        }
+//                                        .padding(.horizontal)
+//                                        .id(message)
+//                                        .onAppear {
+////                                            viewModel.hasNewMessage = false
+//                                            previousHeader = currentHeader
+//                                        }
+//                                        .frame(maxWidth: .infinity, alignment: .leading)
+//                                    } else {
+                                        VStack(alignment: .leading, spacing: 9) {
+                                            ChatHeaderView(
+                                                author: message.displayName,
+                                                isAuthorYou: message.userId == viewModel.localUserId,
+                                                date: message.time
+                                            )
+                                            switch message.type {
+                                            case .text:
+                                                if let chat = message as? DyteTextMessage {
+                                                    ChatBubbleView(
+                                                        messageBody: chat.message,
+                                                        isAuthorYou: message.userId == viewModel.localUserId
+                                                    )
+                                                    /// Pin chat is not available in Dyte SDK
+                                                    //                                                .contextMenu {
+                                                    //                                                    Button {
+                                                    //                                                        withAnimation(.spring(response: 0.4, dampingFraction: 0.4)) {
+                                                    //
+                                                    //                                                        }
+                                                    //                                                    } label: {
+                                                    //                                                        Label("Pin this chat", systemImage: "pin.fill")
+                                                    //                                                    }
+                                                    //                                                }
+                                                }
+                                            default:
+                                                EmptyView()
                                             }
-                                        default:
-                                            EmptyView()
                                         }
-                                    }
-                                    .padding(.horizontal)
-                                    .padding(.vertical, 7)
-                                    .id(message)
-                                    .onAppear {
-                                        viewModel.hasNewMessage = false
-                                    }
+                                        .padding(.horizontal)
+                                        .padding(.vertical, 5)
+                                        .id(message)
+                                        .onAppear {
+                                            viewModel.hasNewMessage = false
+//                                            previousHeader = currentHeader
+                                        }
+//                                    }
                                 }
                                 
                             }
@@ -2950,6 +2993,9 @@ fileprivate extension GroupVideoCallView {
                                 scrollView.scrollTo(value.last, anchor: .bottom)
                             }
                         }
+                        .onAppear(perform: {
+                            scrollView.scrollTo(viewModel.meeting.chat.messages.last)
+                        })
                         
                         HStack(alignment: .bottom) {
                             

@@ -176,7 +176,7 @@ struct TalentWithdrawView: View {
 				VStack {
 					Button(action: {
 						viewModel.isPresent.toggle()
-						
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
 						viewModel.total = viewModel.adminFee + Int(viewModel.inputAmount.orZero())
 						
 					}, label: {
@@ -209,237 +209,332 @@ struct TalentWithdrawView: View {
 		.sheet(isPresented: $viewModel.isPresent, content: {
 			if #available(iOS 16.0, *) {
 				VStack {
-					HStack {
-						Image.Dinotis.handPickedDebitCardWithRoundedRectangle
-							.resizable()
-							.scaledToFit()
-							.frame(height: 40)
-
-						VStack(alignment: .leading) {
-							if let dataBank = viewModel.bankData.first {
-								HStack {
-									Text((dataBank.bank?.name).orEmpty())
-										.font(.robotoRegular(size: 12))
-										.foregroundColor(.black)
-
-									Circle()
-										.scaledToFit()
-										.frame(height: 3)
-										.foregroundColor(.black)
-
-									Text(dataBank.accountName.orEmpty())
-										.font(.robotoRegular(size: 12))
-										.foregroundColor(.black)
-								}
-
-								Text(dataBank.accountNumber.orEmpty())
-									.font(.robotoMedium(size: 14))
-									.foregroundColor(.black)
-							}
-						}
-
-						Spacer()
-					}
-
-					HStack {
-						Text(LocaleText.withdrawAmountText)
-							.font(.robotoRegular(size: 12))
-							.foregroundColor(.black)
-
-						Spacer()
-
-						Text("\(viewModel.inputAmount.orZero().toCurrency())")
-							.font(.robotoBold(size: 16))
-							.foregroundColor(.black)
-					}
-					.padding(.top)
-					.padding(.bottom, 5)
-
-					HStack {
-						Text(LocaleText.adminFeeText)
-							.font(.robotoRegular(size: 12))
-							.foregroundColor(.black)
-
-						Spacer()
-
-						Text("\(viewModel.adminFee.numberString.toCurrency())")
-							.font(.robotoBold(size: 16))
-							.foregroundColor(.black)
-					}
-
-					Divider()
-						.padding(.vertical)
-
-					HStack {
-						Text(LocaleText.totalBalanceWithHeld)
-							.font(.robotoRegular(size: 12))
-							.foregroundColor(.black)
-
-						Spacer()
-
-						Text("\(viewModel.total.numberString.toCurrency())")
-							.font(.robotoBold(size: 16))
-							.foregroundColor(.black)
-					}
-					.padding(.bottom)
-
-					HStack(spacing: 15) {
-						Button(action: {
-							viewModel.isPresent.toggle()
-						}, label: {
-							HStack {
-								Spacer()
-								Text(LocaleText.cancelText)
-									.font(.robotoMedium(size: 12))
-									.foregroundColor(.black)
-								Spacer()
-							}
-							.padding()
-							.background(Color.secondaryViolet)
-							.cornerRadius(8)
-							.overlay(
-								RoundedRectangle(cornerRadius: 8)
-									.stroke(Color.DinotisDefault.primary, lineWidth: 1.0)
-							)
-						})
-
-						Button(action: {
-                            Task {
-                                await viewModel.withdraw()
+                    if viewModel.isLoadingWithdraw {
+                        Spacer()
+                        
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                        
+                        Spacer()
+                    } else if !viewModel.isLoadingWithdraw && viewModel.success {
+                        
+                        Spacer()
+                        
+                        Image.Dinotis.paymentSuccessImage
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 180)
+                        
+                        VStack(spacing: 5) {
+                            Text(LocalizableText.generalSuccess)
+                                .font(.robotoBold(size: 14))
+                                .foregroundColor(.DinotisDefault.black1)
+                                .multilineTextAlignment(.center)
+                            
+                            Text(LocalizableText.withdrawSuccessSubtitle)
+                                .font(.robotoRegular(size: 12))
+                                .foregroundColor(.DinotisDefault.black1)
+                                .multilineTextAlignment(.center)
+                        }
+                        
+                        Spacer()
+                        
+                        DinotisPrimaryButton(
+                            text: LocalizableText.closeLabel,
+                            type: .adaptiveScreen,
+                            height: 45,
+                            textColor: .white,
+                            bgColor: .DinotisDefault.primary
+                        ) {
+                            viewModel.isPresent = false
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0001) {
+                                dismiss()
                             }
-						}, label: {
-							HStack {
-								Spacer()
-								Text(LocaleText.withdrawBalance)
-									.font(.robotoMedium(size: 12))
-									.foregroundColor(.white)
-								Spacer()
-							}
-							.padding()
-							.background(Color.DinotisDefault.primary)
-							.cornerRadius(8)
-						})
-					}
+                        }
+                    } else {
+                        HStack {
+                            Image.Dinotis.handPickedDebitCardWithRoundedRectangle
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 40)
+                            
+                            VStack(alignment: .leading) {
+                                if let dataBank = viewModel.bankData.first {
+                                    HStack {
+                                        Text((dataBank.bank?.name).orEmpty())
+                                            .font(.robotoRegular(size: 12))
+                                            .foregroundColor(.black)
+                                        
+                                        Circle()
+                                            .scaledToFit()
+                                            .frame(height: 3)
+                                            .foregroundColor(.black)
+                                        
+                                        Text(dataBank.accountName.orEmpty())
+                                            .font(.robotoRegular(size: 12))
+                                            .foregroundColor(.black)
+                                    }
+                                    
+                                    Text(dataBank.accountNumber.orEmpty())
+                                        .font(.robotoMedium(size: 14))
+                                        .foregroundColor(.black)
+                                }
+                            }
+                            
+                            Spacer()
+                        }
+                        
+                        HStack {
+                            Text(LocaleText.withdrawAmountText)
+                                .font(.robotoRegular(size: 12))
+                                .foregroundColor(.black)
+                            
+                            Spacer()
+                            
+                            Text("\(viewModel.inputAmount.orZero().toCurrency())")
+                                .font(.robotoBold(size: 16))
+                                .foregroundColor(.black)
+                        }
+                        .padding(.top)
+                        .padding(.bottom, 5)
+                        
+                        HStack {
+                            Text(LocaleText.adminFeeText)
+                                .font(.robotoRegular(size: 12))
+                                .foregroundColor(.black)
+                            
+                            Spacer()
+                            
+                            Text("\(viewModel.adminFee.numberString.toCurrency())")
+                                .font(.robotoBold(size: 16))
+                                .foregroundColor(.black)
+                        }
+                        
+                        Divider()
+                            .padding(.vertical)
+                        
+                        HStack {
+                            Text(LocaleText.totalBalanceWithHeld)
+                                .font(.robotoRegular(size: 12))
+                                .foregroundColor(.black)
+                            
+                            Spacer()
+                            
+                            Text("\(viewModel.total.numberString.toCurrency())")
+                                .font(.robotoBold(size: 16))
+                                .foregroundColor(.black)
+                        }
+                        .padding(.bottom)
+                        
+                        Spacer()
+                        
+                        HStack(spacing: 15) {
+                            Button(action: {
+                                viewModel.isPresent.toggle()
+                            }, label: {
+                                HStack {
+                                    Spacer()
+                                    Text(LocaleText.cancelText)
+                                        .font(.robotoMedium(size: 12))
+                                        .foregroundColor(.black)
+                                    Spacer()
+                                }
+                                .padding()
+                                .background(Color.secondaryViolet)
+                                .cornerRadius(8)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.DinotisDefault.primary, lineWidth: 1.0)
+                                )
+                            })
+                            
+                            Button(action: {
+                                Task {
+                                    await viewModel.withdraw()
+                                }
+                            }, label: {
+                                HStack {
+                                    Spacer()
+                                    Text(LocaleText.withdrawBalance)
+                                        .font(.robotoMedium(size: 12))
+                                        .foregroundColor(.white)
+                                    Spacer()
+                                }
+                                .padding()
+                                .background(Color.DinotisDefault.primary)
+                                .cornerRadius(8)
+                            })
+                        }
+                    }
 				}
 					.padding()
 					.padding(.vertical)
-					.presentationDetents([.fraction(0.6), .large])
+                    .presentationDetents([.height(380)])
+                    .presentationDragIndicator(.hidden)
+                    .dynamicTypeSize(.large)
 			} else {
 				VStack {
-					HStack {
-						Image.Dinotis.handPickedDebitCardWithRoundedRectangle
-							.resizable()
-							.scaledToFit()
-							.frame(height: 40)
-
-						VStack(alignment: .leading) {
-							if let dataBank = viewModel.bankData.first {
-								HStack {
-									Text((dataBank.bank?.name).orEmpty())
-										.font(.robotoRegular(size: 12))
-										.foregroundColor(.black)
-
-									Circle()
-										.scaledToFit()
-										.frame(height: 3)
-										.foregroundColor(.black)
-
-									Text(dataBank.accountName.orEmpty())
-										.font(.robotoRegular(size: 12))
-										.foregroundColor(.black)
-								}
-
-								Text(dataBank.accountNumber.orEmpty())
-									.font(.robotoMedium(size: 14))
-									.foregroundColor(.black)
-							}
-						}
-
-						Spacer()
-					}
-
-					HStack {
-						Text(LocaleText.withdrawAmountText)
-							.font(.robotoRegular(size: 12))
-							.foregroundColor(.black)
-
-						Spacer()
-
-						Text("\(viewModel.inputAmount.orZero().toCurrency())")
-							.font(.robotoBold(size: 16))
-							.foregroundColor(.black)
-					}
-					.padding(.top)
-					.padding(.bottom, 5)
-
-					HStack {
-						Text(LocaleText.adminFeeText)
-							.font(.robotoRegular(size: 12))
-							.foregroundColor(.black)
-
-						Spacer()
-
-						Text("\(viewModel.adminFee.numberString.toCurrency())")
-							.font(.robotoBold(size: 16))
-							.foregroundColor(.black)
-					}
-
-					Divider()
-						.padding(.vertical)
-
-					HStack {
-						Text(LocaleText.totalBalanceWithHeld)
-							.font(.robotoRegular(size: 12))
-							.foregroundColor(.black)
-
-						Spacer()
-
-						Text("\(viewModel.total.numberString.toCurrency())")
-							.font(.robotoBold(size: 16))
-							.foregroundColor(.black)
-					}
-					.padding(.bottom)
-
-					HStack(spacing: 15) {
-						Button(action: {
-							viewModel.isPresent.toggle()
-						}, label: {
-							HStack {
-								Spacer()
-								Text(LocaleText.cancelText)
-									.font(.robotoMedium(size: 12))
-									.foregroundColor(.black)
-								Spacer()
-							}
-							.padding()
-							.background(Color.secondaryViolet)
-							.cornerRadius(8)
-							.overlay(
-								RoundedRectangle(cornerRadius: 8)
-									.stroke(Color.DinotisDefault.primary, lineWidth: 1.0)
-							)
-						})
-
-						Button(action: {
-                            Task {
-                                await viewModel.withdraw()
+                    if viewModel.isLoading {
+                        Spacer()
+                        
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                        
+                        Spacer()
+                    } else if !viewModel.isLoadingWithdraw && viewModel.success {
+                        
+                        Spacer()
+                        
+                        Image.Dinotis.paymentSuccessImage
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 180)
+                        
+                        VStack(spacing: 5) {
+                            Text(LocalizableText.generalSuccess)
+                                .font(.robotoBold(size: 14))
+                                .foregroundColor(.DinotisDefault.black1)
+                                .multilineTextAlignment(.center)
+                            
+                            Text(LocalizableText.withdrawSuccessSubtitle)
+                                .font(.robotoRegular(size: 12))
+                                .foregroundColor(.DinotisDefault.black1)
+                                .multilineTextAlignment(.center)
+                        }
+                        
+                        Spacer()
+                        
+                        DinotisPrimaryButton(
+                            text: LocalizableText.closeLabel,
+                            type: .adaptiveScreen,
+                            height: 45,
+                            textColor: .white,
+                            bgColor: .DinotisDefault.primary
+                        ) {
+                            viewModel.isPresent = false
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0001) {
+                                dismiss()
                             }
-						}, label: {
-							HStack {
-								Spacer()
-								Text(LocaleText.withdrawBalance)
-									.font(.robotoMedium(size: 12))
-									.foregroundColor(.white)
-								Spacer()
-							}
-							.padding()
-							.background(Color.DinotisDefault.primary)
-							.cornerRadius(8)
-						})
-					}
+                        }
+                    } else {
+                        HStack {
+                            Image.Dinotis.handPickedDebitCardWithRoundedRectangle
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 40)
+                            
+                            VStack(alignment: .leading) {
+                                if let dataBank = viewModel.bankData.first {
+                                    HStack {
+                                        Text((dataBank.bank?.name).orEmpty())
+                                            .font(.robotoRegular(size: 12))
+                                            .foregroundColor(.black)
+                                        
+                                        Circle()
+                                            .scaledToFit()
+                                            .frame(height: 3)
+                                            .foregroundColor(.black)
+                                        
+                                        Text(dataBank.accountName.orEmpty())
+                                            .font(.robotoRegular(size: 12))
+                                            .foregroundColor(.black)
+                                    }
+                                    
+                                    Text(dataBank.accountNumber.orEmpty())
+                                        .font(.robotoMedium(size: 14))
+                                        .foregroundColor(.black)
+                                }
+                            }
+                            
+                            Spacer()
+                        }
+                        
+                        HStack {
+                            Text(LocaleText.withdrawAmountText)
+                                .font(.robotoRegular(size: 12))
+                                .foregroundColor(.black)
+                            
+                            Spacer()
+                            
+                            Text("\(viewModel.inputAmount.orZero().toCurrency())")
+                                .font(.robotoBold(size: 16))
+                                .foregroundColor(.black)
+                        }
+                        .padding(.top)
+                        .padding(.bottom, 5)
+                        
+                        HStack {
+                            Text(LocaleText.adminFeeText)
+                                .font(.robotoRegular(size: 12))
+                                .foregroundColor(.black)
+                            
+                            Spacer()
+                            
+                            Text("\(viewModel.adminFee.numberString.toCurrency())")
+                                .font(.robotoBold(size: 16))
+                                .foregroundColor(.black)
+                        }
+                        
+                        Divider()
+                            .padding(.vertical)
+                        
+                        HStack {
+                            Text(LocaleText.totalBalanceWithHeld)
+                                .font(.robotoRegular(size: 12))
+                                .foregroundColor(.black)
+                            
+                            Spacer()
+                            
+                            Text("\(viewModel.total.numberString.toCurrency())")
+                                .font(.robotoBold(size: 16))
+                                .foregroundColor(.black)
+                        }
+                        .padding(.bottom)
+                        
+                        HStack(spacing: 15) {
+                            Button(action: {
+                                viewModel.isPresent.toggle()
+                            }, label: {
+                                HStack {
+                                    Spacer()
+                                    Text(LocaleText.cancelText)
+                                        .font(.robotoMedium(size: 12))
+                                        .foregroundColor(.black)
+                                    Spacer()
+                                }
+                                .padding()
+                                .background(Color.secondaryViolet)
+                                .cornerRadius(8)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.DinotisDefault.primary, lineWidth: 1.0)
+                                )
+                            })
+                            
+                            Button(action: {
+                                Task {
+                                    await viewModel.withdraw()
+                                }
+                            }, label: {
+                                HStack {
+                                    Spacer()
+                                    Text(LocaleText.withdrawBalance)
+                                        .font(.robotoMedium(size: 12))
+                                        .foregroundColor(.white)
+                                    Spacer()
+                                }
+                                .padding()
+                                .background(Color.DinotisDefault.primary)
+                                .cornerRadius(8)
+                            })
+                        }
+                    }
 				}
 					.padding()
 					.padding(.vertical)
+                    .dynamicTypeSize(.large)
 			}
 		})
 		.onAppear {

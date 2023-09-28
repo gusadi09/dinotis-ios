@@ -80,6 +80,7 @@ extension TalentEditProfile {
 							})
 							.sheet(isPresented: $viewModel.isShowPhotoLibraryHG[item]) {
 								ImagePicker(sourceType: .photoLibrary, selectedImage: $viewModel.userHighlightsImage[item])
+                                    .dynamicTypeSize(.large)
 							}
 
 							Text("\(LocaleText.photo) \(item+1)")
@@ -105,21 +106,39 @@ extension TalentEditProfile {
 	}
 
 	struct TitleHeader: View {
-
-		@ObservedObject var viewModel: EditProfileViewModel
+        
+        let proxy: GeometryProxy
 		@Environment(\.dismiss) var dismiss
 		
 		var body: some View {
-			HStack {
-				Spacer()
-				Text(LocaleText.editProfileTitle)
+            ZStack {
+                HStack(spacing: 0) {
+                    Button(action: {
+                        dismiss()
+                    }, label: {
+                        Image.Dinotis.arrowBackIcon
+                            .padding()
+                            .background(Color.white)
+                            .clipShape(Circle())
+                    })
+                    
+                    Spacer()
+                }
+                
+                Text(LocaleText.editProfileTitle)
                     .font(.robotoBold(size: 14))
-					.foregroundColor(.black)
-
-				Spacer()
-			}
-			.padding(.top)
-			.padding()
+                    .foregroundColor(.black)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+                    .frame(width: proxy.size.width - 100)
+            }
+            .padding(.top)
+            .padding(.bottom, 10)
+            .padding(.horizontal)
+            .background(
+                Color.DinotisDefault.baseBackground
+                .edgesIgnoringSafeArea(.all)
+            )
 		}
 	}
 	
@@ -164,6 +183,7 @@ extension TalentEditProfile {
 					})
 					.sheet(isPresented: $viewModel.isShowPhotoLibrary) {
 						ImagePicker(sourceType: .photoLibrary, selectedImage: $viewModel.image)
+                            .dynamicTypeSize(.large)
 					}
 					Spacer()
 				}

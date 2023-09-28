@@ -27,16 +27,6 @@ struct EditTalentMeetingView: View {
 				Image.Dinotis.linearGradientBackground
 					.resizable()
 					.edgesIgnoringSafeArea(.all)
-					.alert(isPresented: $viewModel.isRefreshFailed) {
-						Alert(
-							title: Text(LocaleText.attention),
-							message: Text(LocaleText.sessionExpireText),
-							dismissButton: .default(
-								Text(LocaleText.returnText),
-								action: viewModel.routeToRoot
-							)
-						)
-					}
 				
 				VStack(spacing: 0) {
 					ZStack {
@@ -47,13 +37,6 @@ struct EditTalentMeetingView: View {
 								.foregroundColor(.black)
 							
 							Spacer()
-						}
-						.alert(isPresented: $viewModel.isError) {
-							Alert(
-								title: Text(LocaleText.attention),
-								message: Text(viewModel.error.orEmpty()),
-								dismissButton: .cancel(Text(LocaleText.returnText))
-							)
 						}
 						
 						HStack {
@@ -104,6 +87,7 @@ struct EditTalentMeetingView: View {
 					VStack(spacing: 0) {
 						Button(action: {
                             Task {
+                                UIApplication.shared.endEditing()
                                 await viewModel.editMeeting()
                             }
 						}, label: {
@@ -131,18 +115,6 @@ struct EditTalentMeetingView: View {
 						)
 
 					}
-					.alert(isPresented: $viewModel.isShowSuccess) {
-						Alert(
-							title: Text(LocaleText.successTitle),
-							message: Text(LocaleText.editVideoCallSuccessSubtitle),
-							dismissButton: .default(
-								Text(LocaleText.returnText),
-								action: {
-									dismiss()
-								}
-							)
-						)
-					}
 				}
 
 			}
@@ -152,6 +124,20 @@ struct EditTalentMeetingView: View {
 		.onAppear {
             viewModel.onAppear()
 		}
+        .dinotisAlert(
+            isPresent: $viewModel.isShowAlert,
+            type: .general,
+            title: viewModel.alertTitle(),
+            isError: viewModel.isError || viewModel.isRefreshFailed,
+            message: viewModel.alertText(),
+            primaryButton: .init(text: LocalizableText.returnText, action: {
+                if viewModel.isRefreshFailed && !viewModel.isShowSuccess && !viewModel.isError {
+                    viewModel.routeToRoot()
+                } else if !viewModel.isRefreshFailed && viewModel.isShowSuccess && !viewModel.isError {
+                    dismiss()
+                }
+            })
+        )
 		.navigationBarTitle(Text(""))
 		.navigationBarHidden(true)
 	}
