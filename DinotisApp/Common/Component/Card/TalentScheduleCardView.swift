@@ -307,7 +307,7 @@ struct TalentScheduleCardView: View {
                     Button(action: {
                         onTapButton()
                     }, label: {
-                        Text(NSLocalizedString("view_details", comment: ""))
+                        Text(status == .unconfirmed ? LocalizableText.pendingCardSetTime : NSLocalizedString("view_details", comment: ""))
                             .font(.robotoMedium(size: 12))
                             .foregroundColor(.black)
                             .padding()

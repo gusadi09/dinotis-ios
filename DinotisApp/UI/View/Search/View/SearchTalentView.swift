@@ -643,53 +643,51 @@ private extension SearchTalentView {
                     if !viewModel.searchedCreator.isEmpty {
                         LazyVGrid(columns: [GridItem(.adaptive(minimum: 164))], spacing: 13) {
                             ForEach(viewModel.searchedCreator, id: \.id) { item in
-								if let profession = item.professions?[0].profession?.name {
-                                    Button {
-                                        viewModel.routeToTalentProfile(username: item.username.orEmpty())
-                                    } label: {
-										CreatorCard(
-											with: CreatorCardModel(
-												name: item.name.orEmpty(),
-												isVerified: item.isVerified ?? false,
-												professions: profession,
-												photo: item.profilePhoto.orEmpty()
-											), size: 170, type: .withDesc
-										) {
-											HStack(spacing: 4) {
-                                                (
-                                                Text("\(item.meetingCount.orZero()) ")
-                                                    .font(.robotoBold(size: 13))
-                                                    .foregroundColor(.DinotisDefault.black2)
-                                                +
-                                                Text(LocalizableText.sessionCompleted)
-                                                    .font(.robotoRegular(size: 13))
-                                                    .foregroundColor(.DinotisDefault.black3)
-                                                )
-                                                .multilineTextAlignment(.leading)
-                                                
-                                                Spacer()
-                                                
-                                                Image(systemName: "star.fill")
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .foregroundColor(.orange)
-                                                    .frame(width: 13)
-                                                
-                                                Text(item.rating.orEmpty())
-                                                    .font(.robotoRegular(size: 13))
-                                                    .foregroundColor(.DinotisDefault.black2)
-                                                
-                                            }
+                                Button {
+                                    viewModel.routeToTalentProfile(username: item.username.orEmpty())
+                                } label: {
+                                    CreatorCard(
+                                        with: CreatorCardModel(
+                                            name: item.name.orEmpty(),
+                                            isVerified: item.isVerified ?? false,
+                                            professions: (item.stringProfessions?.joined(separator: ", ")).orEmpty(),
+                                            photo: item.profilePhoto.orEmpty()
+                                        ), size: 170, type: .withDesc
+                                    ) {
+                                        HStack(spacing: 4) {
+                                            (
+                                            Text("\(item.meetingCount.orZero()) ")
+                                                .font(.robotoBold(size: 13))
+                                                .foregroundColor(.DinotisDefault.black2)
+                                            +
+                                            Text(LocalizableText.sessionCompleted)
+                                                .font(.robotoRegular(size: 13))
+                                                .foregroundColor(.DinotisDefault.black3)
+                                            )
+                                            .multilineTextAlignment(.leading)
+                                            
+                                            Spacer()
+                                            
+                                            Image(systemName: "star.fill")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .foregroundColor(.orange)
+                                                .frame(width: 13)
+                                            
+                                            Text(item.rating.orEmpty())
+                                                .font(.robotoRegular(size: 13))
+                                                .foregroundColor(.DinotisDefault.black2)
+                                            
                                         }
                                     }
-									.onAppear {
-										if item.id == viewModel.searchedCreator.last?.id && viewModel.creatorNextCursor != nil {
-											Task {
-												viewModel.takeItem += 30
-												await viewModel.getSearchedData(isMore: true)
-											}
-										}
-									}
+                                }
+                                .onAppear {
+                                    if item.id == viewModel.searchedCreator.last?.id && viewModel.creatorNextCursor != nil {
+                                        Task {
+                                            viewModel.takeItem += 30
+                                            await viewModel.getSearchedData(isMore: true)
+                                        }
+                                    }
                                 }
                             }
                         }

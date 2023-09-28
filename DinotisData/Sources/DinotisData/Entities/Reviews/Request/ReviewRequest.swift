@@ -13,18 +13,21 @@ public struct ReviewRequestBody: Codable {
     public var meetingId: String?
     public var isGeneral: Bool?
     public var reasons: String?
+    public var tip: Int?
     
     public init(
         rating: Int? = 0,
         review: String = "",
         meetingId: String? = "",
         isGeneral: Bool? = nil,
-        reasons: String? = nil
+        reasons: String? = nil,
+        tip: Int? = nil
     ) {
         self.rating = rating
         self.review = review
         self.meetingId = meetingId
         self.isGeneral = isGeneral
         self.review = review
+        self.tip = tip
     }
 }

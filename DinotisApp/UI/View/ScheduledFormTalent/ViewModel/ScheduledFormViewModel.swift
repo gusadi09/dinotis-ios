@@ -109,7 +109,7 @@ final class ScheculedFormViewModel: ObservableObject {
 			isError.toggle()
 			error = LocaleText.formFieldError
 		} else if meetingArr.contains(where: {
-			!$0.isPrivate && $0.slots <= 1
+			!$0.isPrivate && $0.slots < 1
 		}) {
 			minimumPeopleError.toggle()
 		} else {

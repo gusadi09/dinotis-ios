@@ -300,7 +300,7 @@ struct FormScheduleTalentCardView: View {
                         
                         pricePerPeople = String(meetingForm.price)
                         
-                        isValidPersonForGroup = meetingForm.slots > 1
+                        isValidPersonForGroup = meetingForm.slots > 0
                         
                         selectedWallet = meetingForm.managementId == nil ?
                         LocalizableText.personalWalletText :
@@ -314,7 +314,7 @@ struct FormScheduleTalentCardView: View {
                     }
                     .onChange(of: meetingForm.slots) { newValue in
                         peopleGroup = meetingForm.isPrivate ? "1" : String(newValue)
-                        isValidPersonForGroup = meetingForm.slots > 1
+                        isValidPersonForGroup = meetingForm.slots > 0
                     }
                     .onChange(of: meetingForm.startAt) { newValue in
                         timeStart = DateUtils.dateFormatter(newValue, forFormat: .utcV2)
@@ -405,7 +405,7 @@ struct FormScheduleTalentCardView: View {
                                                 let intPrice = Int(pricePerPeople)
                                                 estPrice = (intPrice ?? 0) * (intPeople ?? 0)
                                                 
-                                                isValidPersonForGroup = Int(value).orZero() > 1
+                                                isValidPersonForGroup = Int(value).orZero() > 0
                                             }
                                         }
                                 }
@@ -418,7 +418,7 @@ struct FormScheduleTalentCardView: View {
                                         .scaledToFit()
                                         .frame(height: 10)
                                         .foregroundColor(.red)
-                                    Text("Participants for Group call must more than 1")
+                                    Text(LocalizableText.createSessionMinimumParticipantAlert)
                                         .font(.robotoRegular(size: 10))
                                         .foregroundColor(.red)
                                     

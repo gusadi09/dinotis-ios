@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -11,6 +11,7 @@
 		0A0664D1280F4939009EC7C0 /* EmptySchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0664D0280F4939009EC7C0 /* EmptySchedule.swift */; };
 		0AE145A22812801E00108948 /* TalentEditProfile+Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE145A12812801E00108948 /* TalentEditProfile+Component.swift */; };
 		37B4DBCF2A8A963B00D3EAA1 /* AfterFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B4DBCE2A8A963B00D3EAA1 /* AfterFeedback.swift */; };
+		4BA7D6152AC1756500B5177E /* session-close-to-end.json in Resources */ = {isa = PBXBuildFile; fileRef = 4BA7D6142AC1756500B5177E /* session-close-to-end.json */; };
 		EC01F1E326BFD7C600CA878F /* UserBiodataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC01F1E226BFD7C600CA878F /* UserBiodataView.swift */; };
 		EC0279F227C5E40B00B8C392 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0279F127C5E40A00B8C392 /* RoundedCorner.swift */; };
 		EC0279F527C61D7900B8C392 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0279F427C61D7900B8C392 /* ProfileViewModel.swift */; };
@@ -365,6 +366,7 @@
 		0A0664D0280F4939009EC7C0 /* EmptySchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptySchedule.swift; sourceTree = "<group>"; };
 		0AE145A12812801E00108948 /* TalentEditProfile+Component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TalentEditProfile+Component.swift"; sourceTree = "<group>"; };
 		37B4DBCE2A8A963B00D3EAA1 /* AfterFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfterFeedback.swift; sourceTree = "<group>"; };
+		4BA7D6142AC1756500B5177E /* session-close-to-end.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "session-close-to-end.json"; sourceTree = "<group>"; };
 		EC01F1E226BFD7C600CA878F /* UserBiodataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserBiodataView.swift; sourceTree = "<group>"; };
 		EC0279F127C5E40A00B8C392 /* RoundedCorner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
 		EC0279F427C61D7900B8C392 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
@@ -611,7 +613,6 @@
 		ECED4DD729F9297C00E79663 /* SelectedCollabCreatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCollabCreatorView.swift; sourceTree = "<group>"; };
 		ECF582BE27244951006C0BE7 /* ScrollViewModification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewModification.swift; sourceTree = "<group>"; };
 		ECF7096828C1E7D90093E020 /* CountryPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryPickerView.swift; sourceTree = "<group>"; };
-		F61C58392982710000CCCDBD /* close-to-end.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "close-to-end.json"; sourceTree = "<group>"; };
 		F61E53DE28CB49B6006594B4 /* PrivateVideoSpeakerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateVideoSpeakerViewModel.swift; sourceTree = "<group>"; };
 		F61E53E228CB5010006594B4 /* PrivateSpeakerVideoViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateSpeakerVideoViewModelFactory.swift; sourceTree = "<group>"; };
 		F61E53E428CB50F4006594B4 /* PrivateSpeakerVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateSpeakerVideoViewModel.swift; sourceTree = "<group>"; };
@@ -1179,9 +1180,9 @@
 		EC4E500327FC0B45009D66FF /* Lottie */ = {
 			isa = PBXGroup;
 			children = (
+				4BA7D6142AC1756500B5177E /* session-close-to-end.json */,
 				ECB412A52A978EA300802C07 /* waiting-talent.json */,
 				ECD4FC8629C4B93A00FBBC01 /* dinotis-white-lottie-loading.json */,
-				F61C58392982710000CCCDBD /* close-to-end.json */,
 			);
 			path = Lottie;
 			sourceTree = "<group>";
@@ -2983,6 +2984,7 @@
 				ECD4FC8729C4B93B00FBBC01 /* dinotis-white-lottie-loading.json in Resources */,
 				EC6DBB5A272BC1A50034E803 /* Localizable.strings in Resources */,
 				ECDAE39426B7FD9300419194 /* Montserrat-ExtraLight.ttf in Resources */,
+				4BA7D6152AC1756500B5177E /* session-close-to-end.json in Resources */,
 				ECDAE39026B7FD9300419194 /* Montserrat-SemiBold.ttf in Resources */,
 				ECDAE39326B7FD9300419194 /* Montserrat-ExtraBoldItalic.ttf in Resources */,
 				ECDAE39626B7FD9300419194 /* Montserrat-Black.ttf in Resources */,

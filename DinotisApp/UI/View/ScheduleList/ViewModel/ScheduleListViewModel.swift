@@ -225,7 +225,7 @@ final class ScheduleListViewModel: ObservableObject {
 	}
 	
 	func routeToPayment(price: String) {
-        let viewModel = PaymentMethodsViewModel(price: price, meetingId: meetingId, rateCardMessage: "", isRateCard: false, backToHome: {self.route = nil})
+        let viewModel = PaymentMethodsViewModel(price: price, meetingId: meetingId, rateCardMessage: "", requestTime: "", isRateCard: false, backToHome: {self.route = nil})
 		
 		DispatchQueue.main.async { [weak self] in
 			self?.route = .paymentMethod(viewModel: viewModel)

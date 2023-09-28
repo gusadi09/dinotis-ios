@@ -43,6 +43,8 @@ final class EditTalentMeetingViewModel: ObservableObject {
     
     @Published var isRefreshFailed = false
     
+    @Published var isShowAlert = false
+    
     init(
 		meetingID: String,
 		backToHome: @escaping (() -> Void),
@@ -78,6 +80,7 @@ final class EditTalentMeetingViewModel: ObservableObject {
 			self?.error = nil
 			self?.isRefreshFailed = false
 			self?.isShowSuccess = false
+            self?.isShowAlert = false
 		}
 
 	}
@@ -104,6 +107,7 @@ final class EditTalentMeetingViewModel: ObservableObject {
                 self?.error = error.localizedDescription
             }
             
+            self?.isShowAlert = true
         }
     }
     
@@ -190,12 +194,33 @@ final class EditTalentMeetingViewModel: ObservableObject {
             DispatchQueue.main.async { [weak self] in
                 self?.isLoading = false
                 self?.isShowSuccess = true
+                self?.isShowAlert = true
             }
         case .failure(let failure):
             handleDefaultError(error: failure)
         }
 
 	}
+    
+    func alertText() -> String {
+        if isRefreshFailed && !isShowSuccess && !isError {
+            return LocaleText.sessionExpireText
+        } else if !isRefreshFailed && isShowSuccess && !isError {
+            return LocaleText.editVideoCallSuccessSubtitle
+        } else {
+            return self.error.orEmpty()
+        }
+    }
+    
+    func alertTitle() -> String {
+        if isRefreshFailed && !isShowSuccess && !isError {
+            return LocaleText.attention
+        } else if !isRefreshFailed && isShowSuccess && !isError {
+            return LocaleText.attention
+        } else {
+            return LocaleText.successTitle
+        }
+    }
     
     func toggleDisableEdit(from maxEdit: Date) {
         isDisableEdit = maxEdit < Date()

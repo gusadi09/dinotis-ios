@@ -258,7 +258,7 @@ private extension ScheduleListView {
                                     } visitProfile: {
                                         viewModel.routeToTalentProfile(username: (item.meeting?.user?.username).orEmpty())
                                     }
-                                    .frame(width: abs(.infinity))
+                                    .frame(maxWidth: abs(.infinity))
                                     .padding()
                                     .background(Color.clear)
                                 }

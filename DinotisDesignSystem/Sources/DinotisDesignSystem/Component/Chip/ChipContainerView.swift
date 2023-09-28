@@ -12,9 +12,11 @@ public struct ChipContainerView: View {
     @State var chips: [ChipModel]
     
     @State private var containerHeight: CGFloat = 0
+    var withNumber: Bool = false
     
-    public init(chips: [ChipModel]) {
+    public init(chips: [ChipModel], withNumber: Bool = false) {
         self.chips = chips
+        self.withNumber = withNumber
     }
     
     public var body: some View {
@@ -23,7 +25,7 @@ public struct ChipContainerView: View {
         return GeometryReader { geo in
             ZStack(alignment: .topLeading, content: {
                 ForEach($chips, id: \.id) { data in
-                    ChipView(chip: data)
+                    ChipView(chip: data, withNumber: withNumber)
                         .padding(.all, 5)
                         .alignmentGuide(.leading) { dimension in
                             if (abs(width - dimension.width) > geo.size.width) {

@@ -99,8 +99,11 @@ extension PrivateRoomManager: RoomDelegate {
         guard !participant.isVideoComposer else { return }
         
         let participant = PrivateRemoteParticipantManager(participant: participant, delegate: self)
+        
         remoteParticipants = participant
+        
         remoteParticipantConnectPublisher.send(participant)
+        
     }
     
     func participantDidDisconnect(room: Room, participant: RemoteParticipant) {
@@ -112,7 +115,7 @@ extension PrivateRoomManager: RoomDelegate {
 
 extension PrivateRoomManager: PrivateRemoteParticipantManagerDelegate {
     func participantDidChange(_ participant: PrivateRemoteParticipantManager) {
-        remoteParticipantChangePublisher.send(participant)
+            remoteParticipantChangePublisher.send(participant)
     }
     
     func participant(_ participant: PrivateRemoteParticipantManager, didSendMessage message: PrivateRoomMessage) {
