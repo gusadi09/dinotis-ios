@@ -19,6 +19,14 @@ enum TalentHomeSection {
     case completed
 }
 
+enum CreatorHomeAlertType {
+    case deleteSelector
+    case error
+    case deleteSuccess
+    case refreshFailed
+    case confirmationSuccess
+}
+
 final class TalentHomeViewModel: ObservableObject {
     
     private var cancellables = Set<AnyCancellable>()
@@ -36,6 +44,8 @@ final class TalentHomeViewModel: ObservableObject {
     private let getTalentMeetingWithStatusUseCase: GetCreatorMeetingWithStatusListUseCase
     private let getClosestSessionUseCase: GetClosestSessionUseCase
 
+    @Published var isShowAlert = false
+    @Published var alertType: CreatorHomeAlertType = .error
     @Published var isFromUserType: Bool
     @Published var hasNewNotif = false
     @Published var notificationBadgeCountStr = ""
@@ -150,6 +160,7 @@ final class TalentHomeViewModel: ObservableObject {
 	@Published var isLoadingConfirm = false
 
 	@Published var requestId = ""
+    @Published var requestMeetingId = ""
 
     @Published var announceData = [AnnouncementData]()
     @Published var announceIndex = 0
@@ -724,16 +735,19 @@ final class TalentHomeViewModel: ObservableObject {
                 
                 if error.statusCode.orZero() == 401 {
                     self?.error = error.message.orEmpty()
+                    self?.alertType = .refreshFailed
                     self?.isRefreshFailed.toggle()
                 } else {
                     self?.error = error.message.orEmpty()
                     self?.isErrorAdditionalShow = true
+                    self?.alertType = .error
                 }
             } else {
                 self?.isErrorAdditionalShow = true
                 self?.error = error.localizedDescription
+                self?.alertType = .error
             }
-
+            self?.isShowAlert = true
         }
     }
     
@@ -743,16 +757,20 @@ final class TalentHomeViewModel: ObservableObject {
         let result = await deleteMeetingUseCase.execute(for: meetingId)
 
         switch result {
-        case .success(let success):
+        case .success(_):
+            
             DispatchQueue.main.async { [weak self] in
+                self?.alertType = .deleteSuccess
                 self?.isSuccessDelete = true
+                self?.isShowAlert = true
                 self?.isLoading = false
-                self?.meetingData = []
-                self?.meetingParam.skip = 0
-                self?.meetingParam.take = 15
+                
+                self?.scheduledRequest.skip = 0
+                self?.scheduledRequest.take = 8
             }
-
-            await self.getTalentMeeting(isMore: false)
+            
+            await self.getScheduledMeeting(isMore: false)
+            await self.getClosestSession()
 
         case .failure(let failure):
             handleDefaultErrorDelete(error: failure)
@@ -773,16 +791,20 @@ final class TalentHomeViewModel: ObservableObject {
 
                 if error.statusCode.orZero() == 401 {
                     self?.error = error.message.orEmpty()
+                    self?.alertType = .refreshFailed
                     self?.isRefreshFailed.toggle()
                 } else {
                     self?.error = error.message.orEmpty()
+                    self?.alertType = .error
                     self?.isError = true
                 }
             } else {
                 self?.isError = true
+                self?.alertType = .error
                 self?.error = error.localizedDescription
             }
 
+            self?.isShowAlert = true
         }
     }
     
@@ -809,16 +831,20 @@ final class TalentHomeViewModel: ObservableObject {
 
                 if error.statusCode.orZero() == 401 {
                     self?.error = error.message.orEmpty()
+                    self?.alertType = .refreshFailed
                     self?.isRefreshFailed.toggle()
                 } else {
                     self?.error = error.message.orEmpty()
+                    self?.alertType = .error
                     self?.isError = true
                 }
             } else {
+                self?.alertType = .error
                 self?.isError = true
                 self?.error = error.localizedDescription
             }
-
+            
+            self?.isShowAlert = true
         }
     }
 
@@ -992,6 +1018,68 @@ final class TalentHomeViewModel: ObservableObject {
 			self?.confirmationSheet = nil
 		}
 	}
+    
+    func alertAction() {
+        switch alertType {
+        case .deleteSelector:
+            Task {
+                await deleteMeeting()
+            }
+        case .error:
+            break
+        case .deleteSuccess:
+            break
+        case .refreshFailed:
+            routeBack()
+        case .confirmationSuccess:
+            break
+        }
+    }
+    
+    func alertButtonText() -> String {
+        switch alertType {
+        case .deleteSelector:
+            return LocaleText.yesDeleteText
+        case .error:
+            return LocaleText.returnText
+        case .deleteSuccess:
+            return LocaleText.returnText
+        case .refreshFailed:
+            return LocaleText.returnText
+        case .confirmationSuccess:
+            return LocaleText.okText
+        }
+    }
+    
+    func alertContent() -> String {
+        switch alertType {
+        case .deleteSelector:
+            return LocaleText.deleteAlertText
+        case .error:
+            return self.error.orEmpty()
+        case .deleteSuccess:
+            return LocaleText.meetingDeleted
+        case .refreshFailed:
+            return LocaleText.sessionExpireText
+        case .confirmationSuccess:
+            return LocaleText.successConfirmRequestText
+        }
+    }
+    
+    func alertContentTitle() -> String {
+        switch alertType {
+        case .deleteSelector:
+            return LocaleText.attention
+        case .error:
+            return LocaleText.attention
+        case .deleteSuccess:
+            return LocaleText.successTitle
+        case .refreshFailed:
+            return LocaleText.attention
+        case .confirmationSuccess:
+            return LocaleText.successTitle
+        }
+    }
 
 	func handleDefaultErrorConfirm(error: Error) {
 		DispatchQueue.main.async { [weak self] in
@@ -1001,21 +1089,23 @@ final class TalentHomeViewModel: ObservableObject {
 			if let error = error as? ErrorResponse {
 				self?.error = error.message.orEmpty()
 
-
 				if error.statusCode.orZero() == 401 {
+                    self?.alertType = .refreshFailed
 					self?.isRefreshFailed.toggle()
 				} else {
 					self?.isError = true
+                    self?.alertType = .error
 				}
 			} else {
+                self?.alertType = .error
 				self?.isError = true
 				self?.error = error.localizedDescription
 			}
-
+            self?.isShowAlert = true
 		}
 	}
 
-	func confirmRequest(isAccepted: Bool, reasons: [Int]?, otherReason: String?) async {
+    func confirmRequest(isAccepted: Bool, reasons: [Int]?, otherReason: String?) async {
 		onStartConfirm()
 
 		let body = ConfirmationRateCardRequest(isAccepted: isAccepted, reasons: reasons, otherReason: otherReason)
@@ -1025,21 +1115,26 @@ final class TalentHomeViewModel: ObservableObject {
 		switch result {
 		case .success(_):
 			DispatchQueue.main.async { [weak self] in
+                self?.alertType = .confirmationSuccess
 				self?.successConfirm = true
 				self?.isLoadingConfirm = false
 
 				self?.meetingRequestData.removeAll()
-				self?.meetingData.removeAll()
+				self?.scheduledData.removeAll()
 				self?.rateCardQuery.skip = 0
 				self?.rateCardQuery.take = 15
-				self?.meetingParam.skip = 0
-				self?.meetingParam.take = 15
+				self?.scheduledRequest.skip = 0
+				self?.scheduledRequest.take = 8
 
+                if isAccepted {
+                    self?.routeToTalentDetailSchedule(meetingId: (self?.requestMeetingId).orEmpty())
+                }
 			}
 
 			Task {
-                await self.getTalentMeeting(isMore: false)
                 await self.getMeetingRequest(isMore: false)
+                await self.getTalentMeeting(isMore: false)
+                await self.getScheduledMeeting(isMore: false)
 			}
 		case .failure(let failure):
 			handleDefaultErrorConfirm(error: failure)

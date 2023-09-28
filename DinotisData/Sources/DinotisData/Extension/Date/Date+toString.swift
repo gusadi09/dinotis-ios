@@ -8,13 +8,26 @@
 import Foundation
 
 public extension Date {
+    var iso8601withFractionalSeconds: String { return Formatter.iso8601withFractionalSeconds.string(from: self) }
+    
 	func toStringFormat(with format: DateFormatType) -> String {
 		let formatter = DateFormatter()
-		formatter.locale = Locale.current
+		formatter.locale = Locale(identifier: "en_US_POSIX")
 		formatter.dateFormat = format.rawValue
 
 		return formatter.string(from: self)
 	}
+}
+
+extension ISO8601DateFormatter {
+    convenience init(_ formatOptions: Options) {
+        self.init()
+        self.formatOptions = formatOptions
+    }
+}
+
+extension Formatter {
+    static let iso8601withFractionalSeconds = ISO8601DateFormatter([.withInternetDateTime, .withFractionalSeconds])
 }
 
 public enum DateFormatType: String {

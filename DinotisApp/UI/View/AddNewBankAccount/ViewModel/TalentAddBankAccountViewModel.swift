@@ -11,6 +11,12 @@ import Combine
 import DinotisData
 import DinotisDesignSystem
 
+enum AddBankAlertType {
+    case success
+    case refreshFailed
+    case error
+}
+
 final class TalentAddBankAccountViewModel: ObservableObject {
 	private let userRepository: UsersRepository
 	private let authRepository: AuthenticationRepository
@@ -45,7 +51,8 @@ final class TalentAddBankAccountViewModel: ObservableObject {
 
 	@Published var bankList = [BankData]()
     
-    @Published var alert = AlertAttribute()
+    @Published var isShowAlert = false
+    @Published var typeAlert: AddBankAlertType = .error
 
 	init(
 		isEdit: Bool,
@@ -67,6 +74,50 @@ final class TalentAddBankAccountViewModel: ObservableObject {
         self.editBankAccountUseCase = editBankAccountUseCase
 	}
 
+    func alertTitle() -> String {
+        switch typeAlert {
+        case .success:
+            return LocaleText.successTitle
+        case .refreshFailed:
+            return LocaleText.attention
+        case .error:
+            return LocaleText.attention
+        }
+    }
+    
+    func alertContent() -> String {
+        switch typeAlert {
+        case .success:
+            return LocaleText.bankAccountUpdateSuccessText
+        case .refreshFailed:
+            return LocaleText.sessionExpireText
+        case .error:
+            return error.orEmpty()
+        }
+    }
+    
+    func alertButtonText() -> String {
+        switch typeAlert {
+        case .success:
+            return LocaleText.returnText
+        case .refreshFailed:
+            return LocaleText.returnText
+        case .error:
+            return LocaleText.okText
+        }
+    }
+    
+    func alertAction(completion: () -> Void) {
+        switch typeAlert {
+        case .success:
+            completion()
+        case .refreshFailed:
+            routeToRoot()
+        case .error:
+            break
+        }
+    }
+    
 	func routeToRoot() {
         NavigationUtil.popToRootView()
         self.stateObservable.userType = 0
@@ -81,6 +132,7 @@ final class TalentAddBankAccountViewModel: ObservableObject {
 		DispatchQueue.main.async {[weak self] in
 			self?.isLoading = true
 			self?.isError = false
+            self?.isShowAlert = false
 			self?.error = nil
 			self?.success = false
 			self?.isRefreshFailed = false
@@ -95,18 +147,22 @@ final class TalentAddBankAccountViewModel: ObservableObject {
     func handleDefaultError(error: Error) {
         DispatchQueue.main.async { [weak self] in
             self?.isLoading = false
+            self?.isShowAlert = true
 
             if let error = error as? ErrorResponse {
 
                 if error.statusCode.orZero() == 401 {
                     self?.error = error.message.orEmpty()
                     self?.isRefreshFailed.toggle()
+                    self?.typeAlert = .refreshFailed
                 } else {
                     self?.error = error.message.orEmpty()
                     self?.isError = true
+                    self?.typeAlert = .error
                 }
             } else {
                 self?.isError = true
+                self?.typeAlert = .error
                 self?.error = error.localizedDescription
             }
 
@@ -164,6 +220,8 @@ final class TalentAddBankAccountViewModel: ObservableObject {
             DispatchQueue.main.async { [weak self] in
                 self?.isLoading = false
                 self?.success = true
+                self?.isShowAlert = true
+                self?.typeAlert = .success
             }
         case .failure(let failure):
             handleDefaultError(error: failure)
@@ -182,6 +240,8 @@ final class TalentAddBankAccountViewModel: ObservableObject {
             DispatchQueue.main.async { [weak self] in
                 self?.isLoading = false
                 self?.success = true
+                self?.isShowAlert = true
+                self?.typeAlert = .success
             }
         case .failure(let failure):
             handleDefaultError(error: failure)

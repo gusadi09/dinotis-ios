@@ -46,40 +46,14 @@ struct BundlingFormView: View {
 				Image.Dinotis.linearGradientBackground
 					.resizable()
 					.edgesIgnoringSafeArea(.all)
-                    .alert(isPresented: $viewModel.isBundleCreated) {
-                        Alert(
-                            title: Text(LocaleText.bundleSuccessTitle),
-                            message: Text(LocaleText.bundleSuccessDesc),
-                            dismissButton: .default(Text(LocaleText.okText), action: {
-                                viewModel.backToBundlingList()
-                            })
-                        )
-                    }
-
 				
 				VStack(spacing: 0) {
 					HeaderView(viewModel: viewModel)
-                        .alert(isPresented: $viewModel.isError) {
-                            Alert(
-                                title: Text(LocaleText.attention),
-                                message: Text(viewModel.error.orEmpty()),
-                                dismissButton: .default(Text(LocaleText.okText))
-                            )
-                        }
 
 					ScrollView(.vertical, showsIndicators: false) {
 						VStack {
 							FormView(viewModel: viewModel, isEdit: viewModel.isEdit)
 								.padding()
-								.alert(isPresented: $viewModel.isBundleUpdated) {
-									Alert(
-										title: Text(LocaleText.successTitle),
-										message: Text(LocaleText.successUpdateBundle),
-										dismissButton: .default(Text(LocaleText.okText), action: {
-											dismiss()
-										})
-									)
-								}
 
 							Button {
 								if viewModel.isEdit {
@@ -120,6 +94,7 @@ struct BundlingFormView: View {
 					}
 
 					Button {
+                        UIApplication.shared.endEditing()
                         Task {
                             if !viewModel.isEdit {
                                 await viewModel.createBundle()
@@ -174,6 +149,23 @@ struct BundlingFormView: View {
 			}
             .navigationBarHidden(true)
             .navigationBarTitle("")
+            .dinotisAlert(
+                isPresent: $viewModel.isShowAlert,
+                type: .general,
+                title: viewModel.alertTitle(),
+                isError: viewModel.type == .error,
+                message: viewModel.alertContent(),
+                primaryButton: .init(
+                    text: viewModel.alertButtonText(),
+                    action: {
+                        viewModel.alertAction(
+                            completion: {
+                                dismiss()
+                            }
+                        )
+                    }
+                )
+            )
 		}
     }
 }

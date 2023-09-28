@@ -17,6 +17,9 @@ class PrivateVideoSpeakerViewModel: ObservableObject {
     private var roomManager: PrivateRoomManager!
     private var speakersMap: SyncUsersMap!
     @Published var speakerVideoViewModelFactory: PrivateSpeakerVideoViewModelFactory!
+    
+    @Published var remoteCamAvailable = false
+    @Published var camAvailable = false
     private var subscriptions = Set<AnyCancellable>()
     
     func configure(
@@ -54,7 +57,7 @@ class PrivateVideoSpeakerViewModel: ObservableObject {
                 guard let self = self else { return }
                 
                 self.localSpeaker = self.speakerVideoViewModelFactory.makeSpeaker(participant: participant)
-                
+                self.camAvailable = localSpeaker.cameraTrack != nil
             }
             .store(in: &subscriptions)
         
@@ -63,7 +66,7 @@ class PrivateVideoSpeakerViewModel: ObservableObject {
                 guard let self = self else { return }
                 
                 print("participant: ", participant)
-                
+                self.remoteCamAvailable = participant.cameraTrack != nil
                 self.remoteSpeakers = self.speakerVideoViewModelFactory.makeSpeaker(participant: participant)
                 
             }
@@ -77,6 +80,7 @@ class PrivateVideoSpeakerViewModel: ObservableObject {
             .sink { [weak self] participant in
                 guard let self = self else { return }
                 self.remoteSpeakers = self.speakerVideoViewModelFactory.makeSpeaker(participant: participant)
+                self.remoteCamAvailable = participant.cameraTrack != nil
             }
             .store(in: &subscriptions)
     }

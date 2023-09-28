@@ -28,18 +28,6 @@ struct TalentAddBankAccountView: View {
 				Image.Dinotis.userTypeBackground
 					.resizable()
 					.edgesIgnoringSafeArea(.all)
-					.alert(isPresented: $viewModel.isRefreshFailed) {
-						Alert(
-							title: Text(LocaleText.attention),
-							message: Text(LocaleText.sessionExpireText),
-							dismissButton: .default(
-								Text(LocaleText.returnText),
-								action: {
-									viewModel.routeToRoot()
-								}
-							)
-						)
-					}
 				
 				VStack(spacing: 0) {
 					HStack(alignment: . center) {
@@ -65,13 +53,6 @@ struct TalentAddBankAccountView: View {
 						
 					}
 					.padding(.top, 5)
-					.alert(isPresented: $viewModel.isError) {
-						Alert(
-							title: Text(LocaleText.attention),
-							message: Text(viewModel.error.orEmpty()),
-							dismissButton: .default(Text(LocaleText.returnText))
-						)
-					}
 
 					ScrollView(.vertical, showsIndicators: false) {
 						VStack(spacing: 15) {
@@ -79,18 +60,6 @@ struct TalentAddBankAccountView: View {
 								Text(LocaleText.bankNameText)
 									.font(.robotoMedium(size: 12))
 									.foregroundColor(.black)
-									.alert(isPresented: $viewModel.success) {
-										Alert(
-											title: Text(LocaleText.successTitle),
-											message: Text(LocaleText.bankAccountUpdateSuccessText),
-											dismissButton: .default(
-												Text(LocaleText.returnText),
-												action: {
-													dismiss()
-												}
-											)
-										)
-									}
 
 								Button(action: {
 									viewModel.isPresentBank.toggle()
@@ -163,6 +132,7 @@ struct TalentAddBankAccountView: View {
 
 					VStack(spacing: 0) {
 						Button(action: {
+                            UIApplication.shared.endEditing()
                             Task {
                                 if viewModel.bankData.first != nil {
                                     await viewModel.editBankAccount()
@@ -289,5 +259,17 @@ struct TalentAddBankAccountView: View {
 		}
 		.navigationBarTitle(Text(""))
 		.navigationBarHidden(true)
+        .dinotisAlert(
+            isPresent: $viewModel.isShowAlert,
+            type: .general,
+            title: viewModel.alertTitle(),
+            isError: viewModel.typeAlert == .refreshFailed || viewModel.typeAlert == .error,
+            message: viewModel.alertContent(),
+            primaryButton: .init(text: viewModel.alertButtonText(), action: {
+                viewModel.alertAction {
+                    dismiss()
+                }
+            })
+        )
 	}
 }

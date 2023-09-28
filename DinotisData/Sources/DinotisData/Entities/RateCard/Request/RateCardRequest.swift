@@ -36,14 +36,16 @@ public struct ConfirmationRateCardRequest: Codable {
 public struct RequestSessionRequest: Codable {
 	public var paymentMethod: Int?
 	public var rateCardId: String
-	public var message: String
+	public var message: String?
 	public var voucherCode: String?
+    public var requestAt: String?
 
-	public init(paymentMethod: Int? = nil, rateCardId: String, message: String, voucherCode: String? = nil) {
+    public init(paymentMethod: Int? = nil, rateCardId: String, message: String?, voucherCode: String? = nil, requestAt: String?) {
 		self.paymentMethod = paymentMethod
 		self.rateCardId = rateCardId
 		self.message = message
 		self.voucherCode = voucherCode
+        self.requestAt = requestAt
 	}
 }
 

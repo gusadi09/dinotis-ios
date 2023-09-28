@@ -80,9 +80,10 @@ struct RateCardServiceBookingView: View {
                 DinotisPrimaryButton(
                     text: LocalizableText.nextLabel,
                     type: .adaptiveScreen,
-                    textColor: viewModel.noteText.isEmpty || !viewModel.noteText.isStringContainWhitespaceAndText() ? .DinotisDefault.lightPrimaryActive : .DinotisDefault.white,
-                    bgColor: viewModel.noteText.isEmpty || !viewModel.noteText.isStringContainWhitespaceAndText() ? .DinotisDefault.lightPrimary : .DinotisDefault.primary
+                    textColor: .DinotisDefault.white,
+                    bgColor: .DinotisDefault.primary
                 ) {
+                    UIApplication.shared.endEditing()
                     viewModel.isPresent = true
                 }
 				.padding()
@@ -90,7 +91,6 @@ struct RateCardServiceBookingView: View {
 					Color.white
 						.edgesIgnoringSafeArea(.bottom)
 				)
-                .disabled(viewModel.noteText.isEmpty || !viewModel.noteText.isStringContainWhitespaceAndText())
 
             }
             .onAppear {
@@ -126,7 +126,7 @@ struct RateCardServiceBookingView: View {
 					DetailOrderSheetView(viewModel: viewModel)
 						.padding()
 						.padding(.vertical)
-						.presentationDetents([.fraction(0.8), .large])
+                        .presentationDetents([.height(450), .large])
                         .dynamicTypeSize(.large)
 				} else {
 					DetailOrderSheetView(viewModel: viewModel)
@@ -164,7 +164,7 @@ struct RateCardServiceBookingView: View {
 					CoinPaymentSheetView(viewModel: viewModel)
 						.padding()
 						.padding(.top)
-                        .presentationDetents([.fraction(0.9), .large])
+                        .presentationDetents([.height(550), .large])
                         .dynamicTypeSize(.large)
 				} else {
 					CoinPaymentSheetView(viewModel: viewModel)
@@ -181,7 +181,7 @@ struct RateCardServiceBookingView: View {
 					AddCoinSheetView(viewModel: viewModel)
 						.padding()
 						.padding(.top)
-						.presentationDetents([.fraction(0.67), .large])
+						.presentationDetents([.height(400), .large])
                         .dynamicTypeSize(.large)
 				} else {
 					AddCoinSheetView(viewModel: viewModel)
@@ -201,7 +201,7 @@ extension RateCardServiceBookingView {
 		@ObservedObject var viewModel: RateCardServiceBookingFormViewModel
 
 		var body: some View {
-			VStack(alignment: .leading, spacing: 18) {
+			VStack(alignment: .leading, spacing: 12) {
 				HStack {
                     DinotisImageLoader(urlString: viewModel.talentPhoto, width: 40, height: 40)
                         .clipShape(Circle())
@@ -256,7 +256,7 @@ extension RateCardServiceBookingView {
                     }
 				}
                 
-                VStack(alignment: .leading, spacing: 14) {
+                VStack(alignment: .leading, spacing: 12) {
                     HStack(spacing: 12) {
                         Image.sessionCardTimeSolidIcon
                             .resizable()
@@ -270,21 +270,8 @@ extension RateCardServiceBookingView {
                         Spacer()
                     }
                     
-                    HStack(spacing: 12) {
-                        Image.sessionCardCoinIcon
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 18)
-                        
-                        Text((viewModel.rateCard.price?.toCurrency()).orEmpty())
-                            .font(.robotoBold(size: 12))
-                            .foregroundColor(.DinotisDefault.primary)
-                        
-                        Spacer()
-                    }
-                    
                     HStack(spacing: 9) {
-                        Image.sessionCardVideocallIcon
+                        Image.sessionCardCameraIcon
                             .resizable()
                             .scaledToFit()
                             .frame(width: 21)
@@ -296,25 +283,9 @@ extension RateCardServiceBookingView {
                         Spacer()
                     }
                 }
-
-                VStack(spacing: 9) {
-                    Divider()
-                    
-                    HStack {
-                        Text(LocalizableText.priceLabel)
-                            .font(.robotoRegular(size: 12))
-                            .foregroundColor(.black)
-                        
-                        Spacer()
-                        
-                        Text((viewModel.rateCard.price?.toCurrency()).orEmpty())
-                            .font(.robotoBold(size: 16))
-                            .foregroundColor(.black)
-                    }
-                }
 			}
-			.padding()
-			.padding(.vertical, 24)
+            .padding(.horizontal)
+			.padding(.vertical, 16)
 			.background(
 				RoundedRectangle(cornerRadius: 12)
 					.foregroundColor(.white)
@@ -328,44 +299,236 @@ extension RateCardServiceBookingView {
 		@ObservedObject var viewModel: RateCardServiceBookingFormViewModel
 
 		var body: some View {
-			VStack(alignment: .leading, spacing: 12) {
-				HStack {
-					Image.sessionCardNotesSolidIcon
-						.resizable()
-						.scaledToFit()
-						.frame(height: 20)
-
-					Text(LocalizableText.noteForCreatorTitle)
-						.font(.robotoMedium(size: 12))
-						.foregroundColor(.black)
-
-					Spacer()
-				}
+            VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Text(LocalizableText.noteForCreatorSuggestTimeTitle)
+                            .font(.robotoBold(size: 14))
+                            .foregroundColor(.black)
+                        
+                        Spacer()
+                    }
+                    
+                    Text(LocalizableText.noteForCreatorSuggestTimeSubtitle)
+                        .font(.robotoMedium(size: 10))
+                        .foregroundColor(.DinotisDefault.black3)
+                    
+                    HStack(spacing: 16) {
+                        VStack(alignment: .leading, spacing: 5) {
+                            Text(LocalizableText.noteForCreatorDateTitle)
+                                .font(.robotoRegular(size: 14))
+                                .foregroundColor(.black)
+                            
+                            HStack {
+                                Text(viewModel.dateSuggestion.toStringFormat(with: .slashddMMyyyy))
+                                    .lineLimit(1)
+                                    .font(.robotoRegular(size: 14))
+                                    .foregroundColor(.black)
+                                    .padding(.vertical, 4)
+                                    .padding(.horizontal, 8)
+                                
+                                Spacer()
+                                
+                                Image.sessionCardDateIcon
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 20)
+                                    .padding(.vertical, 4)
+                                    .padding(.horizontal, 8)
+                                    .overlay(
+                                        RoundedCorner(radius: 8, corners: [.topRight, .bottomRight])
+                                            .stroke(Color.DinotisDefault.lightPrimaryActive, lineWidth: 1)
+                                    )
+                            }
+                            .contentShape(RoundedRectangle(cornerRadius: 8))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.DinotisDefault.lightPrimaryActive, lineWidth: 1)
+                            )
+                            .onTapGesture {
+                                viewModel.isShowDatePicker.toggle()
+                            }
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 5) {
+                            
+                            Text(LocalizableText.noteForCreatorTimeTitle)
+                                .font(.robotoRegular(size: 14))
+                                .foregroundColor(.black)
+                            
+                            HStack {
+                                Text(viewModel.dateSuggestion.toStringFormat(with: .HHmm))
+                                    .font(.robotoRegular(size: 14))
+                                    .lineLimit(1)
+                                    .foregroundColor(.black)
+                                    .padding(.vertical, 4)
+                                    .padding(.horizontal, 8)
+                                
+                                Spacer()
+                                
+                                Image.sessionCardTimeSolidIcon
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 20)
+                                    .padding(.vertical, 4)
+                                    .padding(.horizontal, 8)
+                                    .overlay(
+                                        RoundedCorner(radius: 8, corners: [.topRight, .bottomRight])
+                                            .stroke(Color.DinotisDefault.lightPrimaryActive, lineWidth: 1)
+                                    )
+                            }
+                            .contentShape(RoundedRectangle(cornerRadius: 8))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.DinotisDefault.lightPrimaryActive, lineWidth: 1)
+                            )
+                            .onTapGesture {
+                                viewModel.isShowTimePicker.toggle()
+                            }
+                        }
+                    }
+                    
+                }
                 
-                Text(LocalizableText.bookingRateCardMessageSubtitle)
-                    .font(.robotoLight(size: 10))
-                    .foregroundColor(.black)
-                    .multilineTextAlignment(.leading)
-                
-                DinotisTextEditor(
-                    LocalizableText.noteForCreatorPlaceholder,
-                    label: nil,
-                    text: $viewModel.noteText,
-                    errorText: .constant(nil)
-                )
-                .autocorrectionDisabled(true)
-                .autocapitalization(.none)
-
-			}
-			.padding()
-			.padding(.vertical, 10)
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Image.sessionCardNotesSolidIcon
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 20)
+                        
+                        Text(LocalizableText.noteForCreatorTitle)
+                            .font(.robotoBold(size: 14))
+                            .foregroundColor(.black)
+                        
+                        Spacer()
+                    }
+                    
+                    DinotisTextEditor(
+                        LocalizableText.noteForCreatorPlaceholder,
+                        label: nil,
+                        text: $viewModel.noteText,
+                        errorText: .constant(nil),
+                        stroke: .DinotisDefault.lightPrimaryActive
+                    )
+                    .autocorrectionDisabled(true)
+                    .autocapitalization(.none)
+                    
+                }
+            }
+            .padding(.horizontal)
+			.padding(.vertical, 16)
+            .multilineTextAlignment(.leading)
 			.background(
 				RoundedRectangle(cornerRadius: 12)
 					.foregroundColor(.white)
                     .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 2)
 			)
+            .sheet(isPresented: $viewModel.isShowDatePicker) {
+                if #available(iOS 16.0, *) {
+                    DatePickerSheet(viewModel: viewModel)
+                    .presentationDetents([.medium])
+                    .dynamicTypeSize(.large)
+                } else {
+                    DatePickerSheet(viewModel: viewModel)
+                    .dynamicTypeSize(.large)
+                }
+            }
+            .sheet(isPresented: $viewModel.isShowTimePicker) {
+                if #available(iOS 16.0, *) {
+                    TimePickerSheet(viewModel: viewModel)
+                    .presentationDetents([.medium])
+                    .dynamicTypeSize(.large)
+                } else {
+                    TimePickerSheet(viewModel: viewModel)
+                    .dynamicTypeSize(.large)
+                }
+                
+            }
 		}
 	}
+    
+    struct TimePickerSheet: View {
+        @ObservedObject var viewModel: RateCardServiceBookingFormViewModel
+        
+        var body: some View {
+            ZStack {
+                VStack(alignment: .leading) {
+                    HStack {
+                        Spacer()
+                        
+                        DatePicker("", selection: $viewModel.changedDateSuggestion, in: Date()..., displayedComponents: .hourAndMinute)
+                            .datePickerStyle(WheelDatePickerStyle())
+                            .labelsHidden()
+                        
+                        Spacer()
+                    }
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        viewModel.dateSuggestion = viewModel.changedDateSuggestion
+                        viewModel.isShowTimePicker = false
+                    }, label: {
+                        HStack {
+                            Spacer()
+                            
+                            Text(NSLocalizedString("select_text", comment: ""))
+                                .foregroundColor(.white)
+                                .font(.robotoMedium(size: 14))
+                            
+                            Spacer()
+                        }
+                        .padding(.vertical)
+                        .background(Color.DinotisDefault.primary)
+                    })
+                    .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                    .onAppear {
+                        viewModel.changedDateSuggestion = viewModel.dateSuggestion
+                    }
+                }
+                .padding()
+            }
+        }
+    }
+    
+    struct DatePickerSheet: View {
+        @ObservedObject var viewModel: RateCardServiceBookingFormViewModel
+        
+        var body: some View {
+            ZStack {
+                VStack(alignment: .center, spacing: 0) {
+                    DatePicker("", selection: $viewModel.changedDateSuggestion, in: Date()..., displayedComponents: .date)
+                        .datePickerStyle(WheelDatePickerStyle())
+                        .labelsHidden()
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        viewModel.dateSuggestion = viewModel.changedDateSuggestion
+                        viewModel.isShowDatePicker = false
+                    }, label: {
+                        HStack {
+                            Spacer()
+                            
+                            Text(NSLocalizedString("select_text", comment: ""))
+                                .foregroundColor(.white)
+                                .font(.robotoMedium(size: 14))
+                            
+                            Spacer()
+                        }
+                        .padding(.vertical)
+                        .background(Color.DinotisDefault.primary)
+                    })
+                    .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                }
+                .padding()
+                .onAppear {
+                    viewModel.changedDateSuggestion = viewModel.dateSuggestion
+                }
+            }
+        }
+    }
 
 	struct DetailOrderSheetView: View {
 
@@ -1000,7 +1163,9 @@ extension RateCardServiceBookingView {
                     text: LocalizableText.continuePaymentLabel,
                     type: .adaptiveScreen,
                     textColor: (Int(viewModel.userData?.coinBalance?.current ?? "0") ?? 0) < viewModel.totalPayment ? Color(.systemGray) : .white,
-                    bgColor: (Int(viewModel.userData?.coinBalance?.current ?? "0") ?? 0) < viewModel.totalPayment ? Color(.systemGray4) : .DinotisDefault.primary) {
+                    bgColor: (Int(viewModel.userData?.coinBalance?.current ?? "0") ?? 0) < viewModel.totalPayment ? Color(.systemGray4) : .DinotisDefault.primary,
+                    isLoading: $viewModel.isLoadingCoinPay
+                ) {
 						Task {
 							await viewModel.coinPayment()
 						}

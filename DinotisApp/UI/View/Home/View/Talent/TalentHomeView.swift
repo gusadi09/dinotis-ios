@@ -21,9 +21,31 @@ struct TalentHomeView: View {
     var body: some View {
         if homeVM.isFromUserType {
             MainView(homeVM: homeVM, state: state)
+                .dinotisAlert(
+                    isPresent: $homeVM.isShowAlert,
+                    type: .general,
+                    title: homeVM.alertContentTitle(),
+                    isError: homeVM.alertType == .error || homeVM.alertType == .refreshFailed,
+                    message: homeVM.alertContent(),
+                    primaryButton: .init(text: homeVM.alertButtonText(), action: { 
+                        homeVM.alertAction()
+                    }),
+                    secondaryButton: homeVM.alertType != .deleteSelector ? nil : .init(text: LocaleText.noText, action: {})
+                )
         } else {
             NavigationView {
                 MainView(homeVM: homeVM, state: state)
+                    .dinotisAlert(
+                        isPresent: $homeVM.isShowAlert,
+                        type: .general,
+                        title: homeVM.alertContentTitle(),
+                        isError: homeVM.alertType == .error || homeVM.alertType == .refreshFailed,
+                        message: homeVM.alertContent(),
+                        primaryButton: .init(text: homeVM.alertButtonText(), action: {
+                            homeVM.alertAction()
+                        }),
+                        secondaryButton: homeVM.alertType != .deleteSelector ? nil : .init(text: LocaleText.noText, action: {})
+                    )
             }
             .navigationViewStyle(StackNavigationViewStyle())
             .navigationBarTitle(Text(""))
@@ -73,23 +95,6 @@ struct TalentHomeView: View {
                         EmptyView()
                     }
                 )
-                .alert(isPresented: $homeVM.isShowDelete) {
-                    Alert(
-                        title: Text(LocaleText.attention),
-                        message: Text(LocaleText.deleteAlertText),
-                        primaryButton: .default(
-                            Text(LocaleText.noText)
-                        ),
-                        secondaryButton: .destructive(
-                            Text(LocaleText.yesDeleteText),
-                            action: {
-                                Task {
-                                    await homeVM.deleteMeeting()
-                                }
-                            }
-                        )
-                    )
-                }
                 
                 ZStack(alignment: .bottom) {
                     
@@ -97,13 +102,6 @@ struct TalentHomeView: View {
                         VStack {
                             LinearGradient(colors: [.secondaryBackground, .white, .white], startPoint: .top, endPoint: .bottom)
                                 .edgesIgnoringSafeArea([.top, .horizontal])
-                                .alert(isPresented: $homeVM.isError) {
-                                    Alert(
-                                        title: Text(LocaleText.attention),
-                                        message: Text(homeVM.error.orEmpty()),
-                                        dismissButton: .cancel(Text(LocaleText.returnText))
-                                    )
-                                }
                         }
                         
                         VStack {
@@ -229,14 +227,6 @@ struct TalentHomeView: View {
                                 }
                                 .padding()
                                 .padding(.top, 10)
-                                .alert(isPresented: $homeVM.isSuccessDelete) {
-                                    Alert(
-                                        title: Text(LocaleText.successTitle),
-                                        message: Text(LocaleText.meetingDeleted),
-                                        dismissButton: .default(Text(LocaleText.returnText), action: {
-                                            
-                                        }))
-                                }
                                 
                                 DinotisList {
                                     Task {
@@ -400,11 +390,11 @@ struct TalentHomeView: View {
                                         .background(
                                             RoundedRectangle(cornerRadius: 11)
                                                 .foregroundColor(.white)
-                                                .shadow(color: Color.dinotisShadow.opacity(0.08), radius: 8, x: 0, y: 0)
+                                                .shadow(color: Color.dinotisShadow.opacity(0.08), radius: 5, x: 0, y: 0)
                                         )
-                                        .padding(.top, 10)
                                     }
                                     .listRowBackground(Color.clear)
+                                    .listRowInsets(EdgeInsets(top: 6, leading: 15, bottom: 8, trailing: 15))
                                     
                                     if !homeVM.closestSessions.isEmpty {
                                         Section {
@@ -462,15 +452,6 @@ struct TalentHomeView: View {
                                         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
                                     }
                                 }
-                                .alert(isPresented: $homeVM.isRefreshFailed) {
-                                    Alert(
-                                        title: Text(LocaleText.attention),
-                                        message: Text(LocaleText.sessionExpireText),
-                                        dismissButton: .default(Text(LocaleText.returnText), action: {
-                                            
-                                            homeVM.routeBack()
-                                        }))
-                                }
                                 
                                 
                             }
@@ -492,13 +473,6 @@ struct TalentHomeView: View {
                             EmptyView()
                         }
                     )
-                    .alert(isPresented: $homeVM.successConfirm) {
-                        Alert(
-                            title: Text(LocaleText.successTitle),
-                            message: Text(LocaleText.successConfirmRequestText),
-                            dismissButton: .default(Text(LocaleText.okText))
-                        )
-                    }
                     
                     NavigationLink(
                         unwrapping: $homeVM.route,
@@ -535,13 +509,6 @@ struct TalentHomeView: View {
                             EmptyView()
                         }
                     )
-                    .alert(isPresented: $homeVM.isErrorAdditionalShow) {
-                        Alert(
-                            title: Text(LocaleText.errorText),
-                            message: Text(homeVM.error.orEmpty()),
-                            dismissButton: .cancel(Text(LocaleText.returnText))
-                        )
-                    }
                     
                     if !homeVM.announceData.isEmpty {
                         AnnouncementView(
@@ -591,66 +558,63 @@ struct TalentHomeView: View {
                             case .scheduled:
                                 EmptyView()
                             default:
-                                HStack {
-                                    HStack(spacing: 12) {
-                                        Image(systemName: "slider.horizontal.3")
-                                        
-                                        Text(LocalizableText.sortLabel)
+                                VStack(spacing: 0) {
+                                    
+                                    HStack {
+                                        Text(LocalizableText.sortByLabel)
                                             .font(.robotoBold(size: 12))
-                                    }
-                                    .foregroundColor(.DinotisDefault.primary)
-                                    
-                                    Spacer()
-                                    
-                                    Menu {
-                                        Button {
-                                            withAnimation {
-                                                homeVM.sortSelectionActionLatest()
-                                            }
-                                        } label: {
-                                            HStack {
-                                                Text(LocalizableText.sortLatest)
-                                                
-                                                Image(systemName: "checkmark")
-                                                    .isHidden(!homeVM.sortSectionHiddenValue())
-                                                
-                                            }
-                                        }
+                                            .foregroundColor(.DinotisDefault.black2)
                                         
-                                        Button {
-                                            withAnimation {
-                                                homeVM.sortSelectionActionEarliest()
-                                            }
-                                        } label: {
-                                            HStack {
-                                                Text(LocalizableText.sortEarliest)
-                                                
-                                                Image(systemName: "checkmark")
-                                                    .isHidden(homeVM.sortSectionHiddenValue())
-                                            }
-                                        }
+                                        Spacer()
                                         
-                                    } label: {
-                                        HStack(spacing: 4) {
-                                            Text(homeVM.sortSectionHiddenValue() ? LocalizableText.sortLatest : LocalizableText.sortEarliest)
-                                                .font(.robotoMedium(size: 12))
+                                        Menu {
+                                            Button {
+                                                withAnimation {
+                                                    homeVM.sortSelectionActionLatest()
+                                                }
+                                            } label: {
+                                                HStack {
+                                                    Text(LocalizableText.sortLatest)
+                                                    
+                                                    Image(systemName: "checkmark")
+                                                        .isHidden(!homeVM.sortSectionHiddenValue())
+                                                    
+                                                }
+                                            }
                                             
-                                            Image(systemName: "chevron.down")
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: 10, height: 5)
+                                            Button {
+                                                withAnimation {
+                                                    homeVM.sortSelectionActionEarliest()
+                                                }
+                                            } label: {
+                                                HStack {
+                                                    Text(LocalizableText.sortEarliest)
+                                                    
+                                                    Image(systemName: "checkmark")
+                                                        .isHidden(homeVM.sortSectionHiddenValue())
+                                                }
+                                            }
+                                            
+                                        } label: {
+                                            HStack(spacing: 8) {
+                                                Image(systemName: "slider.horizontal.3")
+                                                
+                                                Text("\(homeVM.sortSectionHiddenValue() ? LocalizableText.sortLatest : LocalizableText.sortEarliest) \(Image(systemName: "chevron.down"))")
+                                                    .font(.robotoMedium(size: 12))
+                                            }
+                                            .foregroundColor(.DinotisDefault.primary)
+                                            .padding(.horizontal, 18)
+                                            .padding(.vertical, 9)
+                                            .background(Color.DinotisDefault.lightPrimary)
+                                            .cornerRadius(8)
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 8)
+                                                    .inset(by: 0.5)
+                                                    .stroke(Color.DinotisDefault.primary, lineWidth: 1)
+                                            )
                                         }
-                                        .foregroundColor(.DinotisDefault.primary)
-                                        .padding(.horizontal, 18)
-                                        .padding(.vertical, 9)
-                                        .background(Color.DinotisDefault.lightPrimary)
-                                        .cornerRadius(8)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 8)
-                                                .inset(by: 0.5)
-                                                .stroke(Color.DinotisDefault.primary, lineWidth: 1)
-                                        )
                                     }
+                                    
                                 }
                             }
                         }
@@ -1207,7 +1171,8 @@ extension TalentHomeView {
                                 viewModel.routeToEditSchedule(id: meeting.id.orEmpty())
                             } onTapDelete: {
                                 viewModel.meetingId = meeting.id.orEmpty()
-                                viewModel.isShowDelete.toggle()
+                                viewModel.alertType = .deleteSelector
+                                viewModel.isShowAlert = true
                             }
                             .onAppear {
                                 if (viewModel.scheduledData.unique().last?.id).orEmpty() == meeting.id {
@@ -1251,6 +1216,12 @@ extension TalentHomeView {
         
         var body: some View {
             LazyVStack(alignment: .leading, spacing: 12) {
+                Text(LocalizableText.ratecardRequestExplanation)
+                    .font(.robotoRegular(size: 12))
+                    .foregroundColor(.DinotisDefault.black3)
+                    .multilineTextAlignment(.center)
+                    .padding(.bottom, 10)
+                
                 if !viewModel.meetingRequestData.unique().isEmpty {
                     ForEach(viewModel.meetingRequestData.sorted(by: { $0.createdAt?.compare($1.createdAt.orCurrentDate()) == (viewModel.isSortByLatestNotConfirmed ? .orderedDescending : .orderedAscending) }).unique(), id: \.id) { item in
                         RequestCardView(
@@ -1258,10 +1229,12 @@ extension TalentHomeView {
                             item: item,
                             onTapDecline: {
                                 viewModel.requestId = item.id.orEmpty()
+                                viewModel.requestMeetingId = item.meetingId.orEmpty()
                                 viewModel.confirmationSheet = .declined
                             },
                             onTapAccept: {
                                 viewModel.requestId = item.id.orEmpty()
+                                viewModel.requestMeetingId = item.meetingId.orEmpty()
                                 viewModel.confirmationSheet = .accepted
                             }
                         )
@@ -1321,6 +1294,7 @@ extension TalentHomeView {
                                 viewModel.routeToEditSchedule(id: meeting.id.orEmpty())
                             } onTapDelete: {
                                 viewModel.meetingId = meeting.id.orEmpty()
+                                viewModel.alertType = .deleteSelector
                                 viewModel.isShowDelete.toggle()
                             }
                             .onAppear {
@@ -1378,6 +1352,7 @@ extension TalentHomeView {
                                 viewModel.routeToEditSchedule(id: meeting.id.orEmpty())
                             } onTapDelete: {
                                 viewModel.meetingId = meeting.id.orEmpty()
+                                viewModel.alertType = .deleteSelector
                                 viewModel.isShowDelete.toggle()
                             }
                             .onAppear {
@@ -1435,6 +1410,7 @@ extension TalentHomeView {
                                 viewModel.routeToEditSchedule(id: meeting.id.orEmpty())
                             } onTapDelete: {
                                 viewModel.meetingId = meeting.id.orEmpty()
+                                viewModel.alertType = .deleteSelector
                                 viewModel.isShowDelete.toggle()
                             }
                             .onAppear {
