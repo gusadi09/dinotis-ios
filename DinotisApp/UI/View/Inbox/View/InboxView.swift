@@ -11,6 +11,7 @@ import SwiftUI
 struct InboxView: View {
     
     @EnvironmentObject var viewModel: InboxViewModel
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         VStack(spacing: 0) {
@@ -21,13 +22,13 @@ struct InboxView: View {
                 textColor: .DinotisDefault.black1,
                 leadingButton:  {
                     Button {
-                        
+                        dismiss()
                     } label: {
                         Image.generalBackIcon
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 24, height: 24)
-                            .padding(8)
+                            .frame(width: 20, height: 20)
+                            .padding(12)
                             .background(
                                 Circle()
                                     .fill(.white)
@@ -74,6 +75,8 @@ struct InboxView: View {
                     .ignoresSafeArea()
             )
         }
+        .navigationBarTitle(Text(""))
+        .navigationBarHidden(true)
     }
 }
 
