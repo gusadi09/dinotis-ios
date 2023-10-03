@@ -80,8 +80,8 @@ struct RateCardServiceBookingView: View {
                 DinotisPrimaryButton(
                     text: LocalizableText.nextLabel,
                     type: .adaptiveScreen,
-                    textColor: viewModel.noteText.isEmpty || !viewModel.noteText.isStringContainWhitespaceAndText() ? .DinotisDefault.lightPrimaryActive : .DinotisDefault.white,
-                    bgColor: viewModel.noteText.isEmpty || !viewModel.noteText.isStringContainWhitespaceAndText() ? .DinotisDefault.lightPrimary : .DinotisDefault.primary
+                    textColor: .DinotisDefault.white,
+                    bgColor: .DinotisDefault.primary
                 ) {
                     UIApplication.shared.endEditing()
                     viewModel.isPresent = true
@@ -91,7 +91,6 @@ struct RateCardServiceBookingView: View {
 					Color.white
 						.edgesIgnoringSafeArea(.bottom)
 				)
-                .disabled(viewModel.noteText.isEmpty || !viewModel.noteText.isStringContainWhitespaceAndText())
 
             }
             .onAppear {

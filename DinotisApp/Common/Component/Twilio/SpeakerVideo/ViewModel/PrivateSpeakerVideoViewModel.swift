@@ -17,6 +17,7 @@ struct PrivateSpeakerVideoViewModel {
     var isYou = false
     var isMuted = false
     var cameraTrack: VideoTrack?
+    var presentationTrack: VideoTrack?
     var shouldMirrorCameraVideo = true
     var pinValue = 0
     
@@ -27,7 +28,7 @@ struct PrivateSpeakerVideoViewModel {
         isYou = true
         isMuted = !participant.isMicOn
         
-        if let cameraTrack = participant.cameraTrack, cameraTrack.isEnabled {
+        if let cameraTrack = participant.cameraTrack {
             self.cameraTrack = cameraTrack
         } else {
             cameraTrack = nil
@@ -40,6 +41,7 @@ struct PrivateSpeakerVideoViewModel {
         displayName = DisplayNameFactory().makeDisplayName(identity: participant.identity, isHost: isHost, isYou: false)
         isMuted = !participant.isMicOn
         cameraTrack = participant.cameraTrack
+        presentationTrack = participant.presentationTrack
     }
     
 }
@@ -61,6 +63,7 @@ extension PrivateSpeakerVideoViewModel {
         isYou: Bool = false,
         isMuted: Bool = false,
         cameraTrack: VideoTrack? = nil,
+        presentationTrack: VideoTrack? = nil,
         shouldMirrorCameraVideo: Bool = false
     ) {
         self.identity = identity
@@ -68,6 +71,7 @@ extension PrivateSpeakerVideoViewModel {
         self.isYou = isYou
         self.isMuted = isMuted
         self.cameraTrack = cameraTrack
+        self.presentationTrack = presentationTrack
         self.shouldMirrorCameraVideo = shouldMirrorCameraVideo
     }
 }

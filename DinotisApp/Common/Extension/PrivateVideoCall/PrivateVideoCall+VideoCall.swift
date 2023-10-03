@@ -25,7 +25,6 @@ extension PrivateVideoCallView {
 	
 	func toogleLocalCamera() {
 		DispatchQueue.main.async {
-			
 			self.speakerSettingsManager.isCameraOn.toggle()
 		}
 	}

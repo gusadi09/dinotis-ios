@@ -34,18 +34,20 @@ class PrivateLocalParticipantManager: NSObject {
             }
         }
     }
-    var isMicOn: Bool {
-        get {
-            micTrack?.isEnabled ?? false
-        }
-        set {
-            if newValue {
-                guard
-                    micTrack == nil,
-                    let micTrack = LocalAudioTrack(options: nil, enabled: true, name: TrackName.mic)
-                else {
+    var isMicOn = false {
+        didSet {
+            
+            guard oldValue != isMicOn else {
+                return
+            }
+            
+            if isMicOn {
+                guard let micTrack = LocalAudioTrack(options: nil, enabled: true, name: TrackName.mic) else {
                     return
                 }
+                
+                self.micTrack = micTrack
+                participant?.publishAudioTrack(micTrack)
                 
                 self.micTrack = micTrack
                 participant?.publishAudioTrack(micTrack)
@@ -81,11 +83,7 @@ class PrivateLocalParticipantManager: NSObject {
                     return
                 }
                 
-                cameraSource.startCapture(device: captureDevice) { _, _, error in
-                    if let error = error {
-                        print("Start capture error: \(error)")
-                    }
-                }
+                cameraSource.startCapture(device: captureDevice, completion: nil)
                 
                 participant?.publishVideoTrack(cameraTrack)
                 self.cameraSource = cameraSource

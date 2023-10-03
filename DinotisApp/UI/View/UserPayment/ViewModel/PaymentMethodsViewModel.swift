@@ -438,7 +438,7 @@ final class PaymentMethodsViewModel: ObservableObject {
             let body = RequestSessionRequest(
                 paymentMethod: selectItem,
                 rateCardId: meetingId,
-                message: rateCardMessage,
+                message: rateCardMessage.isEmpty ? nil : rateCardMessage,
                 requestAt: requestTime
             )
 

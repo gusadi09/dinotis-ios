@@ -182,7 +182,7 @@ struct UserScheduleDetail: View {
                         ScrollableContent(viewModel: viewModel, action: refreshList, participantCount: participantCount(data: viewModel.dataBooking))
                             .environmentObject(customerChatManager)
                         
-                        if ((viewModel.dataBooking?.status).orEmpty().contains(SessionStatus.upcoming.rawValue) || (viewModel.dataBooking?.status).orEmpty().contains(SessionStatus.paid.rawValue))  &&
+                        if !(viewModel.dataBooking?.status).orEmpty().contains(SessionStatus.done.rawValue)  &&
                             viewModel.dataBooking != nil
                         {
                             BottomView(viewModel: viewModel)
@@ -1835,7 +1835,7 @@ private extension UserScheduleDetail {
                             textColor: .white,
                             bgColor: .DinotisDefault.primary
                         ) {
-                            
+                            viewModel.showReviewSheet.toggle()
                         }
                     }
                 }

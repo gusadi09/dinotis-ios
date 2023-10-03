@@ -383,7 +383,7 @@ final class RateCardServiceBookingFormViewModel: NSObject, ObservableObject, SKP
     func coinPayment() async {
         onStartPay()
         
-        let body = RequestSessionRequest(rateCardId: rateCard.id.orEmpty(), message: noteText, requestAt: dateSuggestion.iso8601withFractionalSeconds)
+        let body = RequestSessionRequest(rateCardId: rateCard.id.orEmpty(), message: noteText.isEmpty ? nil : noteText, requestAt: dateSuggestion.iso8601withFractionalSeconds)
 
         let result = await rateCardPaymentUseCase.execute(with: body)
 

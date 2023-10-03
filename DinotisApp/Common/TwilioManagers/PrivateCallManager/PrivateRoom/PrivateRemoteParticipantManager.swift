@@ -30,6 +30,16 @@ class PrivateRemoteParticipantManager: NSObject {
         
         return track
     }
+    var presentationTrack: VideoTrack? {
+        guard
+            let publication = participant.remoteVideoTracks.first(where: { $0.trackName.contains("screen") }),
+            let track = publication.remoteTrack
+        else {
+            return nil
+        }
+        
+        return track
+    }
     private let participant: RemoteParticipant
     private weak var delegate: PrivateRemoteParticipantManagerDelegate?
     

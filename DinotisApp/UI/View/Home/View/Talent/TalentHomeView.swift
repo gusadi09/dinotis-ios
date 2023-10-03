@@ -453,6 +453,7 @@ struct TalentHomeView: View {
                                     }
                                 }
                                 
+                                
                             }
                             .frame(height: !homeVM.closestSessions.isEmpty ? 570 : 340)
                             
@@ -558,12 +559,6 @@ struct TalentHomeView: View {
                                 EmptyView()
                             default:
                                 VStack(spacing: 0) {
-                                    Text(LocalizableText.ratecardRequestExplanation)
-                                        .font(.robotoRegular(size: 12))
-                                        .foregroundColor(.DinotisDefault.black3)
-                                        .multilineTextAlignment(.center)
-                                        .padding([.bottom, .horizontal])
-                                        .isHidden(homeVM.currentSection != .notConfirmed, remove: homeVM.currentSection != .notConfirmed)
                                     
                                     HStack {
                                         Text(LocalizableText.sortByLabel)
@@ -619,6 +614,7 @@ struct TalentHomeView: View {
                                             )
                                         }
                                     }
+                                    
                                 }
                             }
                         }
@@ -1220,6 +1216,12 @@ extension TalentHomeView {
         
         var body: some View {
             LazyVStack(alignment: .leading, spacing: 12) {
+                Text(LocalizableText.ratecardRequestExplanation)
+                    .font(.robotoRegular(size: 12))
+                    .foregroundColor(.DinotisDefault.black3)
+                    .multilineTextAlignment(.center)
+                    .padding(.bottom, 10)
+                
                 if !viewModel.meetingRequestData.unique().isEmpty {
                     ForEach(viewModel.meetingRequestData.sorted(by: { $0.createdAt?.compare($1.createdAt.orCurrentDate()) == (viewModel.isSortByLatestNotConfirmed ? .orderedDescending : .orderedAscending) }).unique(), id: \.id) { item in
                         RequestCardView(
@@ -1227,10 +1229,12 @@ extension TalentHomeView {
                             item: item,
                             onTapDecline: {
                                 viewModel.requestId = item.id.orEmpty()
+                                viewModel.requestMeetingId = item.meetingId.orEmpty()
                                 viewModel.confirmationSheet = .declined
                             },
                             onTapAccept: {
                                 viewModel.requestId = item.id.orEmpty()
+                                viewModel.requestMeetingId = item.meetingId.orEmpty()
                                 viewModel.confirmationSheet = .accepted
                             }
                         )
