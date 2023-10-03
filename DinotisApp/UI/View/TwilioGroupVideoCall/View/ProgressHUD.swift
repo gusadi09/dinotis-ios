@@ -58,16 +58,19 @@ struct ProgressHUDFlat: View {
 
 	var title: String?
 	var description = ""
-	var geo: GeometryProxy
+    
+    var isPad: Bool {
+        UIDevice.current.userInterfaceIdiom == .pad
+    }
 
 	var body: some View {
-		ZStack {
-			Color.black
-				.opacity(0.4)
+		VStack {
+            Spacer()
+            
 			VStack(spacing: 20) {
 				LottieView(name: "waiting-talent", loopMode: .loop)
 					.scaledToFit()
-					.frame(height: geo.size.height/4)
+                    .frame(height: isPad ? 300 : 180)
 
 				if let title = title {
 					Text(title)
@@ -82,8 +85,9 @@ struct ProgressHUDFlat: View {
 					.multilineTextAlignment(.center)
 			}
 			.padding()
+            
+            Spacer()
 		}
-		.ignoresSafeArea()
 	}
 }
 
