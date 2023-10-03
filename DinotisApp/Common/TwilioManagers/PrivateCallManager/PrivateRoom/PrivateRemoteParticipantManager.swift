@@ -32,7 +32,7 @@ class PrivateRemoteParticipantManager: NSObject {
     }
     var presentationTrack: VideoTrack? {
         guard
-            let publication = participant.remoteVideoTracks.first(where: { $0.trackName.contains(TrackName.presentation) }),
+            let publication = participant.remoteVideoTracks.first(where: { $0.trackName.contains("screen") }),
             let track = publication.remoteTrack
         else {
             return nil
