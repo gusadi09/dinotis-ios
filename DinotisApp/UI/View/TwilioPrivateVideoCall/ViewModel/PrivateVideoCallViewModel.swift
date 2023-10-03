@@ -30,6 +30,10 @@ final class PrivateVideoCallViewModel: ObservableObject {
 	@Published var isLocalInSession = false
 	@Published var isLocalAudioMuted = false
 	@Published var isSwitchCam = true
+    @Published var isShowUtilities = true
+    
+    @Published var participantPhotoUrl = ""
+    @Published var userPhotoUrl = ""
 
 	@Published var isRemoteAudioMuted = false
 
@@ -245,6 +249,8 @@ final class PrivateVideoCallViewModel: ObservableObject {
                 self?.success = true
                 self?.isLoading = false
                 self?.userData = success
+                self?.userPhotoUrl = success.profilePhoto ?? ""
+                self?.participantPhotoUrl = success.id == self?.meeting.participantDetails?.first?.id ? self?.meeting.user?.profilePhoto ?? "" : self?.participantPhotoUrl ?? ""
             }
         case .failure(let failure):
             handleDefaultError(error: failure)
