@@ -15,7 +15,7 @@ public class Configuration {
 		if let configuration = Bundle.main.object(forInfoDictionaryKey: "Configuration") as? String {
 			if configuration.range(of: "Development") != nil {
 				return EnvironmentApi.development
-            } else if configuration.range(of: "Development") != nil {
+            } else if configuration.range(of: "Staging") != nil {
                 return EnvironmentApi.staging
             }
 		}
