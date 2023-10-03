@@ -15,6 +15,12 @@ import Lottie
 struct PrivateVideoCallView : View {
 
 	@ObservedObject var stateObservable = StateObservable.shared
+    @Environment(\.verticalSizeClass) var verticalSizeClass
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    
+    var isPotrait: Bool {
+        horizontalSizeClass == .compact && verticalSizeClass == .regular
+    }
 	
 	@Environment(\.viewController) private var viewControllerHolder: ViewControllerHolder
 	
@@ -47,37 +53,44 @@ struct PrivateVideoCallView : View {
 						EmptyView()
 					}
 				)
-				
-				Color.DinotisDefault.primary.edgesIgnoringSafeArea(.vertical)
-					.onChange(of: viewModel.isSwitchCam) { newValue in
-						streamManager.roomManager?.localParticipant.position = newValue ? .front : .back
-					}
-				
+                .onChange(of: isPotrait) { newValue in
+                    if newValue {
+                        viewModel.dragOffset = CGPoint(x: 0, y: 0)
+                    }
+                }
+                
+                GeometryReader { geo in
+                    Image.videoCallBackgroundPattern
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: geo.size.width, height: geo.size.height)
+                }
+                .ignoresSafeArea()
+                
 				ZStack {
 
 					if viewModel.isSwitchCanvas {
-                        PrivateSpeakerVideoView(speaker: $speakerGridViewModel.localSpeaker, isCamEnabled: $speakerGridViewModel.camAvailable, isMainView: true, isLocal: true)
+                        PrivateSpeakerVideoView(speaker: $speakerGridViewModel.localSpeaker, isCamEnabled: $speakerGridViewModel.camAvailable, photoUrl: $viewModel.userPhotoUrl, isMainView: true, isLocal: true)
 							.rotationEffect(.degrees(0))
 							.rotation3DEffect(.degrees(StateObservable.shared.cameraPositionUsed == .back ? 180 : 0), axis: (0, 1, 0))
 					} else {
-						if speakerGridViewModel.remoteSpeakers.identity.isEmpty {
-							GeometryReader { geo in
-								ZStack {
-									Color.black.edgesIgnoringSafeArea([.bottom, .horizontal])
-
-									ProgressHUDFlat(
-                                        title: LocaleText.waitingOtherToJoin,
-                                        geo: geo
-                                    )
-                                    .padding()
-                                }
+                        if speakerGridViewModel.remoteSpeakers.identity.isEmpty {
+                            ZStack {
+                                ProgressHUDFlat(
+                                    title: LocaleText.waitingOtherToJoin
+                                )
+                                .padding()
                             }
                         } else {
-                            PrivateSpeakerVideoView(speaker: $speakerGridViewModel.remoteSpeakers, isCamEnabled: $speakerGridViewModel.remoteCamAvailable, isMainView: true, isLocal: false)
+                            if speakerGridViewModel.remoteSpeakers.presentationTrack != nil {
+                                PresentationVideoView(videoTrack: $speakerGridViewModel.remoteSpeakers.presentationTrack)
+                            } else {
+                                PrivateSpeakerVideoView(speaker: $speakerGridViewModel.remoteSpeakers, isCamEnabled: $speakerGridViewModel.remoteCamAvailable, photoUrl: $viewModel.participantPhotoUrl, isMainView: true, isLocal: false)
+                            }
                         }
                     }
                 }
-				.edgesIgnoringSafeArea(.bottom)
+				.edgesIgnoringSafeArea(.all)
 
 				VStack {
 					HStack {
@@ -85,22 +98,35 @@ struct PrivateVideoCallView : View {
 						ZStack {
 							Group {
 								if viewModel.isSwitchCanvas {
-                                    PrivateSpeakerVideoView(speaker: $speakerGridViewModel.remoteSpeakers, isCamEnabled: $speakerGridViewModel.remoteCamAvailable, isMainView: false, isLocal: false)
+                                    PrivateSpeakerVideoView(speaker: $speakerGridViewModel.remoteSpeakers, isCamEnabled: $speakerGridViewModel.remoteCamAvailable, photoUrl: $viewModel.participantPhotoUrl, isMainView: false, isLocal: false)
 								} else {
-                                    PrivateSpeakerVideoView(speaker: $speakerGridViewModel.localSpeaker, isCamEnabled: $speakerGridViewModel.camAvailable, isMainView: false, isLocal: true)
+                                    PrivateSpeakerVideoView(speaker: $speakerGridViewModel.localSpeaker, isCamEnabled: $speakerGridViewModel.camAvailable, photoUrl: $viewModel.userPhotoUrl, isMainView: false, isLocal: true)
 										.rotationEffect(.degrees(0))
 										.rotation3DEffect(.degrees(StateObservable.shared.cameraPositionUsed == .back ? 180 : 0), axis: (0, 1, 0))
 								}
 							}
 								.onTapGesture {
-									if !speakerGridViewModel.remoteSpeakers.identity.isEmpty {
+                                    if !speakerGridViewModel.remoteSpeakers.identity.isEmpty && speakerGridViewModel.remoteSpeakers.presentationTrack == nil {
 										viewModel.isSwitchCanvas.toggle()
 									}
 								}
 						}
-						.frame(width: geo.size.width/3.5, height: geo.size.height/3.5)
+                        .frame(
+                            width: isPotrait ? (viewModel.isShowUtilities ? geo.size.width/3.5 : geo.size.width/4) : (viewModel.isShowUtilities ? geo.size.width/5.5 : geo.size.width/6.5),
+                            height: isPotrait ? (viewModel.isShowUtilities ? geo.size.height/3.5 : geo.size.height/5) : (viewModel.isShowUtilities ? geo.size.width/4.5 : geo.size.width/5.5))
 						.cornerRadius(10)
-						.shadow(color: speakerGridViewModel.remoteSpeakers.identity.isEmpty ? .gray.opacity(0.3) : .black.opacity(0.2), radius: 10, x: 0, y: 0)
+                        .shadow(
+                            color: speakerGridViewModel.remoteSpeakers.identity.isEmpty ?
+                                .gray.opacity(speakerGridViewModel.remoteSpeakers.presentationTrack != nil ? 0 : 0.3) :
+                                (
+                                    speakerGridViewModel.remoteCamAvailable ?
+                                    .black.opacity(speakerGridViewModel.remoteSpeakers.presentationTrack != nil ? 0 : 0.2) :
+                                        .gray.opacity(speakerGridViewModel.remoteSpeakers.presentationTrack != nil ? 0 : 0.3)
+                                ),
+                            radius: 10, 
+                            x: 0,
+                            y: 0
+                        )
 						.draggable(by: $viewModel.dragOffset)
 
 						}
@@ -221,6 +247,7 @@ struct PrivateVideoCallView : View {
 						
 					}
 					.padding()
+                    .isHidden(!viewModel.isShowUtilities, remove: !viewModel.isShowUtilities)
 				}
 
 				HStack(spacing: 5) {
@@ -242,6 +269,11 @@ struct PrivateVideoCallView : View {
 				.padding(.top, 8)
 				
 			}
+            .onTapGesture {
+                withAnimation(.spring()) {
+                    viewModel.isShowUtilities = !viewModel.isShowUtilities
+                }
+            }
 			
 			GeometryReader { proxy in
 				ZStack {
@@ -585,12 +617,13 @@ struct PrivateVideoCallView : View {
                 self.streamManager.connect(meetingId: viewModel.meeting.id.orEmpty())
                 
                 UIApplication.shared.isIdleTimerDisabled = true
+                AppDelegate.orientationLock = .all
             }
 		}
 		.onDisappear(perform: {
 			UIApplication.shared.isIdleTimerDisabled = false
+            AppDelegate.orientationLock = .portrait
 		})
-		
 		.navigationBarTitle(Text(""))
 		.navigationBarHidden(true)
 	}
