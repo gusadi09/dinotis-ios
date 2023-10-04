@@ -2519,7 +2519,7 @@ public enum LocalizableText {
         "already_refund",
         bundle: .module,
         comment: "already refund"
-    
+    )
     public static let creatorInboxTitle = NSLocalizedString(
         "creator_inbox_title",
         bundle: .module,
