@@ -622,7 +622,7 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
     }
     
     func disableStartButton() -> Bool {
-        return (dataBooking?.meeting?.startAt).orCurrentDate().addingTimeInterval(-280) > Date() || dataBooking?.meeting?.startAt != nil
+        return (dataBooking?.meeting?.startAt).orCurrentDate().addingTimeInterval(-280) > Date() || dataBooking?.meeting?.startAt == nil
     }
     
     func reviewStars() -> Int {
