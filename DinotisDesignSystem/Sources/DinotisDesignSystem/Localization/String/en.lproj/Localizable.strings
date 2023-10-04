@@ -552,3 +552,9 @@
 "gift_label" = "Gift";
 
 "create_session_minimum_participant_alert" = "Participants for Group call must more than 0";
+"creator_confirmation_status" = "Waiting confirmation from Creator";
+"creator_not_set_schedule_status" = "Schedule didn't set";
+"creator_scheduled_status" = "Session already scheduled";
+"creator_canceled_status" = "Session cancelled by Creator";
+"refund_status" = "Refund Status";
+"already_refund" = "Already Refund";

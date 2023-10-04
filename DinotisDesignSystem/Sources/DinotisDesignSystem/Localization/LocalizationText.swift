@@ -2490,6 +2490,36 @@ public enum LocalizableText {
         bundle: .module,
         comment: "set time"
     )
+    public static let creatorConfirmationStatus = NSLocalizedString(
+        "creator_confirmation_status",
+        bundle: .module,
+        comment: "Waiting confirmation from Creator"
+    )
+    public static let creatorNotSetScheduleStatus = NSLocalizedString(
+        "creator_not_set_schedule_status",
+        bundle: .module,
+        comment: "Schedule didn't set"
+    )
+    public static let creatorScheduledStatus = NSLocalizedString(
+        "creator_scheduled_status",
+        bundle: .module,
+        comment: "Session already scheduled"
+    )
+    public static let creatorCancelledStatus = NSLocalizedString(
+        "creator_canceled_status",
+        bundle: .module,
+        comment: "Session cancelled by Creator"
+    )
+    public static let refundStatus = NSLocalizedString(
+        "refund_status",
+        bundle: .module,
+        comment: "refund status"
+    )
+    public static let alreadyRefund = NSLocalizedString(
+        "already_refund",
+        bundle: .module,
+        comment: "already refund"
+    )
 }
 
 

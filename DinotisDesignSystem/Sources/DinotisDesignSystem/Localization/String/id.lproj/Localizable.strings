@@ -551,4 +551,10 @@
 "anytime_label" = "Kapan saja";
 "gift_label" = "Gift";
 
-"create_session_minimum_participant_alert" = "Participant untuk sesi Group Call harus lebih dari 0";
+"create_session_minimum_participant_alert" = "Peserta untuk sesi Group Call harus lebih dari 0";
+"creator_confirmation_status" = "Menunggu konfirmasi Kreator";
+"creator_not_set_schedule_status" = "Jadwal belum diatur";
+"creator_scheduled_status" = "Sesi telah dijadwalkan";
+"creator_canceled_status" = "Sesi dibatalkan Kreator";
+"refund_status" = "Status Refund";
+"already_refund" = "Telah Direfund";
