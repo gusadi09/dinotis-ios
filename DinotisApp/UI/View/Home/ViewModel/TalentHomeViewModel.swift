@@ -261,6 +261,14 @@ final class TalentHomeViewModel: ObservableObject {
         }
     }
     
+    func routeToInbox() {
+        let viewModel = InboxViewModel()
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .inbox(viewModel: viewModel)
+        }
+    }
+    
     func routeToProfile() {
         let viewModel = ProfileViewModel(backToHome: { self.route = nil })
         

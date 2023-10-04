@@ -153,4 +153,8 @@ public extension Image {
     static let homeTalentNotificationIcon = Image("ic-notification-bell-primary", bundle: .module)
     static let homeTalentChatPrimaryIcon = Image("ic-chat-primary", bundle: .module)
     static let homeTalentWalletIcon = Image("ic-wallet-home", bundle: .module)
+    
+    static let inboxAudienceIcon = Image("ic-audience-inbox", bundle: .module)
+    static let inboxReviewIcon = Image("ic-review-inbox", bundle: .module)
+    static let inboxScheduleIcon = Image("ic-schedule-inbox", bundle: .module)
 }

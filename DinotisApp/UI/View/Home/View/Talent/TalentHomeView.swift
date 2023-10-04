@@ -96,6 +96,19 @@ struct TalentHomeView: View {
                     }
                 )
                 
+                NavigationLink(
+                    unwrapping: $homeVM.route,
+                    case: /HomeRouting.inbox,
+                    destination: { viewModel in
+                        InboxView()
+                            .environmentObject(viewModel.wrappedValue)
+                    },
+                    onNavigate: { _ in },
+                    label: {
+                        EmptyView()
+                    }
+                )
+                
                 ZStack(alignment: .bottom) {
                     
                     ZStack(alignment: .bottomTrailing) {
@@ -161,7 +174,7 @@ struct TalentHomeView: View {
                                     Spacer()
                                     
                                     Button {
-                                        
+                                        homeVM.routeToInbox()
                                     } label: {
                                         ZStack(alignment: .topTrailing) {
                                             
@@ -191,7 +204,6 @@ struct TalentHomeView: View {
                                             //                                        }
                                         }
                                     }
-                                    .isHidden(true, remove: true)
                                     
                                     Button {
                                         homeVM.routeToNotification()

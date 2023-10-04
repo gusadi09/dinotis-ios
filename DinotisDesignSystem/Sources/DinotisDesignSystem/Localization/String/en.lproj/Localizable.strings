@@ -552,3 +552,9 @@
 "gift_label" = "Gift";
 
 "create_session_minimum_participant_alert" = "Participants for Group call must more than 0";
+
+"creator_inbox_title" = "Creator Inbox";
+"inbox_discuss_schedule_title" = "Schedule Discussion Chat";
+"inbox_discuss_schedule_desc" = "Conversation about scheduling with the creator.";
+"inbox_completed_session_desc" = "Conversation history of completed sessions.";
+"inbox_review_desc" = "Give ratings for completed sessions.";

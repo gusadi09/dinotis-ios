@@ -2490,6 +2490,32 @@ public enum LocalizableText {
         bundle: .module,
         comment: "set time"
     )
+    
+    public static let creatorInboxTitle = NSLocalizedString(
+        "creator_inbox_title",
+        bundle: .module,
+        comment: "title in inbox view"
+    )
+    public static let inboxDiscussScheduleTitle = NSLocalizedString(
+        "inbox_discuss_schedule_title",
+        bundle: .module,
+        comment: "title of schedule discussion section in inbox view"
+    )
+    public static let inboxDiscussScheduleDesc = NSLocalizedString(
+        "inbox_discuss_schedule_desc",
+        bundle: .module,
+        comment: "description of schedule discussion section in inbox view"
+    )
+    public static let inboxCompletedSessionDesc = NSLocalizedString(
+        "inbox_completed_session_desc",
+        bundle: .module,
+        comment: "description of completed session section in inbox view"
+    )
+    public static let inboxReviewDesc = NSLocalizedString(
+        "inbox_review_desc",
+        bundle: .module,
+        comment: "description of completed session section in inbox view"
+    )
 }
 
 

@@ -11,6 +11,8 @@
 		0A0664D1280F4939009EC7C0 /* EmptySchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0664D0280F4939009EC7C0 /* EmptySchedule.swift */; };
 		0AE145A22812801E00108948 /* TalentEditProfile+Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE145A12812801E00108948 /* TalentEditProfile+Component.swift */; };
 		37B4DBCF2A8A963B00D3EAA1 /* AfterFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B4DBCE2A8A963B00D3EAA1 /* AfterFeedback.swift */; };
+		4B03ED3D2ACC17C4004DD0FA /* InboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B03ED3C2ACC17C4004DD0FA /* InboxView.swift */; };
+		4B03ED3F2ACC18D3004DD0FA /* InboxViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B03ED3E2ACC18D3004DD0FA /* InboxViewModel.swift */; };
 		4BA7D6152AC1756500B5177E /* session-close-to-end.json in Resources */ = {isa = PBXBuildFile; fileRef = 4BA7D6142AC1756500B5177E /* session-close-to-end.json */; };
 		EC01F1E326BFD7C600CA878F /* UserBiodataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC01F1E226BFD7C600CA878F /* UserBiodataView.swift */; };
 		EC0279F227C5E40B00B8C392 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0279F127C5E40A00B8C392 /* RoundedCorner.swift */; };
@@ -366,6 +368,8 @@
 		0A0664D0280F4939009EC7C0 /* EmptySchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptySchedule.swift; sourceTree = "<group>"; };
 		0AE145A12812801E00108948 /* TalentEditProfile+Component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TalentEditProfile+Component.swift"; sourceTree = "<group>"; };
 		37B4DBCE2A8A963B00D3EAA1 /* AfterFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfterFeedback.swift; sourceTree = "<group>"; };
+		4B03ED3C2ACC17C4004DD0FA /* InboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxView.swift; sourceTree = "<group>"; };
+		4B03ED3E2ACC18D3004DD0FA /* InboxViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxViewModel.swift; sourceTree = "<group>"; };
 		4BA7D6142AC1756500B5177E /* session-close-to-end.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "session-close-to-end.json"; sourceTree = "<group>"; };
 		EC01F1E226BFD7C600CA878F /* UserBiodataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserBiodataView.swift; sourceTree = "<group>"; };
 		EC0279F127C5E40A00B8C392 /* RoundedCorner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
@@ -734,6 +738,31 @@
 				37B4DBCE2A8A963B00D3EAA1 /* AfterFeedback.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		4B03ED392ACC1783004DD0FA /* Inbox */ = {
+			isa = PBXGroup;
+			children = (
+				4B03ED3B2ACC17B7004DD0FA /* ViewModel */,
+				4B03ED3A2ACC17AD004DD0FA /* View */,
+			);
+			path = Inbox;
+			sourceTree = "<group>";
+		};
+		4B03ED3A2ACC17AD004DD0FA /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4B03ED3C2ACC17C4004DD0FA /* InboxView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		4B03ED3B2ACC17B7004DD0FA /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				4B03ED3E2ACC18D3004DD0FA /* InboxViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		EC01F1DF26BFD7A500CA878F /* Biodata */ = {
@@ -2006,6 +2035,7 @@
 		ECBA142E26B79149004D452C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				4B03ED392ACC1783004DD0FA /* Inbox */,
 				37B4DBC62A89E56200D3EAA1 /* Feedback */,
 				EC3B977A2A41B4D6006D7B1B /* GroupVideoCall */,
 				ECD453B32A272A1100338D05 /* OutdatedVersion */,
@@ -3021,6 +3051,7 @@
 				EC6D5B0128B36ADD00BB794F /* SyncRoomDocument.swift in Sources */,
 				EC6D0E60298306BF0016C45D /* TabViewContainer.swift in Sources */,
 				ECDAE3A126B7FF3D00419194 /* FontManager.swift in Sources */,
+				4B03ED3D2ACC17C4004DD0FA /* InboxView.swift in Sources */,
 				EC7222682950150100C05A1B /* FollowedCreatorView.swift in Sources */,
 				EC246D402705AFB90084846F /* SearchTalent.swift in Sources */,
 				EC4E4FE727FB4D75009D66FF /* Message.swift in Sources */,
@@ -3102,6 +3133,7 @@
 				F63A098D289BED1C008C7815 /* SpeakerGridView.swift in Sources */,
 				EC7B1EA427BCD3AF00471219 /* LocaleText.swift in Sources */,
 				EC9C4E302813FD1000837469 /* PreviewTalentView.swift in Sources */,
+				4B03ED3F2ACC18D3004DD0FA /* InboxViewModel.swift in Sources */,
 				ECAAA2A4280C28CC00AAC6CA /* TalentPhotoProfile.swift in Sources */,
 				F63A0992289C04B4008C7815 /* SpeakerSettingsManager.swift in Sources */,
 				F63A097B289BD53A008C7815 /* PresentationLayoutView.swift in Sources */,
