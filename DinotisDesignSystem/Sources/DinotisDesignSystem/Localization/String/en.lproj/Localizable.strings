@@ -558,3 +558,9 @@
 "creator_canceled_status" = "Session cancelled by Creator";
 "refund_status" = "Refund Status";
 "already_refund" = "Already Refund";
+
+"creator_inbox_title" = "Creator Inbox";
+"inbox_discuss_schedule_title" = "Schedule Discussion Chat";
+"inbox_discuss_schedule_desc" = "Conversation about scheduling with the creator.";
+"inbox_completed_session_desc" = "Conversation history of completed sessions.";
+"inbox_review_desc" = "Give ratings for completed sessions.";

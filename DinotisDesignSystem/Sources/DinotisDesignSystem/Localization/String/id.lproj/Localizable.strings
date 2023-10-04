@@ -558,3 +558,10 @@
 "creator_canceled_status" = "Sesi dibatalkan Kreator";
 "refund_status" = "Status Refund";
 "already_refund" = "Telah Direfund";
+"create_session_minimum_participant_alert" = "Participant untuk sesi Group Call harus lebih dari 0";
+
+"creator_inbox_title" = "Inbox Kreator";
+"inbox_discuss_schedule_title" = "Chat Diskusi Jadwal";
+"inbox_discuss_schedule_desc" = "Percakapan atur jadwal bersama creator.";
+"inbox_completed_session_desc" = "Riwayat percakapan sesi yang telah selesai.";
+"inbox_review_desc" = "Berikan penilaian untuk sesi yang telah selesai.";
