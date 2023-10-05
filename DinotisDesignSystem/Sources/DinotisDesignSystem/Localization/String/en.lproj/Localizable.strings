@@ -564,3 +564,12 @@
 "inbox_discuss_schedule_desc" = "Conversation about scheduling with the creator.";
 "inbox_completed_session_desc" = "Conversation history of completed sessions.";
 "inbox_review_desc" = "Give ratings for completed sessions.";
+
+
+"discussion_tag_unread" = "Unread";
+"discussion_tag_nearest_schedule" = "Nearest Schedule";
+"discussion_status_cancel_within" = "Cancel Within **%@**";
+"discussion_status_scheduled_session" = "Scheduled Session";
+
+"day_text" = "Day";
+"hour_text" = "Hour";
