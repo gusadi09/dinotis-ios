@@ -564,3 +564,11 @@
 "inbox_discuss_schedule_desc" = "Percakapan atur jadwal bersama creator.";
 "inbox_completed_session_desc" = "Riwayat percakapan sesi yang telah selesai.";
 "inbox_review_desc" = "Berikan penilaian untuk sesi yang telah selesai.";
+
+"discussion_tag_unread" = "Belum dibaca";
+"discussion_tag_nearest_schedule" = "Jadwal Terdekat";
+"discussion_status_cancel_within" = "C **%@**";
+"discussion_status_scheduled_session" = "Sesi Terjadwalkan";
+
+"day_text" = "Hari";
+"hour_text" = "Jam";

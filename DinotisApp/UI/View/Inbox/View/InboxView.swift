@@ -5,16 +5,30 @@
 //  Created by Irham Naufal on 03/10/23.
 //
 
+import DinotisData
 import DinotisDesignSystem
 import SwiftUI
+import SwiftUINavigation
 
 struct InboxView: View {
     
+    @ObservedObject var state = StateObservable.shared
     @EnvironmentObject var viewModel: InboxViewModel
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
         VStack(spacing: 0) {
+            NavigationLink(
+                unwrapping: $viewModel.route,
+                case: /HomeRouting.discussionList) { viewModel in
+                    DiscussionListView()
+                        .environmentObject(viewModel.wrappedValue)
+                } onNavigate: { _ in
+                    
+                } label: {
+                    EmptyView()
+                }
+            
             HeaderView(
                 type: .textHeader,
                 title: LocalizableText.creatorInboxTitle,
@@ -45,7 +59,7 @@ struct InboxView: View {
                         description: LocalizableText.inboxDiscussScheduleDesc,
                         counter: viewModel.discussionChatCounter,
                         action: {
-                            
+                            viewModel.routeToDiscussionList(.ongoing)
                         }
                     )
                     
@@ -55,7 +69,7 @@ struct InboxView: View {
                         description: LocalizableText.inboxCompletedSessionDesc,
                         counter: viewModel.completedSessionCounter,
                         action: {
-                            
+                            viewModel.routeToDiscussionList(.completed)
                         }
                     )
                     
@@ -68,6 +82,7 @@ struct InboxView: View {
                             
                         }
                     )
+                    .isHidden(state.userType != 2, remove: state.userType != 2)
                 }
             }
             .background(

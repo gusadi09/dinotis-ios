@@ -2545,6 +2545,41 @@ public enum LocalizableText {
         bundle: .module,
         comment: "description of completed session section in inbox view"
     )
+    public static let discussionTagUnread = NSLocalizedString(
+        "discussion_tag_unread",
+        bundle: .module,
+        comment: "unread tag in discussion list"
+    )
+    public static let discussionTagNearestSchedule = NSLocalizedString(
+        "discussion_tag_nearest_schedule",
+        bundle: .module,
+        comment: "nearest schedule tag in discussion list"
+    )
+    public static func discussionStatusCancelWithin(date: String) -> String {
+        String(
+            format: NSLocalizedString(
+                "discussion_status_cancel_within",
+                bundle: .module,
+                comment: "not confirmed schedule status in discussion list"
+            ),
+            date
+        )
+    }
+    public static let discussionStatusScheduledSession = NSLocalizedString(
+        "discussion_status_scheduled_session",
+        bundle: .module,
+        comment: "scheduled session status in discussion list"
+    )
+    public static let dayText = NSLocalizedString(
+        "day_text",
+        bundle: .module,
+        comment: "day text"
+    )
+    public static let hourText = NSLocalizedString(
+        "hour_text",
+        bundle: .module,
+        comment: "hour text"
+    )
 }
 
 

@@ -14,6 +14,8 @@
 		4B03ED3D2ACC17C4004DD0FA /* InboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B03ED3C2ACC17C4004DD0FA /* InboxView.swift */; };
 		4B03ED3F2ACC18D3004DD0FA /* InboxViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B03ED3E2ACC18D3004DD0FA /* InboxViewModel.swift */; };
 		4BA7D6152AC1756500B5177E /* session-close-to-end.json in Resources */ = {isa = PBXBuildFile; fileRef = 4BA7D6142AC1756500B5177E /* session-close-to-end.json */; };
+		4BFE4E002ACD4CFF00E14890 /* DiscussionListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFE4DFF2ACD4CFF00E14890 /* DiscussionListViewModel.swift */; };
+		4BFE4E022ACD4D2A00E14890 /* DiscussionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFE4E012ACD4D2A00E14890 /* DiscussionListView.swift */; };
 		EC01F1E326BFD7C600CA878F /* UserBiodataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC01F1E226BFD7C600CA878F /* UserBiodataView.swift */; };
 		EC0279F227C5E40B00B8C392 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0279F127C5E40A00B8C392 /* RoundedCorner.swift */; };
 		EC0279F527C61D7900B8C392 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0279F427C61D7900B8C392 /* ProfileViewModel.swift */; };
@@ -371,6 +373,8 @@
 		4B03ED3C2ACC17C4004DD0FA /* InboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxView.swift; sourceTree = "<group>"; };
 		4B03ED3E2ACC18D3004DD0FA /* InboxViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxViewModel.swift; sourceTree = "<group>"; };
 		4BA7D6142AC1756500B5177E /* session-close-to-end.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "session-close-to-end.json"; sourceTree = "<group>"; };
+		4BFE4DFF2ACD4CFF00E14890 /* DiscussionListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscussionListViewModel.swift; sourceTree = "<group>"; };
+		4BFE4E012ACD4D2A00E14890 /* DiscussionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscussionListView.swift; sourceTree = "<group>"; };
 		EC01F1E226BFD7C600CA878F /* UserBiodataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserBiodataView.swift; sourceTree = "<group>"; };
 		EC0279F127C5E40A00B8C392 /* RoundedCorner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
 		EC0279F427C61D7900B8C392 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
@@ -763,6 +767,31 @@
 				4B03ED3E2ACC18D3004DD0FA /* InboxViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		4BFE4DFC2ACD4CDA00E14890 /* DiscussionList */ = {
+			isa = PBXGroup;
+			children = (
+				4BFE4DFE2ACD4CEF00E14890 /* View */,
+				4BFE4DFD2ACD4CE900E14890 /* ViewModel */,
+			);
+			path = DiscussionList;
+			sourceTree = "<group>";
+		};
+		4BFE4DFD2ACD4CE900E14890 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				4BFE4DFF2ACD4CFF00E14890 /* DiscussionListViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		4BFE4DFE2ACD4CEF00E14890 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4BFE4E012ACD4D2A00E14890 /* DiscussionListView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		EC01F1DF26BFD7A500CA878F /* Biodata */ = {
@@ -2035,6 +2064,7 @@
 		ECBA142E26B79149004D452C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				4BFE4DFC2ACD4CDA00E14890 /* DiscussionList */,
 				4B03ED392ACC1783004DD0FA /* Inbox */,
 				37B4DBC62A89E56200D3EAA1 /* Feedback */,
 				EC3B977A2A41B4D6006D7B1B /* GroupVideoCall */,
@@ -3059,6 +3089,7 @@
 				EC04ED3726C8CB6800E0D473 /* ScheduleCardView.swift in Sources */,
 				F665C44428C9CEA800D669A8 /* PrivateLocalParticipantManager.swift in Sources */,
 				EC2C67FB26C582BE008F094D /* MultilineTextField.swift in Sources */,
+				4BFE4E002ACD4CFF00E14890 /* DiscussionListViewModel.swift in Sources */,
 				F67334D62908EE30006C1ADF /* TalentCardListViewModel.swift in Sources */,
 				EC9C4E34281426AD00837469 /* RequestSchedule.swift in Sources */,
 				F63A09A5289CEC6F008C7815 /* SwiftUIPlayerView.swift in Sources */,
@@ -3285,6 +3316,7 @@
 				ECBFE67D270FF9F80075D01F /* View+Draggable.swift in Sources */,
 				ECD51FAE28A0C25A000B1F6C /* RoomMessage.swift in Sources */,
 				EC4B891729248D270074732A /* CustomerChatManager.swift in Sources */,
+				4BFE4E022ACD4D2A00E14890 /* DiscussionListView.swift in Sources */,
 				ECBE2B652729265D002A45D8 /* WithdrawBank.swift in Sources */,
 				ECED4DD529F8FFC900E79663 /* CreatorPickerView.swift in Sources */,
 				F67335062908F190006C1ADF /* UserBundlingScheduleCardView.swift in Sources */,
