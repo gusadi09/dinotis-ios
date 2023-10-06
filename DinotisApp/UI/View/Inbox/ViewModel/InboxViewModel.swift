@@ -9,7 +9,17 @@ import Foundation
 
 final class InboxViewModel: ObservableObject {
     
+    @Published var route: HomeRouting?
+    
     @Published var discussionChatCounter: String = ""
     @Published var completedSessionCounter: String = ""
     @Published var reviewCounter: String = ""
+    
+    func routeToDiscussionList(_ type: DiscussionListType) {
+        let viewModel = DiscussionListViewModel(type: type)
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .discussionList(viewModel: viewModel)
+        }
+    }
 }
