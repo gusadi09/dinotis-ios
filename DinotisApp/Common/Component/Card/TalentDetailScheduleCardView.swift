@@ -38,7 +38,7 @@ struct TalentDetailScheduleCardView: View {
                                 .foregroundColor(.DinotisDefault.black3.opacity(0.5))
                         )
                 } else if data.meetingRequest != nil && !(data.meetingRequest?.isConfirmed ?? false) {
-                    Text(LocalizableText.creatorConfirmationStatus)
+                    Text(LocalizableText.creatorNotSetScheduleStatus)
                         .multilineTextAlignment(.center)
                         .font(.robotoBold(size: 12))
                         .foregroundColor(.DinotisDefault.orange)
@@ -123,6 +123,7 @@ struct TalentDetailScheduleCardView: View {
                                             .stroke(Color.DinotisDefault.primary, lineWidth: 1)
                                     )
                                 }
+                                .isHidden(true, remove: true)
                             } else if data.meetingRequest != nil && data.startedAt != nil {
                                 Button {
                                     onTapEnd()
