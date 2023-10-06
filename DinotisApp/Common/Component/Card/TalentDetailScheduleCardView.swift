@@ -41,12 +41,12 @@ struct TalentDetailScheduleCardView: View {
                     Text(LocalizableText.creatorNotSetScheduleStatus)
                         .multilineTextAlignment(.center)
                         .font(.robotoBold(size: 12))
-                        .foregroundColor(.DinotisDefault.orange)
+                        .foregroundColor(.DinotisDefault.primary)
                         .padding(10)
                         .frame(maxWidth: .infinity, alignment: .center)
                         .background(
                             Capsule()
-                                .foregroundColor(.DinotisDefault.lightOrange)
+                                .foregroundColor(.DinotisDefault.lightPrimary)
                         )
                 } else if data.meetingRequest != nil && (data.meetingRequest?.isConfirmed ?? false) && data.startAt == nil {
                     Text(LocalizableText.creatorNotSetScheduleStatus)
