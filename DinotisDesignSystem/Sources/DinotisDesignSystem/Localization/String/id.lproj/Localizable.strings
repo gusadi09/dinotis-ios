@@ -567,8 +567,12 @@
 
 "discussion_tag_unread" = "Belum dibaca";
 "discussion_tag_nearest_schedule" = "Jadwal Terdekat";
-"discussion_status_cancel_within" = "C **%@**";
+"discussion_status_cancel_within" = "Batal Dalam **%@**";
 "discussion_status_scheduled_session" = "Sesi Terjadwalkan";
+"discussion_search_placeholder" = "Cari di chat diskusi jadwal...";
+"discussion_search_creator_name" = "Cari nama creator";
+"discussion_search_audience_name" = "Cari nama audiens";
+"discussion_search_not_found" = "Pencarian Tidak Ditemukan";
 
 "day_text" = "Hari";
 "hour_text" = "Jam";
