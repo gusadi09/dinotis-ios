@@ -969,9 +969,9 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
 	}
 
 	func isWaitingCreatorConfirmationFailed(status: String, isAccepted: Bool?) -> Bool {
-		(
-			status == "waiting_creator_confirmation" || status == "schedule_confirmed" || status == "schedule_started" || status == "schedule_ended"
-		) && !(isAccepted ?? false)
+        guard let isAccepted = isAccepted else {return false}
+        
+        return !isAccepted
 	}
 
 	func isScheduleConfirmationDone(status: String, isConfirmed: Bool?) -> Bool {

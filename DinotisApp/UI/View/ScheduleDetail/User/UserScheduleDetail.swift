@@ -1325,7 +1325,7 @@ private extension UserScheduleDetail {
                                         Capsule()
                                             .foregroundColor(.DinotisDefault.black3.opacity(0.5))
                                     )
-                            } else if detail.meeting?.meetingRequest != nil && !(detail.meeting?.meetingRequest?.isConfirmed ?? false) {
+                            } else if detail.meeting?.meetingRequest != nil && detail.meeting?.meetingRequest?.isAccepted == nil {
                                 Text(LocalizableText.creatorConfirmationStatus)
                                     .multilineTextAlignment(.center)
                                     .font(.robotoBold(size: 12))
@@ -1336,7 +1336,7 @@ private extension UserScheduleDetail {
                                         Capsule()
                                             .foregroundColor(.DinotisDefault.lightOrange)
                                     )
-                            } else if detail.meeting?.meetingRequest != nil && (detail.meeting?.meetingRequest?.isConfirmed ?? false) && detail.meeting?.startAt == nil {
+                            } else if let accepted = detail.meeting?.meetingRequest?.isAccepted, detail.meeting?.meetingRequest != nil && accepted && detail.meeting?.startAt == nil {
                                 Text(LocalizableText.creatorNotSetScheduleStatus)
                                     .multilineTextAlignment(.center)
                                     .font(.robotoBold(size: 12))
