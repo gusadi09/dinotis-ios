@@ -570,6 +570,10 @@
 "discussion_tag_nearest_schedule" = "Nearest Schedule";
 "discussion_status_cancel_within" = "Cancel Within **%@**";
 "discussion_status_scheduled_session" = "Scheduled Session";
+"discussion_search_placeholder" = "Search discussion chat...";
+"discussion_search_creator_name" = "Search creaor's name";
+"discussion_search_audience_name" = "Search audience's name";
+"discussion_search_not_found" = "Search Not Found";
 
 "day_text" = "Day";
 "hour_text" = "Hour";

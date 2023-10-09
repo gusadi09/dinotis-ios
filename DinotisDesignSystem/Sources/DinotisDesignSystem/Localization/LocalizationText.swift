@@ -2580,6 +2580,26 @@ public enum LocalizableText {
         bundle: .module,
         comment: "hour text"
     )
+    public static let discussionSearchPlaceholder = NSLocalizedString(
+        "discussion_search_placeholder",
+        bundle: .module,
+        comment: "discussion list search placeholder"
+    )
+    public static let discussionSearchCreatorName = NSLocalizedString(
+        "discussion_search_creator_name",
+        bundle: .module,
+        comment: "discussion list search creator name"
+    )
+    public static let discussionSearchAudienceName = NSLocalizedString(
+        "discussion_search_audience_name",
+        bundle: .module,
+        comment: "discussion list search audience name"
+    )
+    public static let discussionSearchNotFound = NSLocalizedString(
+        "discussion_search_not_found",
+        bundle: .module,
+        comment: "discussion list search not found"
+    )
 }
 
 
