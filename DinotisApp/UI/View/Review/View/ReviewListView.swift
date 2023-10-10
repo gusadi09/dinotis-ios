@@ -5,6 +5,7 @@
 //  Created by Irham Naufal on 06/10/23.
 //
 
+import DinotisData
 import DinotisDesignSystem
 import SwiftUI
 
@@ -38,16 +39,43 @@ struct ReviewListView: View {
                 })
             
             FilterReviewView(viewModel: viewModel)
+                .onChange(of: viewModel.currentSection) { newValue in
+                    viewModel.onLoadReviews(section: newValue)
+                }
             
-            ScrollView {
-                VStack(spacing: 0) {
+            if viewModel.isLoading {
+                Spacer()
+                
+                DinotisLoadingView(.small, hide: !viewModel.isLoading)
+                
+                Spacer()
+            } else {
+                List {
                     ForEach(viewModel.data, id: \.id) { item in
                         ReviewCellView(data: item)
+                            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                            .listRowBackground(Color.white.ignoresSafeArea())
+                            .listRowSeparator(.hidden)
                     }
                 }
+                .listStyle(.plain)
             }
-            .background(Color.white.ignoresSafeArea())
         }
+        .onAppear(perform: {
+            viewModel.onLoadReviews(section: viewModel.currentSection)
+        })
+        .dinotisAlert(
+            isPresent: $viewModel.isError,
+            type: .general,
+            title: LocalizableText.attentionText,
+            isError: true, 
+            message: viewModel.error,
+            primaryButton: .init(text: LocalizableText.okText, action: {
+                if viewModel.isRefreshFailed {
+                    viewModel.routeToRoot()
+                }
+            })
+        )
         .navigationBarTitle(Text(""))
         .navigationBarHidden(true)
     }
@@ -98,11 +126,11 @@ extension ReviewListView {
             }
         }
         
-        private func headerText(for filter: ReviewFilter) -> String {
+        private func headerText(for filter: ReviewListFilterType) -> String {
             switch filter {
-            case .latest:
+            case .desc:
                 return LocalizableText.sortLatest
-            case .earliest:
+            case .asc:
                 return LocalizableText.sortEarliest
             case .highest:
                 return LocalizableText.reviewFilterHighestStar
@@ -114,7 +142,7 @@ extension ReviewListView {
     
     struct ReviewCellView: View {
         
-        @State var data: DummyReviewModel
+        @State var data: InboxReviewData
         @State var isShowFull = false
         
         var body: some View {
@@ -122,7 +150,7 @@ extension ReviewListView {
                 Divider()
                 
                 HStack(alignment: .top, spacing: 12) {
-                    DinotisImageLoader(urlString: data.profilePicture)
+                    DinotisImageLoader(urlString: (data.user?.profilePhoto).orEmpty())
                         .scaledToFill()
                         .frame(width: 48, height: 48)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -130,14 +158,14 @@ extension ReviewListView {
                     VStack(alignment: .leading, spacing: 12) {
                         HStack(alignment: .top, spacing: 8) {
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(data.name)
+                                Text((data.user?.name).orEmpty())
                                     .font(.robotoBold(size: 12))
                                 
                                 VStack(alignment: .leading, spacing: 0) {
-                                    Text(data.review.review.orEmpty())
+                                    Text(data.review.orEmpty())
                                         .font(.robotoRegular(size: 12))
                                         .lineLimit(isShowFull ? nil : 2)
-                                        .isHidden(data.review.review.orEmpty().isEmpty, remove: data.review.review.orEmpty().isEmpty)
+                                        .isHidden(data.review.orEmpty().isEmpty, remove: data.review.orEmpty().isEmpty)
                                     
                                     Button(action: {
                                         withAnimation {
@@ -152,8 +180,8 @@ extension ReviewListView {
                                         .foregroundColor(.DinotisDefault.primary)
                                     })
                                     .isHidden(
-                                        data.review.review.orEmpty().count < 150,
-                                        remove: data.review.review.orEmpty().count < 150
+                                        data.review.orEmpty().count < 150,
+                                        remove: data.review.orEmpty().count < 150
                                     )
                                 }
                             }
@@ -167,7 +195,7 @@ extension ReviewListView {
                                     .scaledToFit()
                                     .frame(width: 14, height: 14)
                                 
-                                Text("\(data.review.rating.orZero())")
+                                Text("\(data.rating.orZero())")
                                     .font(.robotoBold(size: 12))
                                     .foregroundColor(.DinotisDefault.primary)
                             }
@@ -184,18 +212,18 @@ extension ReviewListView {
                             )
                         }
                         
-                        Text("+ \(data.review.tip.orZero().toDecimal()) Tip")
+                        Text("+ \(data.tip.orZero().toDecimal()) Tip")
                             .font(.robotoBold(size: 12))
                             .foregroundColor(.DinotisDefault.green)
-                            .isHidden(data.review.tip.orZero() == 0, remove: data.review.tip.orZero() == 0)
+                            .isHidden(data.tip.orZero() == 0, remove: data.tip.orZero() == 0)
                         
                         VStack(alignment: .leading, spacing: 4) {
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(data.title)
+                                Text((data.meeting?.title).orEmpty())
                                     .font(.robotoBold(size: 12))
                                     .foregroundColor(.DinotisDefault.black2)
                                 
-                                Text(data.description)
+                                Text((data.meeting?.description).orEmpty())
                                     .font(.robotoRegular(size: 12))
                                     .foregroundColor(.DinotisDefault.black3)
                             }
@@ -208,7 +236,7 @@ extension ReviewListView {
                                     .foregroundColor(.DinotisDefault.black3.opacity(0.2))
                             )
                             
-                            Text(countHourTime(time: data.review.createdAt.orCurrentDate()))
+                            Text(countHourTime(time: data.createdAt.orCurrentDate()))
                                 .font(.robotoRegular(size: 12))
                                 .foregroundColor(.DinotisDefault.black3)
                         }

@@ -218,3 +218,97 @@ public struct Amount: Codable {
         self.amount = amount
     }
 }
+
+public struct InboxReviewsResponse: Codable {
+    public let data: [InboxReviewData]?
+    public let counter: String?
+    
+    public init(data: [InboxReviewData]?, counter: String?) {
+        self.data = data
+        self.counter = counter
+    }
+}
+
+public extension InboxReviewsResponse {
+    static var sample: InboxReviewsResponse {
+        InboxReviewsResponse(data: [.sample], counter: "1")
+    }
+    
+    static var sampleData: Data {
+        InboxReviewsResponse(data: [.sample], counter: "1").toJSONData()
+    }
+}
+
+public struct InboxReviewData: Codable, Hashable {
+    public let id: Int?
+    public let rating: Int?
+    public let review: String?
+    public let reasons: String?
+    public let userId: String?
+    public let meetingId: String?
+    public let talentId: String?
+    public let approvedAt: Date?
+    public let createdAt: Date?
+    public let updatedAt: Date?
+    public let tip: Int?
+    public let user: UserResponse?
+    public let meeting: MeetingDetailResponse?
+    
+    public init(id: Int?, rating: Int?, review: String?, reasons: String?, userId: String?, meetingId: String?, talentId: String?, approvedAt: Date?, createdAt: Date?, updatedAt: Date?, tip: Int?, user: UserResponse?, meeting: MeetingDetailResponse?) {
+        self.id = id
+        self.rating = rating
+        self.review = review
+        self.reasons = reasons
+        self.userId = userId
+        self.meetingId = meetingId
+        self.talentId = talentId
+        self.approvedAt = approvedAt
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+        self.tip = tip
+        self.user = user
+        self.meeting = meeting
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
+public extension InboxReviewData {
+    static var sample: InboxReviewData {
+        InboxReviewData(
+            id: 1,
+            rating: 5,
+            review: "testing",
+            reasons: "testing",
+            userId: "testing",
+            meetingId: "testing",
+            talentId: "testing",
+            approvedAt: Date(),
+            createdAt: Date(),
+            updatedAt: Date(),
+            tip: 1000,
+            user: .sample,
+            meeting: nil
+        )
+    }
+    
+    static var sampleData: Data {
+        InboxReviewData(
+            id: 1,
+            rating: 5,
+            review: "testing",
+            reasons: "testing",
+            userId: "testing",
+            meetingId: "testing",
+            talentId: "testing",
+            approvedAt: Date(),
+            createdAt: Date(),
+            updatedAt: Date(),
+            tip: 1000,
+            user: .sample,
+            meeting: nil
+        ).toJSONData()
+    }
+}
