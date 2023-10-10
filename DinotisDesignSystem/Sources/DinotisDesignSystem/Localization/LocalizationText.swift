@@ -2580,6 +2580,16 @@ public enum LocalizableText {
         bundle: .module,
         comment: "hour text"
     )
+    public static let reviewFilterHighestStar = NSLocalizedString(
+        "review_filter_highest_star",
+        bundle: .module,
+        comment: "highest star filter in review list"
+    )
+    public static let reviewFilterLowestStar = NSLocalizedString(
+        "review_filter_lowest_star",
+        bundle: .module,
+        comment: "lowest star filter in review list"
+    )
     public static let discussionSearchPlaceholder = NSLocalizedString(
         "discussion_search_placeholder",
         bundle: .module,

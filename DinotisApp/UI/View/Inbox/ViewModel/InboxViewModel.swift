@@ -22,4 +22,12 @@ final class InboxViewModel: ObservableObject {
             self?.route = .discussionList(viewModel: viewModel)
         }
     }
+    
+    func routeToReviewList() {
+        let viewModel = ReviewListViewModel()
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .reviewList(viewModel: viewModel)
+        }
+    }
 }

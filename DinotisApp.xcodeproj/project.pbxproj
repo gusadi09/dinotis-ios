@@ -16,6 +16,8 @@
 		4BA7D6152AC1756500B5177E /* session-close-to-end.json in Resources */ = {isa = PBXBuildFile; fileRef = 4BA7D6142AC1756500B5177E /* session-close-to-end.json */; };
 		4BFE4E002ACD4CFF00E14890 /* DiscussionListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFE4DFF2ACD4CFF00E14890 /* DiscussionListViewModel.swift */; };
 		4BFE4E022ACD4D2A00E14890 /* DiscussionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFE4E012ACD4D2A00E14890 /* DiscussionListView.swift */; };
+		4BFE4E092AD0264600E14890 /* ReviewListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFE4E082AD0264600E14890 /* ReviewListView.swift */; };
+		4BFE4E0B2AD0265800E14890 /* ReviewListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFE4E0A2AD0265800E14890 /* ReviewListViewModel.swift */; };
 		EC01F1E326BFD7C600CA878F /* UserBiodataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC01F1E226BFD7C600CA878F /* UserBiodataView.swift */; };
 		EC0279F227C5E40B00B8C392 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0279F127C5E40A00B8C392 /* RoundedCorner.swift */; };
 		EC0279F527C61D7900B8C392 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0279F427C61D7900B8C392 /* ProfileViewModel.swift */; };
@@ -375,6 +377,8 @@
 		4BA7D6142AC1756500B5177E /* session-close-to-end.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "session-close-to-end.json"; sourceTree = "<group>"; };
 		4BFE4DFF2ACD4CFF00E14890 /* DiscussionListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscussionListViewModel.swift; sourceTree = "<group>"; };
 		4BFE4E012ACD4D2A00E14890 /* DiscussionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscussionListView.swift; sourceTree = "<group>"; };
+		4BFE4E082AD0264600E14890 /* ReviewListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewListView.swift; sourceTree = "<group>"; };
+		4BFE4E0A2AD0265800E14890 /* ReviewListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewListViewModel.swift; sourceTree = "<group>"; };
 		EC01F1E226BFD7C600CA878F /* UserBiodataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserBiodataView.swift; sourceTree = "<group>"; };
 		EC0279F127C5E40A00B8C392 /* RoundedCorner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
 		EC0279F427C61D7900B8C392 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
@@ -792,6 +796,31 @@
 				4BFE4E012ACD4D2A00E14890 /* DiscussionListView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		4BFE4E052AD0244700E14890 /* Review */ = {
+			isa = PBXGroup;
+			children = (
+				4BFE4E062AD0262E00E14890 /* View */,
+				4BFE4E072AD0263200E14890 /* ViewModel */,
+			);
+			path = Review;
+			sourceTree = "<group>";
+		};
+		4BFE4E062AD0262E00E14890 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4BFE4E082AD0264600E14890 /* ReviewListView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		4BFE4E072AD0263200E14890 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				4BFE4E0A2AD0265800E14890 /* ReviewListViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		EC01F1DF26BFD7A500CA878F /* Biodata */ = {
@@ -2064,6 +2093,7 @@
 		ECBA142E26B79149004D452C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				4BFE4E052AD0244700E14890 /* Review */,
 				4BFE4DFC2ACD4CDA00E14890 /* DiscussionList */,
 				4B03ED392ACC1783004DD0FA /* Inbox */,
 				37B4DBC62A89E56200D3EAA1 /* Feedback */,
@@ -3179,6 +3209,7 @@
 				F665C44228C9CD2800D669A8 /* PrivateRemoteParticipantManager.swift in Sources */,
 				ECA51E6227D09A9F0096E22D /* SearchTalentViewModel.swift in Sources */,
 				EC722265295014E000C05A1B /* FollowedCreatorViewModel.swift in Sources */,
+				4BFE4E092AD0264600E14890 /* ReviewListView.swift in Sources */,
 				ECD51FAB28A0C25A000B1F6C /* TrackName.swift in Sources */,
 				ECBFE68927102A560075D01F /* String+Random.swift in Sources */,
 				F67334BB2908EC26006C1ADF /* TalentCreateBundlingView.swift in Sources */,
@@ -3337,6 +3368,7 @@
 				F67334E42908EE5D006C1ADF /* ScheduleNegotiationChatViewModel.swift in Sources */,
 				EC28759A27D1CB430093E9C9 /* DetailPaymentViewModel.swift in Sources */,
 				ECBA9F3526D63662008CCCDB /* TalentProfileDetailView.swift in Sources */,
+				4BFE4E0B2AD0265800E14890 /* ReviewListViewModel.swift in Sources */,
 				EC96E32A2940D59F00347091 /* OnboardingViewModel.swift in Sources */,
 				EC6A757A2918A1760030BC41 /* EditTalentMeetingViewModel.swift in Sources */,
 				EC7B1EA227BCCC1A00471219 /* UserTypeViewModel.swift in Sources */,

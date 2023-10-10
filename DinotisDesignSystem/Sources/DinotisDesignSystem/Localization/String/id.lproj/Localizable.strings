@@ -576,3 +576,6 @@
 
 "day_text" = "Hari";
 "hour_text" = "Jam";
+
+"review_filter_highest_star" = "Bintang tertinggi";
+"review_filter_lowest_star" = "Bintang terendah";

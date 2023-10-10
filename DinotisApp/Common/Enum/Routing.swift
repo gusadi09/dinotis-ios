@@ -67,4 +67,5 @@ enum HomeRouting {
     case feedbackAfterCall(viewModel: FeedbackViewModel)
     case inbox(viewModel: InboxViewModel)
     case discussionList(viewModel: DiscussionListViewModel)
+    case reviewList(viewModel: ReviewListViewModel)
 }
