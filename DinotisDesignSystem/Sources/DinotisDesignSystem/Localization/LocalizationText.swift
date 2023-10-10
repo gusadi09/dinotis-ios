@@ -2580,6 +2580,34 @@ public enum LocalizableText {
         bundle: .module,
         comment: "hour text"
     )
+    
+    public static func chatBookedSession(title: String) -> String {
+        String(
+            format: NSLocalizedString(
+                "booked_session_chat",
+                bundle: .module,
+                comment: "booked session : "
+            ),
+            title
+        )
+    }
+    
+    public static let chatDisabledText = NSLocalizedString(
+        "chat_disabled_text",
+        bundle: .module,
+        comment: "chat disabled explanation"
+    )
+    public static let today = NSLocalizedString(
+        "today",
+        bundle: .module,
+        comment: "today"
+    )
+    public static let yesterday = NSLocalizedString(
+        "yesterday",
+        bundle: .module,
+        comment: "yesterday"
+    )
+    
     public static let reviewFilterHighestStar = NSLocalizedString(
         "review_filter_highest_star",
         bundle: .module,

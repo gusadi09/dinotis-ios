@@ -515,7 +515,6 @@ struct TalentScheduleDetailView: View {
 						EmptyView()
 					}
 				)
-                
             }
 			.sheet(unwrapping: $viewModel.route, case: /HomeRouting.scheduleNegotiationChat, onDismiss: {
 				customerChatManager.hasUnreadMessage = false
@@ -1395,7 +1394,8 @@ extension TalentScheduleDetailView {
 
 				if viewModel.isShowingChatButton() {
 					Button {
-						viewModel.routeToScheduleNegotiationChat()
+                        guard let data = viewModel.dataMeeting else { return }
+                        viewModel.routeToScheduleNegotiationChat(meet: viewModel.convertToUserMeet(meet: data))
 					} label: {
 						HStack {
 							Image.Dinotis.messageIcon

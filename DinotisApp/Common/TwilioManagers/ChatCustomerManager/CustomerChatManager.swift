@@ -7,10 +7,24 @@
 
 import TwilioConversationsClient
 
+struct GroupedChat: Codable, Identifiable, Hashable {
+    var id: String = UUID().uuidString
+    let date: Date
+    let chat: [CustomerChatMessage]
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
 class CustomerChatManager: NSObject, ObservableObject {
 	@Published var hasUnreadMessage = false
 	@Published var unreadChatCount = 0
 	@Published var messages: [CustomerChatMessage] = []
+    @Published var groupedMessage: [GroupedChat] = []
+    
+    @Published var isLoading = false
+    @Published var isLoadingMore = false
 	var isConnected: Bool { client != nil }
 	private var client: TwilioConversationsClient?
 	private var conversation: TCHConversation?
@@ -39,6 +53,7 @@ class CustomerChatManager: NSObject, ObservableObject {
 		client = nil
 		conversation = nil
 		messages = []
+        groupedMessage = []
 		hasUnreadMessage = false
 	}
 
@@ -46,14 +61,19 @@ class CustomerChatManager: NSObject, ObservableObject {
 		conversation?.prepareMessage().setBody(message).buildAndSend(completion: nil)
 	}
 
-	private func getConversation() {
+	private func getConversation(isMore: Bool) {
 		client?.conversation(withSidOrUniqueName: conversationName) { [weak self] _, conversation in
 			self?.conversation = conversation
-			self?.getMessages()
+            self?.getMessages(isMore: isMore)
 		}
 	}
 
-	func getMessages(count: UInt = 100) {
+    func getMessages(count: UInt = 100, isMore: Bool) {
+        if isMore {
+            isLoadingMore = true
+        } else {
+            isLoading = true
+        }
 		/// Just get the last 100 messages since the UI does not have pagination in this app
 		conversation?.getLastMessages(withCount: count) { [weak self] _, messages in
 			guard let messages = messages else {
@@ -61,12 +81,35 @@ class CustomerChatManager: NSObject, ObservableObject {
 			}
 
 			self?.messages = messages.compactMap { CustomerChatMessage(message: $0, conversation: self?.conversation) }
-
+            let temp = messages.compactMap { CustomerChatMessage(message: $0, conversation: self?.conversation) }
+            self?.groupedMessage = (self?.mapTo2DArray(elements: temp) ?? []).compactMap({
+                GroupedChat(date: ($0.first?.date).orCurrentDate(), chat: $0)
+            })
+            
 			if !messages.isEmpty {
 				self?.hasUnreadMessage = true
 			}
+            
+            if isMore {
+                self?.isLoadingMore = false
+            } else {
+                self?.isLoading = false
+            }
 		}
 	}
+    
+    func mapTo2DArray(elements: [CustomerChatMessage]) -> [[CustomerChatMessage]] {
+        let groupedElements = Dictionary(grouping: elements) { element in
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"  // Format the date as needed
+            return dateFormatter.string(from: element.date)
+        }
+        
+        return groupedElements.compactMap { (_, elementsForDate) in
+            guard !elementsForDate.isEmpty else { return nil }
+            return elementsForDate
+        }
+    }
 }
 
 extension CustomerChatManager: TwilioConversationsClientDelegate {
@@ -76,9 +119,10 @@ extension CustomerChatManager: TwilioConversationsClientDelegate {
 	) {
 		switch status {
 		case .started, .conversationsListCompleted:
+            isLoading = true
 			return
 		case .completed:
-			getConversation()
+            getConversation(isMore: false)
 		case .failed:
 			disconnect()
 		@unknown default:
@@ -96,6 +140,10 @@ extension CustomerChatManager: TwilioConversationsClientDelegate {
 		}
 
 		messages.append(message)
+        
+        self.groupedMessage = self.mapTo2DArray(elements: messages).compactMap({
+            GroupedChat(date: ($0.first?.date).orCurrentDate(), chat: $0)
+        })
 		hasUnreadMessage = true
 	}
 }

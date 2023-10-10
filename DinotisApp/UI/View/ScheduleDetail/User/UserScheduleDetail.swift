@@ -1219,7 +1219,8 @@ private extension UserScheduleDetail {
                             
                             if viewModel.dataBooking?.meeting?.startAt == nil {
                                 Button {
-                                    viewModel.routeToScheduleNegotiationChat()
+                                    guard let data = viewModel.dataBooking?.meeting else { return }
+                                    viewModel.routeToScheduleNegotiationChat(meet: data)
                                 } label: {
                                     HStack {
                                         Image.Dinotis.messageIcon
