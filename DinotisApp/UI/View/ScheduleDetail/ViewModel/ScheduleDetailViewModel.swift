@@ -851,7 +851,7 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
             deletedAt: meet.deletedAt,
             bookings: [],
             user: meet.user,
-			participantDetails: [],
+            participantDetails: meet.participantDetails,
 			meetingBundleId: meet.meetingBundleId,
 			meetingRequestId: meet.meetingRequestId,
 			status: meet.status,
@@ -894,8 +894,8 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
         }
     }
     
-    func routeToScheduleNegotiationChat() {
-		let viewModel = ScheduleNegotiationChatViewModel(token: tokenConversation, expireDate: expiredData, backToHome: {self.route = nil})
+    func routeToScheduleNegotiationChat(meet: UserMeetingData) {
+        let viewModel = ScheduleNegotiationChatViewModel(token: tokenConversation, meetingData: meet, expireDate: expiredData, backToHome: {self.route = nil})
         
         DispatchQueue.main.async {[weak self] in
             self?.route = .scheduleNegotiationChat(viewModel: viewModel)

@@ -577,5 +577,9 @@
 "day_text" = "Hari";
 "hour_text" = "Jam";
 
+"booked_session_chat" = "Sesi Dipesan : %@";
+"yesterday" = "Kemarin";
+"today" = "Hari Ini";
+"chat_disabled_text" = "Chat tidak lagi tersedia untuk sesi ini";
 "review_filter_highest_star" = "Bintang tertinggi";
 "review_filter_lowest_star" = "Bintang terendah";
