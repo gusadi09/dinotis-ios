@@ -577,3 +577,6 @@
 
 "day_text" = "Day";
 "hour_text" = "Hour";
+
+"review_filter_highest_star" = "Highest star";
+"review_filter_lowest_star" = "Lowest star";

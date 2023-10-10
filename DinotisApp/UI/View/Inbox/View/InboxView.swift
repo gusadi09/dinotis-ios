@@ -29,6 +29,17 @@ struct InboxView: View {
                     EmptyView()
                 }
             
+            NavigationLink(
+                unwrapping: $viewModel.route,
+                case: /HomeRouting.reviewList) { viewModel in
+                    ReviewListView()
+                        .environmentObject(viewModel.wrappedValue)
+                } onNavigate: { _ in
+                    
+                } label: {
+                    EmptyView()
+                }
+            
             HeaderView(
                 type: .textHeader,
                 title: LocalizableText.creatorInboxTitle,
@@ -79,7 +90,7 @@ struct InboxView: View {
                         description: LocalizableText.inboxReviewDesc,
                         counter: viewModel.reviewCounter,
                         action: {
-                            
+                            viewModel.routeToReviewList()
                         }
                     )
                     .isHidden(state.userType != 2, remove: state.userType != 2)
