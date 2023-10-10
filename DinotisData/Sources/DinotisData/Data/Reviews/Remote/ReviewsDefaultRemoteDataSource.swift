@@ -31,4 +31,8 @@ public final class ReviewsDefaultRemoteDataSource: ReviewsRemoteDataSource {
     public func getTipAmounts() async throws -> TipAmounts {
         try await self.provider.request(.getTipAmounts, model: TipAmounts.self)
     }
+    
+    public func getInboxReviews(filter: ReviewListFilterType) async throws -> InboxReviewsResponse {
+        try await self.provider.request(.getReviewList(filter), model: InboxReviewsResponse.self)
+    }
 }
