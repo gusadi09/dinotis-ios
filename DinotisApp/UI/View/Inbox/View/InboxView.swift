@@ -15,6 +15,7 @@ struct InboxView: View {
     @ObservedObject var state = StateObservable.shared
     @EnvironmentObject var viewModel: InboxViewModel
     @Environment(\.dismiss) var dismiss
+    @StateObject private var customerChatManager = CustomerChatManager()
     
     var body: some View {
         VStack(spacing: 0) {
@@ -23,6 +24,7 @@ struct InboxView: View {
                 case: /HomeRouting.discussionList) { viewModel in
                     DiscussionListView()
                         .environmentObject(viewModel.wrappedValue)
+                        .environmentObject(customerChatManager)
                 } onNavigate: { _ in
                     
                 } label: {
@@ -68,30 +70,34 @@ struct InboxView: View {
                         icon: .inboxScheduleIcon,
                         title: LocalizableText.inboxDiscussScheduleTitle,
                         description: LocalizableText.inboxDiscussScheduleDesc,
-                        counter: viewModel.discussionChatCounter,
+                        counter: $viewModel.discussionChatCounter,
                         action: {
                             viewModel.routeToDiscussionList(.ongoing)
-                        }
+                        }, 
+                        isLoading: $viewModel.isLoadingInbox
                     )
                     
                     InboxSectionView(
                         icon: .inboxAudienceIcon,
                         title: LocalizableText.sessionCompleted,
                         description: LocalizableText.inboxCompletedSessionDesc,
-                        counter: viewModel.completedSessionCounter,
+                        counter: $viewModel.completedSessionCounter,
                         action: {
                             viewModel.routeToDiscussionList(.completed)
-                        }
+                        },
+                        isLoading: .constant(false)
                     )
+                    .isHidden(true, remove: true) // hide, since this menu unnecesarry
                     
                     InboxSectionView(
                         icon: .inboxReviewIcon,
                         title: LocalizableText.talentDetailReviews,
                         description: LocalizableText.inboxReviewDesc,
-                        counter: viewModel.reviewCounter,
+                        counter: $viewModel.reviewCounter,
                         action: {
                             viewModel.routeToReviewList()
-                        }
+                        },
+                        isLoading: $viewModel.isLoadingReview
                     )
                     .isHidden(state.userType != 2, remove: state.userType != 2)
                 }
@@ -103,6 +109,11 @@ struct InboxView: View {
         }
         .navigationBarTitle(Text(""))
         .navigationBarHidden(true)
+        .onAppear {
+            customerChatManager.disconnect()
+            viewModel.onLoadReviews(section: .desc)
+            viewModel.onLoadChats(section: .desc, query: "")
+        }
     }
 }
 
@@ -113,8 +124,9 @@ extension InboxView {
         let icon: Image
         let title: String
         let description: String
-        @State var counter: String
+        @Binding var counter: String
         let action: () -> Void
+        @Binding var isLoading: Bool
         
         var body: some View {
             Button(action: {
@@ -140,15 +152,21 @@ extension InboxView {
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         
-                        Text(counter)
-                            .font(.robotoRegular(size: 14))
-                            .foregroundColor(.white)
-                            .padding(4)
-                            .background(
-                                RoundedRectangle(cornerRadius: 4)
-                                    .fill(Color.DinotisDefault.primary)
-                            )
-                            .isHidden(counter == "", remove: counter == "")
+                        if isLoading {
+                            LottieView(name: "regular-loading", loopMode: .loop)
+                                .scaledToFit()
+                                .frame(height: 15)
+                        } else {
+                            Text(counter)
+                                .font(.robotoRegular(size: 14))
+                                .foregroundColor(.white)
+                                .padding(4)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 4)
+                                        .fill(Color.DinotisDefault.primary)
+                                )
+                                .isHidden(counter == "", remove: counter == "")
+                        }
                         
                         Image(systemName: "chevron.right")
                             .font(.system(size: 14, weight: .bold))

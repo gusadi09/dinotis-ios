@@ -45,7 +45,6 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
     private let getUserUseCase: GetUserUseCase
     private let authRepo: AuthenticationRepository
     private let confirmationUseCase: RequestConfirmationUseCase
-    private let conversationTokenUseCase: ConversationTokenUseCase
     private let giveReviewUseCase: GiveReviewUseCase
     private let stateObservable = StateObservable.shared
     private var cancellables = Set<AnyCancellable>()
@@ -56,6 +55,7 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
     private let deleteMeetingUseCase: DeleteCreatorMeetingUseCase
     private let coinVerificationUseCase: CoinVerificationUseCase
     private let getTipAmountsUseCase: GetTipAmountsUseCase
+    private let conversationTokenUseCase: ConversationTokenUseCase
     
     @Published var typeAlert: ScheduleDetailAlert = .error
     @Published var isShowAlert = false
@@ -123,7 +123,6 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
     @Published var dataMeeting: MeetingDetailResponse?
     @Published var dataBooking: UserBookingData?
 
-	@Published var tokenConversation = ""
 	@Published var expiredData = Date()
 
     @Published var isRefreshFailed = false
@@ -163,6 +162,7 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
     @Published var talentPhoto: String
     
     @Published var isDirectToHome: Bool
+    @Published var tokenConversation = ""
     
     init(
 		isActiveBooking: Bool,
@@ -172,7 +172,6 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
         getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
         authRepo: AuthenticationRepository = AuthenticationDefaultRepository(),
 		confirmationUseCase: RequestConfirmationUseCase = RequestConfirmationDefaultUseCase(),
-		conversationTokenUseCase: ConversationTokenUseCase = ConversationTokenDefaultUseCase(),
         giveReviewUseCase: GiveReviewUseCase = GiveReviewDefaultUseCase(),
         startMeetingUseCase: StartCreatorMeetingUseCase = StartCreatorMeetingDefaultUseCase(),
         getDetailMeetingUseCase: GetMeetingDetailUseCase = GetMeetingDetailDefaultUseCase(),
@@ -180,6 +179,7 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
         deleteMeetingUseCase: DeleteCreatorMeetingUseCase = DeleteCreatorMeetingDefaultUseCase(),
         coinVerificationUseCase: CoinVerificationUseCase = CoinVerificationDefaultUseCase(),
         getTipAmountsUseCase: GetTipAmountsUseCase = GetTipAmountsDefaultUseCase(),
+        conversationTokenUseCase: ConversationTokenUseCase = ConversationTokenDefaultUseCase(),
         bookingId: String,
         backToHome: @escaping (() -> Void),
         talentName: String = "",
@@ -190,12 +190,12 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
         self.getRulesUseCase = getRulesUseCase
         self.meetingsRepo = meetingsRepo
         self.getBookingDetailUseCase = getBookingDetailUseCase
+        self.conversationTokenUseCase = conversationTokenUseCase
         self.getUserUseCase = getUserUseCase
         self.authRepo = authRepo
         self.bookingId = bookingId
         self.backToHome = backToHome
 		self.confirmationUseCase = confirmationUseCase
-		self.conversationTokenUseCase = conversationTokenUseCase
         self.talentName = talentName
         self.talentPhoto = talentPhoto
         self.isDirectToHome = isDirectToHome
@@ -216,6 +216,24 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
         self.stateObservable.accessToken = ""
         self.stateObservable.isAnnounceShow = false
         OneSignal.setExternalUserId("")
+    }
+    
+    @MainActor
+    func getConversationToken(id: String) async {
+        onStartFetchDetail()
+        
+        let result = await conversationTokenUseCase.execute(with: id)
+        
+        switch result {
+        case .success(let success):
+            DispatchQueue.main.async { [weak self] in
+                self?.successDetail = true
+                self?.isLoadingDetail = false
+                self?.tokenConversation = success.token.orEmpty()
+            }
+        case .failure(let failure):
+            handleDefaultError(error: failure)
+        }
     }
     
     func alertTitle() -> String {
@@ -340,8 +358,6 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
                     self?.error = nil
                     self?.showReviewSheet = false
                     self?.isReviewSuccess = true
-                    print(response)
-                    print("TIP RESPONSE: \(self?.successTipAmount)")
                 }
             }
             
@@ -603,11 +619,13 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
             await getDetailBookingUser()
         }
     }
+    
     func onAppearView() {
         onGetMeetingRules()
         onGetUser()
         onGetDetailBooking()
         onGetTipAmounts()
+        
     }
     
     @MainActor
@@ -727,12 +745,13 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
 				self?.expiredData = (success.meeting?.meetingRequest?.expiredAt).orCurrentDate()
 				self?.participantDetail = success.meeting?.participantDetails ?? []
 			}
+            
+            if success.meeting?.meetingRequest != nil && ((success.meeting?.meetingRequest?.isAccepted ?? false) && (success.meeting?.meetingRequest?.isConfirmed == nil)) {
+                if (self.tokenConversation).isEmpty {
+                    await self.getConversationToken(id: (success.meeting?.meetingRequest?.id).orEmpty())
+                }
+            }
 
-			if success.meeting?.meetingRequest != nil && ((success.meeting?.meetingRequest?.isAccepted ?? false) && (success.meeting?.meetingRequest?.isConfirmed == nil)) {
-				if (self.tokenConversation).isEmpty {
-					await self.getConversationToken(id: (success.meeting?.meetingRequest?.id).orEmpty())
-				}
-			}
 		case .failure(let failure):
 			handleDefaultError(error: failure)
 		}
@@ -761,6 +780,7 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
                         }
                     }
                 }
+
             }
         case .failure(let failure):
             await handleDefaultError(error: failure)
@@ -895,7 +915,7 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
     }
     
     func routeToScheduleNegotiationChat(meet: UserMeetingData) {
-        let viewModel = ScheduleNegotiationChatViewModel(token: tokenConversation, meetingData: meet, expireDate: expiredData, backToHome: {self.route = nil})
+        let viewModel = ScheduleNegotiationChatViewModel(meetingData: meet, expireDate: expiredData, backToHome: {self.route = nil})
         
         DispatchQueue.main.async {[weak self] in
             self?.route = .scheduleNegotiationChat(viewModel: viewModel)
@@ -933,24 +953,6 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
             self?.route = .talentProfileDetail(viewModel: viewModel)
         }
     }
-
-    @MainActor
-	func getConversationToken(id: String) async {
-		onStartFetchDetail()
-
-		let result = await conversationTokenUseCase.execute(with: id)
-
-		switch result {
-		case .success(let success):
-			DispatchQueue.main.async { [weak self] in
-				self?.successDetail = true
-				self?.isLoadingDetail = false
-				self?.tokenConversation = success.token.orEmpty()
-			}
-		case .failure(let failure):
-			handleDefaultError(error: failure)
-		}
-	}
 
 	func isPaymentDone(status: String) -> Bool {
 		status == "payment_done" || status == "waiting_creator_confirmation" || status == "schedule_confirmed" || status == "schedule_started" || status == "schedule_ended"
