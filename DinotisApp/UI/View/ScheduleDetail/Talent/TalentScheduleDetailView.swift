@@ -519,12 +519,9 @@ struct TalentScheduleDetailView: View {
 			.sheet(unwrapping: $viewModel.route, case: /HomeRouting.scheduleNegotiationChat, onDismiss: {
 				customerChatManager.hasUnreadMessage = false
 			}) { viewModel in
-				ScheduleNegotiationChatView(viewModel: viewModel.wrappedValue)
+                ScheduleNegotiationChatView(viewModel: viewModel.wrappedValue, isOnSheet: true)
 					.environmentObject(customerChatManager)
                     .dynamicTypeSize(.large)
-			}
-			.onChange(of: viewModel.tokenConversation) { newValue in
-				customerChatManager.connect(accessToken: newValue, conversationName: (viewModel.dataMeeting?.meetingRequest?.id).orEmpty())
 			}
 			.onDisappear {
 				customerChatManager.disconnect()
@@ -678,6 +675,9 @@ struct TalentScheduleDetailView: View {
                     .dynamicTypeSize(.large)
 			}
 
+        })
+        .onChange(of: viewModel.tokenConversation, perform: { value in
+            customerChatManager.connect(accessToken: value, conversationName: (viewModel.dataBooking?.meeting?.meetingRequest?.id).orEmpty())
         })
         .onAppear(perform: {
             Task {

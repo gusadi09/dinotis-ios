@@ -6,6 +6,7 @@
 //
 
 import TwilioConversationsClient
+import DinotisData
 
 struct GroupedChat: Codable, Identifiable, Hashable {
     var id: String = UUID().uuidString
@@ -27,8 +28,9 @@ class CustomerChatManager: NSObject, ObservableObject {
     @Published var isLoadingMore = false
 	var isConnected: Bool { client != nil }
 	private var client: TwilioConversationsClient?
-	private var conversation: TCHConversation?
+	@Published var conversation: TCHConversation?
 	private var conversationName = ""
+    private let state = StateObservable.shared
 
 	init(messages: [CustomerChatMessage] = []) {
 		self.messages = messages
@@ -81,7 +83,15 @@ class CustomerChatManager: NSObject, ObservableObject {
 			}
 
 			self?.messages = messages.compactMap { CustomerChatMessage(message: $0, conversation: self?.conversation) }
-            let temp = messages.compactMap { CustomerChatMessage(message: $0, conversation: self?.conversation) }
+            let temp = messages.filter({
+                let name = $0.author
+                
+                if (self?.state.userType).orZero() == 2 {
+                    return !name.orEmpty().contains("system-audience")
+                } else {
+                    return !name.orEmpty().contains("system-creator")
+                }
+            }).compactMap { CustomerChatMessage(message: $0, conversation: self?.conversation) }
             self?.groupedMessage = (self?.mapTo2DArray(elements: temp) ?? []).compactMap({
                 GroupedChat(date: ($0.first?.date).orCurrentDate(), chat: $0)
             })
@@ -141,7 +151,16 @@ extension CustomerChatManager: TwilioConversationsClientDelegate {
 
 		messages.append(message)
         
-        self.groupedMessage = self.mapTo2DArray(elements: messages).compactMap({
+        let temp = messages.filter({
+            let name = $0.author
+            
+            if (self.state.userType) == 2 {
+                return !name.contains("system-audience")
+            } else {
+                return !name.contains("system-creator")
+            }
+        })
+        self.groupedMessage = self.mapTo2DArray(elements: temp).compactMap({
             GroupedChat(date: ($0.first?.date).orCurrentDate(), chat: $0)
         })
 		hasUnreadMessage = true

@@ -8,51 +8,41 @@
 import DinotisData
 import DinotisDesignSystem
 import SwiftUI
+import SwiftUINavigation
 
 struct DiscussionListView: View {
     
     @EnvironmentObject var viewModel: DiscussionListViewModel
     @Environment(\.dismiss) var dismiss
     @FocusState var searchFocused: Bool
+    @EnvironmentObject var customerChatManager: CustomerChatManager
     
     var body: some View {
-        VStack(spacing: 0) {
-            
-            if viewModel.isSearching {
-                HStack(spacing: 16) {
-                    Button {
-                        withAnimation {
-                            searchFocused = false
-                            viewModel.isSearching = false
-                        }
-                    } label: {
-                        Image.generalBackIcon
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 20, height: 20)
-                            .padding(12)
-                            .background(
-                                Circle()
-                                    .fill(.white)
-                                    .shadow(color: /*@START_MENU_TOKEN@*/.black/*@END_MENU_TOKEN@*/.opacity(0.05), radius: 10, x: 0, y: 0)
-                            )
-                    }
-                    
-                    SearchTextField(LocalizableText.discussionSearchPlaceholder, text: $viewModel.searchText)
-                        .focused($searchFocused)
+        ZStack {
+            NavigationLink(
+                unwrapping: $viewModel.route,
+                case: /HomeRouting.scheduleNegotiationChat,
+                destination: {viewModel in
+                    ScheduleNegotiationChatView(viewModel: viewModel.wrappedValue, isOnSheet: false)
+                        .environmentObject(customerChatManager)
+                },
+                onNavigate: {_ in},
+                label: {
+                    EmptyView()
                 }
-                .padding()
+            )
+            
+            VStack(spacing: 0) {
                 
-            } else {
-                HeaderView(
-                    type: .textHeader,
-                    title: viewModel.type == .ongoing ?
-                    LocalizableText.inboxDiscussScheduleTitle : LocalizableText.sessionCompleted,
-                    headerColor: .white,
-                    textColor: .DinotisDefault.black1,
-                    leadingButton:  {
+                if viewModel.isSearching {
+                    HStack(spacing: 16) {
                         Button {
-                            dismiss()
+                            withAnimation {
+                                viewModel.debouncedText = ""
+                                viewModel.searchText = ""
+                                searchFocused = false
+                                viewModel.isSearching = false
+                            }
                         } label: {
                             Image.generalBackIcon
                                 .resizable()
@@ -65,50 +55,114 @@ struct DiscussionListView: View {
                                         .shadow(color: /*@START_MENU_TOKEN@*/.black/*@END_MENU_TOKEN@*/.opacity(0.05), radius: 10, x: 0, y: 0)
                                 )
                         }
-                    }) {
-                        Button {
-                            withAnimation {
-                                viewModel.isSearching = true
-                                searchFocused = true
+                        
+                        SearchTextField(LocalizableText.discussionSearchPlaceholder, text: $viewModel.searchText)
+                            .focused($searchFocused)
+                    }
+                    .padding()
+                    
+                } else {
+                    HeaderView(
+                        type: .textHeader,
+                        title: viewModel.type == .ongoing ?
+                        LocalizableText.inboxDiscussScheduleTitle : LocalizableText.sessionCompleted,
+                        headerColor: .white,
+                        textColor: .DinotisDefault.black1,
+                        leadingButton:  {
+                            Button {
+                                dismiss()
+                            } label: {
+                                Image.generalBackIcon
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 20, height: 20)
+                                    .padding(12)
+                                    .background(
+                                        Circle()
+                                            .fill(.white)
+                                            .shadow(color: /*@START_MENU_TOKEN@*/.black/*@END_MENU_TOKEN@*/.opacity(0.05), radius: 10, x: 0, y: 0)
+                                    )
                             }
-                        } label: {
-                            Image(systemName: "magnifyingglass")
-                                .font(.system(size: 20, weight: .semibold))
-                                .foregroundColor(.DinotisDefault.black2)
-                                .padding(12)
+                        }) {
+                            Button {
+                                withAnimation {
+                                    viewModel.isSearching = true
+                                    searchFocused = true
+                                    viewModel.data = []
+                                }
+                            } label: {
+                                Image(systemName: "magnifyingglass")
+                                    .font(.system(size: 20, weight: .semibold))
+                                    .foregroundColor(.DinotisDefault.black2)
+                                    .padding(12)
+                            }
+                        }
+                }
+                
+                FilterDiscussionView(viewModel: viewModel)
+                    .isHidden(viewModel.isSearching, remove: viewModel.isSearching)
+                
+                if viewModel.isLoading {
+                    Spacer()
+                    
+                    DinotisLoadingView(.small, hide: !viewModel.isLoading)
+                    
+                    Spacer()
+                } else {
+                    List {
+                        if viewModel.isSearching {
+                            SearchDiscussionView(viewModel: viewModel)
+                        } else {
+                            // FIXME: Change this with data from backend
+                            ForEach(viewModel.data, id: \.id) { item in
+                                ChatCellView(
+                                    viewModel: viewModel,
+                                    type: viewModel.type,
+                                    title: (item.meeting?.title).orEmpty(),
+                                    hasAccepted: item.meeting?.startAt != nil,
+                                    expiredAt: item.expiredAt.orCurrentDate(),
+                                    hasRead: item.status.orEmpty() == "confirmed" || item.status.orEmpty() == "done",
+                                    name: (item.user?.name).orEmpty(),
+                                    profilePicture: (item.user?.profilePhoto).orEmpty(),
+                                    message: item.lastMessage.orEmpty(),
+                                    date: item.sendAt.orCurrentDate(),
+                                    inbox: item
+                                )
+                                .listRowSeparator(.hidden)
+                                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                            }
                         }
                     }
-            }
-            
-            FilterDiscussionView(viewModel: viewModel)
-                .isHidden(viewModel.isSearching, remove: viewModel.isSearching)
-            
-            ScrollView {
-                LazyVStack(spacing: 0) {
-                    if viewModel.isSearching {
-                        SearchDiscussionView(viewModel: viewModel)
-                    } else {
-                        // FIXME: Change this with data from backend
-                        ForEach(viewModel.data, id: \.id) { item in
-                            ChatCellView(
-                                type: viewModel.type,
-                                title: item.title,
-                                hasAccepted: item.hasAccepted,
-                                expiredAt: item.expiredAt,
-                                hasRead: item.hasRead,
-                                name: item.name,
-                                profilePicture: item.profilePicture,
-                                message: item.message,
-                                date: item.date
-                            )
-                        }
-                    }
+                    .refreshable(action: {
+                        await viewModel.getInboxChat(section: viewModel.currentSection, query: viewModel.debouncedText, isRefresh: true)
+                    })
+                    .listStyle(.plain)
                 }
             }
-            .background(Color.DinotisDefault.baseBackground)
         }
         .navigationBarTitle(Text(""))
         .navigationBarHidden(true)
+        .onChange(of: viewModel.searchText) { newValue in
+            viewModel.debounceText()
+        }
+        .onChange(of: viewModel.debouncedText) { newValue in
+            viewModel.onLoadChats(section: viewModel.currentSection, query: newValue)
+        }
+        .onAppear {
+            viewModel.onLoadChats(section: viewModel.currentSection, query: viewModel.debouncedText)
+        }
+        .dinotisAlert(
+            isPresent: $viewModel.isError,
+            type: .general,
+            title: LocalizableText.attentionText,
+            isError: true,
+            message: viewModel.error,
+            primaryButton: .init(text: LocalizableText.okText, action: {
+                if viewModel.isRefreshFailed {
+                    viewModel.routeToRoot()
+                }
+            })
+        )
     }
 }
 
@@ -127,6 +181,8 @@ extension DiscussionListView {
                             ForEach(viewModel.tabSections, id: \.self) { tab in
                                 Button {
                                     withAnimation {
+                                        viewModel.data = []
+                                        viewModel.onLoadChats(section: tab, query: viewModel.debouncedText)
                                         viewModel.currentSection = tab
                                         scrollView.scrollTo(tab, anchor: .center)
                                     }
@@ -158,22 +214,19 @@ extension DiscussionListView {
             .background(Color.white)
         }
         
-        private func headerText(for filter: DiscussionFilter) -> String {
+        private func headerText(for filter: ChatInboxFilter) -> String {
             switch filter {
-            case .latest:
+            case .desc:
                 return LocalizableText.sortLatest
-            case .earliest:
+            case .asc:
                 return LocalizableText.sortEarliest
-            case .unread:
-                return LocalizableText.discussionTagUnread
-            case .nearest:
-                return LocalizableText.discussionTagNearestSchedule
             }
         }
     }
     
     struct ChatCellView: View {
         
+        @ObservedObject var viewModel: DiscussionListViewModel
         @State var type: DiscussionListType
         @State var title: String
         @State var hasAccepted: Bool
@@ -184,11 +237,11 @@ extension DiscussionListView {
         @State var message: String
         @State var date: Date
         
+        @State var inbox: InboxData
+        
         var body: some View {
             Button(action: {
-                withAnimation {
-                    hasRead = true
-                }
+                viewModel.routeToScheduleNegotiationChat(meet: viewModel.convertToUserMeet(meet: inbox), expiredAt: expiredAt)
             }, label: {
                 VStack(spacing: 0) {
                     Divider()
@@ -241,7 +294,7 @@ extension DiscussionListView {
                                     
                                     Spacer()
                                     
-                                    Text(messageDate)
+                                    Text(Date().toStringFormat(with: .ddMMM))
                                         .font(.robotoRegular(size: 12))
                                         .foregroundColor(hasRead ? .DinotisDefault.black1 : .DinotisDefault.primary)
                                 }
@@ -292,13 +345,6 @@ extension DiscussionListView {
                 return hasAccepted ? AttributedString(LocalizableText.discussionStatusScheduledSession) : AttributedString(LocalizableText.discussionStatusCancelWithin(date: formattedString))
             }
         }
-        
-        private var messageDate: String {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "d MMM"
-
-            return dateFormatter.string(from: date)
-        }
     }
     
     struct SearchDiscussionView: View {
@@ -309,38 +355,59 @@ extension DiscussionListView {
         var body: some View {
             switch viewModel.searchState {
             case .initiate:
-                Text(state.userType == 2 ? LocalizableText.discussionSearchAudienceName : LocalizableText.discussionSearchCreatorName)
-                    .font(.robotoRegular(size: 12))
-                    .foregroundColor(.DinotisDefault.black1)
-                    .multilineTextAlignment(.center)
-                    .padding()
-            case .success:
-                ForEach(viewModel.searchedData, id: \.id) { item in
-                    ChatCellView(
-                        type: viewModel.type,
-                        title: item.title,
-                        hasAccepted: item.hasAccepted,
-                        expiredAt: item.expiredAt,
-                        hasRead: item.hasRead,
-                        name: item.name,
-                        profilePicture: item.profilePicture,
-                        message: item.message,
-                        date: item.date
-                    )
-                }
-            case .empty:
-                VStack(spacing: 16) {
-                    Image.searchNotFoundImage
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxHeight: 235)
+                HStack {
                     
-                    Text(LocalizableText.discussionSearchNotFound)
+                    Spacer()
+                    
+                    Text(state.userType == 2 ? LocalizableText.discussionSearchAudienceName : LocalizableText.discussionSearchCreatorName)
                         .font(.robotoRegular(size: 12))
                         .foregroundColor(.DinotisDefault.black1)
                         .multilineTextAlignment(.center)
+                        .padding()
+                    
+                    Spacer()
+                }
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+            case .success:
+                ForEach(viewModel.data, id: \.id) { item in
+                    ChatCellView(
+                        viewModel: viewModel,
+                        type: viewModel.type,
+                        title: (item.meeting?.title).orEmpty(),
+                        hasAccepted: item.status.orEmpty().contains("accepted"),
+                        expiredAt: item.expiredAt.orCurrentDate(),
+                        hasRead: item.status.orEmpty() == "confirmed" || item.status.orEmpty() == "done",
+                        name: (item.user?.name).orEmpty(),
+                        profilePicture: (item.user?.profilePhoto).orEmpty(),
+                        message: item.lastMessage.orEmpty(),
+                        date: item.sendAt.orCurrentDate(),
+                        inbox: item
+                    )
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                }
+            case .empty:
+                HStack {
+                    Spacer()
+                    
+                    VStack(spacing: 16) {
+                        Image.searchNotFoundImage
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxHeight: 235)
+                        
+                        Text(LocalizableText.discussionSearchNotFound)
+                            .font(.robotoRegular(size: 12))
+                            .foregroundColor(.DinotisDefault.black1)
+                            .multilineTextAlignment(.center)
+                    }
+                    
+                    Spacer()
                 }
                 .padding()
+                .listRowSeparator(.hidden)
+                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
             }
         }
     }

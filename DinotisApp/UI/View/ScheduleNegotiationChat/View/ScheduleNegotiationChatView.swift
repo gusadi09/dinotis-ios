@@ -13,6 +13,8 @@ struct ScheduleNegotiationChatView: View {
 
 	@ObservedObject var viewModel: ScheduleNegotiationChatViewModel
 	@EnvironmentObject var customerChatManager: CustomerChatManager
+    let isOnSheet: Bool
+    let calendar = Calendar(identifier: .iso8601)
 
 	var body: some View {
 		ZStack {
@@ -21,7 +23,7 @@ struct ScheduleNegotiationChatView: View {
 			VStack(spacing: 0) {
 				HeaderView(viewModel: viewModel)
 
-                if customerChatManager.isLoading {
+                if customerChatManager.isLoading || viewModel.isLoading {
                     Spacer()
                     
                     ProgressView()
@@ -31,97 +33,103 @@ struct ScheduleNegotiationChatView: View {
                 } else {
                     ScrollViewReader { scroll in
                         List {
+                            Section {
+                                EndChatLimitationView(viewModel: viewModel)
+                                    .padding(.top, 5)
+                            }
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
                             
-                            EndChatLimitationView(viewModel: viewModel)
-                                .padding(.top, 5)
-                                .padding(.bottom, 10)
-                                .listRowSeparator(.hidden)
-                                .listRowBackground(Color.clear)
-                            
-                            ForEach(customerChatManager.groupedMessage, id: \.id) { item in
-                                HStack {
-                                    
-                                    Spacer()
-                                    
-                                    if Calendar(identifier: .iso8601).isDateInYesterday(item.date) {
-                                        Text(LocalizableText.yesterday)
-                                            .font(.robotoRegular(size: 12))
-                                            .foregroundColor(.DinotisDefault.primary)
-                                            .padding(.vertical, 4)
-                                            .padding(.horizontal, 12)
-                                            .overlay(
-                                                Capsule()
-                                                    .stroke(Color.DinotisDefault.primary, lineWidth: 1)
-                                            )
-                                    } else if Calendar(identifier: .iso8601).isDateInToday(item.date) {
-                                        Text(LocalizableText.today)
-                                            .font(.robotoRegular(size: 12))
-                                            .foregroundColor(.DinotisDefault.primary)
-                                            .padding(.vertical, 4)
-                                            .padding(.horizontal, 12)
-                                            .overlay(
-                                                Capsule()
-                                                    .stroke(Color.DinotisDefault.primary, lineWidth: 1)
-                                            )
-                                    } else {
-                                        Text(item.date.toStringFormat(with: .ddMMMyyyy))
-                                            .font(.robotoRegular(size: 12))
-                                            .foregroundColor(.DinotisDefault.primary)
-                                            .padding(.vertical, 4)
-                                            .padding(.horizontal, 12)
-                                            .overlay(
-                                                Capsule()
-                                                    .stroke(Color.DinotisDefault.primary, lineWidth: 1)
-                                            )
-                                        
-                                    }
-                                    
-                                    Spacer()
-                                }
-                                .listRowSeparator(.hidden)
-                                .listRowBackground(Color.clear)
-                                .listRowInsets(.init(top: 5, leading: 20, bottom: 10, trailing: 20))
-                                
-                                ForEach(item.chat, id: \.id) { item in
+                            Section {
+                                ForEach(customerChatManager.groupedMessage.sorted(by: {
+                                    $0.date < $1.date
+                                }), id: \.id) { item in
                                     HStack {
-                                        if item.author == viewModel.state.userId {
-                                            Spacer()
+                                        
+                                        Spacer()
+                                        
+                                        if calendar.isDateInYesterday(item.date) {
+                                            Text(LocalizableText.yesterday)
+                                                .font(.robotoRegular(size: 12))
+                                                .foregroundColor(.DinotisDefault.primary)
+                                                .padding(.vertical, 4)
+                                                .padding(.horizontal, 12)
+                                                .overlay(
+                                                    Capsule()
+                                                        .stroke(Color.DinotisDefault.primary, lineWidth: 1)
+                                                )
+                                        } else if calendar.isDateInToday(item.date) {
+                                            Text(LocalizableText.today)
+                                                .font(.robotoRegular(size: 12))
+                                                .foregroundColor(.DinotisDefault.primary)
+                                                .padding(.vertical, 4)
+                                                .padding(.horizontal, 12)
+                                                .overlay(
+                                                    Capsule()
+                                                        .stroke(Color.DinotisDefault.primary, lineWidth: 1)
+                                                )
+                                        } else {
+                                            Text(item.date.toStringFormat(with: .ddMMMyyyy))
+                                                .font(.robotoRegular(size: 12))
+                                                .foregroundColor(.DinotisDefault.primary)
+                                                .padding(.vertical, 4)
+                                                .padding(.horizontal, 12)
+                                                .overlay(
+                                                    Capsule()
+                                                        .stroke(Color.DinotisDefault.primary, lineWidth: 1)
+                                                )
                                         }
                                         
-                                        ChatBubbleView(
-                                            sender: item.name.orEmpty(),
-                                            message: item.body,
-                                            date: item.date,
-                                            isSender: item.author == viewModel.state.userId
-                                        )
-                                        .tag(item.id)
-                                        .onAppear {
-                                            if item.id == (customerChatManager.messages.last?.id).orEmpty() {
-                                                viewModel.count += 30
-                                                customerChatManager.getMessages(count: viewModel.count, isMore: true)
-                                            }
-                                        }
-                                        
-                                        if item.author != viewModel.state.userId {
-                                            Spacer()
-                                        }
+                                        Spacer()
                                     }
                                     .listRowSeparator(.hidden)
                                     .listRowBackground(Color.clear)
-                                    .listRowInsets(.init(top: 5, leading: 20, bottom: 5, trailing: 20))
+                                    .listRowInsets(.init(top: 10, leading: 20, bottom: 5, trailing: 20))
+                                    
+                                    ForEach(item.chat, id: \.id) { item in
+                                        HStack {
+                                            if item.author == viewModel.state.userId {
+                                                Spacer()
+                                            }
+                                            
+                                            ChatBubbleView(
+                                                sender: item.name.orEmpty(),
+                                                message: item.body,
+                                                date: item.date,
+                                                isSender: item.author == viewModel.state.userId
+                                            )
+                                            .tag(item.id)
+                                            .onAppear {
+                                                if item.id == (customerChatManager.messages.last?.id).orEmpty() {
+                                                    viewModel.count += 30
+                                                    customerChatManager.getMessages(count: viewModel.count, isMore: true)
+                                                }
+                                            }
+                                            
+                                            if item.author != viewModel.state.userId {
+                                                Spacer()
+                                            }
+                                        }
+                                        .listRowSeparator(.hidden)
+                                        .listRowBackground(Color.clear)
+                                        .listRowInsets(.init(top: 5, leading: 20, bottom: 5, trailing: 20))
+                                    }
                                 }
                             }
-                            
                         }
                         .listStyle(.plain)
                         .onChange(of: customerChatManager.messages.count) { newValue in
                             withAnimation {
-                                scroll.scrollTo((customerChatManager.messages.last?.id).orEmpty())
+                                scroll.scrollTo((customerChatManager.groupedMessage.sorted(by: {
+                                    $0.date < $1.date
+                                }).last?.chat.last?.id).orEmpty())
                             }
                         }
                         .onAppear {
                             withAnimation {
-                                scroll.scrollTo((customerChatManager.messages.last?.id).orEmpty())
+                                scroll.scrollTo((customerChatManager.groupedMessage.sorted(by: {
+                                    $0.date < $1.date
+                                }).last?.chat.last?.id).orEmpty())
                             }
                         }
                     }
@@ -152,7 +160,7 @@ struct ScheduleNegotiationChatView: View {
                                 RoundedRectangle(cornerRadius: 20)
                                     .foregroundColor(Color(.systemGray6))
                             )
-                            .disabled(customerChatManager.isLoading)
+                            .disabled(customerChatManager.isLoading || viewModel.isLoading)
                         
                         Button {
                             customerChatManager.sendMessage(viewModel.textMessage)
@@ -162,9 +170,9 @@ struct ScheduleNegotiationChatView: View {
                                 .resizable()
                                 .scaledToFit()
                                 .frame(height: 45)
-                                .opacity(viewModel.textMessage.isEmpty || !viewModel.textMessage.isStringContainWhitespaceAndText() || customerChatManager.isLoading ? 0.5 : 1)
+                                .opacity(viewModel.textMessage.isEmpty || !viewModel.textMessage.isStringContainWhitespaceAndText() || customerChatManager.isLoading || viewModel.isLoading ? 0.5 : 1)
                         }
-                        .disabled(viewModel.textMessage.isEmpty || !viewModel.textMessage.isStringContainWhitespaceAndText() || customerChatManager.isLoading)
+                        .disabled(viewModel.textMessage.isEmpty || !viewModel.textMessage.isStringContainWhitespaceAndText() || customerChatManager.isLoading || viewModel.isLoading)
                     }
 				}
 				.padding(15)
@@ -176,6 +184,36 @@ struct ScheduleNegotiationChatView: View {
 		}
 		.navigationBarHidden(true)
 		.navigationBarTitle("")
+        .onChange(of: viewModel.tokenConversation, perform: { newValue in
+            if !isOnSheet {
+                if !viewModel.tokenConversation.isEmpty {
+                    customerChatManager.connect(accessToken: newValue, conversationName: (viewModel.meetingData.meetingRequest?.id).orEmpty())
+                }
+            }
+        })
+        .onAppear(perform: {
+            if !isOnSheet {
+                if customerChatManager.messages.isEmpty {
+                    Task {
+                        await viewModel.getConversationToken(id: (viewModel.meetingData.meetingRequest?.id).orEmpty())
+                    }
+                } else if customerChatManager.conversation?.sid != viewModel.meetingData.roomSid {
+                    Task {
+                        await viewModel.getConversationToken(id: (viewModel.meetingData.meetingRequest?.id).orEmpty())
+                    }
+                }
+            }
+        })
+        .dinotisAlert(
+            isPresent: $viewModel.isShowAlert,
+            type: .general,
+            title: viewModel.alertTitle(),
+            isError: viewModel.typeAlert == .error || viewModel.typeAlert == .refreshFailed,
+            message: viewModel.alertContent(),
+            primaryButton: .init(text: viewModel.alertButtonText(), action: {
+                viewModel.alertAction()
+            })
+        )
 	}
 }
 
@@ -299,7 +337,6 @@ struct ScheduleNegotiationChatView_Previews: PreviewProvider {
 	static var previews: some View {
         ScheduleNegotiationChatView(
             viewModel: ScheduleNegotiationChatViewModel(
-                token: "",
                 meetingData: UserMeetingData(
                     id: nil,
                     title: nil,
@@ -336,7 +373,8 @@ struct ScheduleNegotiationChatView_Previews: PreviewProvider {
                 ),
                 expireDate: Date(),
                 backToHome: {}
-            )
+            ),
+            isOnSheet: false
         )
 	}
 }
