@@ -583,3 +583,6 @@
 "chat_disabled_text" = "Chat tidak lagi tersedia untuk sesi ini";
 "review_filter_highest_star" = "Bintang tertinggi";
 "review_filter_lowest_star" = "Bintang terendah";
+
+"discuss_with_creator" = "Diskusi dengan Creator";
+"discuss_with_audience" = "Diskusi dengan Audience";

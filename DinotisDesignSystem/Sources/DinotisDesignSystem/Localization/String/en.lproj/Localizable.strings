@@ -584,3 +584,6 @@
 
 "review_filter_highest_star" = "Highest star";
 "review_filter_lowest_star" = "Lowest star";
+
+"discuss_with_creator" = "Discuss with Creator";
+"discuss_with_audience" = "Discuss with Audience";

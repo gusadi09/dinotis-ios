@@ -2638,6 +2638,16 @@ public enum LocalizableText {
         bundle: .module,
         comment: "discussion list search not found"
     )
+    public static let discussWithCreatorTitle = NSLocalizedString(
+        "discuss_with_creator",
+        bundle: .module,
+        comment: "discuss with creator"
+    )
+    public static let discussWithAudienceTitle = NSLocalizedString(
+        "discuss_with_audience",
+        bundle: .module,
+        comment: "discuss with audience"
+    )
 }
 
 

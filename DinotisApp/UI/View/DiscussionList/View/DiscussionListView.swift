@@ -294,7 +294,7 @@ extension DiscussionListView {
                                     
                                     Spacer()
                                     
-                                    Text(Date().toStringFormat(with: .ddMMM))
+                                    Text(date.toStringFormat(with: .ddMMM))
                                         .font(.robotoRegular(size: 12))
                                         .foregroundColor(hasRead ? .DinotisDefault.black1 : .DinotisDefault.primary)
                                 }
@@ -325,6 +325,7 @@ extension DiscussionListView {
         
         private var expiredTime: AttributedString {
             let timeDifference = Calendar.current.dateComponents([.day, .hour, .minute], from: Date(), to: expiredAt)
+            print(expiredAt)
             
             let days = timeDifference.day ?? 0
             let hours = timeDifference.hour ?? 0
@@ -333,9 +334,13 @@ extension DiscussionListView {
             
             if days > 0 {
                 formattedString += "\(days) \(LocalizableText.dayText) "
+            } else {
+                formattedString += "\(days) \(LocalizableText.dayText) "
             }
             
             if hours > 0 {
+                formattedString += "\(hours) \(LocalizableText.hourText)"
+            } else {
                 formattedString += "\(hours) \(LocalizableText.hourText)"
             }
             
@@ -375,7 +380,7 @@ extension DiscussionListView {
                         viewModel: viewModel,
                         type: viewModel.type,
                         title: (item.meeting?.title).orEmpty(),
-                        hasAccepted: item.status.orEmpty().contains("accepted"),
+                        hasAccepted: item.meeting?.startAt != nil,
                         expiredAt: item.expiredAt.orCurrentDate(),
                         hasRead: item.status.orEmpty() == "confirmed" || item.status.orEmpty() == "done",
                         name: (item.user?.name).orEmpty(),

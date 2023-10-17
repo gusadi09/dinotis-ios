@@ -21,7 +21,7 @@ struct ScheduleNegotiationChatView: View {
             Color.DinotisDefault.baseBackground.edgesIgnoringSafeArea(.all)
 
 			VStack(spacing: 0) {
-				HeaderView(viewModel: viewModel)
+                HeaderView(viewModel: viewModel)
 
                 if customerChatManager.isLoading || viewModel.isLoading {
                     Spacer()
@@ -243,12 +243,21 @@ extension ScheduleNegotiationChatView {
                         Spacer()
                     }
                     
-                    Text(LocaleText.newScheduleDiscussionTitle)
-                        .font(.robotoBold(size: 14))
-                        .foregroundColor(.black)
-                        .lineLimit(2)
-                        .multilineTextAlignment(.center)
-                        .frame(width: UIScreen.main.bounds.width - 120)
+                    if viewModel.state.userType == 2 {
+                        Text(LocalizableText.discussWithAudienceTitle)
+                            .font(.robotoBold(size: 14))
+                            .foregroundColor(.black)
+                            .lineLimit(2)
+                            .multilineTextAlignment(.center)
+                            .frame(width: UIScreen.main.bounds.width - 120)
+                    } else {
+                        Text(LocalizableText.discussWithCreatorTitle)
+                            .font(.robotoBold(size: 14))
+                            .foregroundColor(.black)
+                            .lineLimit(2)
+                            .multilineTextAlignment(.center)
+                            .frame(width: UIScreen.main.bounds.width - 120)
+                    }
                 }
                 
                 HStack(spacing: 16) {
