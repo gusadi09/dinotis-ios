@@ -16,11 +16,12 @@ struct ChatBubbleView: View {
 	let isSender: Bool
 
     var body: some View {
-		LazyVStack(alignment: .leading, spacing: 15) {
+		VStack(alignment: .leading, spacing: 12) {
 			HStack {
 				if !isSender {
 					Text(sender)
 						.font(.robotoBold(size: 12))
+                        .lineLimit(1)
 						.foregroundColor(isSender ? .white : .white)
 						.multilineTextAlignment(.leading)
 				}
@@ -31,16 +32,19 @@ struct ChatBubbleView: View {
 				.foregroundColor(isSender ? .black : .white)
 				.multilineTextAlignment(isSender ? .trailing : .leading)
             
-            HStack {
-                Spacer()
+            VStack(alignment: .trailing) {
+                Rectangle()
+                    .foregroundColor(isSender ? .secondaryViolet : .DinotisDefault.primary)
                 
+                    .frame(maxWidth: 256, maxHeight: 0.5)
                 Text(date.toStringFormat(with: .HHmm))
                     .font(.robotoRegular(size: 10))
                     .foregroundColor(isSender ? .black : .white)
             }
 		}
-		.padding()
         .frame(maxWidth: 256)
+        .padding(.vertical, 12)
+        .padding(.horizontal, 16)
 		.background(
 			RoundedCorner(radius: 20, corners: isSender ? [.bottomLeft, .topLeft, .topRight] : [.bottomRight, .topLeft, .topRight])
 				.foregroundColor(isSender ? .secondaryViolet : .DinotisDefault.primary)
