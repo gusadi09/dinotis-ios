@@ -36,8 +36,7 @@ struct UserHomeView: View {
                 
                 ZStack(alignment: .center) {
                     
-                    Color.homeBgColor
-                        .edgesIgnoringSafeArea(.bottom)
+                    Color.homeBgColor.ignoresSafeArea()
                     
                     VStack(spacing: 0) {
                         
