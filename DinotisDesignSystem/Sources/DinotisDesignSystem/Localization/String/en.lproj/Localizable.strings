@@ -564,7 +564,7 @@
 "inbox_discuss_schedule_desc" = "Conversation about scheduling with the creator.";
 "inbox_completed_session_desc" = "Conversation history of completed sessions.";
 "inbox_review_desc" = "Give ratings for completed sessions.";
-
+"inbox_empty_description" = "Chat inbox is currently empty";
 
 "discussion_tag_unread" = "Unread";
 "discussion_tag_nearest_schedule" = "Nearest Schedule";

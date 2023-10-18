@@ -2725,6 +2725,12 @@ public enum LocalizableText {
         bundle: .module,
         comment: "app usage costs slider tooltip text"
     )
+    public static let inboxEmptyDescription = NSLocalizedString(
+        "inbox_empty_description",
+        bundle: .module,
+        comment: "empty inbox description"
+    )
+    
 }
 
 

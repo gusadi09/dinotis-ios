@@ -564,6 +564,7 @@
 "inbox_discuss_schedule_desc" = "Percakapan atur jadwal bersama creator.";
 "inbox_completed_session_desc" = "Riwayat percakapan sesi yang telah selesai.";
 "inbox_review_desc" = "Berikan penilaian untuk sesi yang telah selesai.";
+"inbox_empty_description" = "Belum ada chat yang masuk";
 
 "discussion_tag_unread" = "Belum dibaca";
 "discussion_tag_nearest_schedule" = "Jadwal Terdekat";
