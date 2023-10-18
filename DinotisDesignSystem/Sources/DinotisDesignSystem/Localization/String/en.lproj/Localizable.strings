@@ -565,6 +565,7 @@
 "inbox_completed_session_desc" = "Conversation history of completed sessions.";
 "inbox_review_desc" = "Give ratings for completed sessions.";
 "inbox_empty_description" = "Chat inbox is currently empty";
+"review_empty_description" = "You don't have any reviews yet";
 
 "discussion_tag_unread" = "Unread";
 "discussion_tag_nearest_schedule" = "Nearest Schedule";

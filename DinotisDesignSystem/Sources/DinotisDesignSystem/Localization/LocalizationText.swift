@@ -2730,6 +2730,11 @@ public enum LocalizableText {
         bundle: .module,
         comment: "empty inbox description"
     )
+    public static let reviewEmptyDescription = NSLocalizedString(
+        "review_empty_description",
+        bundle: .module,
+        comment: "empty review description"
+    )
     
 }
 

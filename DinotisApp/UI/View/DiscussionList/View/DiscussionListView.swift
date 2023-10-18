@@ -97,6 +97,8 @@ struct DiscussionListView: View {
                                     .padding(12)
                             }
                         }
+                    
+                    Divider()
                 }
                 
                 FilterDiscussionView(viewModel: viewModel)
