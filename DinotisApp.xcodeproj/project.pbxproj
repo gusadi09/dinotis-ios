@@ -11,7 +11,13 @@
 		0A0664D1280F4939009EC7C0 /* EmptySchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0664D0280F4939009EC7C0 /* EmptySchedule.swift */; };
 		0AE145A22812801E00108948 /* TalentEditProfile+Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE145A12812801E00108948 /* TalentEditProfile+Component.swift */; };
 		37B4DBCF2A8A963B00D3EAA1 /* AfterFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B4DBCE2A8A963B00D3EAA1 /* AfterFeedback.swift */; };
+		4B03ED3D2ACC17C4004DD0FA /* InboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B03ED3C2ACC17C4004DD0FA /* InboxView.swift */; };
+		4B03ED3F2ACC18D3004DD0FA /* InboxViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B03ED3E2ACC18D3004DD0FA /* InboxViewModel.swift */; };
 		4BA7D6152AC1756500B5177E /* session-close-to-end.json in Resources */ = {isa = PBXBuildFile; fileRef = 4BA7D6142AC1756500B5177E /* session-close-to-end.json */; };
+		4BFE4E002ACD4CFF00E14890 /* DiscussionListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFE4DFF2ACD4CFF00E14890 /* DiscussionListViewModel.swift */; };
+		4BFE4E022ACD4D2A00E14890 /* DiscussionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFE4E012ACD4D2A00E14890 /* DiscussionListView.swift */; };
+		4BFE4E092AD0264600E14890 /* ReviewListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFE4E082AD0264600E14890 /* ReviewListView.swift */; };
+		4BFE4E0B2AD0265800E14890 /* ReviewListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFE4E0A2AD0265800E14890 /* ReviewListViewModel.swift */; };
 		EC01F1E326BFD7C600CA878F /* UserBiodataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC01F1E226BFD7C600CA878F /* UserBiodataView.swift */; };
 		EC0279F227C5E40B00B8C392 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0279F127C5E40A00B8C392 /* RoundedCorner.swift */; };
 		EC0279F527C61D7900B8C392 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0279F427C61D7900B8C392 /* ProfileViewModel.swift */; };
@@ -20,6 +26,7 @@
 		EC04ED3C26C8D83E00E0D473 /* UserHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC04ED3B26C8D83E00E0D473 /* UserHomeView.swift */; };
 		EC04ED4426C8FF3B00E0D473 /* UserScheduleCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC04ED4326C8FF3B00E0D473 /* UserScheduleCardView.swift */; };
 		EC04ED4926C923B900E0D473 /* SuggestCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC04ED4826C923B900E0D473 /* SuggestCardView.swift */; };
+		EC0A513B2AD9E1D700DB2C7A /* regular-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = EC0A513A2AD9E1D700DB2C7A /* regular-loading.json */; };
 		EC0D4C222A8C706A0028B87C /* AftercallFeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0D4C212A8C706A0028B87C /* AftercallFeedbackView.swift */; };
 		EC0D4C252A8C70820028B87C /* FeedbackViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0D4C242A8C70820028B87C /* FeedbackViewModel.swift */; };
 		EC0FE33127152953006CABA8 /* TalentMeeting.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0FE33027152953006CABA8 /* TalentMeeting.swift */; };
@@ -366,7 +373,13 @@
 		0A0664D0280F4939009EC7C0 /* EmptySchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptySchedule.swift; sourceTree = "<group>"; };
 		0AE145A12812801E00108948 /* TalentEditProfile+Component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TalentEditProfile+Component.swift"; sourceTree = "<group>"; };
 		37B4DBCE2A8A963B00D3EAA1 /* AfterFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfterFeedback.swift; sourceTree = "<group>"; };
+		4B03ED3C2ACC17C4004DD0FA /* InboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxView.swift; sourceTree = "<group>"; };
+		4B03ED3E2ACC18D3004DD0FA /* InboxViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxViewModel.swift; sourceTree = "<group>"; };
 		4BA7D6142AC1756500B5177E /* session-close-to-end.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "session-close-to-end.json"; sourceTree = "<group>"; };
+		4BFE4DFF2ACD4CFF00E14890 /* DiscussionListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscussionListViewModel.swift; sourceTree = "<group>"; };
+		4BFE4E012ACD4D2A00E14890 /* DiscussionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscussionListView.swift; sourceTree = "<group>"; };
+		4BFE4E082AD0264600E14890 /* ReviewListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewListView.swift; sourceTree = "<group>"; };
+		4BFE4E0A2AD0265800E14890 /* ReviewListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewListViewModel.swift; sourceTree = "<group>"; };
 		EC01F1E226BFD7C600CA878F /* UserBiodataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserBiodataView.swift; sourceTree = "<group>"; };
 		EC0279F127C5E40A00B8C392 /* RoundedCorner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
 		EC0279F427C61D7900B8C392 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
@@ -375,6 +388,7 @@
 		EC04ED3B26C8D83E00E0D473 /* UserHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHomeView.swift; sourceTree = "<group>"; };
 		EC04ED4326C8FF3B00E0D473 /* UserScheduleCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserScheduleCardView.swift; sourceTree = "<group>"; };
 		EC04ED4826C923B900E0D473 /* SuggestCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestCardView.swift; sourceTree = "<group>"; };
+		EC0A513A2AD9E1D700DB2C7A /* regular-loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "regular-loading.json"; sourceTree = "<group>"; };
 		EC0D4C212A8C706A0028B87C /* AftercallFeedbackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AftercallFeedbackView.swift; sourceTree = "<group>"; };
 		EC0D4C242A8C70820028B87C /* FeedbackViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackViewModel.swift; sourceTree = "<group>"; };
 		EC0FE33027152953006CABA8 /* TalentMeeting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalentMeeting.swift; sourceTree = "<group>"; };
@@ -734,6 +748,81 @@
 				37B4DBCE2A8A963B00D3EAA1 /* AfterFeedback.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		4B03ED392ACC1783004DD0FA /* Inbox */ = {
+			isa = PBXGroup;
+			children = (
+				4B03ED3B2ACC17B7004DD0FA /* ViewModel */,
+				4B03ED3A2ACC17AD004DD0FA /* View */,
+			);
+			path = Inbox;
+			sourceTree = "<group>";
+		};
+		4B03ED3A2ACC17AD004DD0FA /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4B03ED3C2ACC17C4004DD0FA /* InboxView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		4B03ED3B2ACC17B7004DD0FA /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				4B03ED3E2ACC18D3004DD0FA /* InboxViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		4BFE4DFC2ACD4CDA00E14890 /* DiscussionList */ = {
+			isa = PBXGroup;
+			children = (
+				4BFE4DFE2ACD4CEF00E14890 /* View */,
+				4BFE4DFD2ACD4CE900E14890 /* ViewModel */,
+			);
+			path = DiscussionList;
+			sourceTree = "<group>";
+		};
+		4BFE4DFD2ACD4CE900E14890 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				4BFE4DFF2ACD4CFF00E14890 /* DiscussionListViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		4BFE4DFE2ACD4CEF00E14890 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4BFE4E012ACD4D2A00E14890 /* DiscussionListView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		4BFE4E052AD0244700E14890 /* Review */ = {
+			isa = PBXGroup;
+			children = (
+				4BFE4E062AD0262E00E14890 /* View */,
+				4BFE4E072AD0263200E14890 /* ViewModel */,
+			);
+			path = Review;
+			sourceTree = "<group>";
+		};
+		4BFE4E062AD0262E00E14890 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4BFE4E082AD0264600E14890 /* ReviewListView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		4BFE4E072AD0263200E14890 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				4BFE4E0A2AD0265800E14890 /* ReviewListViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		EC01F1DF26BFD7A500CA878F /* Biodata */ = {
@@ -1183,6 +1272,7 @@
 				4BA7D6142AC1756500B5177E /* session-close-to-end.json */,
 				ECB412A52A978EA300802C07 /* waiting-talent.json */,
 				ECD4FC8629C4B93A00FBBC01 /* dinotis-white-lottie-loading.json */,
+				EC0A513A2AD9E1D700DB2C7A /* regular-loading.json */,
 			);
 			path = Lottie;
 			sourceTree = "<group>";
@@ -2006,6 +2096,9 @@
 		ECBA142E26B79149004D452C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				4BFE4E052AD0244700E14890 /* Review */,
+				4BFE4DFC2ACD4CDA00E14890 /* DiscussionList */,
+				4B03ED392ACC1783004DD0FA /* Inbox */,
 				37B4DBC62A89E56200D3EAA1 /* Feedback */,
 				EC3B977A2A41B4D6006D7B1B /* GroupVideoCall */,
 				ECD453B32A272A1100338D05 /* OutdatedVersion */,
@@ -2988,6 +3081,7 @@
 				ECDAE39026B7FD9300419194 /* Montserrat-SemiBold.ttf in Resources */,
 				ECDAE39326B7FD9300419194 /* Montserrat-ExtraBoldItalic.ttf in Resources */,
 				ECDAE39626B7FD9300419194 /* Montserrat-Black.ttf in Resources */,
+				EC0A513B2AD9E1D700DB2C7A /* regular-loading.json in Resources */,
 				ECDAE38E26B7FD9300419194 /* Montserrat-ExtraBold.ttf in Resources */,
 				EC62578627B8B2140079AA10 /* Icon.xcassets in Resources */,
 				ECBA13EF26B78F78004D452C /* Image.xcassets in Resources */,
@@ -3021,6 +3115,7 @@
 				EC6D5B0128B36ADD00BB794F /* SyncRoomDocument.swift in Sources */,
 				EC6D0E60298306BF0016C45D /* TabViewContainer.swift in Sources */,
 				ECDAE3A126B7FF3D00419194 /* FontManager.swift in Sources */,
+				4B03ED3D2ACC17C4004DD0FA /* InboxView.swift in Sources */,
 				EC7222682950150100C05A1B /* FollowedCreatorView.swift in Sources */,
 				EC246D402705AFB90084846F /* SearchTalent.swift in Sources */,
 				EC4E4FE727FB4D75009D66FF /* Message.swift in Sources */,
@@ -3028,6 +3123,7 @@
 				EC04ED3726C8CB6800E0D473 /* ScheduleCardView.swift in Sources */,
 				F665C44428C9CEA800D669A8 /* PrivateLocalParticipantManager.swift in Sources */,
 				EC2C67FB26C582BE008F094D /* MultilineTextField.swift in Sources */,
+				4BFE4E002ACD4CFF00E14890 /* DiscussionListViewModel.swift in Sources */,
 				F67334D62908EE30006C1ADF /* TalentCardListViewModel.swift in Sources */,
 				EC9C4E34281426AD00837469 /* RequestSchedule.swift in Sources */,
 				F63A09A5289CEC6F008C7815 /* SwiftUIPlayerView.swift in Sources */,
@@ -3102,6 +3198,7 @@
 				F63A098D289BED1C008C7815 /* SpeakerGridView.swift in Sources */,
 				EC7B1EA427BCD3AF00471219 /* LocaleText.swift in Sources */,
 				EC9C4E302813FD1000837469 /* PreviewTalentView.swift in Sources */,
+				4B03ED3F2ACC18D3004DD0FA /* InboxViewModel.swift in Sources */,
 				ECAAA2A4280C28CC00AAC6CA /* TalentPhotoProfile.swift in Sources */,
 				F63A0992289C04B4008C7815 /* SpeakerSettingsManager.swift in Sources */,
 				F63A097B289BD53A008C7815 /* PresentationLayoutView.swift in Sources */,
@@ -3116,6 +3213,7 @@
 				F665C44228C9CD2800D669A8 /* PrivateRemoteParticipantManager.swift in Sources */,
 				ECA51E6227D09A9F0096E22D /* SearchTalentViewModel.swift in Sources */,
 				EC722265295014E000C05A1B /* FollowedCreatorViewModel.swift in Sources */,
+				4BFE4E092AD0264600E14890 /* ReviewListView.swift in Sources */,
 				ECD51FAB28A0C25A000B1F6C /* TrackName.swift in Sources */,
 				ECBFE68927102A560075D01F /* String+Random.swift in Sources */,
 				F67334BB2908EC26006C1ADF /* TalentCreateBundlingView.swift in Sources */,
@@ -3253,6 +3351,7 @@
 				ECBFE67D270FF9F80075D01F /* View+Draggable.swift in Sources */,
 				ECD51FAE28A0C25A000B1F6C /* RoomMessage.swift in Sources */,
 				EC4B891729248D270074732A /* CustomerChatManager.swift in Sources */,
+				4BFE4E022ACD4D2A00E14890 /* DiscussionListView.swift in Sources */,
 				ECBE2B652729265D002A45D8 /* WithdrawBank.swift in Sources */,
 				ECED4DD529F8FFC900E79663 /* CreatorPickerView.swift in Sources */,
 				F67335062908F190006C1ADF /* UserBundlingScheduleCardView.swift in Sources */,
@@ -3273,6 +3372,7 @@
 				F67334E42908EE5D006C1ADF /* ScheduleNegotiationChatViewModel.swift in Sources */,
 				EC28759A27D1CB430093E9C9 /* DetailPaymentViewModel.swift in Sources */,
 				ECBA9F3526D63662008CCCDB /* TalentProfileDetailView.swift in Sources */,
+				4BFE4E0B2AD0265800E14890 /* ReviewListViewModel.swift in Sources */,
 				EC96E32A2940D59F00347091 /* OnboardingViewModel.swift in Sources */,
 				EC6A757A2918A1760030BC41 /* EditTalentMeetingViewModel.swift in Sources */,
 				EC7B1EA227BCCC1A00471219 /* UserTypeViewModel.swift in Sources */,
@@ -3378,7 +3478,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.6.2;
+				MARKETING_VERSION = 1.6.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -3454,7 +3554,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.6.2;
+				MARKETING_VERSION = 1.6.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp.DinotisNotificationServiceExtension;
@@ -3562,7 +3662,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6.2;
+				MARKETING_VERSION = 1.6.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp;
 				PRODUCT_NAME = DinotisStag;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3640,7 +3740,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.6.2;
+				MARKETING_VERSION = 1.6.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -3748,7 +3848,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6.2;
+				MARKETING_VERSION = 1.6.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp;
 				PRODUCT_NAME = DinotisDev;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3845,7 +3945,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6.2;
+				MARKETING_VERSION = 1.6.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp;
 				PRODUCT_NAME = Dinotis;
 				PROVISIONING_PROFILE_SPECIFIER = "";

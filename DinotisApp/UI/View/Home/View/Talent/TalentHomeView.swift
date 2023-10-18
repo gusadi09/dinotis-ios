@@ -96,6 +96,19 @@ struct TalentHomeView: View {
                     }
                 )
                 
+                NavigationLink(
+                    unwrapping: $homeVM.route,
+                    case: /HomeRouting.inbox,
+                    destination: { viewModel in
+                        InboxView()
+                            .environmentObject(viewModel.wrappedValue)
+                    },
+                    onNavigate: { _ in },
+                    label: {
+                        EmptyView()
+                    }
+                )
+                
                 ZStack(alignment: .bottom) {
                     
                     ZStack(alignment: .bottomTrailing) {
@@ -161,7 +174,7 @@ struct TalentHomeView: View {
                                     Spacer()
                                     
                                     Button {
-                                        
+                                        homeVM.routeToInbox()
                                     } label: {
                                         ZStack(alignment: .topTrailing) {
                                             
@@ -177,21 +190,20 @@ struct TalentHomeView: View {
                                                 )
                                                 .shadow(color: Color(red: 0.22, green: 0.29, blue: 0.41).opacity(0.06), radius: 20, x: 0, y: 0)
                                             
-                                            //                                        if homeVM.hasNewNotif {
-                                            Text("9+")
-                                                .font(.robotoMedium(size: 12))
-                                                .foregroundColor(.white)
-                                                .padding(.horizontal, 3)
-                                                .padding(.vertical, 1)
-                                                .background(
-                                                    RoundedRectangle(cornerRadius: 4)
-                                                        .foregroundColor(.red)
-                                                )
-                                            
-                                            //                                        }
+                                            if homeVM.hasNewNotifInbox {
+                                                Text(homeVM.notificationInboxBadgeCountStr)
+                                                    .font(.robotoMedium(size: 12))
+                                                    .foregroundColor(.white)
+                                                    .padding(.horizontal, 3)
+                                                    .padding(.vertical, 1)
+                                                    .background(
+                                                        RoundedRectangle(cornerRadius: 4)
+                                                            .foregroundColor(.red)
+                                                    )
+                                                
+                                            }
                                         }
                                     }
-                                    .isHidden(true, remove: true)
                                     
                                     Button {
                                         homeVM.routeToNotification()

@@ -551,4 +551,38 @@
 "anytime_label" = "Kapan saja";
 "gift_label" = "Gift";
 
-"create_session_minimum_participant_alert" = "Participant untuk sesi Group Call harus lebih dari 0";
+"create_session_minimum_participant_alert" = "Peserta untuk sesi Group Call harus lebih dari 0";
+"creator_confirmation_status" = "Menunggu konfirmasi Kreator";
+"creator_not_set_schedule_status" = "Jadwal belum diatur";
+"creator_scheduled_status" = "Sesi telah dijadwalkan";
+"creator_canceled_status" = "Sesi dibatalkan Kreator";
+"refund_status" = "Status Refund";
+"already_refund" = "Telah Direfund";
+
+"creator_inbox_title" = "Inbox Kreator";
+"inbox_discuss_schedule_title" = "Chat Diskusi Jadwal";
+"inbox_discuss_schedule_desc" = "Percakapan atur jadwal bersama creator.";
+"inbox_completed_session_desc" = "Riwayat percakapan sesi yang telah selesai.";
+"inbox_review_desc" = "Berikan penilaian untuk sesi yang telah selesai.";
+
+"discussion_tag_unread" = "Belum dibaca";
+"discussion_tag_nearest_schedule" = "Jadwal Terdekat";
+"discussion_status_cancel_within" = "Batal Dalam **%@**";
+"discussion_status_scheduled_session" = "Sesi Terjadwalkan";
+"discussion_search_placeholder" = "Cari di chat diskusi jadwal...";
+"discussion_search_creator_name" = "Cari nama creator";
+"discussion_search_audience_name" = "Cari nama audiens";
+"discussion_search_not_found" = "Pencarian Tidak Ditemukan";
+
+"day_text" = "Hari";
+"hour_text" = "Jam";
+
+"booked_session_chat" = "Sesi Dipesan : %@";
+"yesterday" = "Kemarin";
+"today" = "Hari Ini";
+"chat_disabled_text" = "Chat tidak lagi tersedia untuk sesi ini";
+"review_filter_highest_star" = "Bintang tertinggi";
+"review_filter_lowest_star" = "Bintang terendah";
+
+"discuss_with_creator" = "Diskusi dengan Creator";
+"discuss_with_audience" = "Diskusi dengan Audience";

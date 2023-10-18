@@ -9,6 +9,7 @@ import Foundation
 import Moya
 
 public enum ReviewsTargetType {
+    case getReviewList(ReviewListFilterType)
 	case getReviews(String, GeneralParameterRequest)
     case giveReview(ReviewRequestBody)
     case getReasons(Int?)
@@ -18,6 +19,10 @@ public enum ReviewsTargetType {
 extension ReviewsTargetType: DinotisTargetType, AccessTokenAuthorizable {
 	var parameters: [String : Any] {
 		switch self {
+        case .getReviewList(let type):
+            return [
+                "sort": type.value
+            ]
 		case .getReviews(_, let params):
 			return params.toJSON()
         case .giveReview(let body):
@@ -48,6 +53,8 @@ extension ReviewsTargetType: DinotisTargetType, AccessTokenAuthorizable {
             return URLEncoding.queryString
         case .getTipAmounts:
             return URLEncoding.default
+        case .getReviewList(_):
+            return URLEncoding.default
         }
 	}
 
@@ -65,6 +72,8 @@ extension ReviewsTargetType: DinotisTargetType, AccessTokenAuthorizable {
             return "/reviews/reasons"
         case .getTipAmounts:
             return "/reviews/tip-amounts"
+        case .getReviewList(_):
+            return "/reviews"
         }
 	}
 
@@ -87,6 +96,8 @@ extension ReviewsTargetType: DinotisTargetType, AccessTokenAuthorizable {
             return [String]().toJSONData()
         case .getTipAmounts:
             return [Int]().toJSONData()
+        case .getReviewList(_):
+            return InboxReviewsResponse.sampleData
         }
 	}
 }

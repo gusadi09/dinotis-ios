@@ -30,7 +30,7 @@ struct ChatMessage: Codable, Identifiable {
     }
 }
 
-struct CustomerChatMessage: Codable, Identifiable {
+struct CustomerChatMessage: Codable, Identifiable, Hashable {
 	let id: String
 	let author: String
 	let date: Date
@@ -54,4 +54,8 @@ struct CustomerChatMessage: Codable, Identifiable {
 		let attribute = conversation?.participant(withIdentity: author)?.attributes()?.dictionary
 		self.name = author.contains("system") ? author : attribute?["name"] as? String
 	}
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }
