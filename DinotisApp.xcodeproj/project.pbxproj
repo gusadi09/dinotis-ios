@@ -90,7 +90,6 @@
 		EC62576027B79F010079AA10 /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = EC62575F27B79F010079AA10 /* SwiftUINavigation */; };
 		EC62576327B7A23C0079AA10 /* Moya+defaultProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC62576227B7A23C0079AA10 /* Moya+defaultProvider.swift */; };
 		EC62576527B7A24C0079AA10 /* Moya+Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC62576427B7A24C0079AA10 /* Moya+Request.swift */; };
-		EC62576827B7A3630079AA10 /* String?+OrEmpty.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC62576727B7A3630079AA10 /* String?+OrEmpty.swift */; };
 		EC62576E27B7A38B0079AA10 /* String+isValidEmail.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC62576B27B7A38B0079AA10 /* String+isValidEmail.swift */; };
 		EC62576F27B7A38B0079AA10 /* String+toURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC62576C27B7A38B0079AA10 /* String+toURL.swift */; };
 		EC62577427B7A4BF0079AA10 /* OptionalInt+orZero.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC62577327B7A4BF0079AA10 /* OptionalInt+orZero.swift */; };
@@ -447,7 +446,6 @@
 		EC625603272ADF6D00FA209B /* EditTalentMeetingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTalentMeetingView.swift; sourceTree = "<group>"; };
 		EC62576227B7A23C0079AA10 /* Moya+defaultProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Moya+defaultProvider.swift"; sourceTree = "<group>"; };
 		EC62576427B7A24C0079AA10 /* Moya+Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Moya+Request.swift"; sourceTree = "<group>"; };
-		EC62576727B7A3630079AA10 /* String?+OrEmpty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String?+OrEmpty.swift"; sourceTree = "<group>"; };
 		EC62576B27B7A38B0079AA10 /* String+isValidEmail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+isValidEmail.swift"; sourceTree = "<group>"; };
 		EC62576C27B7A38B0079AA10 /* String+toURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+toURL.swift"; sourceTree = "<group>"; };
 		EC62577327B7A4BF0079AA10 /* OptionalInt+orZero.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OptionalInt+orZero.swift"; sourceTree = "<group>"; };
@@ -1318,7 +1316,6 @@
 				EC62577727B7E12E0079AA10 /* OptionalDate+orCurrentDate.swift */,
 				EC62577527B7E1240079AA10 /* OptionalDouble+OrZero.swift */,
 				EC62577327B7A4BF0079AA10 /* OptionalInt+orZero.swift */,
-				EC62576727B7A3630079AA10 /* String?+OrEmpty.swift */,
 			);
 			path = Optional;
 			sourceTree = "<group>";
@@ -3261,7 +3258,6 @@
 				ECC110C426E9D264007FF617 /* UserInvoiceBookingView.swift in Sources */,
 				ECF582BF27244951006C0BE7 /* ScrollViewModification.swift in Sources */,
 				F67334F82908F0B2006C1ADF /* TalentEditRateCardScheduleView.swift in Sources */,
-				EC62576827B7A3630079AA10 /* String?+OrEmpty.swift in Sources */,
 				F63A097D289BD917008C7815 /* SwiftUIVideoView.swift in Sources */,
 				EC7B1E9A27BCB0D400471219 /* String+toCurrency.swift in Sources */,
 				EC88F42B272D8CBE0051749F /* TrendingTalent.swift in Sources */,

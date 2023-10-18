@@ -286,7 +286,7 @@ final class TalentHomeViewModel: ObservableObject {
     }
     
     func routeToTalentFormSchedule() {
-        let viewModel = ScheculedFormViewModel(backToHome: {self.route = nil})
+        let viewModel = ScheduledFormViewModel(backToHome: {self.route = nil})
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .talentFormSchedule(viewModel: viewModel)
