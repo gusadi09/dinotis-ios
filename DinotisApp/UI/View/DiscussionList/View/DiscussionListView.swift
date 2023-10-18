@@ -100,7 +100,7 @@ struct DiscussionListView: View {
                 }
                 
                 FilterDiscussionView(viewModel: viewModel)
-                    .isHidden(viewModel.isSearching, remove: viewModel.isSearching)
+                    .isHidden(viewModel.isSearching || viewModel.data.isEmpty, remove: viewModel.isSearching || viewModel.data.isEmpty)
                 
                 if viewModel.isLoading {
                     Spacer()
@@ -113,24 +113,7 @@ struct DiscussionListView: View {
                         if viewModel.isSearching {
                             SearchDiscussionView(viewModel: viewModel)
                         } else {
-                            // FIXME: Change this with data from backend
-                            ForEach(viewModel.data, id: \.id) { item in
-                                ChatCellView(
-                                    viewModel: viewModel,
-                                    type: viewModel.type,
-                                    title: (item.meeting?.title).orEmpty(),
-                                    hasAccepted: item.meeting?.startAt != nil,
-                                    expiredAt: item.expiredAt.orCurrentDate(),
-                                    hasRead: item.status.orEmpty() == "confirmed" || item.status.orEmpty() == "done",
-                                    name: (item.user?.name).orEmpty(),
-                                    profilePicture: (item.user?.profilePhoto).orEmpty(),
-                                    message: item.lastMessage.orEmpty(),
-                                    date: item.sendAt.orCurrentDate(),
-                                    inbox: item
-                                )
-                                .listRowSeparator(.hidden)
-                                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-                            }
+                            MainDiscussionListView()
                         }
                     }
                     .refreshable(action: {
@@ -167,6 +150,45 @@ struct DiscussionListView: View {
 }
 
 extension DiscussionListView {
+    
+    @ViewBuilder
+    func MainDiscussionListView() -> some View {
+        if viewModel.data.isEmpty {
+            VStack(spacing: 16) {
+                Image.inboxSmileBubbleChatIcon
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: 137)
+                
+                Text(LocalizableText.inboxEmptyDescription)
+                    .font(.robotoRegular(size: 16))
+                    .foregroundColor(.DinotisDefault.lightPrimaryActive)
+            }
+            .listRowSeparator(.hidden)
+            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+            .frame(maxWidth: .infinity, alignment: .center)
+            .padding(32)
+        } else {
+            ForEach(viewModel.data, id: \.id) { item in
+                ChatCellView(
+                    viewModel: viewModel,
+                    type: viewModel.type,
+                    title: (item.meeting?.title).orEmpty(),
+                    hasAccepted: item.meeting?.startAt != nil,
+                    expiredAt: item.expiredAt.orCurrentDate(),
+                    hasRead: item.status.orEmpty() == "confirmed" || item.status.orEmpty() == "done",
+                    name: (item.user?.name).orEmpty(),
+                    profilePicture: (item.user?.profilePhoto).orEmpty(),
+                    message: item.lastMessage.orEmpty(),
+                    date: item.sendAt.orCurrentDate(),
+                    inbox: item
+                )
+                .listRowSeparator(.hidden)
+                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+            }
+        }
+    }
+    
     struct FilterDiscussionView: View {
         
         @ObservedObject var viewModel: DiscussionListViewModel

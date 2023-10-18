@@ -150,6 +150,7 @@ extension InboxView {
                                 .foregroundColor(.DinotisDefault.black3)
                                 .font(.robotoRegular(size: 12))
                         }
+                        .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         
                         if isLoading {
