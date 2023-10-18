@@ -587,3 +587,16 @@
 
 "discuss_with_creator" = "Discuss with Creator";
 "discuss_with_audience" = "Discuss with Audience";
+"general_close_details" = "Close Details";
+
+"manage_application_usage_costs" = "Manage Application Usage Costs";
+"cost_calculated_subtitle" = "The cost is calculated per minute (**Rp 100**/Audience/minute)";
+"percentage_borne_by_audience" = "The percentage borne by the audience";
+"estimated_app_usage_cost" = "Estimated Application Usage Cost";
+"audience_count" = "(%lld Audiences)";
+"total_borne_by_audience" = "The total application cost is borne by the **Audience(%@%%)**";
+"total_borne_subtitle" = "Each audience will pay **%@** for the application cost";
+"total_cost_borne" = "The total application cost is borne by the **Creator(%@%%)**";
+
+"app_usage_cost_calculation_tooltip" = "Each audience **will be charged Rp100 per minute for the application**, so if the total duration is 45 minutes, the cost will be Rp4.500";
+"app_costs_slider_tooltip" = "You can determine **who will bear the application cost** according to a percentage from 0% to 100%.";

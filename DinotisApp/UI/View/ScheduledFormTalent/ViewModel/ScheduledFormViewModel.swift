@@ -12,7 +12,23 @@ import Combine
 import DinotisData
 import DinotisDesignSystem
 
-final class ScheculedFormViewModel: ObservableObject {
+enum AppCostTip {
+    case first
+    case two
+}
+
+extension AppCostTip {
+    var value: String {
+        switch self {
+        case .first:
+            return "first"
+        case .two:
+            return "two"
+        }
+    }
+}
+
+final class ScheduledFormViewModel: ObservableObject {
 
 	private let authRepository: AuthenticationRepository
 	private let meetingRepository: MeetingsRepository
@@ -30,6 +46,19 @@ final class ScheculedFormViewModel: ObservableObject {
 	@Published var isError = false
 	@Published var success = false
 	@Published var error: String?
+    
+    @Published var isShowAppCostsManagement = false
+    @Published var appUsageFareSheetHeight: CGFloat = 400.0
+    @Published var percentageString = "0"
+    @Published var percentageRaw = 0.0
+    @Published var isSliderUsed = false
+    @Published var isFreeTextUsed = false
+    @Published var percentageFaresForCreatorRaw = 1.0
+    @Published var percentageFaresForCreator = 1.0
+    @Published var percentageFaresForCreatorStr = "100"
+    
+    @Published var isShowFirstTooltip = false
+    @Published var isShowSeconTooltip = false
 
 	@Published var minimumPeopleError = false
 
