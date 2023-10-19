@@ -166,7 +166,7 @@ extension InboxView {
                                     RoundedRectangle(cornerRadius: 4)
                                         .fill(Color.DinotisDefault.primary)
                                 )
-                                .isHidden(counter == "", remove: counter == "")
+                                .isHidden(counter == "0", remove: counter == "0")
                         }
                         
                         Image(systemName: "chevron.right")
