@@ -97,7 +97,7 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
     
     @Published var tips = [Int]()
     @Published var tipAmount: Int?
-    @Published var successTipAmount: Int?
+    @Published var successTipAmount: String?
     
     @Published var randomId = UInt.random(in: .init(1...99999999))
 

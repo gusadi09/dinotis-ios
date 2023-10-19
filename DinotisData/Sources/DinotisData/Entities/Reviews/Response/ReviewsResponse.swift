@@ -86,7 +86,7 @@ public struct ReviewSuccessResponse: Codable, Hashable {
     public let meetingId: String?
     public let createdAt: Date?
     public let updatedAt: Date?
-    public let tip: Int?
+    public let tip: String?
 
     public init(
         id: Int?,
@@ -97,7 +97,7 @@ public struct ReviewSuccessResponse: Codable, Hashable {
         meetingId: String?,
         createdAt: Date?,
         updatedAt: Date?,
-        tip: Int?
+        tip: String?
     ) {
         self.id = id
         self.rating = rating
@@ -134,7 +134,7 @@ public extension ReviewSuccessResponse {
             meetingId: "meetingunittest",
             createdAt: Date(),
             updatedAt: Date(),
-            tip: 1000
+            tip: "1000"
         )
     }
     
@@ -148,7 +148,7 @@ public extension ReviewSuccessResponse {
             meetingId: "meetingunittest",
             createdAt: Date(),
             updatedAt: Date(),
-            tip: 1000
+            tip: "1000"
         )
         .toJSONData()
     }
