@@ -564,6 +564,8 @@
 "inbox_discuss_schedule_desc" = "Percakapan atur jadwal bersama creator.";
 "inbox_completed_session_desc" = "Riwayat percakapan sesi yang telah selesai.";
 "inbox_review_desc" = "Berikan penilaian untuk sesi yang telah selesai.";
+"inbox_empty_description" = "Belum ada chat yang masuk";
+"review_empty_description" = "Kamu belum memiliki review";
 
 "discussion_tag_unread" = "Belum dibaca";
 "discussion_tag_nearest_schedule" = "Jadwal Terdekat";
@@ -586,3 +588,16 @@
 
 "discuss_with_creator" = "Diskusi dengan Creator";
 "discuss_with_audience" = "Diskusi dengan Audience";
+"general_close_details" = "Tutup Detail";
+
+"manage_application_usage_costs" = "Kelola Biaya Penggunaan Aplikasi";
+"cost_calculated_subtitle" = "Biaya dihitung permenit (**Rp 100**/Audience/menit)";
+"percentage_borne_by_audience" = "Persentase yang ditanggung audiens";
+"estimated_app_usage_cost" = "Estimasi biaya penggunaan aplikasi";
+"audience_count" = "(%lld Audiens)";
+"total_borne_by_audience" = "Total biaya aplikasi ditanggung **Audiens(%@%%)**";
+"total_borne_subtitle" = "Setiap audiens akan membayar **%@** untuk biaya aplikasi";
+"total_cost_borne" = "Total biaya aplikasi ditanggung **Kreator(%@%%)**";
+
+"app_usage_cost_calculation_tooltip" = "Setiap Audience **akan dikenakan biaya aplikasi Rp100 per menit**, sehingga jika total durasi 45 menit, biayanya adalah Rp4.500";
+"app_costs_slider_tooltip" = "Kamu dapat menentukan **siapa yang akan menanggung biaya aplikasi** sesuai dengan persentase dari 0% hingga 100%.";

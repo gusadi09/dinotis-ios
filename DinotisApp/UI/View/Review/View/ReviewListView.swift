@@ -38,7 +38,10 @@ struct ReviewListView: View {
                     }
                 })
             
+            Divider()
+            
             FilterReviewView(viewModel: viewModel)
+                .isHidden(viewModel.data.isEmpty, remove: viewModel.data.isEmpty)
                 .onChange(of: viewModel.currentSection) { newValue in
                     viewModel.onLoadReviews(section: newValue)
                 }
@@ -51,11 +54,30 @@ struct ReviewListView: View {
                 Spacer()
             } else {
                 List {
-                    ForEach(viewModel.data, id: \.id) { item in
-                        ReviewCellView(data: item)
-                            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-                            .listRowBackground(Color.white.ignoresSafeArea())
-                            .listRowSeparator(.hidden)
+                    if viewModel.data.isEmpty {
+                        VStack(spacing: 16) {
+                            Image.inboxStarBubbleChatIcon
+                                .resizable()
+                                .scaledToFit()
+                                .frame(maxWidth: 137)
+                            
+                            Text(LocalizableText.reviewEmptyDescription)
+                                .font(.robotoRegular(size: 16))
+                                .foregroundColor(.DinotisDefault.lightPrimaryActive)
+                                .multilineTextAlignment(.center)
+                        }
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                        .listRowBackground(Color.white.ignoresSafeArea())
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(32)
+                    } else {
+                        ForEach(viewModel.data, id: \.id) { item in
+                            ReviewCellView(data: item)
+                                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                .listRowBackground(Color.white.ignoresSafeArea())
+                                .listRowSeparator(.hidden)
+                        }
                     }
                 }
                 .listStyle(.plain)

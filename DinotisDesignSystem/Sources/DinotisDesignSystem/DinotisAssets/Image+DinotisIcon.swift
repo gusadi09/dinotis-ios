@@ -157,4 +157,6 @@ public extension Image {
     static let inboxAudienceIcon = Image("ic-audience-inbox", bundle: .module)
     static let inboxReviewIcon = Image("ic-review-inbox", bundle: .module)
     static let inboxScheduleIcon = Image("ic-schedule-inbox", bundle: .module)
+    static let inboxStarBubbleChatIcon = Image("ic-star-bubble-chat-inbox", bundle: .module)
+    static let inboxSmileBubbleChatIcon = Image("ic-smile-bubble-chat-inbox", bundle: .module)
 }

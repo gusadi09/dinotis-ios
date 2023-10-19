@@ -30,7 +30,7 @@ enum HomeRouting {
 	case editUserProfile(viewModel: EditProfileViewModel)
 	case changePhone(viewModel: ChangePhoneViewModel)
 	case changePhoneOtp(viewModel: ChangePhoneVerifyViewModel)
-	case talentFormSchedule(viewModel: ScheculedFormViewModel)
+	case talentFormSchedule(viewModel: ScheduledFormViewModel)
 	
 	case talentScheduleDetail(viewModel: ScheduleDetailViewModel)
 	case userScheduleDetail(viewModel: ScheduleDetailViewModel)
