@@ -2648,6 +2648,94 @@ public enum LocalizableText {
         bundle: .module,
         comment: "discuss with audience"
     )
+    
+    public static let generalCloseDetails = NSLocalizedString(
+        "general_close_details",
+        bundle: .module,
+        comment: "close details"
+    )
+    public static let manageAppUsageCostsTitle = NSLocalizedString(
+        "manage_application_usage_costs",
+        bundle: .module,
+        comment: "manage application usage costs"
+    )
+    public static let costCalculatedSubtitle = NSLocalizedString(
+        "cost_calculated_subtitle",
+        bundle: .module,
+        comment: "cost calculated subtitle"
+    )
+    public static let percentageBorneByAudience = NSLocalizedString(
+        "percentage_borne_by_audience",
+        bundle: .module,
+        comment: "percentage borne"
+    )
+    public static let estimatedAppUsageCosts = NSLocalizedString(
+        "estimated_app_usage_cost",
+        bundle: .module,
+        comment: "estimated app usage costs"
+    )
+    
+    public static func audienceCountLabel(count: Int) -> String {
+        String(
+            format: NSLocalizedString(
+                "audience_count",
+                bundle: .module,
+                comment: "audience count with label"
+            ), 
+            count
+        )
+    }
+    public static func totalBorneByAudience(borne: String) -> String {
+        String(
+            format: NSLocalizedString(
+                "total_borne_by_audience",
+                bundle: .module,
+                comment: "total borne"
+            ),
+            borne
+        )
+    }
+    public static func totalBorneSubtitle(total: String) -> String {
+        String(
+            format: NSLocalizedString(
+                "total_borne_subtitle",
+                bundle: .module,
+                comment: "total borne subtitle"
+            ),
+            total
+        )
+    }
+    public static func totalCostsBorneByCreator(total: String) -> String {
+        String(
+            format: NSLocalizedString(
+                "total_cost_borne",
+                bundle: .module,
+                comment: "total cost borne by the creator"
+            ),
+            total
+        )
+    }
+    public static let appUsageCostCalculationTooltip = NSLocalizedString(
+        "app_usage_cost_calculation_tooltip",
+        bundle: .module,
+        comment: "cost calculation tooltip text"
+    )
+    public static let appUsageCostsSliderTooltip = NSLocalizedString(
+        "app_costs_slider_tooltip",
+        bundle: .module,
+        comment: "app usage costs slider tooltip text"
+    )
+    public static let inboxEmptyDescription = NSLocalizedString(
+        "inbox_empty_description",
+        bundle: .module,
+        comment: "empty inbox description"
+    )
+    public static let reviewEmptyDescription = NSLocalizedString(
+        "review_empty_description",
+        bundle: .module,
+        comment: "empty review description"
+    )
+    
 }
 
 
