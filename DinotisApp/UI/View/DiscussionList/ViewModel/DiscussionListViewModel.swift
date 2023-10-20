@@ -127,7 +127,7 @@ final class DiscussionListViewModel: ObservableObject {
             updatedAt: nil,
             deletedAt: nil,
             bookings: [],
-            user: nil,
+            user: meet.user,
             participantDetails: [meet.user ?? UserResponse.sample],
             meetingBundleId: nil,
             meetingRequestId: meet.meetingRequestId,
