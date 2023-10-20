@@ -150,6 +150,7 @@ struct UserScheduleDetail: View {
                             stateObservable.spotlightedIdentity = ""
                             viewModel.onAppearView()
                             viewModel.getProductOnAppear()
+                            
                             StateObservable.shared.cameraPositionUsed = .front
                             StateObservable.shared.twilioRole = ""
                             StateObservable.shared.twilioUserIdentity = ""
@@ -1882,17 +1883,21 @@ private extension UserScheduleDetail {
         @Environment(\.dismiss) var dismiss
         
         var body: some View {
-            HStack {
-                if !(viewModel.dataBooking?.meeting?.meetingRequest?.isAccepted ?? false) && viewModel.dataBooking?.meeting?.meetingRequest != nil  {
+            
+            if !(viewModel.dataBooking?.meeting?.meetingRequest?.isAccepted ?? false) && viewModel.dataBooking?.meeting?.meetingRequest != nil  {
+                HStack {
                     DinotisPrimaryButton(
                         text: LocalizableText.startNowLabel,
                         type: .adaptiveScreen,
                         textColor: .DinotisDefault.lightPrimaryActive,
                         bgColor: .DinotisDefault.lightPrimary
                     ) {}
-                    
-                } else {
-                    if viewModel.dataBooking?.meeting?.endedAt == nil {
+                }
+                .padding()
+                .background(Color.white.edgesIgnoringSafeArea(.all))
+            } else {
+                if viewModel.dataBooking?.meeting?.endedAt == nil {
+                    HStack {
                         DinotisPrimaryButton(
                             text: LocalizableText.startNowLabel,
                             type: .adaptiveScreen,
@@ -1902,7 +1907,11 @@ private extension UserScheduleDetail {
                             viewModel.startPresented.toggle()
                         }
                         .disabled(viewModel.disableStartButton())
-                    } else {
+                    }
+                    .padding()
+                    .background(Color.white.edgesIgnoringSafeArea(.all))
+                } else if (viewModel.dataBooking?.meeting?.status).orEmpty().contains(SessionStatus.notReviewed.rawValue) {
+                    HStack {
                         DinotisPrimaryButton(
                             text: LocalizableText.giveReviewLabel,
                             type: .adaptiveScreen,
@@ -1912,10 +1921,10 @@ private extension UserScheduleDetail {
                             viewModel.showReviewSheet.toggle()
                         }
                     }
+                    .padding()
+                    .background(Color.white.edgesIgnoringSafeArea(.all))
                 }
             }
-            .padding()
-            .background(Color.white.edgesIgnoringSafeArea(.all))
         }
     }
     

@@ -652,11 +652,11 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
     }
     
     func isShowRating() -> Bool {
-        (self.dataBooking?.status).orEmpty() == SessionStatus.notReviewed.rawValue || (self.dataBooking?.status).orEmpty() == SessionStatus.done.rawValue
+        (self.dataBooking?.meeting?.status).orEmpty() == SessionStatus.notReviewed.rawValue || (self.dataBooking?.meeting?.status).orEmpty() == SessionStatus.done.rawValue || (self.dataBooking?.meeting?.status).orEmpty() == SessionStatus.scheduleEnded.rawValue
     }
     
     func isDone() -> Bool {
-        (self.dataBooking?.status).orEmpty() == SessionStatus.done.rawValue
+        (self.dataBooking?.meeting?.status).orEmpty() == SessionStatus.done.rawValue
     }
 
     @MainActor
