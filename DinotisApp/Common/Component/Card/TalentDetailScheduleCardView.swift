@@ -129,7 +129,7 @@ struct TalentDetailScheduleCardView: View {
                                     onTapEnd()
                                 } label: {
                                     HStack {
-                                        Text(NSLocalizedString("finish_video_call_detail", comment: ""))
+                                        Text(LocalizableText.videoCallEndSessionButton)
                                             .font(.robotoMedium(size: 12))
                                             .foregroundColor(.DinotisDefault.primary)
                                         
