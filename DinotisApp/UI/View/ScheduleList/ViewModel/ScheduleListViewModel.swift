@@ -26,6 +26,7 @@ enum SessionStatus: String {
     case paid = "paid"
     case upcoming = "upcoming"
     case notReviewed = "not_reviewed"
+    case scheduleEnded = "schedule_ended"
     case done = "done"
     case canceled = "canceled"
 }

@@ -150,6 +150,7 @@ struct UserScheduleDetail: View {
                             stateObservable.spotlightedIdentity = ""
                             viewModel.onAppearView()
                             viewModel.getProductOnAppear()
+                            
                             StateObservable.shared.cameraPositionUsed = .front
                             StateObservable.shared.twilioRole = ""
                             StateObservable.shared.twilioUserIdentity = ""
@@ -269,13 +270,13 @@ struct UserScheduleDetail: View {
                 .sheet(unwrapping: $viewModel.route, case: /HomeRouting.scheduleNegotiationChat, onDismiss: {
                     customerChatManager.hasUnreadMessage = false
                 }) { viewModel in
-                    ScheduleNegotiationChatView(viewModel: viewModel.wrappedValue)
+                    ScheduleNegotiationChatView(viewModel: viewModel.wrappedValue, isOnSheet: true)
                         .environmentObject(customerChatManager)
                         .dynamicTypeSize(.large)
                 }
-                .onChange(of: viewModel.tokenConversation) { newValue in
-                    customerChatManager.connect(accessToken: newValue, conversationName: (viewModel.dataBooking?.meeting?.meetingRequest?.id).orEmpty())
-                }
+                .onChange(of: viewModel.tokenConversation, perform: { value in
+                    customerChatManager.connect(accessToken: value, conversationName: (viewModel.dataBooking?.meeting?.meetingRequest?.id).orEmpty())
+                })
                 .onDisappear {
                     customerChatManager.disconnect()
                 }
@@ -1217,9 +1218,10 @@ private extension UserScheduleDetail {
                                 .padding(.horizontal)
                             }
                             
-                            if viewModel.dataBooking?.meeting?.startAt == nil {
+                            if let accept = viewModel.dataBooking?.meeting?.meetingRequest?.isAccepted, accept {
                                 Button {
-                                    viewModel.routeToScheduleNegotiationChat()
+                                    guard let data = viewModel.dataBooking?.meeting else { return }
+                                    viewModel.routeToScheduleNegotiationChat(meet: data)
                                 } label: {
                                     HStack {
                                         Image.Dinotis.messageIcon
@@ -1284,6 +1286,35 @@ private extension UserScheduleDetail {
                             }
                         }
                         
+                        if let isRefunded = viewModel.dataBooking?.meeting?.meetingRequest?.isAccepted, !isRefunded {
+                            HStack {
+                                Text(LocalizableText.refundStatus)
+                                    .font(.robotoRegular(size: 12))
+                                    .foregroundColor(.DinotisDefault.black2)
+                                
+                                Spacer()
+                                
+                                Text(LocalizableText.alreadyRefund)
+                                    .font(.robotoRegular(size: 12))
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.DinotisDefault.primary)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 6)
+                                    .background(
+                                        Capsule()
+                                            .foregroundColor(Color(red: 0.95, green: 0.89, blue: 1))
+                                    )
+                            }
+                            .padding(.vertical, 12)
+                            .padding(.horizontal, 16)
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .foregroundColor(.DinotisDefault.lightPrimary)
+                            )
+                            .padding(.horizontal)
+                            .padding(.top, 5)
+                        }
+                        
                         VStack(alignment: .leading, spacing: 20) {
                             if detail.meeting?.endedAt != nil {
                                 Text(LocalizableText.stepSessionDone)
@@ -1294,7 +1325,51 @@ private extension UserScheduleDetail {
                                     .frame(maxWidth: .infinity, alignment: .center)
                                     .background(
                                         Capsule()
-                                            .foregroundColor(.DinotisDefault.black2.opacity(0.3))
+                                            .foregroundColor(.DinotisDefault.black3.opacity(0.5))
+                                    )
+                            } else if detail.meeting?.meetingRequest != nil && detail.meeting?.meetingRequest?.isAccepted == nil {
+                                Text(LocalizableText.creatorConfirmationStatus)
+                                    .multilineTextAlignment(.center)
+                                    .font(.robotoBold(size: 12))
+                                    .foregroundColor(.DinotisDefault.orange)
+                                    .padding(10)
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    .background(
+                                        Capsule()
+                                            .foregroundColor(.DinotisDefault.lightOrange)
+                                    )
+                            } else if let accepted = detail.meeting?.meetingRequest?.isAccepted, detail.meeting?.meetingRequest != nil && accepted && detail.meeting?.startAt == nil {
+                                Text(LocalizableText.creatorNotSetScheduleStatus)
+                                    .multilineTextAlignment(.center)
+                                    .font(.robotoBold(size: 12))
+                                    .foregroundColor(.DinotisDefault.primary)
+                                    .padding(10)
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    .background(
+                                        Capsule()
+                                            .foregroundColor(.DinotisDefault.lightPrimary)
+                                    )
+                            } else if detail.meeting?.startAt != nil {
+                                Text(LocalizableText.creatorScheduledStatus)
+                                    .multilineTextAlignment(.center)
+                                    .font(.robotoBold(size: 12))
+                                    .foregroundColor(.DinotisDefault.primary)
+                                    .padding(10)
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    .background(
+                                        Capsule()
+                                            .foregroundColor(.DinotisDefault.lightPrimary)
+                                    )
+                            } else if let canceled = detail.meeting?.meetingRequest?.isAccepted, detail.meeting?.meetingRequest != nil && !canceled {
+                                Text(LocalizableText.creatorCancelledStatus)
+                                    .multilineTextAlignment(.center)
+                                    .font(.robotoBold(size: 12))
+                                    .foregroundColor(.DinotisDefault.red)
+                                    .padding(10)
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    .background(
+                                        Capsule()
+                                            .foregroundColor(.DinotisDefault.lightRed)
                                     )
                             }
                             
@@ -1411,7 +1486,7 @@ private extension UserScheduleDetail {
                                             .font(.robotoRegular(size: 12))
                                             .foregroundColor(.black)
                                         
-                                        Text(((data.meeting?.slots).orZero() > 1) ? LocalizableText.groupSessionLabelWithEmoji : LocalizableText.privateSessionLabelWithEmoji)
+                                        Text((!(data.meeting?.isPrivate ?? false)) ? LocalizableText.groupSessionLabelWithEmoji : LocalizableText.privateSessionLabelWithEmoji)
                                             .font(.robotoBold(size: 10))
                                             .foregroundColor(.DinotisDefault.primary)
                                             .padding(.vertical, 5)
@@ -1808,17 +1883,21 @@ private extension UserScheduleDetail {
         @Environment(\.dismiss) var dismiss
         
         var body: some View {
-            HStack {
-                if !(viewModel.dataBooking?.meeting?.meetingRequest?.isAccepted ?? false) && viewModel.dataBooking?.meeting?.meetingRequest != nil  {
+            
+            if !(viewModel.dataBooking?.meeting?.meetingRequest?.isAccepted ?? false) && viewModel.dataBooking?.meeting?.meetingRequest != nil  {
+                HStack {
                     DinotisPrimaryButton(
                         text: LocalizableText.startNowLabel,
                         type: .adaptiveScreen,
                         textColor: .DinotisDefault.lightPrimaryActive,
                         bgColor: .DinotisDefault.lightPrimary
                     ) {}
-                    
-                } else {
-                    if viewModel.dataBooking?.meeting?.endedAt == nil {
+                }
+                .padding()
+                .background(Color.white.edgesIgnoringSafeArea(.all))
+            } else {
+                if viewModel.dataBooking?.meeting?.endedAt == nil {
+                    HStack {
                         DinotisPrimaryButton(
                             text: LocalizableText.startNowLabel,
                             type: .adaptiveScreen,
@@ -1828,7 +1907,11 @@ private extension UserScheduleDetail {
                             viewModel.startPresented.toggle()
                         }
                         .disabled(viewModel.disableStartButton())
-                    } else {
+                    }
+                    .padding()
+                    .background(Color.white.edgesIgnoringSafeArea(.all))
+                } else if (viewModel.dataBooking?.meeting?.status).orEmpty().contains(SessionStatus.notReviewed.rawValue) {
+                    HStack {
                         DinotisPrimaryButton(
                             text: LocalizableText.giveReviewLabel,
                             type: .adaptiveScreen,
@@ -1838,10 +1921,10 @@ private extension UserScheduleDetail {
                             viewModel.showReviewSheet.toggle()
                         }
                     }
+                    .padding()
+                    .background(Color.white.edgesIgnoringSafeArea(.all))
                 }
             }
-            .padding()
-            .background(Color.white.edgesIgnoringSafeArea(.all))
         }
     }
     

@@ -551,4 +551,53 @@
 "anytime_label" = "Kapan saja";
 "gift_label" = "Gift";
 
-"create_session_minimum_participant_alert" = "Participant untuk sesi Group Call harus lebih dari 0";
+"create_session_minimum_participant_alert" = "Peserta untuk sesi Group Call harus lebih dari 0";
+"creator_confirmation_status" = "Menunggu konfirmasi Kreator";
+"creator_not_set_schedule_status" = "Jadwal belum diatur";
+"creator_scheduled_status" = "Sesi telah dijadwalkan";
+"creator_canceled_status" = "Sesi dibatalkan Kreator";
+"refund_status" = "Status Refund";
+"already_refund" = "Telah Direfund";
+
+"creator_inbox_title" = "Creator Inbox";
+"inbox_discuss_schedule_title" = "Chat Diskusi Sesi";
+"inbox_discuss_schedule_desc" = "Percakapan atur jadwal bersama creator.";
+"inbox_completed_session_desc" = "Riwayat percakapan sesi yang telah selesai.";
+"inbox_review_desc" = "Berikan penilaian untuk sesi yang telah selesai.";
+"inbox_empty_description" = "Belum ada chat yang masuk";
+"review_empty_description" = "Kamu belum memiliki review";
+
+"discussion_tag_unread" = "Belum dibaca";
+"discussion_tag_nearest_schedule" = "Jadwal Terdekat";
+"discussion_status_cancel_within" = "Batal Dalam **%@**";
+"discussion_status_scheduled_session" = "Sesi Terjadwalkan";
+"discussion_search_placeholder" = "Cari di chat diskusi jadwal...";
+"discussion_search_creator_name" = "Cari nama creator";
+"discussion_search_audience_name" = "Cari nama audiens";
+"discussion_search_not_found" = "Pencarian Tidak Ditemukan";
+
+"day_text" = "Hari";
+"hour_text" = "Jam";
+
+"booked_session_chat" = "Sesi Dipesan : %@";
+"yesterday" = "Kemarin";
+"today" = "Hari Ini";
+"chat_disabled_text" = "Chat tidak lagi tersedia untuk sesi ini";
+"review_filter_highest_star" = "Bintang tertinggi";
+"review_filter_lowest_star" = "Bintang terendah";
+
+"discuss_with_creator" = "Diskusi dengan Creator";
+"discuss_with_audience" = "Diskusi dengan Audience";
+"general_close_details" = "Tutup Detail";
+
+"manage_application_usage_costs" = "Kelola Biaya Penggunaan Aplikasi";
+"cost_calculated_subtitle" = "Biaya dihitung permenit (**Rp 100**/Audience/menit)";
+"percentage_borne_by_audience" = "Persentase yang ditanggung audiens";
+"estimated_app_usage_cost" = "Estimasi biaya penggunaan aplikasi";
+"audience_count" = "(%lld Audiens)";
+"total_borne_by_audience" = "Total biaya aplikasi ditanggung **Audiens(%@%%)**";
+"total_borne_subtitle" = "Setiap audiens akan membayar **%@** untuk biaya aplikasi";
+"total_cost_borne" = "Total biaya aplikasi ditanggung **Kreator(%@%%)**";
+
+"app_usage_cost_calculation_tooltip" = "Setiap Audience **akan dikenakan biaya aplikasi Rp100 per menit**, sehingga jika total durasi 45 menit, biayanya adalah Rp4.500";
+"app_costs_slider_tooltip" = "Kamu dapat menentukan **siapa yang akan menanggung biaya aplikasi** sesuai dengan persentase dari 0% hingga 100%.";

@@ -67,11 +67,24 @@ extension UserHomeView {
 		var body: some View {
 			VStack(spacing: 25) {
 
-                HStack(spacing: 24) {
+                HStack(spacing: 5) {
                     Image.logoWithText
                         .resizable()
                         .scaledToFit()
-                        .frame(height: 25)
+                        .frame(height: 35)
+                    
+                    NavigationLink(
+                        unwrapping: $homeVM.route,
+                        case: /HomeRouting.inbox,
+                        destination: { viewModel in
+                            InboxView()
+                                .environmentObject(viewModel.wrappedValue)
+                        },
+                        onNavigate: { _ in },
+                        label: {
+                            EmptyView()
+                        }
+                    )
 
 					NavigationLink(
 						unwrapping: $homeVM.route,
@@ -85,42 +98,71 @@ extension UserHomeView {
 
 					Spacer()
 
-					Button {
-						homeVM.routeToNotification()
-					} label: {
+                    Button {
+                        homeVM.routeToInbox()
+                    } label: {
                         ZStack(alignment: .topTrailing) {
-                            Image.notificationIcon
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 25)
                             
-                            if homeVM.hasNewNotif {
-                                Circle()
-                                    .foregroundColor(.red)
-                                    .scaledToFit()
-                                    .frame(height: 8)
+                            Circle()
+                                .scaledToFit()
+                                .frame(height: 48)
+                                .foregroundColor(Color.white)
+                                .overlay(
+                                    Image.homeTalentChatPrimaryIcon
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 21)
+                                )
+                                .shadow(color: Color(red: 0.22, green: 0.29, blue: 0.41).opacity(0.06), radius: 20, x: 0, y: 0)
+                            
+                            if homeVM.hasNewNotifInbox {
+                                Text(homeVM.notificationInboxBadgeCountStr)
+                                    .font(.robotoMedium(size: 12))
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 3)
+                                    .padding(.vertical, 1)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 4)
+                                            .foregroundColor(.red)
+                                    )
+                                
                             }
                         }
-					}
+                    }
                     
                     Button {
-                        homeVM.openWhatsApp()
+                        homeVM.routeToNotification()
                     } label: {
-                        Image.generalQuestionIcon
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 25)
+                        ZStack(alignment: .topTrailing) {
+                            
+                            Circle()
+                                .scaledToFit()
+                                .frame(height: 48)
+                                .foregroundColor(Color.white)
+                                .overlay(
+                                    Image.homeTalentNotificationIcon
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 20)
+                                )
+                                .shadow(color: Color(red: 0.22, green: 0.29, blue: 0.41).opacity(0.06), radius: 20, x: 0, y: 0)
+                            
+                            if homeVM.hasNewNotif {
+                                Text(homeVM.notificationBadgeCountStr)
+                                    .font(.robotoMedium(size: 12))
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 3)
+                                    .padding(.vertical, 1)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 4)
+                                            .foregroundColor(.red)
+                                    )
+                            }
+                        }
                     }
-
 				}
 			}
 			.padding()
-			.background(
-				Color.white.shadow(
-					color: Color.dinotisShadow.opacity(0.06),
-					radius: 10, x: 0.0, y: 12
-				).edgesIgnoringSafeArea(.all)
-			)
 		}
 	}
 

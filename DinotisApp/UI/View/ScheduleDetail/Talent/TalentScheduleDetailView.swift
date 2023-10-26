@@ -515,17 +515,13 @@ struct TalentScheduleDetailView: View {
 						EmptyView()
 					}
 				)
-                
             }
 			.sheet(unwrapping: $viewModel.route, case: /HomeRouting.scheduleNegotiationChat, onDismiss: {
 				customerChatManager.hasUnreadMessage = false
 			}) { viewModel in
-				ScheduleNegotiationChatView(viewModel: viewModel.wrappedValue)
+                ScheduleNegotiationChatView(viewModel: viewModel.wrappedValue, isOnSheet: true)
 					.environmentObject(customerChatManager)
                     .dynamicTypeSize(.large)
-			}
-			.onChange(of: viewModel.tokenConversation) { newValue in
-				customerChatManager.connect(accessToken: newValue, conversationName: (viewModel.dataMeeting?.meetingRequest?.id).orEmpty())
 			}
 			.onDisappear {
 				customerChatManager.disconnect()
@@ -679,6 +675,9 @@ struct TalentScheduleDetailView: View {
                     .dynamicTypeSize(.large)
 			}
 
+        })
+        .onChange(of: viewModel.tokenConversation, perform: { value in
+            customerChatManager.connect(accessToken: value, conversationName: (viewModel.dataBooking?.meeting?.meetingRequest?.id).orEmpty())
         })
         .onAppear(perform: {
             Task {
@@ -1395,7 +1394,8 @@ extension TalentScheduleDetailView {
 
 				if viewModel.isShowingChatButton() {
 					Button {
-						viewModel.routeToScheduleNegotiationChat()
+                        guard let data = viewModel.dataMeeting else { return }
+                        viewModel.routeToScheduleNegotiationChat(meet: viewModel.convertToUserMeet(meet: data))
 					} label: {
 						HStack {
 							Image.Dinotis.messageIcon

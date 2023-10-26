@@ -552,3 +552,52 @@
 "gift_label" = "Gift";
 
 "create_session_minimum_participant_alert" = "Participants for Group call must more than 0";
+"creator_confirmation_status" = "Waiting confirmation from Creator";
+"creator_not_set_schedule_status" = "Schedule didn't set";
+"creator_scheduled_status" = "Session already scheduled";
+"creator_canceled_status" = "Session cancelled by Creator";
+"refund_status" = "Refund Status";
+"already_refund" = "Already Refund";
+
+"creator_inbox_title" = "Creator Inbox";
+"inbox_discuss_schedule_title" = "Discussion Session Chat";
+"inbox_discuss_schedule_desc" = "Conversation about scheduling with the creator.";
+"inbox_completed_session_desc" = "Conversation history of completed sessions.";
+"inbox_review_desc" = "Give ratings for completed sessions.";
+"inbox_empty_description" = "Chat inbox is currently empty";
+"review_empty_description" = "You don't have any reviews yet";
+
+"discussion_tag_unread" = "Unread";
+"discussion_tag_nearest_schedule" = "Nearest Schedule";
+"discussion_status_cancel_within" = "Cancel Within **%@**";
+"discussion_status_scheduled_session" = "Scheduled Session";
+"discussion_search_placeholder" = "Search discussion chat...";
+"discussion_search_creator_name" = "Search creaor's name";
+"discussion_search_audience_name" = "Search audience's name";
+"discussion_search_not_found" = "Search Not Found";
+
+"day_text" = "Day";
+"hour_text" = "Hour";
+"booked_session_chat" = "Booked Session : %@";
+"yesterday" = "Yesterday";
+"today" = "Today";
+"chat_disabled_text" = "This chat is unavailable for this session";
+
+"review_filter_highest_star" = "Highest star";
+"review_filter_lowest_star" = "Lowest star";
+
+"discuss_with_creator" = "Discuss with Creator";
+"discuss_with_audience" = "Discuss with Audience";
+"general_close_details" = "Close Details";
+
+"manage_application_usage_costs" = "Manage Application Usage Costs";
+"cost_calculated_subtitle" = "The cost is calculated per minute (**Rp 100**/Audience/minute)";
+"percentage_borne_by_audience" = "The percentage borne by the audience";
+"estimated_app_usage_cost" = "Estimated Application Usage Cost";
+"audience_count" = "(%lld Audiences)";
+"total_borne_by_audience" = "The total application cost is borne by the **Audience(%@%%)**";
+"total_borne_subtitle" = "Each audience will pay **%@** for the application cost";
+"total_cost_borne" = "The total application cost is borne by the **Creator(%@%%)**";
+
+"app_usage_cost_calculation_tooltip" = "Each audience **will be charged Rp100 per minute for the application**, so if the total duration is 45 minutes, the cost will be Rp4.500";
+"app_costs_slider_tooltip" = "You can determine **who will bear the application cost** according to a percentage from 0% to 100%.";

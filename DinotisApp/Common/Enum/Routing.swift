@@ -30,7 +30,7 @@ enum HomeRouting {
 	case editUserProfile(viewModel: EditProfileViewModel)
 	case changePhone(viewModel: ChangePhoneViewModel)
 	case changePhoneOtp(viewModel: ChangePhoneVerifyViewModel)
-	case talentFormSchedule(viewModel: ScheculedFormViewModel)
+	case talentFormSchedule(viewModel: ScheduledFormViewModel)
 	
 	case talentScheduleDetail(viewModel: ScheduleDetailViewModel)
 	case userScheduleDetail(viewModel: ScheduleDetailViewModel)
@@ -65,4 +65,7 @@ enum HomeRouting {
 	case followedCreator(viewModel: FollowedCreatorViewModel)
     case dyteGroupVideoCall(viewModel: GroupVideoCallViewModel)
     case feedbackAfterCall(viewModel: FeedbackViewModel)
+    case inbox(viewModel: InboxViewModel)
+    case discussionList(viewModel: DiscussionListViewModel)
+    case reviewList(viewModel: ReviewListViewModel)
 }

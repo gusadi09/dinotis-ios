@@ -119,6 +119,10 @@ final class UserHomeViewModel: NSObject, ObservableObject {
     @Published var announceIndex = 0
     
     @Published var hasNewNotif = false
+    @Published var hasNewNotifInbox = false
+    
+    @Published var notificationInboxBadgeCountStr = ""
+    @Published var notificationBadgeCountStr = ""
     
     init(
         getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
@@ -460,6 +464,9 @@ final class UserHomeViewModel: NSObject, ObservableObject {
             DispatchQueue.main.async { [weak self] in
                 self?.success = true
                 self?.hasNewNotif = success.unreadNotificationCount.orZero() > 0
+                self?.hasNewNotifInbox = success.inboxCount.orZero() > 0
+                self?.notificationInboxBadgeCountStr = success.inboxCount.orZero() > 9 ? "9+" : "\(success.inboxCount.orZero())"
+                self?.notificationBadgeCountStr = success.unreadNotificationCount.orZero() > 9 ? "9+" : "\(success.unreadNotificationCount.orZero())"
             }
         case .failure(let failure):
             handleDefaultError(error: failure, type: .none)
@@ -816,6 +823,14 @@ final class UserHomeViewModel: NSObject, ObservableObject {
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .searchTalent(viewModel: viewModel)
+        }
+    }
+    
+    func routeToInbox() {
+        let viewModel = InboxViewModel()
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .inbox(viewModel: viewModel)
         }
     }
 

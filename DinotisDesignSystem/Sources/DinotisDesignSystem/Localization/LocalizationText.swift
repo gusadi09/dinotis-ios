@@ -2490,6 +2490,252 @@ public enum LocalizableText {
         bundle: .module,
         comment: "set time"
     )
+    public static let creatorConfirmationStatus = NSLocalizedString(
+        "creator_confirmation_status",
+        bundle: .module,
+        comment: "Waiting confirmation from Creator"
+    )
+    public static let creatorNotSetScheduleStatus = NSLocalizedString(
+        "creator_not_set_schedule_status",
+        bundle: .module,
+        comment: "Schedule didn't set"
+    )
+    public static let creatorScheduledStatus = NSLocalizedString(
+        "creator_scheduled_status",
+        bundle: .module,
+        comment: "Session already scheduled"
+    )
+    public static let creatorCancelledStatus = NSLocalizedString(
+        "creator_canceled_status",
+        bundle: .module,
+        comment: "Session cancelled by Creator"
+    )
+    public static let refundStatus = NSLocalizedString(
+        "refund_status",
+        bundle: .module,
+        comment: "refund status"
+    )
+    public static let alreadyRefund = NSLocalizedString(
+        "already_refund",
+        bundle: .module,
+        comment: "already refund"
+    )
+    public static let creatorInboxTitle = NSLocalizedString(
+        "creator_inbox_title",
+        bundle: .module,
+        comment: "title in inbox view"
+    )
+    public static let inboxDiscussScheduleTitle = NSLocalizedString(
+        "inbox_discuss_schedule_title",
+        bundle: .module,
+        comment: "title of schedule discussion section in inbox view"
+    )
+    public static let inboxDiscussScheduleDesc = NSLocalizedString(
+        "inbox_discuss_schedule_desc",
+        bundle: .module,
+        comment: "description of schedule discussion section in inbox view"
+    )
+    public static let inboxCompletedSessionDesc = NSLocalizedString(
+        "inbox_completed_session_desc",
+        bundle: .module,
+        comment: "description of completed session section in inbox view"
+    )
+    public static let inboxReviewDesc = NSLocalizedString(
+        "inbox_review_desc",
+        bundle: .module,
+        comment: "description of completed session section in inbox view"
+    )
+    public static let discussionTagUnread = NSLocalizedString(
+        "discussion_tag_unread",
+        bundle: .module,
+        comment: "unread tag in discussion list"
+    )
+    public static let discussionTagNearestSchedule = NSLocalizedString(
+        "discussion_tag_nearest_schedule",
+        bundle: .module,
+        comment: "nearest schedule tag in discussion list"
+    )
+    public static func discussionStatusCancelWithin(date: String) -> String {
+        String(
+            format: NSLocalizedString(
+                "discussion_status_cancel_within",
+                bundle: .module,
+                comment: "not confirmed schedule status in discussion list"
+            ),
+            date
+        )
+    }
+    public static let discussionStatusScheduledSession = NSLocalizedString(
+        "discussion_status_scheduled_session",
+        bundle: .module,
+        comment: "scheduled session status in discussion list"
+    )
+    public static let dayText = NSLocalizedString(
+        "day_text",
+        bundle: .module,
+        comment: "day text"
+    )
+    public static let hourText = NSLocalizedString(
+        "hour_text",
+        bundle: .module,
+        comment: "hour text"
+    )
+    
+    public static func chatBookedSession(title: String) -> String {
+        String(
+            format: NSLocalizedString(
+                "booked_session_chat",
+                bundle: .module,
+                comment: "booked session : "
+            ),
+            title
+        )
+    }
+    
+    public static let chatDisabledText = NSLocalizedString(
+        "chat_disabled_text",
+        bundle: .module,
+        comment: "chat disabled explanation"
+    )
+    public static let today = NSLocalizedString(
+        "today",
+        bundle: .module,
+        comment: "today"
+    )
+    public static let yesterday = NSLocalizedString(
+        "yesterday",
+        bundle: .module,
+        comment: "yesterday"
+    )
+    
+    public static let reviewFilterHighestStar = NSLocalizedString(
+        "review_filter_highest_star",
+        bundle: .module,
+        comment: "highest star filter in review list"
+    )
+    public static let reviewFilterLowestStar = NSLocalizedString(
+        "review_filter_lowest_star",
+        bundle: .module,
+        comment: "lowest star filter in review list"
+    )
+    public static let discussionSearchPlaceholder = NSLocalizedString(
+        "discussion_search_placeholder",
+        bundle: .module,
+        comment: "discussion list search placeholder"
+    )
+    public static let discussionSearchCreatorName = NSLocalizedString(
+        "discussion_search_creator_name",
+        bundle: .module,
+        comment: "discussion list search creator name"
+    )
+    public static let discussionSearchAudienceName = NSLocalizedString(
+        "discussion_search_audience_name",
+        bundle: .module,
+        comment: "discussion list search audience name"
+    )
+    public static let discussionSearchNotFound = NSLocalizedString(
+        "discussion_search_not_found",
+        bundle: .module,
+        comment: "discussion list search not found"
+    )
+    public static let discussWithCreatorTitle = NSLocalizedString(
+        "discuss_with_creator",
+        bundle: .module,
+        comment: "discuss with creator"
+    )
+    public static let discussWithAudienceTitle = NSLocalizedString(
+        "discuss_with_audience",
+        bundle: .module,
+        comment: "discuss with audience"
+    )
+    
+    public static let generalCloseDetails = NSLocalizedString(
+        "general_close_details",
+        bundle: .module,
+        comment: "close details"
+    )
+    public static let manageAppUsageCostsTitle = NSLocalizedString(
+        "manage_application_usage_costs",
+        bundle: .module,
+        comment: "manage application usage costs"
+    )
+    public static let costCalculatedSubtitle = NSLocalizedString(
+        "cost_calculated_subtitle",
+        bundle: .module,
+        comment: "cost calculated subtitle"
+    )
+    public static let percentageBorneByAudience = NSLocalizedString(
+        "percentage_borne_by_audience",
+        bundle: .module,
+        comment: "percentage borne"
+    )
+    public static let estimatedAppUsageCosts = NSLocalizedString(
+        "estimated_app_usage_cost",
+        bundle: .module,
+        comment: "estimated app usage costs"
+    )
+    
+    public static func audienceCountLabel(count: Int) -> String {
+        String(
+            format: NSLocalizedString(
+                "audience_count",
+                bundle: .module,
+                comment: "audience count with label"
+            ), 
+            count
+        )
+    }
+    public static func totalBorneByAudience(borne: String) -> String {
+        String(
+            format: NSLocalizedString(
+                "total_borne_by_audience",
+                bundle: .module,
+                comment: "total borne"
+            ),
+            borne
+        )
+    }
+    public static func totalBorneSubtitle(total: String) -> String {
+        String(
+            format: NSLocalizedString(
+                "total_borne_subtitle",
+                bundle: .module,
+                comment: "total borne subtitle"
+            ),
+            total
+        )
+    }
+    public static func totalCostsBorneByCreator(total: String) -> String {
+        String(
+            format: NSLocalizedString(
+                "total_cost_borne",
+                bundle: .module,
+                comment: "total cost borne by the creator"
+            ),
+            total
+        )
+    }
+    public static let appUsageCostCalculationTooltip = NSLocalizedString(
+        "app_usage_cost_calculation_tooltip",
+        bundle: .module,
+        comment: "cost calculation tooltip text"
+    )
+    public static let appUsageCostsSliderTooltip = NSLocalizedString(
+        "app_costs_slider_tooltip",
+        bundle: .module,
+        comment: "app usage costs slider tooltip text"
+    )
+    public static let inboxEmptyDescription = NSLocalizedString(
+        "inbox_empty_description",
+        bundle: .module,
+        comment: "empty inbox description"
+    )
+    public static let reviewEmptyDescription = NSLocalizedString(
+        "review_empty_description",
+        bundle: .module,
+        comment: "empty review description"
+    )
+    
 }
 
 

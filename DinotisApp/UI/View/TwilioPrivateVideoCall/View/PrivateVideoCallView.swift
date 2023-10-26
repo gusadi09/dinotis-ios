@@ -166,8 +166,11 @@ struct PrivateVideoCallView : View {
 							}
 							.frame(width: 50, height: 50)
 							.background(Color.white.opacity(0.2))
-							.clipShape(Circle())
-						}
+                            .clipShape(Circle())
+                        }
+                        .onChange(of: viewModel.isSwitchCam) { newValue in
+                            streamManager.roomManager?.localParticipant.position = newValue ? .front : .back
+                        }
 
 						Button(action: toogleLocalCamera) {
 							HStack {

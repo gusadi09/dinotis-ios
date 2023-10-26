@@ -1079,14 +1079,14 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
 }
 
 extension GroupVideoCallViewModel: DyteSelfEventsListener {
+    func onRoomMessage(type: String, payload: [String : Any]) {
+        
+    }
+    
     func onStageStatusUpdated(stageStatus: StageStatus) {
         if stageStatus == .offStage {
             madeToSpeaker()
         }
-    }
-    
-    func onRoomMessage(message: String) {
-        
     }
     
     func onAudioDevicesUpdated() {

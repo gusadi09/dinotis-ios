@@ -8,7 +8,7 @@
 import Foundation
 
 public final class ReviewsDefaultRepository: ReviewsRepository {
-
+    
 	private let remote: ReviewsRemoteDataSource
 
 	public init(remote: ReviewsRemoteDataSource = ReviewsDefaultRemoteDataSource()) {
@@ -29,5 +29,9 @@ public final class ReviewsDefaultRepository: ReviewsRepository {
     
     public func provideGetTipAmounts() async throws -> TipAmounts {
         try await self.remote.getTipAmounts()
+    }
+    
+    public func provideGetInboxReviews(with filter: ReviewListFilterType) async throws -> InboxReviewsResponse {
+        try await self.remote.getInboxReviews(filter: filter)
     }
 }
