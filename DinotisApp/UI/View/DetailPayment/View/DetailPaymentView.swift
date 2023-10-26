@@ -388,7 +388,8 @@ struct DetailPaymentView: View {
 						HStack {
 							Spacer()
 
-							ActivityIndicator(isAnimating: $viewModel.isLoading, color: .black, style: .medium)
+                            ProgressView()
+                                .progressViewStyle(.circular)
 								.padding(.top)
 
 							Spacer()

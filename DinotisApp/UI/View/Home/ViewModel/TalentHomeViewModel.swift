@@ -256,9 +256,9 @@ final class TalentHomeViewModel: ObservableObject {
                 self?.success = true
                 self?.isLoading = false
                 self?.hasNewNotif = success.unreadNotificationCount.orZero() > 0
-                self?.notificationBadgeCountStr = success.unreadNotificationCount.orZero() > 9 ? "9+" : "\(success.unreadNotificationCount.orZero())"
+                self?.notificationBadgeCountStr = success.unreadNotificationCount.orZero() > 100 ? "99+" : "\(success.unreadNotificationCount.orZero())"
                 self?.hasNewNotifInbox = success.inboxCount.orZero() > 0
-                self?.notificationInboxBadgeCountStr = success.inboxCount.orZero() > 9 ? "9+" : "\(success.inboxCount.orZero())"
+                self?.notificationInboxBadgeCountStr = success.inboxCount.orZero() > 100 ? "99+" : "\(success.inboxCount.orZero())"
             }
         case .failure(let failure):
             handleDefaultError(error: failure)

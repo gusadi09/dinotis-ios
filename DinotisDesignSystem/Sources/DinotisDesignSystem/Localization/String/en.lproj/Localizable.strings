@@ -362,7 +362,7 @@
 "general_revenue_purpose" = "Revenue Purpose";
 "general_private_wallet" = "Personal Wallet";
 "url_link_text" = "URL Link";
-"add_url_link_label" = "Add URL Link";
+"add_url_link_label" = "+ Add URL Link";
 "delete_url_link_label" = "Delete URL Link";
 "url_link_title_placeholder" = "URL Link Title";
 "see_additional_menu_label" = "See Additional Menu";
@@ -599,5 +599,25 @@
 "total_borne_subtitle" = "Each audience will pay **%@** for the application cost";
 "total_cost_borne" = "The total application cost is borne by the **Creator(%@%%)**";
 
-"app_usage_cost_calculation_tooltip" = "Each audience **will be charged Rp100 per minute for the application**, so if the total duration is 45 minutes, the cost will be Rp4.500";
-"app_costs_slider_tooltip" = "You can determine **who will bear the application cost** according to a percentage from 0% to 100%.";
+"app_usage_cost_calculation_tooltip" = "Each audience **will be charged Rp%@ per minute for the application**, so if the total duration is %@ minutes, the cost will be Rp%@";
+"app_costs_slider_tooltip" = "You can determine **who will bear the application cost** according to a percentage from 0%% to 100%%.";
+
+"schedule_form_set_participant" = "Set the number of participants (Min. 1)";
+"schedule_form_set_price" = "Set price";
+"schedule_form_per_person" = "Per person";
+"schedule_form_enter_price_label" = "Enter price here...";
+"price_settings_title" = "Cost Settings";
+"application_costs_transfer" = "Application Cost Transfer";
+"set_app_usage_cost" = "Set App Usage Costs";
+"set_app_usage_warning" = "This feature is available if the price has been set.";
+"set_app_usage_rule" = "Application fees are only **charged for paid sessions.**";
+"summary_session_price" = "Price Summary";
+"session_price_title" = "Session Price";
+"audience_quota" = "Audience Quota";
+"app_usage_borne_by_creator" = "Creator-sponsored application fees.";
+"revenue_estimation" = "Revenue Estimation";
+"app_cost_cover_percentage" = "You cover %@%% of the App Fee.";
+"session_settings_title" = "Session Settings";
+"title_description_empty_error" = "Title & Description can't be empty, please fill the title & description";
+"activation_of_archieve_title" = "Enable Video Archive";
+"activation_of_archieve_subtitle" = "This session is automatically recorded by the system. You can download or share it for later viewing.";

@@ -71,4 +71,8 @@ public final class MeetingsDefaultRemoteDataSource: MeetingsRemoteDataSource {
     public func getClosestSession() async throws -> ClosestMeetingResponse {
         try await self.provider.request(.closestSession, model: ClosestMeetingResponse.self)
     }
+    
+    public func getMeetingFee() async throws -> MeetingFeeResponse {
+        try await self.provider.request(.getMeetingFee, model: MeetingFeeResponse.self)
+    }
 }

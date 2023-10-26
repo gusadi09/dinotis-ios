@@ -88,7 +88,9 @@ struct TalentScheduleDetailView: View {
                             if viewModel.isLoading {
                                 HStack {
                                     Spacer()
-                                    ActivityIndicator(isAnimating: $viewModel.isLoading, color: .black, style: .medium)
+                                    
+                                    ProgressView()
+                                        .progressViewStyle(.circular)
                                         .padding(.top)
                                     
                                     Spacer()
@@ -534,7 +536,8 @@ struct TalentScheduleDetailView: View {
 			if #available(iOS 16.0, *) {
 				VStack(spacing: 15) {
 					if viewModel.isLoadingStart {
-						ActivityIndicator(isAnimating: $viewModel.isLoadingStart, color: .black, style: .medium)
+                        ProgressView()
+                            .progressViewStyle(.circular)
 					} else {
 						Image.Dinotis.popoutImage
 							.resizable()
@@ -606,7 +609,8 @@ struct TalentScheduleDetailView: View {
 			} else {
 				VStack(spacing: 15) {
 					if viewModel.isLoadingStart {
-						ActivityIndicator(isAnimating: $viewModel.isLoadingStart, color: .black, style: .medium)
+                        ProgressView()
+                            .progressViewStyle(.circular)
 					} else {
 						Image.Dinotis.popoutImage
 							.resizable()

@@ -362,7 +362,7 @@
 "general_revenue_purpose" = "Tujuan Pendapatan";
 "general_private_wallet" = "Dompet Pribadi";
 "url_link_text" = "Link URL";
-"add_url_link_label" = "Tambah Link URL";
+"add_url_link_label" = "+ Tambah Link URL";
 "delete_url_link_label" = "Hapus Link URL";
 "url_link_title_placeholder" = "Judul Link URL";
 "see_additional_menu_label" = "Lihat Menu Tambahan";
@@ -591,7 +591,7 @@
 "general_close_details" = "Tutup Detail";
 
 "manage_application_usage_costs" = "Kelola Biaya Penggunaan Aplikasi";
-"cost_calculated_subtitle" = "Biaya dihitung permenit (**Rp 100**/Audience/menit)";
+"cost_calculated_subtitle" = "Biaya dihitung permenit (**Rp %@**/Audience/menit)";
 "percentage_borne_by_audience" = "Persentase yang ditanggung audiens";
 "estimated_app_usage_cost" = "Estimasi biaya penggunaan aplikasi";
 "audience_count" = "(%lld Audiens)";
@@ -599,5 +599,25 @@
 "total_borne_subtitle" = "Setiap audiens akan membayar **%@** untuk biaya aplikasi";
 "total_cost_borne" = "Total biaya aplikasi ditanggung **Kreator(%@%%)**";
 
-"app_usage_cost_calculation_tooltip" = "Setiap Audience **akan dikenakan biaya aplikasi Rp100 per menit**, sehingga jika total durasi 45 menit, biayanya adalah Rp4.500";
-"app_costs_slider_tooltip" = "Kamu dapat menentukan **siapa yang akan menanggung biaya aplikasi** sesuai dengan persentase dari 0% hingga 100%.";
+"app_usage_cost_calculation_tooltip" = "Setiap Audience **akan dikenakan biaya aplikasi Rp%@ per menit**, sehingga jika total durasi %@ menit, biayanya adalah Rp%@";
+"app_costs_slider_tooltip" = "Kamu dapat menentukan **siapa yang akan menanggung biaya aplikasi** sesuai dengan persentase dari 0%% hingga 100%%.";
+
+"schedule_form_set_participant" = "Atur jumlah peserta (Min. 1)";
+"schedule_form_set_price" = "Atur harga";
+"schedule_form_per_person" = "Per orang";
+"schedule_form_enter_price_label" = "Masukkan harga disini...";
+"price_settings_title" = "Pengaturan Biaya";
+"application_costs_transfer" = "Pengalihan Biaya Aplikasi";
+"set_app_usage_cost" = "Atur biaya penggunaan aplikasi";
+"set_app_usage_warning" = "Fitur ini tersedia jika harga sudah diatur";
+"set_app_usage_rule" = "Biaya aplikasi hanya **dikenakan untuk sesi berbayar**";
+"summary_session_price" = "Ringkasan Biaya";
+"session_price_title" = "Harga Sesi";
+"audience_quota" = "Kuota Audiens";
+"app_usage_borne_by_creator" = "Biaya aplikasi yang ditanggung kreator";
+"revenue_estimation" = "Estimasi Pendapatan";
+"app_cost_sponsored_percentage" = "Kamu menanggung %@%% Biaya Aplikasi";
+"session_settings_title" = "Pengaturan Sesi";
+"title_description_empty_error" = "Judul & Deskripsi tidak boleh kosong, mohon isi judul & deskripsi";
+"activation_of_archieve_title" = "Aktifkan arsip video";
+"activation_of_archieve_subtitle" = "Sesi ini otomatis direkam oleh sistem. Kamu dapat mendownload atau dibagikan untuk ditonton ulang";

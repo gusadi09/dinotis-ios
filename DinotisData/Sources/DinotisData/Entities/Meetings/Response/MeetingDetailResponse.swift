@@ -117,6 +117,7 @@ public struct MeetingDetailResponse: Codable, Hashable {
     public let isInspected: Bool?
     public let reviews: [ReviewSuccessResponse]?
     public let participantDetails: [UserResponse]?
+    public let meetingFee: MeetingFeeData?
     
     public init(
         id: String = "",
@@ -155,7 +156,8 @@ public struct MeetingDetailResponse: Codable, Hashable {
         dyteMeetingId: String? = nil,
         isInspected: Bool? = nil,
         reviews: [ReviewSuccessResponse]? = [],
-        participantDetails: [UserResponse]? = []
+        participantDetails: [UserResponse]? = [],
+        meetingFee: MeetingFeeData? = nil
     ) {
         self.id = id
         self.title = title
@@ -194,6 +196,7 @@ public struct MeetingDetailResponse: Codable, Hashable {
         self.isInspected = isInspected
         self.reviews = reviews
         self.participantDetails = participantDetails
+        self.meetingFee = meetingFee
     }
     
     public static func == (lhs: MeetingDetailResponse, rhs: MeetingDetailResponse) -> Bool {
@@ -202,6 +205,20 @@ public struct MeetingDetailResponse: Codable, Hashable {
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
+    }
+}
+
+public struct MeetingFeeData: Codable {
+    public let id: Int?
+    public let oneMinuteFee: String?
+    public let userFeePercentage: Int?
+    public let talentFeePercentage: Int?
+    
+    public init(id: Int?, oneMinuteFee: String?, userFeePercentage: Int?, talentFeePercentage: Int?) {
+        self.id = id
+        self.oneMinuteFee = oneMinuteFee
+        self.userFeePercentage = userFeePercentage
+        self.talentFeePercentage = talentFeePercentage
     }
 }
 

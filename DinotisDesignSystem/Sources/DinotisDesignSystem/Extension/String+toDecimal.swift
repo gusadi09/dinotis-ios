@@ -11,11 +11,12 @@ public extension String {
     func toDecimal() -> String {
         if let number = Int(self) {
             let formatter = NumberFormatter()
+            formatter.groupingSeparator = "."
             formatter.numberStyle = .decimal
-            formatter.locale = Locale(identifier: "id_ID")
+            formatter.locale = Locale.current.locale
             return formatter.string(from: NSNumber(value: number)).orEmpty()
         } else {
-            return self
+            return "0"
         }
     }
 }
