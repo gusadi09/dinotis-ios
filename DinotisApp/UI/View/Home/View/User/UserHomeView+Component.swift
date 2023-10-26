@@ -660,7 +660,8 @@ extension UserHomeView {
 											HStack {
 												Spacer()
 
-												ActivityIndicator(isAnimating: $homeVM.isSearchLoading, color: .black, style: .medium)
+                                                ProgressView()
+                                                    .progressViewStyle(.circular)
 													.padding()
 
 												Spacer()

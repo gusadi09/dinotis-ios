@@ -23,6 +23,7 @@ public enum MeetingsTargetType {
     case collaborationMeetingDetail(String)
     case approveInvitation(Bool, String)
     case closestSession
+    case getMeetingFee
 }
 
 extension MeetingsTargetType: DinotisTargetType, AccessTokenAuthorizable {
@@ -147,6 +148,8 @@ extension MeetingsTargetType: DinotisTargetType, AccessTokenAuthorizable {
             ]
         case .closestSession:
             return [:]
+        case .getMeetingFee:
+            return [:]
         }
     }
 
@@ -183,6 +186,8 @@ extension MeetingsTargetType: DinotisTargetType, AccessTokenAuthorizable {
         case .approveInvitation(_, _):
             return JSONEncoding.default
         case .closestSession:
+            return URLEncoding.default
+        case .getMeetingFee:
             return URLEncoding.default
         }
     }
@@ -221,6 +226,8 @@ extension MeetingsTargetType: DinotisTargetType, AccessTokenAuthorizable {
             return "/meetings/\(string)/collaboration/approve"
         case .closestSession:
             return "/meetings/closest"
+        case .getMeetingFee:
+            return "/meetings/fee"
         }
     }
 
@@ -253,6 +260,8 @@ extension MeetingsTargetType: DinotisTargetType, AccessTokenAuthorizable {
         case .approveInvitation(_, _):
             return .post
         case .closestSession:
+            return .get
+        case .getMeetingFee:
             return .get
         }
     }

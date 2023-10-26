@@ -2659,11 +2659,16 @@ public enum LocalizableText {
         bundle: .module,
         comment: "manage application usage costs"
     )
-    public static let costCalculatedSubtitle = NSLocalizedString(
-        "cost_calculated_subtitle",
-        bundle: .module,
-        comment: "cost calculated subtitle"
-    )
+    public static func costCalculatedSubtitle(fee: String) -> String {
+        String(
+            format: NSLocalizedString(
+                "cost_calculated_subtitle",
+                bundle: .module,
+                comment: "cost calculated subtitle"
+            ),
+            fee
+        )
+    }
     public static let percentageBorneByAudience = NSLocalizedString(
         "percentage_borne_by_audience",
         bundle: .module,
@@ -2715,11 +2720,18 @@ public enum LocalizableText {
             total
         )
     }
-    public static let appUsageCostCalculationTooltip = NSLocalizedString(
-        "app_usage_cost_calculation_tooltip",
-        bundle: .module,
-        comment: "cost calculation tooltip text"
-    )
+    public static func appUsageCostCalculationTooltip(fee: String, minute: String, total: String) -> String {
+        String(
+            format: NSLocalizedString(
+                "app_usage_cost_calculation_tooltip",
+                bundle: .module,
+                comment: "cost calculation tooltip text"
+            ),
+            fee,
+            minute,
+            total
+        )
+    }
     public static let appUsageCostsSliderTooltip = NSLocalizedString(
         "app_costs_slider_tooltip",
         bundle: .module,
@@ -2736,6 +2748,117 @@ public enum LocalizableText {
         comment: "empty review description"
     )
     
+    public static let scheduleFormSetParticipant = NSLocalizedString(
+        "schedule_form_set_participant",
+        bundle: .module,
+        comment: "set participant on schedule form"
+    )
+    public static let scheduleFormSetPrice = NSLocalizedString(
+        "schedule_form_set_price",
+        bundle: .module,
+        comment: "set price"
+    )
+    public static let scheduleFormPerPerson = NSLocalizedString(
+        "schedule_form_per_person",
+        bundle: .module,
+        comment: "per person"
+    )
+    public static let scheduleFormPricePlaceholder = NSLocalizedString(
+        "schedule_form_enter_price_label",
+        bundle: .module,
+        comment: "price placeholder"
+    )
+    
+    public static let scheduleFormPriceSettingsTitle = NSLocalizedString(
+        "price_settings_title",
+        bundle: .module,
+        comment: "price settings"
+    )
+    public static let scheduleFormApplicationCostTransfer = NSLocalizedString(
+        "application_costs_transfer",
+        bundle: .module,
+        comment: "application cost transfer"
+    )
+    public static let scheduleFormSetAppUsageCost = NSLocalizedString(
+        "set_app_usage_cost",
+        bundle: .module,
+        comment: "set app usage cost"
+    )
+    public static let scheduleFormSetAppUsageWarning = NSLocalizedString(
+        "set_app_usage_warning",
+        bundle: .module,
+        comment: "set app usage warning if price not set"
+    )
+    public static let scheduleFormSetAppUsageRule = NSLocalizedString(
+        "set_app_usage_rule",
+        bundle: .module,
+        comment: "set app usage rule"
+    )
+    
+    public static let scheduleFormPriceSummary = NSLocalizedString(
+        "summary_session_price",
+        bundle: .module,
+        comment: "price summary"
+    )
+    
+    public static let scheduleFormSessionPriceTitle = NSLocalizedString(
+        "session_price_title",
+        bundle: .module,
+        comment: "session price"
+    )
+    
+    public static let scheduleFormAudienceQuota = NSLocalizedString(
+        "audience_quota",
+        bundle: .module,
+        comment: "audience quota"
+    )
+    
+    public static let scheduleFormCreatorSponsoredCosts = NSLocalizedString(
+        "app_usage_borne_by_creator",
+        bundle: .module,
+        comment: "sponsored cost by creator"
+    )
+    
+    public static let scheduleFormRevenueEstimation = NSLocalizedString(
+        "revenue_estimation",
+        bundle: .module,
+        comment: "revenue estimation"
+    )
+    
+    public static func scheduleFormCoverPercentage(total: String) -> String {
+        String(
+            format: NSLocalizedString(
+                "app_cost_cover_percentage",
+                bundle: .module,
+                comment: "percentage covered"
+            ),
+            total
+        )
+    }
+    
+    public static let scheduleFormSessionSettingsTitle = NSLocalizedString(
+        "session_settings_title",
+        bundle: .module,
+        comment: "session settings"
+    )
+    
+    public static let scheduleFormTitleDescriptionEmptyError = NSLocalizedString(
+        "title_description_empty_error",
+        bundle: .module,
+        comment: "empty title n desc error"
+    )
+    
+    public static let scheduleFormEnableVideoArchieveTitle = NSLocalizedString(
+        "activation_of_archieve_title",
+        bundle: .module,
+        comment: "enable archieve title"
+    )
+    
+    public static let scheduleFormEnableVideoArchieveSubtitle = NSLocalizedString(
+        "activation_of_archieve_subtitle",
+        bundle: .module,
+        comment: "enable archieve subtitle"
+    )
 }
 
 
