@@ -13,6 +13,8 @@
 		4B03ED3D2ACC17C4004DD0FA /* InboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B03ED3C2ACC17C4004DD0FA /* InboxView.swift */; };
 		4B03ED3F2ACC18D3004DD0FA /* InboxViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B03ED3E2ACC18D3004DD0FA /* InboxViewModel.swift */; };
 		4BA7D6152AC1756500B5177E /* session-close-to-end.json in Resources */ = {isa = PBXBuildFile; fileRef = 4BA7D6142AC1756500B5177E /* session-close-to-end.json */; };
+		4BBC06C02AEA5DC000299354 /* CreatorAvailabilityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBC06BF2AEA5DC000299354 /* CreatorAvailabilityViewModel.swift */; };
+		4BBC06C22AEA5DFF00299354 /* CreatorAvailabilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBC06C12AEA5DFF00299354 /* CreatorAvailabilityView.swift */; };
 		4BFE4E002ACD4CFF00E14890 /* DiscussionListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFE4DFF2ACD4CFF00E14890 /* DiscussionListViewModel.swift */; };
 		4BFE4E022ACD4D2A00E14890 /* DiscussionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFE4E012ACD4D2A00E14890 /* DiscussionListView.swift */; };
 		4BFE4E092AD0264600E14890 /* ReviewListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFE4E082AD0264600E14890 /* ReviewListView.swift */; };
@@ -363,6 +365,8 @@
 		4B03ED3C2ACC17C4004DD0FA /* InboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxView.swift; sourceTree = "<group>"; };
 		4B03ED3E2ACC18D3004DD0FA /* InboxViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxViewModel.swift; sourceTree = "<group>"; };
 		4BA7D6142AC1756500B5177E /* session-close-to-end.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "session-close-to-end.json"; sourceTree = "<group>"; };
+		4BBC06BF2AEA5DC000299354 /* CreatorAvailabilityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatorAvailabilityViewModel.swift; sourceTree = "<group>"; };
+		4BBC06C12AEA5DFF00299354 /* CreatorAvailabilityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatorAvailabilityView.swift; sourceTree = "<group>"; };
 		4BFE4DFF2ACD4CFF00E14890 /* DiscussionListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscussionListViewModel.swift; sourceTree = "<group>"; };
 		4BFE4E012ACD4D2A00E14890 /* DiscussionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscussionListView.swift; sourceTree = "<group>"; };
 		4BFE4E082AD0264600E14890 /* ReviewListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewListView.swift; sourceTree = "<group>"; };
@@ -749,6 +753,31 @@
 				4B03ED3E2ACC18D3004DD0FA /* InboxViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		4BBC06BC2AEA5D9400299354 /* CreatorAvailability */ = {
+			isa = PBXGroup;
+			children = (
+				4BBC06BE2AEA5DA900299354 /* View */,
+				4BBC06BD2AEA5DA200299354 /* ViewModel */,
+			);
+			path = CreatorAvailability;
+			sourceTree = "<group>";
+		};
+		4BBC06BD2AEA5DA200299354 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				4BBC06BF2AEA5DC000299354 /* CreatorAvailabilityViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		4BBC06BE2AEA5DA900299354 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4BBC06C12AEA5DFF00299354 /* CreatorAvailabilityView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		4BFE4DFC2ACD4CDA00E14890 /* DiscussionList */ = {
@@ -2036,6 +2065,7 @@
 		ECBA142E26B79149004D452C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				4BBC06BC2AEA5D9400299354 /* CreatorAvailability */,
 				4BFE4E052AD0244700E14890 /* Review */,
 				4BFE4DFC2ACD4CDA00E14890 /* DiscussionList */,
 				4B03ED392ACC1783004DD0FA /* Inbox */,
@@ -3068,6 +3098,7 @@
 				EC9C4E34281426AD00837469 /* RequestSchedule.swift in Sources */,
 				F63A09A5289CEC6F008C7815 /* SwiftUIPlayerView.swift in Sources */,
 				ECD51FCC28A125F0000B1F6C /* SyncUserDocument.swift in Sources */,
+				4BBC06C22AEA5DFF00299354 /* CreatorAvailabilityView.swift in Sources */,
 				EC62576E27B7A38B0079AA10 /* String+isValidEmail.swift in Sources */,
 				EC6A96E127CDDAF900282253 /* ScheduleListViewModel.swift in Sources */,
 				EC9C4E3D281694EA00837469 /* AnnouncementView.swift in Sources */,
@@ -3183,6 +3214,7 @@
 				F67334E52908EE5D006C1ADF /* ScheduleNegotiationChatView.swift in Sources */,
 				F67334BA2908EC26006C1ADF /* TalentCreateBundlingViewModel.swift in Sources */,
 				EC9C4E1F2812574500837469 /* PaymentMethodView+Component.swift in Sources */,
+				4BBC06C02AEA5DC000299354 /* CreatorAvailabilityViewModel.swift in Sources */,
 				ECD51FB128A0C262000B1F6C /* PlayerManager.swift in Sources */,
 				EC6D5B0328B4A5B500BB794F /* TwilioModels.swift in Sources */,
 				EC1F0C72291CC70300B49B2A /* CreateRateCardModel.swift in Sources */,

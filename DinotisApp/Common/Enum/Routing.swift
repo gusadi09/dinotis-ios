@@ -68,4 +68,5 @@ enum HomeRouting {
     case inbox(viewModel: InboxViewModel)
     case discussionList(viewModel: DiscussionListViewModel)
     case reviewList(viewModel: ReviewListViewModel)
+    case creatorAvailability(viewModel: CreatorAvailabilityViewModel)
 }

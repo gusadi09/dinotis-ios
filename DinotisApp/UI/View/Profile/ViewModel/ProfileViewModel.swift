@@ -436,6 +436,14 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 			self?.route = .followedCreator(viewModel: viewModel)
 		}
 	}
+    
+    func routeToAvailability() {
+        let viewModel = CreatorAvailabilityViewModel(backToHome: { self.route = nil })
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .creatorAvailability(viewModel: viewModel)
+        }
+    }
 }
 
 extension SKProduct: Identifiable {

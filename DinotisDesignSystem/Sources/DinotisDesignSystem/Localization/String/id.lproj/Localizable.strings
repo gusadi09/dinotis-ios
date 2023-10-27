@@ -601,6 +601,8 @@
 
 "app_usage_cost_calculation_tooltip" = "Setiap Audience **akan dikenakan biaya aplikasi Rp%@ per menit**, sehingga jika total durasi %@ menit, biayanya adalah Rp%@";
 "app_costs_slider_tooltip" = "Kamu dapat menentukan **siapa yang akan menanggung biaya aplikasi** sesuai dengan persentase dari 0%% hingga 100%%.";
+"app_usage_cost_calculation_tooltip" = "Setiap Audience **akan dikenakan biaya aplikasi Rp100 per menit**, sehingga jika total durasi 45 menit, biayanya adalah Rp4.500";
+"app_costs_slider_tooltip" = "Kamu dapat menentukan **siapa yang akan menanggung biaya aplikasi** sesuai dengan persentase dari 0% hingga 100%.";
 
 "schedule_form_set_participant" = "Atur jumlah peserta (Min. 1)";
 "schedule_form_set_price" = "Atur harga";
@@ -621,3 +623,15 @@
 "title_description_empty_error" = "Judul & Deskripsi tidak boleh kosong, mohon isi judul & deskripsi";
 "activation_of_archieve_title" = "Aktifkan arsip video";
 "activation_of_archieve_subtitle" = "Sesi ini otomatis direkam oleh sistem. Kamu dapat mendownload atau dibagikan untuk ditonton ulang";
+
+"profile_availability_label" = "Ketersediaan";
+"profile_set_subscription_title" = "Setel layanan langganan";
+"profile_set_subscription_desc" = "Audiens berlangganan dapat menyaksikan tayangan ulang setiap sesi yang telah selesai";
+"profile_set_cost_title" = "Atur biaya subscription";
+"profile_set_cost_desc" = "Audiens yang berlangganan akan memperbarui langganan setiap bulan";
+"profile_activate_subscription_title" = "Aktifkan layanan langganan";
+"profile_select_subscription_type_title" = "Pilih tipe subscription Audiens";
+"profile_select_subscription_type_placeholder" = "Pilih tipe langganan";
+"subscription_paid_monthly" = "Berbayar Perbulan";
+"subscription_paid_free" = "Gratis (kamu bisa ubah kapan saja)";
+"month_label" = "Bulan";

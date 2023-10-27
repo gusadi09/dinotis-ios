@@ -2859,6 +2859,61 @@ public enum LocalizableText {
         bundle: .module,
         comment: "enable archieve subtitle"
     )
+    public static let profileAvailabilityLabel = NSLocalizedString(
+        "profile_availability_label",
+        bundle: .module,
+        comment: "profile availability label"
+    )
+    public static let profileSetSubscriptionTitle = NSLocalizedString(
+        "profile_set_subscription_title",
+        bundle: .module,
+        comment: "profile set subscription title"
+    )
+    public static let profileSetSubscriptionDesc = NSLocalizedString(
+        "profile_set_subscription_desc",
+        bundle: .module,
+        comment: "profile set subscription description"
+    )
+    public static let profileSetCostTitle = NSLocalizedString(
+        "profile_set_cost_title",
+        bundle: .module,
+        comment: "profil set cost title"
+    )
+    public static let profileSetCostDesc = NSLocalizedString(
+        "profile_set_cost_desc",
+        bundle: .module,
+        comment: "profil set cost description"
+    )
+    public static let profileActivateSubscriptionTitle = NSLocalizedString(
+        "profile_activate_subscription_title",
+        bundle: .module,
+        comment: "profile activate subscription title"
+    )
+    public static let profileSelectSubscriptionTypeTitle = NSLocalizedString(
+        "profile_select_subscription_type_title",
+        bundle: .module,
+        comment: "profile select subscription type title"
+    )
+    public static let profileSelectSubscriptionTypePlaceholder = NSLocalizedString(
+        "profile_select_subscription_type_placeholder",
+        bundle: .module,
+        comment: "profile select subscription type placeholder"
+    )
+    public static let subscriptionPaidMonthly = NSLocalizedString(
+        "subscription_paid_monthly",
+        bundle: .module,
+        comment: "subscription paid monthly"
+    )
+    public static let subscriptionPaidFree = NSLocalizedString(
+        "subscription_paid_free",
+        bundle: .module,
+        comment: "subscription paid free"
+    )
+    public static let monthLabel = NSLocalizedString(
+        "month_label",
+        bundle: .module,
+        comment: "month label"
+    )
 }
 
 
