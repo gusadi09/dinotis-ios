@@ -319,6 +319,52 @@ struct TalentProfileView: View {
 									.foregroundColor(Color(.systemGray6))
 
 								VStack {
+                                    
+                                    Button(action: {
+                                        viewModel.routeToAvailability()
+                                    }, label: {
+                                        HStack {
+                                            Image.profileGreenPreferencesIcon
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(height: 34)
+                                                .padding(.trailing, 5)
+
+                                            Text(LocalizableText.profileAvailabilityLabel)
+                                                .font(.robotoMedium(size: 12))
+                                                .foregroundColor(.black)
+
+                                            Spacer()
+
+                                            Image(systemName: "chevron.right")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .font(.system(size: 12, weight: .semibold))
+                                                .frame(height: 12)
+                                                .foregroundColor(.black)
+                                        }
+                                    })
+                                    .padding(.vertical, 10)
+                                    .padding(.horizontal, 15)
+                                    .clipShape(Rectangle())
+                                    
+                                    NavigationLink(
+                                        unwrapping: $viewModel.route,
+                                        case: /HomeRouting.creatorAvailability,
+                                        destination: { viewModel in
+                                            CreatorAvailabilityView(viewModel: viewModel.wrappedValue)
+                                        },
+                                        onNavigate: {_ in },
+                                        label: {
+                                            EmptyView()
+                                        }
+                                    )
+                                    
+                                    Capsule()
+                                        .frame(height: 1)
+                                        .foregroundColor(Color(.systemGray6))
+                                    
+                                    
 								Button(action: {
 									viewModel.routeToChangePass()
 								}, label: {

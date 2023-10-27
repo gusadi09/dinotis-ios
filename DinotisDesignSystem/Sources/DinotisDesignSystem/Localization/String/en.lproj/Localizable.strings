@@ -601,6 +601,8 @@
 
 "app_usage_cost_calculation_tooltip" = "Each audience **will be charged Rp%@ per minute for the application**, so if the total duration is %@ minutes, the cost will be Rp%@";
 "app_costs_slider_tooltip" = "You can determine **who will bear the application cost** according to a percentage from 0%% to 100%%.";
+"app_usage_cost_calculation_tooltip" = "Each audience **will be charged Rp100 per minute for the application**, so if the total duration is 45 minutes, the cost will be Rp4.500";
+"app_costs_slider_tooltip" = "You can determine **who will bear the application cost** according to a percentage from 0% to 100%.";
 
 "schedule_form_set_participant" = "Set the number of participants (Min. 1)";
 "schedule_form_set_price" = "Set price";
@@ -621,3 +623,15 @@
 "title_description_empty_error" = "Title & Description can't be empty, please fill the title & description";
 "activation_of_archieve_title" = "Enable Video Archive";
 "activation_of_archieve_subtitle" = "This session is automatically recorded by the system. You can download or share it for later viewing.";
+
+"profile_availability_label" = "Availability";
+"profile_set_subscription_title" = "Set subscription service";
+"profile_set_subscription_desc" = "Subscribed audiences can watch replays of completed sessions";
+"profile_set_cost_title" = "Set subscription cost";
+"profile_set_cost_desc" = "Subscribed audience members will renew their subscriptions every month";
+"profile_activate_subscription_title" = "Activate subscription service";
+"profile_select_subscription_type_title" = "Select audience subscription type";
+"profile_select_subscription_type_placeholder" = "Choose subscription type";
+"subscription_paid_monthly" = "Paid Monthly";
+"subscription_paid_free" = "Free (modifiable at any time)";
+"month_label" = "Month";
