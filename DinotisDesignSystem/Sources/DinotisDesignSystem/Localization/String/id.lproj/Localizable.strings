@@ -651,3 +651,6 @@
 "title_label" = "Judul";
 "description_label" = "Deskripsi";
 "edit_cover_label" = "Edit Cover";
+"see_session_recording_label" = "Lihat Rekaman Sesi";
+"downloading_label" = "Mengunduh..";
+"empty_recording_desc" = "Tidak ada sesi yang direkam";

@@ -2989,6 +2989,22 @@ public enum LocalizableText {
         bundle: .module,
         comment: "edit cover label"
     )
+    public static let seeSessionRecordingLabel = NSLocalizedString(
+        "see_session_recording_label",
+        bundle: .module,
+        comment: "see session recording label"
+    )
+    public static let downloadingLabel = NSLocalizedString(
+        "downloading_label",
+        bundle: .module,
+        comment: "downloading label"
+    )
+    public static let emptyRecordingDesc = NSLocalizedString(
+        "empty_recording_desc",
+        bundle: .module,
+        comment: "empty recording desc"
+    )
+    
 }
 
 

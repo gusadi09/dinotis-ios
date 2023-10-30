@@ -174,4 +174,5 @@ public extension Image {
     static let archiveMediaIcon = Image("ic-media-archive", bundle: .module)
     static let archiveMagentaCheckmarkIcon = Image("ic-magenta-checkmark-archive", bundle: .module)
     static let archiveInactiveCheckmarkIcon = Image("ic-inactive-checkmark-archive", bundle: .module)
+    static let archiveDownloadDocumentIcon = Image("ic-download-document-archive", bundle: .module)
 }

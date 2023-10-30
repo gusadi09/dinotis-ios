@@ -651,3 +651,6 @@
 "title_label" = "Title";
 "description_label" = "Description";
 "edit_cover_label" = "Edit Cover";
+"see_session_recording_label" = "See Session Recordings";
+"downloading_label" = "Downloading..";
+"empty_recording_desc" = "No recorded sessions available";

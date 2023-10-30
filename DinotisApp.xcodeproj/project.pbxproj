@@ -12,6 +12,8 @@
 		37B4DBCF2A8A963B00D3EAA1 /* AfterFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B4DBCE2A8A963B00D3EAA1 /* AfterFeedback.swift */; };
 		4B03ED3D2ACC17C4004DD0FA /* InboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B03ED3C2ACC17C4004DD0FA /* InboxView.swift */; };
 		4B03ED3F2ACC18D3004DD0FA /* InboxViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B03ED3E2ACC18D3004DD0FA /* InboxViewModel.swift */; };
+		4B65C03B2AEF8868000FEF4B /* SessionRecordingListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B65C03A2AEF8868000FEF4B /* SessionRecordingListViewModel.swift */; };
+		4B65C03D2AEF8A02000FEF4B /* SessionRecordingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B65C03C2AEF8A02000FEF4B /* SessionRecordingListView.swift */; };
 		4BA7D6152AC1756500B5177E /* session-close-to-end.json in Resources */ = {isa = PBXBuildFile; fileRef = 4BA7D6142AC1756500B5177E /* session-close-to-end.json */; };
 		4BBC06C02AEA5DC000299354 /* CreatorAvailabilityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBC06BF2AEA5DC000299354 /* CreatorAvailabilityViewModel.swift */; };
 		4BBC06C22AEA5DFF00299354 /* CreatorAvailabilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBC06C12AEA5DFF00299354 /* CreatorAvailabilityView.swift */; };
@@ -366,6 +368,8 @@
 		37B4DBCE2A8A963B00D3EAA1 /* AfterFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfterFeedback.swift; sourceTree = "<group>"; };
 		4B03ED3C2ACC17C4004DD0FA /* InboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxView.swift; sourceTree = "<group>"; };
 		4B03ED3E2ACC18D3004DD0FA /* InboxViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxViewModel.swift; sourceTree = "<group>"; };
+		4B65C03A2AEF8868000FEF4B /* SessionRecordingListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionRecordingListViewModel.swift; sourceTree = "<group>"; };
+		4B65C03C2AEF8A02000FEF4B /* SessionRecordingListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionRecordingListView.swift; sourceTree = "<group>"; };
 		4BA7D6142AC1756500B5177E /* session-close-to-end.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "session-close-to-end.json"; sourceTree = "<group>"; };
 		4BBC06BF2AEA5DC000299354 /* CreatorAvailabilityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatorAvailabilityViewModel.swift; sourceTree = "<group>"; };
 		4BBC06C12AEA5DFF00299354 /* CreatorAvailabilityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatorAvailabilityView.swift; sourceTree = "<group>"; };
@@ -757,6 +761,31 @@
 				4B03ED3E2ACC18D3004DD0FA /* InboxViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		4B65C0372AEF8806000FEF4B /* SessionRecordingList */ = {
+			isa = PBXGroup;
+			children = (
+				4B65C0392AEF8820000FEF4B /* View */,
+				4B65C0382AEF881A000FEF4B /* ViewModel */,
+			);
+			path = SessionRecordingList;
+			sourceTree = "<group>";
+		};
+		4B65C0382AEF881A000FEF4B /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				4B65C03A2AEF8868000FEF4B /* SessionRecordingListViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		4B65C0392AEF8820000FEF4B /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4B65C03C2AEF8A02000FEF4B /* SessionRecordingListView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		4BBC06BC2AEA5D9400299354 /* CreatorAvailability */ = {
@@ -2094,6 +2123,7 @@
 		ECBA142E26B79149004D452C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				4B65C0372AEF8806000FEF4B /* SessionRecordingList */,
 				4BBC06C32AEBA4DD00299354 /* SetUpVideo */,
 				4BBC06BC2AEA5D9400299354 /* CreatorAvailability */,
 				4BFE4E052AD0244700E14890 /* Review */,
@@ -3245,6 +3275,7 @@
 				F67334E52908EE5D006C1ADF /* ScheduleNegotiationChatView.swift in Sources */,
 				F67334BA2908EC26006C1ADF /* TalentCreateBundlingViewModel.swift in Sources */,
 				EC9C4E1F2812574500837469 /* PaymentMethodView+Component.swift in Sources */,
+				4B65C03D2AEF8A02000FEF4B /* SessionRecordingListView.swift in Sources */,
 				4BBC06C02AEA5DC000299354 /* CreatorAvailabilityViewModel.swift in Sources */,
 				ECD51FB128A0C262000B1F6C /* PlayerManager.swift in Sources */,
 				EC6D5B0328B4A5B500BB794F /* TwilioModels.swift in Sources */,
@@ -3343,6 +3374,7 @@
 				ECBFE67D270FF9F80075D01F /* View+Draggable.swift in Sources */,
 				ECD51FAE28A0C25A000B1F6C /* RoomMessage.swift in Sources */,
 				EC4B891729248D270074732A /* CustomerChatManager.swift in Sources */,
+				4B65C03B2AEF8868000FEF4B /* SessionRecordingListViewModel.swift in Sources */,
 				4BFE4E022ACD4D2A00E14890 /* DiscussionListView.swift in Sources */,
 				ECBE2B652729265D002A45D8 /* WithdrawBank.swift in Sources */,
 				ECED4DD529F8FFC900E79663 /* CreatorPickerView.swift in Sources */,

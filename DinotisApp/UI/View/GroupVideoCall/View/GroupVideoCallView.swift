@@ -149,8 +149,8 @@ struct GroupVideoCallView: View {
             )
         })
         .onReceive(viewModel.didSendRequest, perform: {
-//            dismiss()
-            viewModel.routeToSetUpVideo()
+            dismiss()
+//            viewModel.routeToSetUpVideo()
         })
         .onAppear {
             viewModel.onAppear()
