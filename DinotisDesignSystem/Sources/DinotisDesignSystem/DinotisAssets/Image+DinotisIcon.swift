@@ -170,4 +170,8 @@ public extension Image {
     static let scheduleFormURLPrimaryOutlineIcon = Image("ic-url-primary-outline", bundle: .module)
     static let inboxStarBubbleChatIcon = Image("ic-star-bubble-chat-inbox", bundle: .module)
     static let inboxSmileBubbleChatIcon = Image("ic-smile-bubble-chat-inbox", bundle: .module)
+    
+    static let archiveMediaIcon = Image("ic-media-archive", bundle: .module)
+    static let archiveMagentaCheckmarkIcon = Image("ic-magenta-checkmark-archive", bundle: .module)
+    static let archiveInactiveCheckmarkIcon = Image("ic-inactive-checkmark-archive", bundle: .module)
 }

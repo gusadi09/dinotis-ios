@@ -1098,7 +1098,7 @@ extension ScheduledFormView {
                     
                     Toggle("", isOn: $viewModel.isArchieve)
                         .labelsHidden()
-                        .tint(.DinotisDefault.primary)
+                        .tint(.DinotisDefault.green)
                 }
                 .padding(12)
                 .overlay(
@@ -1106,7 +1106,6 @@ extension ScheduledFormView {
                 )
                 .padding(.horizontal, 16)
                 .padding(.bottom, 16)
-                .isHidden(true, remove: true)
                 
                 VStack(alignment: .leading) {
                     HStack(spacing: 10) {

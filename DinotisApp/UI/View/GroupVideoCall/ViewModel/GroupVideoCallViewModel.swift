@@ -608,6 +608,14 @@ final class GroupVideoCallViewModel: ObservableObject {
         }
     }
     
+    func routeToSetUpVideo() {
+        let viewModel = SetUpVideoViewModel(data: self.userMeeting, backToHome: self.backToHome)
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .setUpVideo(viewModel: viewModel)
+        }
+    }
+    
     func onDisappear() {
         enableIdleTimer()
     }
