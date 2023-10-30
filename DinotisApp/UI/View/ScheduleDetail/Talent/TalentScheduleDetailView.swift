@@ -160,6 +160,33 @@ struct TalentScheduleDetailView: View {
                                         .padding(.horizontal)
                                     })
                                     
+                                    Button(action: {
+                                        viewModel.routeToSessionRecordingList()
+                                    }, label: {
+                                        HStack {
+                                            Image.archiveDownloadDocumentIcon
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(height: 28)
+                                            
+                                            Text(LocalizableText.seeSessionRecordingLabel)
+                                                .font(.robotoRegular(size: 14))
+                                                .foregroundColor(.black)
+                                            
+                                            Spacer()
+                                            
+                                            Image.Dinotis.chevronLeftCircleIcon
+                                        }
+                                        .padding()
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .foregroundColor(.white)
+                                                .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 0)
+                                        )
+                                        .padding(.horizontal)
+                                    })
+                                    .padding(.vertical, 8)
+                                    
                                     VStack {
                                         Text(LocaleText.revenueSummaryText)
                                             .font(.robotoBold(size: 16))
@@ -423,6 +450,19 @@ struct TalentScheduleDetailView: View {
 									EmptyView()
 								}
 							)
+                            
+                            NavigationLink(
+                                unwrapping: $viewModel.route,
+                                case: /HomeRouting.sessionRecordingList,
+                                destination: { viewModel in
+                                    SessionRecordingListView()
+                                        .environmentObject(viewModel.wrappedValue)
+                                },
+                                onNavigate: {_ in},
+                                label: {
+                                    EmptyView()
+                                }
+                            )
 						}
 
 						NavigationLink(
