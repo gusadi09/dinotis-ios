@@ -2914,6 +2914,81 @@ public enum LocalizableText {
         bundle: .module,
         comment: "month label"
     )
+    public static let archiveChooseVideo = NSLocalizedString(
+        "archive_choose_video",
+        bundle: .module,
+        comment: "archive choose video"
+    )
+    public static let archiveChooseAudience = NSLocalizedString(
+        "archive_choose_audience",
+        bundle: .module,
+        comment: "archive choose audience"
+    )
+    public static let archiveVideoTitle = NSLocalizedString(
+        "archive_video_title",
+        bundle: .module,
+        comment: "archive video title"
+    )
+    public static let archiveVideoDesc = NSLocalizedString(
+        "archive_video_desc",
+        bundle: .module,
+        comment: "archive video desc"
+    )
+    public static let goToArchiveLabel = NSLocalizedString(
+        "go_to_archive_label",
+        bundle: .module,
+        comment: "go to archive label"
+    )
+    public static let goToUploadLabel = NSLocalizedString(
+        "go_to_upload_label",
+        bundle: .module,
+        comment: "go to upload label"
+    )
+    public static let archivePublicDesc = NSLocalizedString(
+        "archive_public_desc",
+        bundle: .module,
+        comment: "archive public desc"
+    )
+    public static let archiveSubscriberDesc = NSLocalizedString(
+        "archive_subscriber_desc",
+        bundle: .module,
+        comment: "archive subscriber desc"
+    )
+    public static let publicLabel = NSLocalizedString(
+        "public_label",
+        bundle: .module,
+        comment: "public label"
+    )
+    public static let subscriberLabel = NSLocalizedString(
+        "subscriber_label",
+        bundle: .module,
+        comment: "subscriber label"
+    )
+    public static let archiveLabel = NSLocalizedString(
+        "archive_label",
+        bundle: .module,
+        comment: "archive label"
+    )
+    public static let uploadLabel = NSLocalizedString(
+        "upload_label",
+        bundle: .module,
+        comment: "upload label"
+    )
+    public static let titleLabel = NSLocalizedString(
+        "title_label",
+        bundle: .module,
+        comment: "title label"
+    )
+    public static let descriptionLabel = NSLocalizedString(
+        "description_label",
+        bundle: .module,
+        comment: "description label"
+    )
+    public static let editCoverLabel = NSLocalizedString(
+        "edit_cover_label",
+        bundle: .module,
+        comment: "edit cover label"
+    )
 }
 
 

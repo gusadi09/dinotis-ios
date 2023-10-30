@@ -15,6 +15,8 @@
 		4BA7D6152AC1756500B5177E /* session-close-to-end.json in Resources */ = {isa = PBXBuildFile; fileRef = 4BA7D6142AC1756500B5177E /* session-close-to-end.json */; };
 		4BBC06C02AEA5DC000299354 /* CreatorAvailabilityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBC06BF2AEA5DC000299354 /* CreatorAvailabilityViewModel.swift */; };
 		4BBC06C22AEA5DFF00299354 /* CreatorAvailabilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBC06C12AEA5DFF00299354 /* CreatorAvailabilityView.swift */; };
+		4BBC06C72AEBA4F900299354 /* SetUpVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBC06C62AEBA4F900299354 /* SetUpVideoViewModel.swift */; };
+		4BBC06CB2AEBA52200299354 /* SetUpVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBC06CA2AEBA52200299354 /* SetUpVideoView.swift */; };
 		4BFE4E002ACD4CFF00E14890 /* DiscussionListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFE4DFF2ACD4CFF00E14890 /* DiscussionListViewModel.swift */; };
 		4BFE4E022ACD4D2A00E14890 /* DiscussionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFE4E012ACD4D2A00E14890 /* DiscussionListView.swift */; };
 		4BFE4E092AD0264600E14890 /* ReviewListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFE4E082AD0264600E14890 /* ReviewListView.swift */; };
@@ -367,6 +369,8 @@
 		4BA7D6142AC1756500B5177E /* session-close-to-end.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "session-close-to-end.json"; sourceTree = "<group>"; };
 		4BBC06BF2AEA5DC000299354 /* CreatorAvailabilityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatorAvailabilityViewModel.swift; sourceTree = "<group>"; };
 		4BBC06C12AEA5DFF00299354 /* CreatorAvailabilityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatorAvailabilityView.swift; sourceTree = "<group>"; };
+		4BBC06C62AEBA4F900299354 /* SetUpVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUpVideoViewModel.swift; sourceTree = "<group>"; };
+		4BBC06CA2AEBA52200299354 /* SetUpVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUpVideoView.swift; sourceTree = "<group>"; };
 		4BFE4DFF2ACD4CFF00E14890 /* DiscussionListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscussionListViewModel.swift; sourceTree = "<group>"; };
 		4BFE4E012ACD4D2A00E14890 /* DiscussionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscussionListView.swift; sourceTree = "<group>"; };
 		4BFE4E082AD0264600E14890 /* ReviewListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewListView.swift; sourceTree = "<group>"; };
@@ -776,6 +780,31 @@
 			isa = PBXGroup;
 			children = (
 				4BBC06C12AEA5DFF00299354 /* CreatorAvailabilityView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		4BBC06C32AEBA4DD00299354 /* SetUpVideo */ = {
+			isa = PBXGroup;
+			children = (
+				4BBC06C52AEBA4EB00299354 /* View */,
+				4BBC06C42AEBA4E500299354 /* ViewModel */,
+			);
+			path = SetUpVideo;
+			sourceTree = "<group>";
+		};
+		4BBC06C42AEBA4E500299354 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				4BBC06C62AEBA4F900299354 /* SetUpVideoViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		4BBC06C52AEBA4EB00299354 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4BBC06CA2AEBA52200299354 /* SetUpVideoView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2065,6 +2094,7 @@
 		ECBA142E26B79149004D452C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				4BBC06C32AEBA4DD00299354 /* SetUpVideo */,
 				4BBC06BC2AEA5D9400299354 /* CreatorAvailability */,
 				4BFE4E052AD0244700E14890 /* Review */,
 				4BFE4DFC2ACD4CDA00E14890 /* DiscussionList */,
@@ -3192,6 +3222,7 @@
 				EC9C4E322813FDE900837469 /* PreviewTalentView+Component.swift in Sources */,
 				EC9C4E2E2813FD0600837469 /* PreviewTalentViewModel.swift in Sources */,
 				ECD51FAD28A0C25A000B1F6C /* RoomManager.swift in Sources */,
+				4BBC06CB2AEBA52200299354 /* SetUpVideoView.swift in Sources */,
 				EC62578A27B9F9E00079AA10 /* DinotisTargetType.swift in Sources */,
 				EC0279F227C5E40B00B8C392 /* RoundedCorner.swift in Sources */,
 				EC6A96C527C9DFA800282253 /* ScheduleDetailViewModel.swift in Sources */,
@@ -3226,6 +3257,7 @@
 				ECC110C426E9D264007FF617 /* UserInvoiceBookingView.swift in Sources */,
 				ECF582BF27244951006C0BE7 /* ScrollViewModification.swift in Sources */,
 				F67334F82908F0B2006C1ADF /* TalentEditRateCardScheduleView.swift in Sources */,
+				4BBC06C72AEBA4F900299354 /* SetUpVideoViewModel.swift in Sources */,
 				F63A097D289BD917008C7815 /* SwiftUIVideoView.swift in Sources */,
 				EC7B1E9A27BCB0D400471219 /* String+toCurrency.swift in Sources */,
 				EC88F42B272D8CBE0051749F /* TrendingTalent.swift in Sources */,
@@ -3438,7 +3470,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.6.3;
+				MARKETING_VERSION = 1.7.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -3514,7 +3546,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.6.3;
+				MARKETING_VERSION = 1.7.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp.DinotisNotificationServiceExtension;
@@ -3622,7 +3654,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6.3;
+				MARKETING_VERSION = 1.7.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp;
 				PRODUCT_NAME = DinotisStag;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3700,7 +3732,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.6.3;
+				MARKETING_VERSION = 1.7.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -3808,7 +3840,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6.3;
+				MARKETING_VERSION = 1.7.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp;
 				PRODUCT_NAME = DinotisDev;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3905,7 +3937,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6.3;
+				MARKETING_VERSION = 1.7.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp;
 				PRODUCT_NAME = Dinotis;
 				PROVISIONING_PROFILE_SPECIFIER = "";

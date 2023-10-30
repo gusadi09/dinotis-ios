@@ -635,3 +635,19 @@
 "subscription_paid_monthly" = "Paid Monthly";
 "subscription_paid_free" = "Free (modifiable at any time)";
 "month_label" = "Month";
+
+"archive_choose_video" = "Choose Video";
+"archive_choose_audience" = "Choose Audience";
+"archive_video_title" = "Archive Video";
+"archive_video_desc" = "You can archive this session's video for downloading or uploading later.";
+"go_to_archive_label" = "Go to Archive";
+"go_to_upload_label" = "Go to Upload";
+"archive_public_desc" = "All Audiences can view your content";
+"archive_subscriber_desc" = "Only Subscribers can view your content";
+"public_label" = "Public";
+"subscriber_label" = "Subscriber";
+"archive_label" = "Archive";
+"upload_label" = "Upload";
+"title_label" = "Title";
+"description_label" = "Description";
+"edit_cover_label" = "Edit Cover";

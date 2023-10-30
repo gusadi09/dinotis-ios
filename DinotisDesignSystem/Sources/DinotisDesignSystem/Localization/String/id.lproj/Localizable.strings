@@ -635,3 +635,19 @@
 "subscription_paid_monthly" = "Berbayar Perbulan";
 "subscription_paid_free" = "Gratis (kamu bisa ubah kapan saja)";
 "month_label" = "Bulan";
+
+"archive_choose_video" = "Pilih Video";
+"archive_choose_audience" = "Pilih Audiens";
+"archive_video_title" = "Arsip Video";
+"archive_video_desc" = "Anda dapat mengarsipkan video sesi ini untuk diunduh atau diunggah nanti.";
+"go_to_archive_label" = "Menuju Arsip";
+"go_to_upload_label" = "Menuju Unggah";
+"archive_public_desc" = "Semua Audiens dapat menyaksikan konten anda";
+"archive_subscriber_desc" = "Hanya Subscriber yang dapat menyaksikan konten anda";
+"public_label" = "Publik";
+"subscriber_label" = "Subscriber";
+"archive_label" = "Arsip";
+"upload_label" = "Unggah";
+"title_label" = "Judul";
+"description_label" = "Deskripsi";
+"edit_cover_label" = "Edit Cover";
