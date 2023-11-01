@@ -18,10 +18,10 @@ struct DummyDownloadVideo: Identifiable {
 final class SessionRecordingListViewModel: ObservableObject {
     
     @Published var videos: [DummyDownloadVideo] = [
-//        .init(title: "Recording 1"),
-//        .init(title: "Recording 2"),
-//        .init(title: "Recording 3"),
-//        .init(title: "Recording 4"),
+        .init(title: "Recording 1"),
+        .init(title: "Recording 2"),
+        .init(title: "Recording 3"),
+        .init(title: "Recording 4"),
     ]
     
     var backToHome: () -> Void

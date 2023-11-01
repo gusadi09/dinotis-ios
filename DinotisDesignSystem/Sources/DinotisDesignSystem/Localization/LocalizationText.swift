@@ -3004,6 +3004,71 @@ public enum LocalizableText {
         bundle: .module,
         comment: "empty recording desc"
     )
+    public static let creatorStudioLabel = NSLocalizedString(
+        "creator_studio_label",
+        bundle: .module,
+        comment: "creator studio label"
+    )
+    public static let recordedLabel = NSLocalizedString(
+        "recorded_label",
+        bundle: .module,
+        comment: "recorded label"
+    )
+    public static let uploadContentLabel = NSLocalizedString(
+        "upload_content_label",
+        bundle: .module,
+        comment: "upload content label"
+    )
+    public static let popularLabel = NSLocalizedString(
+        "popular_label",
+        bundle: .module,
+        comment: "popular label"
+    )
+    public static let deleteLabel = NSLocalizedString(
+        "delete_label",
+        bundle: .module,
+        comment: "delete label"
+    )
+    public static let downloadLabel = NSLocalizedString(
+        "download_label",
+        bundle: .module,
+        comment: "download label"
+    )
+    public static let postLabel = NSLocalizedString(
+        "post_label",
+        bundle: .module,
+        comment: "post label"
+    )
+    public static let uploadingLabel = NSLocalizedString(
+        "uploading_label",
+        bundle: .module,
+        comment: "uploading label"
+    )
+    public static let tryAgainLabel = NSLocalizedString(
+        "try_again_label",
+        bundle: .module,
+        comment: "try again label"
+    )
+    public static let uploadFailedTitle = NSLocalizedString(
+        "upload_failed_title",
+        bundle: .module,
+        comment: "upload failed title"
+    )
+    public static let cancelUploadLabel = NSLocalizedString(
+        "cancel_upload_label",
+        bundle: .module,
+        comment: "cancel upload title"
+    )
+    public static let generalContinueLabel = NSLocalizedString(
+        "general_continue_label",
+        bundle: .module,
+        comment: "general continue label"
+    )
+    public static let uploadVideoLabel = NSLocalizedString(
+        "upload_video_label",
+        bundle: .module,
+        comment: "upload video label"
+    )
     
 }
 

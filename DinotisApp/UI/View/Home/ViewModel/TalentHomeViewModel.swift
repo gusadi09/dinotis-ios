@@ -293,6 +293,14 @@ final class TalentHomeViewModel: ObservableObject {
         }
     }
     
+    func routeToCreatorStudio() {
+        let viewModel = CreatorStudioViewModel(backToHome: { self.route = nil })
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .creatorStudio(viewModel: viewModel)
+        }
+    }
+    
     func routeToNotification() {
         let viewModel = NotificationViewModel(backToHome: { self.route = nil })
 

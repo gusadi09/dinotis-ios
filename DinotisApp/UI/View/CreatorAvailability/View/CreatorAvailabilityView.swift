@@ -15,7 +15,6 @@ struct CreatorAvailabilityView: View {
     
     init(viewModel: CreatorAvailabilityViewModel) {
         self.viewModel = viewModel
-        FontInjector.registerFonts()
     }
     
     var body: some View {

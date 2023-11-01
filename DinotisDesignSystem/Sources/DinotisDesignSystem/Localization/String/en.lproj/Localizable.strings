@@ -654,3 +654,18 @@
 "see_session_recording_label" = "See Session Recordings";
 "downloading_label" = "Downloading..";
 "empty_recording_desc" = "No recorded sessions available";
+
+"creator_studio_label" = "Creator Studio";
+"recorded_label" = "Recorded";
+"popular_label" = "Popular";
+"upload_content_label" = "Upload content";
+"delete_label" = "Delete";
+"delete_label" = "Delete";
+"download_label" = "Download";
+"post_label" = "Post";
+"uploading_label" = "Uploading...";
+"try_again_label" = "Try again";
+"upload_failed_title" = "Failed to upload";
+"cancel_upload_label" = "Cancel upload";
+"general_continue_label" = "Continue";
+"upload_video_label" = "Upload video";

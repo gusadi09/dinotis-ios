@@ -654,3 +654,17 @@
 "see_session_recording_label" = "Lihat Rekaman Sesi";
 "downloading_label" = "Mengunduh..";
 "empty_recording_desc" = "Tidak ada sesi yang direkam";
+
+"creator_studio_label" = "Creator Studio";
+"recorded_label" = "Recorded";
+"popular_label" = "Popular";
+"upload_content_label" = "Upload konten";
+"delete_label" = "Hapus";
+"download_label" = "Unduh";
+"post_label" = "Post";
+"uploading_label" = "Mengunggah...";
+"try_again_label" = "Coba lagi";
+"upload_failed_title" = "Gagal dalam mengunggah";
+"cancel_upload_label" = "Cancel upload";
+"general_continue_label" = "Lanjutkan";
+"upload_video_label" = "Unggah video";
