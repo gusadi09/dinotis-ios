@@ -88,7 +88,9 @@ struct TalentScheduleDetailView: View {
                             if viewModel.isLoading {
                                 HStack {
                                     Spacer()
-                                    ActivityIndicator(isAnimating: $viewModel.isLoading, color: .black, style: .medium)
+                                    
+                                    ProgressView()
+                                        .progressViewStyle(.circular)
                                         .padding(.top)
                                     
                                     Spacer()
@@ -157,6 +159,34 @@ struct TalentScheduleDetailView: View {
                                         )
                                         .padding(.horizontal)
                                     })
+                                    
+                                    Button(action: {
+                                        viewModel.routeToSessionRecordingList()
+                                    }, label: {
+                                        HStack {
+                                            Image.archiveDownloadDocumentIcon
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(height: 28)
+                                            
+                                            Text(LocalizableText.seeSessionRecordingLabel)
+                                                .font(.robotoRegular(size: 14))
+                                                .foregroundColor(.black)
+                                            
+                                            Spacer()
+                                            
+                                            Image.Dinotis.chevronLeftCircleIcon
+                                        }
+                                        .padding()
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .foregroundColor(.white)
+                                                .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 0)
+                                        )
+                                        .padding(.horizontal)
+                                    })
+                                    .padding(.vertical, 8)
+                                    .isHidden(true, remove: true)
                                     
                                     VStack {
                                         Text(LocaleText.revenueSummaryText)
@@ -421,6 +451,19 @@ struct TalentScheduleDetailView: View {
 									EmptyView()
 								}
 							)
+                            
+                            NavigationLink(
+                                unwrapping: $viewModel.route,
+                                case: /HomeRouting.sessionRecordingList,
+                                destination: { viewModel in
+                                    SessionRecordingListView()
+                                        .environmentObject(viewModel.wrappedValue)
+                                },
+                                onNavigate: {_ in},
+                                label: {
+                                    EmptyView()
+                                }
+                            )
 						}
 
 						NavigationLink(
@@ -534,7 +577,8 @@ struct TalentScheduleDetailView: View {
 			if #available(iOS 16.0, *) {
 				VStack(spacing: 15) {
 					if viewModel.isLoadingStart {
-						ActivityIndicator(isAnimating: $viewModel.isLoadingStart, color: .black, style: .medium)
+                        ProgressView()
+                            .progressViewStyle(.circular)
 					} else {
 						Image.Dinotis.popoutImage
 							.resizable()
@@ -606,7 +650,8 @@ struct TalentScheduleDetailView: View {
 			} else {
 				VStack(spacing: 15) {
 					if viewModel.isLoadingStart {
-						ActivityIndicator(isAnimating: $viewModel.isLoadingStart, color: .black, style: .medium)
+                        ProgressView()
+                            .progressViewStyle(.circular)
 					} else {
 						Image.Dinotis.popoutImage
 							.resizable()

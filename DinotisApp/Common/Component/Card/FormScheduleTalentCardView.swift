@@ -1217,7 +1217,6 @@ struct FormScheduleTalentCardView_Previews: PreviewProvider {
             managements: .constant([]),
             meetingForm: .constant(
                 AddMeetingRequest(
-                    id: UUID().uuidString,
                     title: "",
                     description: "",
                     price: 0, startAt: "",

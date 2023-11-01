@@ -362,7 +362,7 @@
 "general_revenue_purpose" = "Tujuan Pendapatan";
 "general_private_wallet" = "Dompet Pribadi";
 "url_link_text" = "Link URL";
-"add_url_link_label" = "Tambah Link URL";
+"add_url_link_label" = "+ Tambah Link URL";
 "delete_url_link_label" = "Hapus Link URL";
 "url_link_title_placeholder" = "Judul Link URL";
 "see_additional_menu_label" = "Lihat Menu Tambahan";
@@ -591,7 +591,7 @@
 "general_close_details" = "Tutup Detail";
 
 "manage_application_usage_costs" = "Kelola Biaya Penggunaan Aplikasi";
-"cost_calculated_subtitle" = "Biaya dihitung permenit (**Rp 100**/Audience/menit)";
+"cost_calculated_subtitle" = "Biaya dihitung permenit (**Rp %@**/Audience/menit)";
 "percentage_borne_by_audience" = "Persentase yang ditanggung audiens";
 "estimated_app_usage_cost" = "Estimasi biaya penggunaan aplikasi";
 "audience_count" = "(%lld Audiens)";
@@ -599,5 +599,72 @@
 "total_borne_subtitle" = "Setiap audiens akan membayar **%@** untuk biaya aplikasi";
 "total_cost_borne" = "Total biaya aplikasi ditanggung **Kreator(%@%%)**";
 
+"app_usage_cost_calculation_tooltip" = "Setiap Audience **akan dikenakan biaya aplikasi Rp%@ per menit**, sehingga jika total durasi %@ menit, biayanya adalah Rp%@";
+"app_costs_slider_tooltip" = "Kamu dapat menentukan **siapa yang akan menanggung biaya aplikasi** sesuai dengan persentase dari 0%% hingga 100%%.";
 "app_usage_cost_calculation_tooltip" = "Setiap Audience **akan dikenakan biaya aplikasi Rp100 per menit**, sehingga jika total durasi 45 menit, biayanya adalah Rp4.500";
 "app_costs_slider_tooltip" = "Kamu dapat menentukan **siapa yang akan menanggung biaya aplikasi** sesuai dengan persentase dari 0% hingga 100%.";
+
+"schedule_form_set_participant" = "Atur jumlah peserta (Min. 1)";
+"schedule_form_set_price" = "Atur harga";
+"schedule_form_per_person" = "Per orang";
+"schedule_form_enter_price_label" = "Masukkan harga disini...";
+"price_settings_title" = "Pengaturan Biaya";
+"application_costs_transfer" = "Pengalihan Biaya Aplikasi";
+"set_app_usage_cost" = "Atur biaya penggunaan aplikasi";
+"set_app_usage_warning" = "Fitur ini tersedia jika harga sudah diatur";
+"set_app_usage_rule" = "Biaya aplikasi hanya **dikenakan untuk sesi berbayar**";
+"summary_session_price" = "Ringkasan Biaya";
+"session_price_title" = "Harga Sesi";
+"audience_quota" = "Kuota Audiens";
+"app_usage_borne_by_creator" = "Biaya aplikasi yang ditanggung kreator";
+"revenue_estimation" = "Estimasi Pendapatan";
+"app_cost_sponsored_percentage" = "Kamu menanggung %@%% Biaya Aplikasi";
+"session_settings_title" = "Pengaturan Sesi";
+"title_description_empty_error" = "Judul & Deskripsi tidak boleh kosong, mohon isi judul & deskripsi";
+"activation_of_archieve_title" = "Aktifkan arsip video";
+"activation_of_archieve_subtitle" = "Sesi ini otomatis direkam oleh sistem. Kamu dapat mendownload atau dibagikan untuk ditonton ulang";
+
+"profile_availability_label" = "Ketersediaan";
+"profile_set_subscription_title" = "Setel layanan langganan";
+"profile_set_subscription_desc" = "Audiens berlangganan dapat menyaksikan tayangan ulang setiap sesi yang telah selesai";
+"profile_set_cost_title" = "Atur biaya subscription";
+"profile_set_cost_desc" = "Audiens yang berlangganan akan memperbarui langganan setiap bulan";
+"profile_activate_subscription_title" = "Aktifkan layanan langganan";
+"profile_select_subscription_type_title" = "Pilih tipe subscription Audiens";
+"profile_select_subscription_type_placeholder" = "Pilih tipe langganan";
+"subscription_paid_monthly" = "Berbayar Perbulan";
+"subscription_paid_free" = "Gratis (kamu bisa ubah kapan saja)";
+"month_label" = "Bulan";
+
+"archive_choose_video" = "Pilih Video";
+"archive_choose_audience" = "Pilih Audiens";
+"archive_video_title" = "Arsip Video";
+"archive_video_desc" = "Anda dapat mengarsipkan video sesi ini untuk diunduh atau diunggah nanti.";
+"go_to_archive_label" = "Menuju Arsip";
+"go_to_upload_label" = "Menuju Unggah";
+"archive_public_desc" = "Semua Audiens dapat menyaksikan konten anda";
+"archive_subscriber_desc" = "Hanya Subscriber yang dapat menyaksikan konten anda";
+"public_label" = "Publik";
+"subscriber_label" = "Subscriber";
+"archive_label" = "Arsip";
+"upload_label" = "Unggah";
+"title_label" = "Judul";
+"description_label" = "Deskripsi";
+"edit_cover_label" = "Edit Cover";
+"see_session_recording_label" = "Lihat Rekaman Sesi";
+"downloading_label" = "Mengunduh..";
+"empty_recording_desc" = "Tidak ada sesi yang direkam";
+
+"creator_studio_label" = "Creator Studio";
+"recorded_label" = "Recorded";
+"popular_label" = "Popular";
+"upload_content_label" = "Upload konten";
+"delete_label" = "Hapus";
+"download_label" = "Unduh";
+"post_label" = "Post";
+"uploading_label" = "Mengunggah...";
+"try_again_label" = "Coba lagi";
+"upload_failed_title" = "Gagal dalam mengunggah";
+"cancel_upload_label" = "Cancel upload";
+"general_continue_label" = "Lanjutkan";
+"upload_video_label" = "Unggah video";
