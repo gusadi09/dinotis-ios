@@ -67,7 +67,7 @@ struct TalentHomeView: View {
         private var columns: [GridItem] {
             [GridItem](
                 repeating: GridItem(.flexible(), spacing: 24, alignment: .top),
-                count: 4
+                count: 3
             )
         }
         
@@ -416,6 +416,7 @@ struct TalentHomeView: View {
                                                     }
                                                 }
                                                 .buttonStyle(.plain)
+                                                .isHidden(true, remove: true)
                                             }
                                             .padding(.vertical, 12)
                                         }

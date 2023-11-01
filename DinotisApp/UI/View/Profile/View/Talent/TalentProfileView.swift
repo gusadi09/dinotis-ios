@@ -347,6 +347,7 @@ struct TalentProfileView: View {
                                     .padding(.vertical, 10)
                                     .padding(.horizontal, 15)
                                     .clipShape(Rectangle())
+                                    .isHidden(true, remove: true)
                                     
                                     NavigationLink(
                                         unwrapping: $viewModel.route,
@@ -363,6 +364,7 @@ struct TalentProfileView: View {
                                     Capsule()
                                         .frame(height: 1)
                                         .foregroundColor(Color(.systemGray6))
+                                        .isHidden(true, remove: true)
                                     
                                     
 								Button(action: {

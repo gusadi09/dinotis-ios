@@ -305,7 +305,7 @@ final class EditTalentMeetingViewModel: ObservableObject {
                 self?.percentageFaresForCreatorRaw = Double((success.meetingFee?.talentFeePercentage).orZero())/100
                 self?.percentageFaresForCreator = Double((success.meetingFee?.talentFeePercentage).orZero())/100
                 
-                self?.fee = Int((success.meetingFee?.oneMinuteFee) ?? "0").orZero()
+                self?.fee = (success.meetingFee?.oneMinuteFee).orZero()
                 
                 if let startAt = success.startAt, let maxEdit = success.maxEditAt {
                     self?.toggleDisableEdit(from: maxEdit)

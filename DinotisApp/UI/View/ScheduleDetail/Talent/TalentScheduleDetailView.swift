@@ -186,6 +186,7 @@ struct TalentScheduleDetailView: View {
                                         .padding(.horizontal)
                                     })
                                     .padding(.vertical, 8)
+                                    .isHidden(true, remove: true)
                                     
                                     VStack {
                                         Text(LocaleText.revenueSummaryText)

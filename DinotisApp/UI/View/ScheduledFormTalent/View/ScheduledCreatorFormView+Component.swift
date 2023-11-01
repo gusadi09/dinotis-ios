@@ -1106,6 +1106,7 @@ extension ScheduledFormView {
                 )
                 .padding(.horizontal, 16)
                 .padding(.bottom, 16)
+                .isHidden(true, remove: true)
                 
                 VStack(alignment: .leading) {
                     HStack(spacing: 10) {

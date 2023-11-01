@@ -210,11 +210,11 @@ public struct MeetingDetailResponse: Codable, Hashable {
 
 public struct MeetingFeeData: Codable {
     public let id: Int?
-    public let oneMinuteFee: String?
+    public let oneMinuteFee: Int?
     public let userFeePercentage: Int?
     public let talentFeePercentage: Int?
     
-    public init(id: Int?, oneMinuteFee: String?, userFeePercentage: Int?, talentFeePercentage: Int?) {
+    public init(id: Int?, oneMinuteFee: Int?, userFeePercentage: Int?, talentFeePercentage: Int?) {
         self.id = id
         self.oneMinuteFee = oneMinuteFee
         self.userFeePercentage = userFeePercentage

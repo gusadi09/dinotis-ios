@@ -597,7 +597,12 @@ final class GroupVideoCallViewModel: ObservableObject {
     }
     
     func routeToAfterCall() {
-        if userMeeting.isInspected ?? true {
+        guard let isInspected = userMeeting.isInspected else {
+            subject.send()
+            return
+        }
+        
+        if isInspected {
             subject.send()
         } else {
             let viewModel = FeedbackViewModel(meetingId: userMeeting.id.orEmpty(), backToHome: self.backToHome, backToScheduleDetail: self.backToScheduleDetail)
