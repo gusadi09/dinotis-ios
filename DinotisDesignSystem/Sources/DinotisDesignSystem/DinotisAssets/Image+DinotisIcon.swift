@@ -156,6 +156,10 @@ public extension Image {
     static let homeTalentNotificationIcon = Image("ic-notification-bell-primary", bundle: .module)
     static let homeTalentChatPrimaryIcon = Image("ic-chat-primary", bundle: .module)
     static let homeTalentWalletIcon = Image("ic-wallet-home", bundle: .module)
+    static let homeTalentCreateSessionIcon = Image("ic-create-session-creator-home", bundle: .module)
+    static let homeTalentBundlingIcon = Image("ic-bundling-creator-home", bundle: .module)
+    static let homeTalentRatecardIcon = Image("ic-ratecard-creator-home", bundle: .module)
+    static let homeTalentStudioIcon = Image("ic-studio-creator-home", bundle: .module)
     
     static let inboxAudienceIcon = Image("ic-audience-inbox", bundle: .module)
     static let inboxReviewIcon = Image("ic-review-inbox", bundle: .module)
@@ -175,4 +179,8 @@ public extension Image {
     static let archiveMagentaCheckmarkIcon = Image("ic-magenta-checkmark-archive", bundle: .module)
     static let archiveInactiveCheckmarkIcon = Image("ic-inactive-checkmark-archive", bundle: .module)
     static let archiveDownloadDocumentIcon = Image("ic-download-document-archive", bundle: .module)
+    
+    static let studioDocumentUploadIcon = Image("ic-document-upload", bundle: .module)
+    static let studioPencilIcon = Image("ic-pencil-black", bundle: .module)
+    static let studioTrashIcon = Image("ic-trash-black", bundle: .module)
 }
