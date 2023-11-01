@@ -30,8 +30,6 @@ extension AppCostTip {
 
 final class ScheduledFormViewModel: ObservableObject {
 
-	private let authRepository: AuthenticationRepository
-	private let meetingRepository: MeetingsRepository
 	private lazy var stateObservable = StateObservable.shared
 	private var cancellables = Set<AnyCancellable>()
     private let userUseCase: GetUserUseCase
