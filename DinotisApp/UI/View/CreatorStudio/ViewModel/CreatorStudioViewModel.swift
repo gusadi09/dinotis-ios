@@ -9,17 +9,6 @@ import SwiftUI
 import DinotisDesignSystem
 import AVFoundation
 
-struct DummyVideoModel: Identifiable {
-    var id: UUID = .init()
-    var title: String
-    var description: String = ""
-    var url: URL? = URL(string: "https://storage.googleapis.com/dinotis-recording-1/recordings/bbb789d0-f056-4c89-b936-7bd5051c72b4_1697192142005.mp4")
-    var thumbnail: String
-    var date: Date = .now
-    var type: String = LocalizableText.recordedLabel
-    var viewerType: ViewerType = .publicly
-}
-
 struct DummyArchiveModel: Identifiable {
     var id: UUID = .init()
     var title: String = "Serba serbi Program Hamil Alami dan Mandiri bebas bebas dalam hidup"
@@ -221,6 +210,14 @@ final class CreatorStudioViewModel: ObservableObject {
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .sessionRecordingList(viewModel: viewModel)
+        }
+    }
+    
+    func routeToDetailVideo() {
+        let viewModel = DetailVideoViewModel(backToHome: { self.backToHome() })
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .detailVideo(viewModel: viewModel)
         }
     }
 }

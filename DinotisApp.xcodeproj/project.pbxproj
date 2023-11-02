@@ -21,6 +21,8 @@
 		4BBC06CB2AEBA52200299354 /* SetUpVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBC06CA2AEBA52200299354 /* SetUpVideoView.swift */; };
 		4BEACAF42AEFAE16008E165C /* CreatorStudioViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEACAF32AEFAE16008E165C /* CreatorStudioViewModel.swift */; };
 		4BEACAF72AEFB3E6008E165C /* CreatorStudioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEACAF62AEFB3E6008E165C /* CreatorStudioView.swift */; };
+		4BEACAFB2AF24C84008E165C /* DetailVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEACAFA2AF24C84008E165C /* DetailVideoViewModel.swift */; };
+		4BEACAFE2AF25A82008E165C /* DetailVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEACAFD2AF25A82008E165C /* DetailVideoView.swift */; };
 		4BFE4E002ACD4CFF00E14890 /* DiscussionListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFE4DFF2ACD4CFF00E14890 /* DiscussionListViewModel.swift */; };
 		4BFE4E022ACD4D2A00E14890 /* DiscussionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFE4E012ACD4D2A00E14890 /* DiscussionListView.swift */; };
 		4BFE4E092AD0264600E14890 /* ReviewListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFE4E082AD0264600E14890 /* ReviewListView.swift */; };
@@ -379,6 +381,8 @@
 		4BBC06CA2AEBA52200299354 /* SetUpVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUpVideoView.swift; sourceTree = "<group>"; };
 		4BEACAF32AEFAE16008E165C /* CreatorStudioViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatorStudioViewModel.swift; sourceTree = "<group>"; };
 		4BEACAF62AEFB3E6008E165C /* CreatorStudioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatorStudioView.swift; sourceTree = "<group>"; };
+		4BEACAFA2AF24C84008E165C /* DetailVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailVideoViewModel.swift; sourceTree = "<group>"; };
+		4BEACAFD2AF25A82008E165C /* DetailVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailVideoView.swift; sourceTree = "<group>"; };
 		4BFE4DFF2ACD4CFF00E14890 /* DiscussionListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscussionListViewModel.swift; sourceTree = "<group>"; };
 		4BFE4E012ACD4D2A00E14890 /* DiscussionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscussionListView.swift; sourceTree = "<group>"; };
 		4BFE4E082AD0264600E14890 /* ReviewListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewListView.swift; sourceTree = "<group>"; };
@@ -863,6 +867,31 @@
 			isa = PBXGroup;
 			children = (
 				4BEACAF62AEFB3E6008E165C /* CreatorStudioView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		4BEACAF82AF24C5D008E165C /* DetailVideo */ = {
+			isa = PBXGroup;
+			children = (
+				4BEACAFC2AF25A74008E165C /* View */,
+				4BEACAF92AF24C71008E165C /* ViewModel */,
+			);
+			path = DetailVideo;
+			sourceTree = "<group>";
+		};
+		4BEACAF92AF24C71008E165C /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				4BEACAFA2AF24C84008E165C /* DetailVideoViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		4BEACAFC2AF25A74008E165C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4BEACAFD2AF25A82008E165C /* DetailVideoView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2152,6 +2181,7 @@
 		ECBA142E26B79149004D452C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				4BEACAF82AF24C5D008E165C /* DetailVideo */,
 				4B65C0372AEF8806000FEF4B /* SessionRecordingList */,
 				4BEACAF12AEFADFB008E165C /* CreatorStudio */,
 				4BBC06C32AEBA4DD00299354 /* SetUpVideo */,
@@ -3245,6 +3275,7 @@
 				F61E53DF28CB49B6006594B4 /* PrivateVideoSpeakerViewModel.swift in Sources */,
 				EC9D9EBB26CF7BA6003A441C /* TalentDetailScheduleCardView.swift in Sources */,
 				EC2A511728C7099800C717B9 /* PresentationVideoView.swift in Sources */,
+				4BEACAFE2AF25A82008E165C /* DetailVideoView.swift in Sources */,
 				EC72227C2954401100C05A1B /* NotificationViewModel.swift in Sources */,
 				EC789C6527C40BF7005872E2 /* OtpVerificationViewModel.swift in Sources */,
 				F67335042908F190006C1ADF /* RequestCardView.swift in Sources */,
@@ -3375,6 +3406,7 @@
 				EC0D4C252A8C70820028B87C /* FeedbackViewModel.swift in Sources */,
 				EC28759E27D1CB600093E9C9 /* UserInvoiceBookingViewModel.swift in Sources */,
 				ECD51FD728A20CBC000B1F6C /* TwilioRemoteDataSource.swift in Sources */,
+				4BEACAFB2AF24C84008E165C /* DetailVideoViewModel.swift in Sources */,
 				F67334C82908EE02006C1ADF /* BundlingViewModel.swift in Sources */,
 				EC6767A128C765D100C72B58 /* SelectChannelView.swift in Sources */,
 				EC1C145026D8B4EF00EC66E0 /* TopBarView.swift in Sources */,

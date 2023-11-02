@@ -3069,6 +3069,26 @@ public enum LocalizableText {
         bundle: .module,
         comment: "upload video label"
     )
+    public static let subscribeLabel = NSLocalizedString(
+        "subscribe_label",
+        bundle: .module,
+        comment: "subscribe label"
+    )
+    public static let commentLabel = NSLocalizedString(
+        "comment_label",
+        bundle: .module,
+        comment: "comment label"
+    )
+    public static let detailVideoUpcomingSessionDesc = NSLocalizedString(
+        "detail_video_upcoming_session_desc",
+        bundle: .module,
+        comment: "detail video upcoming session desc"
+    )
+    public static let groupVideoCallLabel = NSLocalizedString(
+        "group_video_call_label",
+        bundle: .module,
+        comment: "group video call label"
+    )
     
 }
 

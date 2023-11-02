@@ -202,6 +202,7 @@
 "booking_rate_card_message_subtitle" = "* Please input the day and time for the Private Call that you wish to schedule.";
 "minute_in_duration" = "%lld Minutes";
 "private_video_call_label" = "Private Video Call";
+"group_video_call_label" = "Group Video Call";
 "price_label" = "Price";
 "note_for_creator_placeholder" = "Enter message for creator here...";
 "note_for_creator_title" = "Leave message for creator!";
@@ -669,3 +670,6 @@
 "cancel_upload_label" = "Cancel upload";
 "general_continue_label" = "Continue";
 "upload_video_label" = "Upload video";
+"subscribe_label" = "Subscribe";
+"comment_label" = "Comment";
+"detail_video_upcoming_session_desc" = "Upcoming sessions you can join";

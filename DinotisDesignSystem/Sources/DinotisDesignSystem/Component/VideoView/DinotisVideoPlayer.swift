@@ -11,15 +11,21 @@ import AVKit
 public struct DinotisVideoPlayer: UIViewControllerRepresentable {
     
     public var url: URL
+    public var isAutoPlay: Bool = false
     
-    public init(url: URL) {
+    public init(url: URL, isAutoPlay: Bool = false) {
         self.url = url
+        self.isAutoPlay = isAutoPlay
         self.setUpAudio()
     }
     
     public func makeUIViewController(context: Context) -> AVPlayerViewController {
         let controller = AVPlayerViewController()
         let player = AVPlayer(url: url)
+        
+        if isAutoPlay {
+            player.play()
+        }
         
         controller.player = player
         return controller
