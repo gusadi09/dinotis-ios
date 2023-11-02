@@ -202,6 +202,7 @@
 "booking_rate_card_message_subtitle" = "* Masukkan hari & jam Private Call yang kamu harapkan";
 "minute_in_duration" = "%lld Menit";
 "private_video_call_label" = "Private Video Call";
+"group_video_call_label" = "Group Video Call";
 "price_label" = "Harga";
 "note_for_creator_placeholder" = "Masukkan pesan untuk kreator di sini...";
 "note_for_creator_title" = "Tinggalkan pesan untuk creator!";
@@ -668,3 +669,6 @@
 "cancel_upload_label" = "Cancel upload";
 "general_continue_label" = "Lanjutkan";
 "upload_video_label" = "Unggah video";
+"subscribe_label" = "Subscribe";
+"comment_label" = "Komentar";
+"detail_video_upcoming_session_desc" = "Sesi terdekat yang bisa kamu ikuti";

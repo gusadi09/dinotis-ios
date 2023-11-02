@@ -29,6 +29,19 @@ struct CreatorStudioView: View {
                 }
             )
             
+            NavigationLink(
+                unwrapping: $viewModel.route,
+                case: /HomeRouting.detailVideo,
+                destination: { viewModel in
+                    DetailVideoView()
+                        .environmentObject(viewModel.wrappedValue)
+                },
+                onNavigate: {_ in},
+                label: {
+                    EmptyView()
+                }
+            )
+            
             HeaderView(
                 type: .textHeader,
                 title: "Dinotis \(LocalizableText.creatorStudioLabel)",
@@ -201,6 +214,9 @@ extension CreatorStudioView {
                         .font(.system(size: 50))
                         .foregroundColor(.white)
                 }
+                .onTapGesture {
+                    viewModel.routeToDetailVideo()
+                }
             
             VStack(alignment: .leading, spacing: 5) {
                 HStack(alignment: .top) {
@@ -208,6 +224,9 @@ extension CreatorStudioView {
                         .font(.robotoBold(size: 16))
                         .foregroundColor(.DinotisDefault.black1)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .onTapGesture {
+                            viewModel.routeToDetailVideo()
+                        }
                     
                     Menu {
                         Button {
@@ -256,6 +275,9 @@ extension CreatorStudioView {
                         .font(.robotoMedium(size: 12))
                 }
                 .foregroundColor(.DinotisDefault.black3)
+                .onTapGesture {
+                    viewModel.routeToDetailVideo()
+                }
             }
             
             Divider()
