@@ -117,7 +117,7 @@ struct ScheduledFormView: View {
                                     .font(.robotoMedium(size: 12))
                                     .foregroundColor(!viewModel.meeting.urls.isEmpty && viewModel.meeting.urls.allSatisfy({
                                         !$0.url.validateURL()
-                                    }) ? .DinotisDefault.primary.opacity(0.5) : .white)
+                                    }) || viewModel.isTotalEstimationMinus() ? .DinotisDefault.primary.opacity(0.5) : .white)
                                     .padding(10)
                                     .padding(.horizontal, 5)
                                     .padding(.vertical, 5)
@@ -127,13 +127,13 @@ struct ScheduledFormView: View {
                             .background(
                                 !viewModel.meeting.urls.isEmpty && viewModel.meeting.urls.allSatisfy({
                                     !$0.url.validateURL()
-                                }) ? Color.DinotisDefault.lightPrimary : Color.DinotisDefault.primary
+                                }) || viewModel.isTotalEstimationMinus() ? Color.DinotisDefault.lightPrimary : Color.DinotisDefault.primary
                             )
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                         })
                         .disabled(!viewModel.meeting.urls.isEmpty && viewModel.meeting.urls.allSatisfy({
                             !$0.url.validateURL()
-                        }))
+                        }) || viewModel.isTotalEstimationMinus())
                         .padding()
                         .background(Color.white.edgesIgnoringSafeArea(.vertical))
                         

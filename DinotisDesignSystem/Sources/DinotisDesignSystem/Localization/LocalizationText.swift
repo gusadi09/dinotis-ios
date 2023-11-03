@@ -3070,6 +3070,11 @@ public enum LocalizableText {
         comment: "upload video label"
     )
     
+    public static let scheduleFormMinusTotalRevenueWarning = NSLocalizedString(
+        "minus_total_revenue_warning",
+        bundle: .module,
+        comment: "minus total revenue warning on schedule form"
+    )
 }
 
 

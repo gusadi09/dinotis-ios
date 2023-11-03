@@ -1397,7 +1397,6 @@
 			isa = PBXGroup;
 			children = (
 				EC62577527B7E1240079AA10 /* OptionalDouble+OrZero.swift */,
-				EC62577327B7A4BF0079AA10 /* OptionalInt+orZero.swift */,
 			);
 			path = Optional;
 			sourceTree = "<group>";

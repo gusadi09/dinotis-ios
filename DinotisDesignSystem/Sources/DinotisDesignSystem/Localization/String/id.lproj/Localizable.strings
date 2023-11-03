@@ -668,3 +668,5 @@
 "cancel_upload_label" = "Cancel upload";
 "general_continue_label" = "Lanjutkan";
 "upload_video_label" = "Unggah video";
+
+"minus_total_revenue_warning" = "**Pendapatan kamu minus** dikarenakan harga sesi yang terlalu rendah, **Silahkan naikkan harga sesi kamu**";
