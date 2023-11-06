@@ -672,3 +672,5 @@
 "subscribe_label" = "Subscribe";
 "comment_label" = "Komentar";
 "detail_video_upcoming_session_desc" = "Sesi terdekat yang bisa kamu ikuti";
+
+"minus_total_revenue_warning" = "**Pendapatan kamu minus** dikarenakan harga sesi yang terlalu rendah, **Silahkan naikkan harga sesi kamu**";

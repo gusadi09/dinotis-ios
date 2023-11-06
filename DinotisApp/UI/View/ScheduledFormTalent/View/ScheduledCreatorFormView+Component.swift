@@ -369,7 +369,7 @@ extension ScheduledFormView {
                                     }
                                     .padding(.top, 16)
                                     
-                                    if let attr = try? AttributedString(markdown: LocalizableText.totalBorneSubtitle(total: viewModel.audienceBorne().toCurrency())) {
+                                    if let attr = try? AttributedString(markdown: LocalizableText.totalBorneSubtitle(total: (viewModel.audienceBorne()/Double(viewModel.peopleGroup).orZero()).toCurrency())) {
                                         Text(attr)
                                             .font(.robotoRegular(size: 12))
                                             .foregroundColor(.DinotisDefault.black3)
@@ -847,7 +847,7 @@ extension ScheduledFormView {
                     
                     Button {
                         UIApplication.shared.endEditing()
-                        if viewModel.pricePerPeople.isEmpty {
+                        if viewModel.pricePerPeople.isEmpty || Double(viewModel.pricePerPeople).orZero() <= 0.0 {
                             if !viewModel.isShowPriceEmptyWarning {
                                 viewModel.getThreeSecondTime()
                             }
@@ -856,7 +856,7 @@ extension ScheduledFormView {
                         }
                     } label: {
                         HStack(spacing: 10) {
-                            if viewModel.isChangedCostManagement {
+                            if viewModel.isChangedCostManagement && Double(viewModel.pricePerPeople).orZero() > 0.0 {
                                 Text(LocalizableText.scheduleFormCoverPercentage(total: viewModel.percentageFaresForCreatorStr))
                                     .lineLimit(1)
                                     .font(.robotoMedium(size: 14))
@@ -983,9 +983,9 @@ extension ScheduledFormView {
                                 .font(.robotoBold(size: 14))
                                 .foregroundStyle(Color.DinotisDefault.primary)
                         } else {
-                            Text("\(((Double(viewModel.rawPrice).orZero()*Double(viewModel.peopleGroup).orZero())-viewModel.creatorEstimated()).toCurrency())")
+                            Text("\(viewModel.getTotalRevenueEstimation().toCurrency())")
                                 .font(.robotoBold(size: 14))
-                                .foregroundStyle(Color.DinotisDefault.primary)
+                                .foregroundStyle(viewModel.isTotalEstimationMinus() ? Color.DinotisDefault.red : Color.DinotisDefault.primary)
                         }
                     }
                     .padding([.horizontal, .bottom], 16)
@@ -995,6 +995,32 @@ extension ScheduledFormView {
                 )
                 .padding(.horizontal, 16)
                 .padding(.bottom, 16)
+                
+                if viewModel.isTotalEstimationMinus() {
+                    HStack {
+                        Spacer()
+                        
+                        if let attr = try? AttributedString(markdown: LocalizableText.scheduleFormMinusTotalRevenueWarning) {
+                            Text(attr)
+                                .font(.robotoRegular(size: 12))
+                                .foregroundStyle(Color.DinotisDefault.orange)
+                                .multilineTextAlignment(.leading)
+                                .padding()
+                        }
+                        
+                        Spacer()
+                    }
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .foregroundStyle(Color.DinotisDefault.lightOrange.opacity(0.6))
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color.DinotisDefault.orange, lineWidth: 1)
+                    )
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 16)
+                }
             }
             .background(
                 RoundedRectangle(cornerRadius: 12)
@@ -1043,14 +1069,9 @@ extension ScheduledFormView {
                         .overlay(
                             RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
                         )
-                    
-                    MultilineTextField(text: $viewModel.meeting.description)
-                        .foregroundColor(.black)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 10)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
-                        )
+                        .onChange(of: viewModel.meeting.title) { value in
+                            viewModel.isFieldDescError = value.isEmpty
+                        }
                     
                     if viewModel.isFieldTitleError {
                         HStack {
@@ -1065,6 +1086,18 @@ extension ScheduledFormView {
                                 .multilineTextAlignment(.leading)
                         }
                     }
+                    
+                    MultilineTextField(text: $viewModel.meeting.description)
+                        .foregroundColor(.black)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 10)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
+                        )
+                        .onChange(of: viewModel.meeting.description) { value in
+                            viewModel.isFieldDescError = value.isEmpty
+                        }
+                    
                     if viewModel.isFieldDescError {
                         HStack {
                             Image.Dinotis.exclamationCircleIcon

@@ -673,3 +673,5 @@
 "subscribe_label" = "Subscribe";
 "comment_label" = "Comment";
 "detail_video_upcoming_session_desc" = "Upcoming sessions you can join";
+
+"minus_total_revenue_warning" = "**Your earnings are negative** due to the session price being too low. **Please increase your session price.**";

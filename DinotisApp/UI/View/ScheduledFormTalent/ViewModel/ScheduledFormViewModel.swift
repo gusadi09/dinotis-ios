@@ -84,7 +84,7 @@ final class ScheduledFormViewModel: ObservableObject {
     @Published var estPrice = 0
     @Published var pricePerPeople = ""
     @Published var rawPrice = ""
-    @Published var isValidPersonForGroup = false
+    @Published var isValidPersonForGroup = true
     @Published var selectedWallet: String? = nil
     @Published var walletLocal = [
         ManagementWrappedData(
@@ -168,6 +168,14 @@ final class ScheduledFormViewModel: ObservableObject {
             estPrice = (intPrice ?? 0) * (intPeople ?? 0)
             
         }
+    }
+    
+    func getTotalRevenueEstimation() -> Double {
+        ((Double(rawPrice).orZero()*Double(peopleGroup).orZero())-creatorEstimated())
+    }
+    
+    func isTotalEstimationMinus() -> Bool {
+        getTotalRevenueEstimation() < 0.0 && Double(pricePerPeople).orZero() > 0
     }
     
     func handleDefaultError(error: Error) {
@@ -306,8 +314,8 @@ final class ScheduledFormViewModel: ObservableObject {
 
     func submitMeeting() {
         UIApplication.shared.endEditing()
-        meeting.userFeePercentage = isChangedCostManagement ? Int(percentageString) ?? Int(percentageRaw*100) : 100
-        meeting.talentFeePercentage = isChangedCostManagement ? Int(percentageFaresForCreatorStr) ?? Int(percentageFaresForCreator*100) : 0
+        meeting.userFeePercentage = isChangedCostManagement && Double(pricePerPeople).orZero() > 0.0 ? Int(percentageString) ?? Int(percentageRaw*100) : 100
+        meeting.talentFeePercentage = isChangedCostManagement && Double(pricePerPeople).orZero() > 0.0 ? Int(percentageFaresForCreatorStr) ?? Int(percentageFaresForCreator*100) : 0
         meeting.slots = Int(peopleGroup) ?? 1
         meeting.price = Int(rawPrice).orZero()
         if meeting.endAt.isEmpty && meeting.startAt.isEmpty {
@@ -346,6 +354,7 @@ final class ScheduledFormViewModel: ObservableObject {
     
     func onCreateMeeting(with meeting: AddMeetingRequest) {
         Task {
+            print("MEETX: ", meeting)
             await addMeeting(meeting: meeting)
         }
     }
