@@ -81,7 +81,7 @@ struct ImageLoader: View {
 				.indicator(.activity)
 				.transition(.fade(duration: 0.5))
 				.scaledToFill()
-				.frame(width: width, height: height)
+				.frame(width: abs(width), height: abs(height))
 			}
 //		}
 	}

@@ -347,6 +347,13 @@ extension TalentEditRateCardScheduleView {
                         .overlay(
                             RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
                         )
+                        .onChange(of: viewModel.timeEnd, perform: { value in
+                            let timeInterval = value.timeIntervalSince(viewModel.timeStart)
+                            
+                            if timeInterval > Double(viewModel.duration * 60) {
+                                viewModel.timeStart = viewModel.timeEnd - Double(viewModel.duration * 60)
+                            }
+                        })
                     }
                     
                     HStack {
@@ -414,7 +421,7 @@ extension TalentEditRateCardScheduleView {
         
         var body: some View {
             VStack {
-                DatePicker("", selection: $changedTimeEnd, in: Date()..., displayedComponents: .hourAndMinute)
+                DatePicker("", selection: $changedTimeEnd, in: viewModel.timeStart..., displayedComponents: .hourAndMinute)
                     .datePickerStyle(WheelDatePickerStyle())
                     .labelsHidden()
                 

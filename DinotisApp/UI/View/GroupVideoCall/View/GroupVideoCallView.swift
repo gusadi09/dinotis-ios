@@ -50,6 +50,19 @@ struct GroupVideoCallView: View {
                 }
             )
             
+            NavigationLink(
+                unwrapping: $viewModel.route,
+                case: /HomeRouting.setUpVideo,
+                destination: { viewModel in
+                    SetUpVideoView()
+                        .environmentObject(viewModel.wrappedValue)
+                },
+                onNavigate: {_ in},
+                label: {
+                    EmptyView()
+                }
+            )
+            
             GeometryReader { geo in
                 Image.videoCallBackgroundPattern
                     .resizable()
@@ -137,6 +150,7 @@ struct GroupVideoCallView: View {
         })
         .onReceive(viewModel.didSendRequest, perform: {
             dismiss()
+//            viewModel.routeToSetUpVideo()
         })
         .onAppear {
             viewModel.onAppear()

@@ -10,6 +10,8 @@ import SwiftUI
 public extension Image {
     static let generalBackIcon = Image("ic-back-general", bundle: Bundle.module)
     static let generalQuestionIcon = Image("ic-question-general", bundle: Bundle.module)
+    static let generalChevronDown = Image("ic-chevron-down", bundle: .module)
+    static let generalChevronRight = Image("ic-chevron-right", bundle: .module)
     static let logoWithText = Image("logo-with-text", bundle: Bundle.module)
     static let logoWhiteText = Image("logo-white-text", bundle: .module)
     static let logoFullWhite = Image("logo-full-white", bundle: .module)
@@ -49,6 +51,7 @@ public extension Image {
     static let profileFavoriteIcon = Image("ic-favorite-profile", bundle: Bundle.module)
     static let profileHelpIcon = Image("ic-help-profile", bundle: Bundle.module)
     static let profileLogoutIcon = Image("ic-logout-profile", bundle: Bundle.module)
+    static let profileGreenPreferencesIcon = Image("ic-green-preferences-profile", bundle: Bundle.module)
     
     static let paymentBCAIcon = Image("ic-bca-payment", bundle: Bundle.module)
     static let paymentBNIIcon = Image("ic-bni-payment", bundle: Bundle.module)
@@ -153,10 +156,31 @@ public extension Image {
     static let homeTalentNotificationIcon = Image("ic-notification-bell-primary", bundle: .module)
     static let homeTalentChatPrimaryIcon = Image("ic-chat-primary", bundle: .module)
     static let homeTalentWalletIcon = Image("ic-wallet-home", bundle: .module)
+    static let homeTalentCreateSessionIcon = Image("ic-create-session-creator-home", bundle: .module)
+    static let homeTalentBundlingIcon = Image("ic-bundling-creator-home", bundle: .module)
+    static let homeTalentRatecardIcon = Image("ic-ratecard-creator-home", bundle: .module)
+    static let homeTalentStudioIcon = Image("ic-studio-creator-home", bundle: .module)
     
     static let inboxAudienceIcon = Image("ic-audience-inbox", bundle: .module)
     static let inboxReviewIcon = Image("ic-review-inbox", bundle: .module)
     static let inboxScheduleIcon = Image("ic-schedule-inbox", bundle: .module)
+    
+    static let scheduleFormCoinPrimaryOutlineIcon = Image("ic-coin-primary-outline", bundle: .module)
+    static let scheduleFormDatePrimaryOutlineIcon = Image("ic-date-primary-outline", bundle: .module)
+    static let scheduleFormSessionPrimaryOutlineIcon = Image("ic-session-primary-outline", bundle: .module)
+    static let scheduleFormTimePrimaryOutlineIcon = Image("ic-time-primary-outline", bundle: .module)
+    static let scheduleFormVideoPrimaryOutlineIcon = Image("ic-video-primary-outline", bundle: .module)
+    static let scheduleFormCollabPrimaryOutlineIcon = Image("ic-person-primary-outline", bundle: .module)
+    static let scheduleFormURLPrimaryOutlineIcon = Image("ic-url-primary-outline", bundle: .module)
     static let inboxStarBubbleChatIcon = Image("ic-star-bubble-chat-inbox", bundle: .module)
     static let inboxSmileBubbleChatIcon = Image("ic-smile-bubble-chat-inbox", bundle: .module)
+    
+    static let archiveMediaIcon = Image("ic-media-archive", bundle: .module)
+    static let archiveMagentaCheckmarkIcon = Image("ic-magenta-checkmark-archive", bundle: .module)
+    static let archiveInactiveCheckmarkIcon = Image("ic-inactive-checkmark-archive", bundle: .module)
+    static let archiveDownloadDocumentIcon = Image("ic-download-document-archive", bundle: .module)
+    
+    static let studioDocumentUploadIcon = Image("ic-document-upload", bundle: .module)
+    static let studioPencilIcon = Image("ic-pencil-black", bundle: .module)
+    static let studioTrashIcon = Image("ic-trash-black", bundle: .module)
 }

@@ -70,4 +70,8 @@ public final class MeetingsDefaultRepository: MeetingsRepository {
     public func provideGetClosestSession() async throws -> ClosestMeetingResponse {
         try await self.remote.getClosestSession()
     }
+    
+    public func provideGetMeetingFee() async throws -> MeetingFeeResponse {
+        try await self.remote.getMeetingFee()
+    }
 }

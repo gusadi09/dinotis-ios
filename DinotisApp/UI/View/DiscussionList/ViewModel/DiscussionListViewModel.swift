@@ -136,7 +136,7 @@ final class DiscussionListViewModel: ObservableObject {
                 id: meet.meetingRequestId,
                 meetingId: (meet.meeting?.id).orEmpty(),
                 message: nil,
-                isAccepted: meet.status.orEmpty().contains("accepted"),
+                isAccepted: meet.status.orEmpty().contains("accepted") || meet.status.orEmpty().contains("confirmed"),
                 isConfirmed: meet.status.orEmpty().contains("confirmed"),
                 userId: nil,
                 user: meet.user,

@@ -271,3 +271,11 @@ public struct MeetingRequestData: Codable, Hashable {
 		self.requestAt = requestAt
 	}
 }
+
+public struct MeetingFeeResponse: Codable {
+    public let oneMinuteFee: Int?
+    
+    public init(oneMinuteFee: Int?) {
+        self.oneMinuteFee = oneMinuteFee
+    }
+}

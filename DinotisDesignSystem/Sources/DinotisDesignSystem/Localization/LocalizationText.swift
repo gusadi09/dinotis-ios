@@ -2659,11 +2659,16 @@ public enum LocalizableText {
         bundle: .module,
         comment: "manage application usage costs"
     )
-    public static let costCalculatedSubtitle = NSLocalizedString(
-        "cost_calculated_subtitle",
-        bundle: .module,
-        comment: "cost calculated subtitle"
-    )
+    public static func costCalculatedSubtitle(fee: String) -> String {
+        String(
+            format: NSLocalizedString(
+                "cost_calculated_subtitle",
+                bundle: .module,
+                comment: "cost calculated subtitle"
+            ),
+            fee
+        )
+    }
     public static let percentageBorneByAudience = NSLocalizedString(
         "percentage_borne_by_audience",
         bundle: .module,
@@ -2715,11 +2720,18 @@ public enum LocalizableText {
             total
         )
     }
-    public static let appUsageCostCalculationTooltip = NSLocalizedString(
-        "app_usage_cost_calculation_tooltip",
-        bundle: .module,
-        comment: "cost calculation tooltip text"
-    )
+    public static func appUsageCostCalculationTooltip(fee: String, minute: String, total: String) -> String {
+        String(
+            format: NSLocalizedString(
+                "app_usage_cost_calculation_tooltip",
+                bundle: .module,
+                comment: "cost calculation tooltip text"
+            ),
+            fee,
+            minute,
+            total
+        )
+    }
     public static let appUsageCostsSliderTooltip = NSLocalizedString(
         "app_costs_slider_tooltip",
         bundle: .module,
@@ -2736,6 +2748,333 @@ public enum LocalizableText {
         comment: "empty review description"
     )
     
+    public static let scheduleFormSetParticipant = NSLocalizedString(
+        "schedule_form_set_participant",
+        bundle: .module,
+        comment: "set participant on schedule form"
+    )
+    public static let scheduleFormSetPrice = NSLocalizedString(
+        "schedule_form_set_price",
+        bundle: .module,
+        comment: "set price"
+    )
+    public static let scheduleFormPerPerson = NSLocalizedString(
+        "schedule_form_per_person",
+        bundle: .module,
+        comment: "per person"
+    )
+    public static let scheduleFormPricePlaceholder = NSLocalizedString(
+        "schedule_form_enter_price_label",
+        bundle: .module,
+        comment: "price placeholder"
+    )
+    
+    public static let scheduleFormPriceSettingsTitle = NSLocalizedString(
+        "price_settings_title",
+        bundle: .module,
+        comment: "price settings"
+    )
+    public static let scheduleFormApplicationCostTransfer = NSLocalizedString(
+        "application_costs_transfer",
+        bundle: .module,
+        comment: "application cost transfer"
+    )
+    public static let scheduleFormSetAppUsageCost = NSLocalizedString(
+        "set_app_usage_cost",
+        bundle: .module,
+        comment: "set app usage cost"
+    )
+    public static let scheduleFormSetAppUsageWarning = NSLocalizedString(
+        "set_app_usage_warning",
+        bundle: .module,
+        comment: "set app usage warning if price not set"
+    )
+    public static let scheduleFormSetAppUsageRule = NSLocalizedString(
+        "set_app_usage_rule",
+        bundle: .module,
+        comment: "set app usage rule"
+    )
+    
+    public static let scheduleFormPriceSummary = NSLocalizedString(
+        "summary_session_price",
+        bundle: .module,
+        comment: "price summary"
+    )
+    
+    public static let scheduleFormSessionPriceTitle = NSLocalizedString(
+        "session_price_title",
+        bundle: .module,
+        comment: "session price"
+    )
+    
+    public static let scheduleFormAudienceQuota = NSLocalizedString(
+        "audience_quota",
+        bundle: .module,
+        comment: "audience quota"
+    )
+    
+    public static let scheduleFormCreatorSponsoredCosts = NSLocalizedString(
+        "app_usage_borne_by_creator",
+        bundle: .module,
+        comment: "sponsored cost by creator"
+    )
+    
+    public static let scheduleFormRevenueEstimation = NSLocalizedString(
+        "revenue_estimation",
+        bundle: .module,
+        comment: "revenue estimation"
+    )
+    
+    public static func scheduleFormCoverPercentage(total: String) -> String {
+        String(
+            format: NSLocalizedString(
+                "app_cost_cover_percentage",
+                bundle: .module,
+                comment: "percentage covered"
+            ),
+            total
+        )
+    }
+    
+    public static let scheduleFormSessionSettingsTitle = NSLocalizedString(
+        "session_settings_title",
+        bundle: .module,
+        comment: "session settings"
+    )
+    
+    public static let scheduleFormTitleDescriptionEmptyError = NSLocalizedString(
+        "title_description_empty_error",
+        bundle: .module,
+        comment: "empty title n desc error"
+    )
+    
+    public static let scheduleFormEnableVideoArchieveTitle = NSLocalizedString(
+        "activation_of_archieve_title",
+        bundle: .module,
+        comment: "enable archieve title"
+    )
+    
+    public static let scheduleFormEnableVideoArchieveSubtitle = NSLocalizedString(
+        "activation_of_archieve_subtitle",
+        bundle: .module,
+        comment: "enable archieve subtitle"
+    )
+    public static let profileAvailabilityLabel = NSLocalizedString(
+        "profile_availability_label",
+        bundle: .module,
+        comment: "profile availability label"
+    )
+    public static let profileSetSubscriptionTitle = NSLocalizedString(
+        "profile_set_subscription_title",
+        bundle: .module,
+        comment: "profile set subscription title"
+    )
+    public static let profileSetSubscriptionDesc = NSLocalizedString(
+        "profile_set_subscription_desc",
+        bundle: .module,
+        comment: "profile set subscription description"
+    )
+    public static let profileSetCostTitle = NSLocalizedString(
+        "profile_set_cost_title",
+        bundle: .module,
+        comment: "profil set cost title"
+    )
+    public static let profileSetCostDesc = NSLocalizedString(
+        "profile_set_cost_desc",
+        bundle: .module,
+        comment: "profil set cost description"
+    )
+    public static let profileActivateSubscriptionTitle = NSLocalizedString(
+        "profile_activate_subscription_title",
+        bundle: .module,
+        comment: "profile activate subscription title"
+    )
+    public static let profileSelectSubscriptionTypeTitle = NSLocalizedString(
+        "profile_select_subscription_type_title",
+        bundle: .module,
+        comment: "profile select subscription type title"
+    )
+    public static let profileSelectSubscriptionTypePlaceholder = NSLocalizedString(
+        "profile_select_subscription_type_placeholder",
+        bundle: .module,
+        comment: "profile select subscription type placeholder"
+    )
+    public static let subscriptionPaidMonthly = NSLocalizedString(
+        "subscription_paid_monthly",
+        bundle: .module,
+        comment: "subscription paid monthly"
+    )
+    public static let subscriptionPaidFree = NSLocalizedString(
+        "subscription_paid_free",
+        bundle: .module,
+        comment: "subscription paid free"
+    )
+    public static let monthLabel = NSLocalizedString(
+        "month_label",
+        bundle: .module,
+        comment: "month label"
+    )
+    public static let archiveChooseVideo = NSLocalizedString(
+        "archive_choose_video",
+        bundle: .module,
+        comment: "archive choose video"
+    )
+    public static let archiveChooseAudience = NSLocalizedString(
+        "archive_choose_audience",
+        bundle: .module,
+        comment: "archive choose audience"
+    )
+    public static let archiveVideoTitle = NSLocalizedString(
+        "archive_video_title",
+        bundle: .module,
+        comment: "archive video title"
+    )
+    public static let archiveVideoDesc = NSLocalizedString(
+        "archive_video_desc",
+        bundle: .module,
+        comment: "archive video desc"
+    )
+    public static let goToArchiveLabel = NSLocalizedString(
+        "go_to_archive_label",
+        bundle: .module,
+        comment: "go to archive label"
+    )
+    public static let goToUploadLabel = NSLocalizedString(
+        "go_to_upload_label",
+        bundle: .module,
+        comment: "go to upload label"
+    )
+    public static let archivePublicDesc = NSLocalizedString(
+        "archive_public_desc",
+        bundle: .module,
+        comment: "archive public desc"
+    )
+    public static let archiveSubscriberDesc = NSLocalizedString(
+        "archive_subscriber_desc",
+        bundle: .module,
+        comment: "archive subscriber desc"
+    )
+    public static let publicLabel = NSLocalizedString(
+        "public_label",
+        bundle: .module,
+        comment: "public label"
+    )
+    public static let subscriberLabel = NSLocalizedString(
+        "subscriber_label",
+        bundle: .module,
+        comment: "subscriber label"
+    )
+    public static let archiveLabel = NSLocalizedString(
+        "archive_label",
+        bundle: .module,
+        comment: "archive label"
+    )
+    public static let uploadLabel = NSLocalizedString(
+        "upload_label",
+        bundle: .module,
+        comment: "upload label"
+    )
+    public static let titleLabel = NSLocalizedString(
+        "title_label",
+        bundle: .module,
+        comment: "title label"
+    )
+    public static let descriptionLabel = NSLocalizedString(
+        "description_label",
+        bundle: .module,
+        comment: "description label"
+    )
+    public static let editCoverLabel = NSLocalizedString(
+        "edit_cover_label",
+        bundle: .module,
+        comment: "edit cover label"
+    )
+    public static let seeSessionRecordingLabel = NSLocalizedString(
+        "see_session_recording_label",
+        bundle: .module,
+        comment: "see session recording label"
+    )
+    public static let downloadingLabel = NSLocalizedString(
+        "downloading_label",
+        bundle: .module,
+        comment: "downloading label"
+    )
+    public static let emptyRecordingDesc = NSLocalizedString(
+        "empty_recording_desc",
+        bundle: .module,
+        comment: "empty recording desc"
+    )
+    public static let creatorStudioLabel = NSLocalizedString(
+        "creator_studio_label",
+        bundle: .module,
+        comment: "creator studio label"
+    )
+    public static let recordedLabel = NSLocalizedString(
+        "recorded_label",
+        bundle: .module,
+        comment: "recorded label"
+    )
+    public static let uploadContentLabel = NSLocalizedString(
+        "upload_content_label",
+        bundle: .module,
+        comment: "upload content label"
+    )
+    public static let popularLabel = NSLocalizedString(
+        "popular_label",
+        bundle: .module,
+        comment: "popular label"
+    )
+    public static let deleteLabel = NSLocalizedString(
+        "delete_label",
+        bundle: .module,
+        comment: "delete label"
+    )
+    public static let downloadLabel = NSLocalizedString(
+        "download_label",
+        bundle: .module,
+        comment: "download label"
+    )
+    public static let postLabel = NSLocalizedString(
+        "post_label",
+        bundle: .module,
+        comment: "post label"
+    )
+    public static let uploadingLabel = NSLocalizedString(
+        "uploading_label",
+        bundle: .module,
+        comment: "uploading label"
+    )
+    public static let tryAgainLabel = NSLocalizedString(
+        "try_again_label",
+        bundle: .module,
+        comment: "try again label"
+    )
+    public static let uploadFailedTitle = NSLocalizedString(
+        "upload_failed_title",
+        bundle: .module,
+        comment: "upload failed title"
+    )
+    public static let cancelUploadLabel = NSLocalizedString(
+        "cancel_upload_label",
+        bundle: .module,
+        comment: "cancel upload title"
+    )
+    public static let generalContinueLabel = NSLocalizedString(
+        "general_continue_label",
+        bundle: .module,
+        comment: "general continue label"
+    )
+    public static let uploadVideoLabel = NSLocalizedString(
+        "upload_video_label",
+        bundle: .module,
+        comment: "upload video label"
+    )
+    
+    public static let scheduleFormMinusTotalRevenueWarning = NSLocalizedString(
+        "minus_total_revenue_warning",
+        bundle: .module,
+        comment: "minus total revenue warning on schedule form"
+    )
 }
 
 
