@@ -66,7 +66,7 @@ struct TalentHomeView: View {
         
         private var columns: [GridItem] {
             [GridItem](
-                repeating: GridItem(.flexible(), spacing: 30),
+                repeating: GridItem(.flexible(), spacing: 24, alignment: .top),
                 count: 3
             )
         }
@@ -309,21 +309,45 @@ struct TalentHomeView: View {
                                             
                                             LazyVGrid(columns: columns) {
                                                 Button {
+                                                    homeVM.routeToTalentRateCardList()
+                                                } label: {
+                                                    VStack {
+                                                        Image.homeTalentRatecardIcon
+                                                            .resizable()
+                                                            .scaledToFit()
+                                                            .padding(10)
+                                                            .frame(width: 45, height: 45)
+                                                            .background(Color.secondaryViolet)
+                                                            .cornerRadius(12)
+                                                            .overlay(
+                                                                RoundedRectangle(cornerRadius: 12)
+                                                                    .stroke(Color.DinotisDefault.primary, lineWidth: 1)
+                                                                    .frame(width: 45, height: 45)
+                                                            )
+                                                        
+                                                        Text(LocaleText.rateCardMenu)
+                                                            .foregroundColor(.black)
+                                                            .font(.robotoRegular(size: 10))
+                                                            .multilineTextAlignment(.center)
+                                                    }
+                                                }
+                                                .buttonStyle(.plain)
+                                                
+                                                Button {
                                                     homeVM.routeToTalentFormSchedule()
                                                 } label: {
                                                     VStack {
-                                                        Image.Dinotis.redCameraVideoIcon
+                                                        Image.homeTalentCreateSessionIcon
                                                             .resizable()
                                                             .scaledToFit()
-                                                            .frame(width: 24)
-                                                            .padding(8)
+                                                            .padding(10)
+                                                            .frame(width: 45, height: 45)
                                                             .background(Color.secondaryViolet)
-                                                            .frame(width: 36, height: 36)
-                                                            .cornerRadius(8)
+                                                            .cornerRadius(12)
                                                             .overlay(
-                                                                RoundedRectangle(cornerRadius: 8)
+                                                                RoundedRectangle(cornerRadius: 12)
                                                                     .stroke(Color.DinotisDefault.primary, lineWidth: 1)
-                                                                    .frame(width: 36, height: 36)
+                                                                    .frame(width: 45, height: 45)
                                                             )
                                                         
                                                         Text(LocaleText.createSessionSchedule)
@@ -338,28 +362,18 @@ struct TalentHomeView: View {
                                                     homeVM.routeToBundling()
                                                 } label: {
                                                     VStack {
-                                                        ZStack(alignment: .topTrailing) {
-                                                            Image.Dinotis.redPricetagIcon
-                                                                .resizable()
-                                                                .scaledToFit()
-                                                                .frame(width: 24)
-                                                                .padding(8)
-                                                                .background(Color.secondaryViolet)
-                                                                .frame(width: 36, height: 36)
-                                                                .cornerRadius(8)
-                                                                .overlay(
-                                                                    RoundedRectangle(cornerRadius: 8)
-                                                                        .stroke(Color.DinotisDefault.primary, lineWidth: 1)
-                                                                        .frame(width: 36, height: 36)
-                                                                )
-                                                            
-                                                            Image.Dinotis.newBadgeIcon
-                                                                .resizable()
-                                                                .scaledToFit()
-                                                                .frame(width: 18, height: 10)
-                                                                .padding(.top, -5)
-                                                                .padding(.trailing, -9)
-                                                        }
+                                                        Image.homeTalentBundlingIcon
+                                                            .resizable()
+                                                            .scaledToFit()
+                                                            .padding(10)
+                                                            .frame(width: 45, height: 45)
+                                                            .background(Color.secondaryViolet)
+                                                            .cornerRadius(12)
+                                                            .overlay(
+                                                                RoundedRectangle(cornerRadius: 12)
+                                                                    .stroke(Color.DinotisDefault.primary, lineWidth: 1)
+                                                                    .frame(width: 45, height: 45)
+                                                            )
                                                         
                                                         Text(LocaleText.talentHomeBundlingMenu)
                                                             .foregroundColor(.black)
@@ -370,30 +384,39 @@ struct TalentHomeView: View {
                                                 .buttonStyle(.plain)
                                                 
                                                 Button {
-                                                    homeVM.routeToTalentRateCardList()
+                                                    homeVM.routeToCreatorStudio()
                                                 } label: {
                                                     VStack {
                                                         ZStack(alignment: .topTrailing) {
-                                                            Image.Dinotis.rateCardIcon
+                                                            Image.homeTalentStudioIcon
                                                                 .resizable()
                                                                 .scaledToFit()
-                                                                .frame(width: 36, height: 36)
+                                                                .padding(10)
+                                                                .frame(width: 45, height: 45)
+                                                                .background(Color.secondaryViolet)
+                                                                .cornerRadius(12)
+                                                                .overlay(
+                                                                    RoundedRectangle(cornerRadius: 12)
+                                                                        .stroke(Color.DinotisDefault.primary, lineWidth: 1)
+                                                                        .frame(width: 45, height: 45)
+                                                                )
                                                             
                                                             Image.Dinotis.newBadgeIcon
                                                                 .resizable()
                                                                 .scaledToFit()
-                                                                .frame(width: 18, height: 10)
+                                                                .frame(width: 21)
                                                                 .padding(.top, -5)
                                                                 .padding(.trailing, -9)
                                                         }
                                                         
-                                                        Text(LocaleText.rateCardMenu)
+                                                        Text(LocalizableText.creatorStudioLabel)
                                                             .foregroundColor(.black)
                                                             .font(.robotoRegular(size: 10))
                                                             .multilineTextAlignment(.center)
                                                     }
                                                 }
                                                 .buttonStyle(.plain)
+                                                .isHidden(true, remove: true)
                                             }
                                             .padding(.vertical, 12)
                                         }
@@ -514,6 +537,19 @@ struct TalentHomeView: View {
                         case: /HomeRouting.talentScheduleDetail,
                         destination: { viewModel in
                             TalentScheduleDetailView(viewModel: viewModel.wrappedValue)
+                        },
+                        onNavigate: { _ in },
+                        label: {
+                            EmptyView()
+                        }
+                    )
+                    
+                    NavigationLink(
+                        unwrapping: $homeVM.route,
+                        case: /HomeRouting.creatorStudio,
+                        destination: { viewModel in
+                            CreatorStudioView()
+                                .environmentObject(viewModel.wrappedValue)
                         },
                         onNavigate: { _ in },
                         label: {

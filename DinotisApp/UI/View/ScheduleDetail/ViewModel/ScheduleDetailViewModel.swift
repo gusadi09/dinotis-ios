@@ -953,6 +953,14 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
             self?.route = .talentProfileDetail(viewModel: viewModel)
         }
     }
+    
+    func routeToSessionRecordingList() {
+        let viewModel = SessionRecordingListViewModel(backToHome: { self.backToHome() })
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .sessionRecordingList(viewModel: viewModel)
+        }
+    }
 
 	func isPaymentDone(status: String) -> Bool {
 		status == "payment_done" || status == "waiting_creator_confirmation" || status == "schedule_confirmed" || status == "schedule_started" || status == "schedule_ended"

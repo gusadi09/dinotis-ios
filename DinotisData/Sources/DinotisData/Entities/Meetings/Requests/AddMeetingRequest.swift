@@ -8,7 +8,6 @@
 import Foundation
 
 public struct AddMeetingRequest: Codable {
-    public var id: String?
     public var title: String
     public var description: String
     public var price: Int
@@ -19,9 +18,10 @@ public struct AddMeetingRequest: Codable {
     public var managementId: Int?
     public var urls: [MeetingURLrequest]
     public var collaborations: [String]?
+    public var userFeePercentage: Int?
+    public var talentFeePercentage: Int?
     
-    public init(id: String? = nil, title: String, description: String, price: Int, startAt: String, endAt: String, isPrivate: Bool, slots: Int, managementId: Int? = nil, urls: [MeetingURLrequest], collaborations: [String]? = nil) {
-        self.id = id
+    public init(title: String, description: String, price: Int, startAt: String, endAt: String, isPrivate: Bool, slots: Int, managementId: Int? = nil, urls: [MeetingURLrequest], collaborations: [String]? = nil, userFeePercentage: Int? = nil, talentFeePercentage: Int? = nil) {
         self.title = title
         self.description = description
         self.price = price
@@ -32,6 +32,8 @@ public struct AddMeetingRequest: Codable {
         self.managementId = managementId
         self.urls = urls
         self.collaborations = collaborations
+        self.userFeePercentage = userFeePercentage
+        self.talentFeePercentage = talentFeePercentage
     }
 }
 

@@ -22,4 +22,5 @@ public protocol MeetingsRepository {
     func provideGetCollabMeeting(by meetingId: String) async throws -> MeetingDetailResponse
     func provideApproveInvitation(with isApprove: Bool, for meetingId: String) async throws -> SuccessResponse
     func provideGetClosestSession() async throws -> ClosestMeetingResponse
+    func provideGetMeetingFee() async throws -> MeetingFeeResponse
 }

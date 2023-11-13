@@ -24,65 +24,93 @@ struct EditTalentMeetingView: View {
 	var body: some View {
 		ZStack {
 			ZStack(alignment: .topLeading) {
-				Image.Dinotis.linearGradientBackground
-					.resizable()
-					.edgesIgnoringSafeArea(.all)
+                Color.DinotisDefault.baseBackground
+                    .edgesIgnoringSafeArea(.all)
 				
 				VStack(spacing: 0) {
-					ZStack {
-						HStack {
-							Spacer()
-							Text(LocaleText.editVideoCallSchedule)
-								.font(.robotoBold(size: 14))
-								.foregroundColor(.black)
-							
-							Spacer()
-						}
-						
-						HStack {
-							Button(action: {
-								dismiss()
-							}, label: {
-								Image.Dinotis.arrowBackIcon
-									.padding()
-									.background(Color.white)
-									.clipShape(Circle())
-							})
-							.padding(.leading)
-							
-							Spacer()
-						}
-						
-					}
-					.padding(.vertical)
-					.background(
-						colorTab
-							.edgesIgnoringSafeArea(.vertical)
-					)
+                    ZStack {
+                        HStack {
+                            Spacer()
+                            Text(LocaleText.editVideoCallScheduleTitle)
+                                .font(.robotoBold(size: 14))
+                                .foregroundColor(.black)
+                            
+                            Spacer()
+                        }
+                        
+                        HStack {
+                            Button(action: {
+                                dismiss()
+                            }, label: {
+                                Image.Dinotis.arrowBackIcon
+                                    .padding()
+                                    .background(Color.white)
+                                    .clipShape(Circle())
+                            })
+                            .padding(.leading)
+                            
+                            Spacer()
+                        }
+                        
+                    }
+                    .padding(.bottom)
+                    .background(
+                        Color.DinotisDefault.baseBackground
+                            .edgesIgnoringSafeArea(.vertical)
+                    )
 					
-					ScrollViews(axes: .vertical, showsIndicators: false) { value in
-						DispatchQueue.main.async {
-							if value.y < 0 {
-								self.colorTab = Color.white
-							} else {
-								self.colorTab = Color.clear
-							}
-						}
-					} content: {
-						VStack {
-                            FormScheduleTalentCardView(
-                                collab: $viewModel.talent,
-                                managements: $viewModel.managements,
-                                meetingForm: $viewModel.meetingForm,
-                                onTapRemove: {},
-                                isShowRemove: false,
-                                isEdit: true,
-                                disableEdit: viewModel.isDisableEdit,
-                                maxEdit: $viewModel.maxEdit
-                            )
-						}
-						.padding(.vertical, 15)
-					}
+                    ScrollView(.vertical, showsIndicators: false) {
+                        LazyVStack(spacing: 16) {
+                            if let attr = try? AttributedString(markdown: LocalizableText.creatorRescheduleWarning(viewModel.maxEdit)) {
+                                Text(attr)
+                                    .font(.robotoRegular(size: 12))
+                                    .foregroundColor(.DinotisDefault.darkPrimary)
+                                    .padding(.vertical, 16)
+                                    .padding(.horizontal, 11)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .foregroundColor(.DinotisDefault.lightPrimary)
+                                    )
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .inset(by: 0.5)
+                                            .stroke(Color.DinotisDefault.darkPrimary, lineWidth: 1)
+                                    )
+                            }
+                            
+                            ScheduleSetupForm()
+                                .environmentObject(viewModel)
+                            
+                            PriceSetupForm()
+                                .environmentObject(viewModel)
+                        }
+                        .padding()
+                    }
+//					ScrollViews(axes: .vertical, showsIndicators: false) { value in
+//						DispatchQueue.main.async {
+//							if value.y < 0 {
+//								self.colorTab = Color.white
+//							} else {
+//								self.colorTab = Color.clear
+//							}
+//						}
+//					} content: {
+//						VStack {
+//                            FormScheduleTalentCardView(
+//                                collab: $viewModel.talent,
+//                                managements: $viewModel.managements,
+//                                meetingForm: $viewModel.meetingForm,
+//                                onTapRemove: {},
+//                                isShowRemove: false,
+//                                isEdit: true,
+//                                disableEdit: viewModel.isDisableEdit,
+//                                maxEdit: $viewModel.maxEdit
+////                            )
+//                            
+//						}
+//						.padding(.vertical, 15)
+//					}
 
 					VStack(spacing: 0) {
 						Button(action: {
@@ -121,6 +149,50 @@ struct EditTalentMeetingView: View {
 			
             DinotisLoadingView(.fullscreen, hide: !viewModel.isLoading)
 		}
+        .sheet(isPresented: $viewModel.presentTalentPicker, content: {
+            CreatorPickerView(arrUsername: $viewModel.meetingForm.collaborations, arrTalent: $viewModel.talent) {
+                viewModel.presentTalentPicker = false
+            }
+            .dynamicTypeSize(.large)
+        })
+        .sheet(isPresented: $viewModel.showsDatePicker) {
+            if #available(iOS 16.0, *) {
+                StartDatePicker()
+                    .environmentObject(viewModel)
+                    .presentationDetents([.height(560)])
+                    .dynamicTypeSize(.large)
+            } else {
+                StartDatePicker()
+                    .environmentObject(viewModel)
+                    .dynamicTypeSize(.large)
+            }
+        }
+        .sheet(isPresented: $viewModel.showsTimePicker) {
+            if #available(iOS 16.0, *) {
+                StartTimePicker()
+                    .environmentObject(viewModel)
+                    .presentationDetents([.medium])
+                    .dynamicTypeSize(.large)
+            } else {
+                StartTimePicker()
+                    .environmentObject(viewModel)
+                    .dynamicTypeSize(.large)
+            }
+            
+        }
+        .sheet(isPresented: $viewModel.showsTimeUntilPicker) {
+            if #available(iOS 16.0, *) {
+                EndTimePicker()
+                    .environmentObject(viewModel)
+                .presentationDetents([.medium])
+                .dynamicTypeSize(.large)
+            } else {
+                EndTimePicker()
+                    .environmentObject(viewModel)
+                .dynamicTypeSize(.large)
+            }
+            
+        }
 		.onAppear {
             viewModel.onAppear()
 		}

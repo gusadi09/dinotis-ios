@@ -39,11 +39,88 @@ final class EditTalentMeetingViewModel: ObservableObject {
     @Published var talent = [MeetingCollaborationData]()
     @Published var maxEdit = 0
     
-    @Published var meetingForm = AddMeetingRequest(id: "", title: "", description: "", price: 0, startAt: "", endAt: "", isPrivate: false, slots: 0, managementId: nil, urls: [])
+    @Published var meetingForm = AddMeetingRequest(title: "", description: "", price: 0, startAt: "", endAt: "", isPrivate: false, slots: 0, managementId: nil, urls: [])
     
     @Published var isRefreshFailed = false
     
     @Published var isShowAlert = false
+    
+    @Published var isShowAppCostsManagement = false
+    @Published var isChangedCostManagement = false
+    @Published var appUsageFareSheetHeight: CGFloat = 460.0
+    @Published var percentageString = "0"
+    @Published var percentageRaw = 0.0
+    @Published var isSliderUsed = false
+    @Published var isFreeTextUsed = false
+    @Published var percentageFaresForCreatorRaw = 1.0
+    @Published var percentageFaresForCreator = 1.0
+    @Published var percentageFaresForCreatorStr = "100"
+    
+    @Published var isShowPriceEmptyWarning = false
+    @Published var timer: Timer?
+    @Published var onSecondTime = 0
+    
+    @Published var isShowFirstTooltip = false
+    @Published var isShowSeconTooltip = false
+
+    @Published var minimumPeopleError = false
+    
+    @Published var isArchieve = false
+    
+    @Published var arrSession = [LocaleText.privateCallLabel, LocaleText.groupcallLabel]
+    @Published var selectedSession = ""
+    @Published var peopleGroup = "1"
+    @Published var estPrice = 0
+    @Published var pricePerPeople = ""
+    @Published var rawPrice = ""
+    @Published var isValidPersonForGroup = false
+    @Published var selectedWallet: String? = nil
+    @Published var walletLocal = [
+        ManagementWrappedData(
+            id: nil,
+            managementId: nil,
+            userId: nil,
+            management: UserDataOfManagement(
+                createdAt: nil,
+                id: nil,
+                updatedAt: nil,
+                user: ManagementTalentData(
+                    id: nil,
+                    name: LocalizableText.personalWalletText,
+                    username: nil,
+                    profilePhoto: nil,
+                    profileDescription: nil,
+                    professions: nil,
+                    userHighlights: nil,
+                    isVerified: nil,
+                    isVisible: nil,
+                    isActive: nil,
+                    stringProfessions: nil
+                ),
+                userId: nil
+            )
+        )
+    ]
+    
+    @Published var startDate: Date? = Date().addingTimeInterval(3600)
+    @Published var endDate: Date? = Date().addingTimeInterval(7200)
+    
+    @Published var changedStartDate = Date().addingTimeInterval(3600)
+    @Published var changedEndDate = Date().addingTimeInterval(7200)
+
+    @Published var fee = 0
+    
+    @Published var isFieldTitleError = false
+    @Published var fieldTitleError = ""
+    @Published var isFieldDescError = false
+    @Published var fieldDescError = ""
+    
+    @Published var isShowSelectedTalent = false
+    @Published var presentTalentPicker = false
+    @Published var isShowAdditionalMenu = false
+    @Published var showsDatePicker = false
+    @Published var showsTimePicker = false
+    @Published var showsTimeUntilPicker = false
     
     init(
 		meetingID: String,
@@ -62,6 +139,34 @@ final class EditTalentMeetingViewModel: ObservableObject {
         self.getDetailMeetingUseCase = getDetailMeetingUseCase
         self.editMeetingUseCase = editMeetingUseCase
 	}
+    
+    func onPeopleOnGroupChanges(_ value: String) {
+        if let intVal = Int(value) {
+            meetingForm.slots = intVal
+            
+            let intPeople = Int(peopleGroup)
+            let intPrice = Int(pricePerPeople)
+            estPrice = (intPrice ?? 0) * (intPeople ?? 0)
+            
+            isValidPersonForGroup = Int(value).orZero() > 0
+        }
+    }
+    
+    func appUsageEstimated() -> Double {
+        Double((fee * Int(peopleGroup).orZero()) * (Int(endDate.orCurrentDate().timeIntervalSince(startDate.orCurrentDate()))/60))
+    }
+    
+    func audienceBorne() -> Double {
+        return appUsageEstimated() - (appUsageEstimated()*percentageFaresForCreator)
+    }
+    
+    func creatorEstimated() -> Double {
+        return isChangedCostManagement ? appUsageEstimated()*percentageFaresForCreator : 0.0
+    }
+    
+    func creatorBorne() -> Double {
+        return appUsageEstimated()*percentageFaresForCreator
+    }
 
 	func routeToRoot() {
         NavigationUtil.popToRootView()
@@ -120,7 +225,7 @@ final class EditTalentMeetingViewModel: ObservableObject {
         case .success(let success):
             DispatchQueue.main.async { [weak self] in
                 self?.isLoading = false
-                self?.managements = success.managements
+                self?.managements = (self?.managements ?? []) + (success.managements ?? [])
                 self?.stateObservable.userId = success.id.orEmpty()
             }
         case .failure(let failure):
@@ -145,6 +250,28 @@ final class EditTalentMeetingViewModel: ObservableObject {
         onGetMeetingDetail()
     }
     
+    func getThreeSecondTime() {
+        isShowPriceEmptyWarning = true
+        let getting = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(increaseTime), userInfo: nil, repeats: true)
+        
+        self.timer = getting
+    }
+    
+    @objc func increaseTime() {
+        onSecondTime += 1
+    }
+    
+    func perPersonPriceCount(price: String) {
+        if let intPrice = Int(price) {
+            meetingForm.price = intPrice
+            
+            let intPeople = Int(peopleGroup)
+            let intPrice = Int(pricePerPeople)
+            estPrice = (intPrice ?? 0) * (intPeople ?? 0)
+            
+        }
+    }
+    
 	func getMeetingDetail() async {
 		onStartRequest()
 
@@ -154,15 +281,31 @@ final class EditTalentMeetingViewModel: ObservableObject {
         case .success(let success):
             DispatchQueue.main.async { [weak self] in
                 self?.isLoading = false
-                self?.meetingForm.id = success.id
                 self?.meetingForm.description = success.description.orEmpty()
                 self?.meetingForm.endAt = DateUtils.dateFormatter(success.endAt.orCurrentDate(), forFormat: .utcV2)
                 self?.meetingForm.isPrivate = success.isPrivate ?? false
+                self?.selectedSession = success.isPrivate ?? false ? (self?.arrSession.first(where: { $0 == LocaleText.privateCallLabel })).orEmpty() : (self?.arrSession.first(where: { $0 == LocaleText.groupcallLabel })).orEmpty()
                 self?.meetingForm.price = Int(success.price.orEmpty()).orZero()
                 self?.meetingForm.slots = success.slots.orZero()
                 self?.meetingForm.startAt = DateUtils.dateFormatter(success.startAt.orCurrentDate(), forFormat: .utcV2)
                 self?.meetingForm.title = success.title.orEmpty()
                 self?.meetingForm.managementId = success.managementId
+                self?.pricePerPeople = success.price.orEmpty()
+                self?.peopleGroup = "\(success.slots.orZero())"
+                self?.selectedWallet = success.managementId == nil ?
+                LocalizableText.personalWalletText :
+                self?.managements?.first(where: {
+                    $0.management?.id == success.managementId
+                })?.management?.user?.name
+                
+                self?.isChangedCostManagement = true
+                self?.percentageRaw = Double((success.meetingFee?.userFeePercentage).orZero())/100
+                self?.percentageString = "\((success.meetingFee?.userFeePercentage).orZero())"
+                self?.percentageFaresForCreatorStr = "\((success.meetingFee?.talentFeePercentage).orZero())"
+                self?.percentageFaresForCreatorRaw = Double((success.meetingFee?.talentFeePercentage).orZero())/100
+                self?.percentageFaresForCreator = Double((success.meetingFee?.talentFeePercentage).orZero())/100
+                
+                self?.fee = (success.meetingFee?.oneMinuteFee).orZero()
                 
                 if let startAt = success.startAt, let maxEdit = success.maxEditAt {
                     self?.toggleDisableEdit(from: maxEdit)
@@ -184,13 +327,28 @@ final class EditTalentMeetingViewModel: ObservableObject {
         }
     }
 
+    @MainActor
 	func editMeeting() async {
 		onStartRequest()
+        self.meetingForm = AddMeetingRequest(
+            title: self.meetingForm.title,
+            description: self.meetingForm.description,
+            price: Int(self.pricePerPeople).orZero(),
+            startAt: self.meetingForm.startAt,
+            endAt: self.meetingForm.endAt,
+            isPrivate: self.meetingForm.isPrivate,
+            slots: Int(self.peopleGroup).orZero(),
+            managementId: self.meetingForm.managementId,
+            urls: self.meetingForm.urls,
+            collaborations: self.meetingForm.collaborations,
+            userFeePercentage: Int(percentageString) ?? Int(percentageRaw*100),
+            talentFeePercentage: Int(percentageFaresForCreatorStr) ?? Int(percentageFaresForCreator*100)
+        )
         
         let result = await editMeetingUseCase.execute(for: meetingID, with: meetingForm)
         
         switch result {
-        case .success(let success):
+        case .success(_):
             DispatchQueue.main.async { [weak self] in
                 self?.isLoading = false
                 self?.isShowSuccess = true

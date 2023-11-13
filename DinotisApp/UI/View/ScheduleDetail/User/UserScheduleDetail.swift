@@ -681,7 +681,8 @@ private extension UserScheduleDetail {
                         HStack {
                             Spacer()
                             
-                            ActivityIndicator(isAnimating: $viewModel.isLoading, color: .black, style: .medium)
+                            ProgressView()
+                                .progressViewStyle(.circular)
                             
                             Spacer()
                         }

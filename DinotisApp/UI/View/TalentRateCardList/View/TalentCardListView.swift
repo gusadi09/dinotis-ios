@@ -119,11 +119,8 @@ struct TalentCardListView: View {
 									HStack {
 										Spacer()
 
-										ActivityIndicator(
-											isAnimating: $viewModel.isLoading,
-											color: .black,
-											style: .large
-										)
+                                        ProgressView()
+                                            .progressViewStyle(.circular)
 
 										Spacer()
 									}
