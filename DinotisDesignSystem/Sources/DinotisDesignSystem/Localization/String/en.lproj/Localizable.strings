@@ -670,4 +670,4 @@
 "general_continue_label" = "Continue";
 "upload_video_label" = "Upload video";
 
-"minus_total_revenue_warning" = "**Your earnings are negative** due to the session price being too low. **Please increase your session price.**";
+"minus_total_revenue_warning" = "**Your income is negative** due to the session price being too low. **It's recommended to increase your session price**.";
