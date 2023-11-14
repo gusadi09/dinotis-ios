@@ -72,6 +72,9 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     @Published var alert = AlertAttribute()
     @Published var isShowAlert = false
     
+    @Published var currentImageIndex = 0
+    @Published var isShowImageDetail = false
+    
     @Published var isShowManagements = false
     @Published var isShowCollabList = false
     
@@ -187,6 +190,53 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     
     @Published var imageIndex = 0
     
+    @Published var currentSection: StudioVideoFilter = .latest
+    @Published var sections: [StudioVideoFilter] = [.latest, .recorded, .popular, .earliest]
+    
+    @Published var videos: [DummyVideoModel] = [
+        .init(title: "Lorem ipsum dolor sit amet consectetur. Aliquet vitae id pellentesque est ",
+              description: "Lorem ipsum dolor sit amet consectetur. Mattis et ut fusce eget turpis in tellus sit. Ultrices est rhoncus vestibulum lectus non. Dui duis etiam dictum quam ut condimentum lacinia. Lorem egestas duis in sollicitudin diam in nec. Eu tincidunt ultricies et id semper erat morbi sed urna. Viverra pulvinar ultrices viverra nisi ac et viverra. Habitasse quis et volutpat dolor lectus aliquet.",
+              thumbnail: "https://esports.id/img/article/854920211125095801.jpg"),
+        .init(title: "Lorem ipsum dolor sit amet consectetur. Aliquet vitae id pellentesque est ",
+              description: "Lorem ipsum dolor sit amet consectetur. Mattis et ut fusce eget turpis in tellus sit. Ultrices est rhoncus vestibulum lectus non. Dui duis etiam dictum quam ut condimentum lacinia. Lorem egestas duis in sollicitudin diam in nec. Eu tincidunt ultricies et id semper erat morbi sed urna. Viverra pulvinar ultrices viverra nisi ac et viverra. Habitasse quis et volutpat dolor lectus aliquet.",
+              thumbnail: "https://esports.id/img/article/854920211125095801.jpg"),
+        .init(title: "Lorem ipsum dolor sit amet consectetur. Aliquet vitae id pellentesque est ",
+              description: "Lorem ipsum dolor sit amet consectetur. Mattis et ut fusce eget turpis in tellus sit. Ultrices est rhoncus vestibulum lectus non. Dui duis etiam dictum quam ut condimentum lacinia. Lorem egestas duis in sollicitudin diam in nec. Eu tincidunt ultricies et id semper erat morbi sed urna. Viverra pulvinar ultrices viverra nisi ac et viverra. Habitasse quis et volutpat dolor lectus aliquet.",
+              thumbnail: "https://esports.id/img/article/854920211125095801.jpg"),
+    ]
+    
+    @Published var isLockPrivate = false
+    @Published var requestSessionMessage = ""
+    @Published var requestSessionType: RequestScheduleType = .groupType
+    var requestSessionText: String {
+        switch requestSessionType {
+        case .privateType:
+            LocalizableText.privateVideoCallLabel
+        default:
+            LocalizableText.groupVideoCallLabel
+        }
+    }
+    
+    @Published var isShowBundlingSheet = false
+    
+    @Published var isShowSubscribeSheet = false
+    @Published var isLastSubscribeSheet = false
+    var subsSheetHeight: CGFloat {
+        isLastSubscribeSheet ? 550 : 340
+    }
+    
+    var professionText: String {
+        var profession = ""
+        
+        let data = talentData?.professions?.compactMap({
+            $0.profession?.name
+        })
+        
+        profession = (data?.joined(separator: ", ")).orEmpty()
+        
+        return profession
+    }
+    
     init(
         backToHome: @escaping (() -> Void),
         username: String,
@@ -223,6 +273,27 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         self.unfollowUseCase = unfollowUseCase
         self.coinVerificationUseCase = coinVerificationUseCase
         self.getTalentDetailMeetingUseCase = getTalentDetailMeetingUseCase
+    }
+    
+    func chipText(_ section: StudioVideoFilter) -> String {
+        switch section {
+        case .earliest:
+            LocalizableText.sortEarliest
+        case .latest:
+            LocalizableText.sortLatest
+        case .recorded:
+            LocalizableText.recordedLabel
+        case .popular:
+            LocalizableText.popularLabel
+        case .archive:
+            LocalizableText.archiveLabel
+        }
+    }
+    
+    func dateFormatter(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd MMM, yyyy"
+        return formatter.string(from: date)
     }
     
     func routeToInvoice(id: String) {
@@ -275,6 +346,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
             self?.showPaymentMenu = false
             self?.isShowCoinPayment = false
             self?.showAddCoin = false
+            self?.alert.title = LocalizableText.attentionText
             
             if let error = error as? ErrorResponse {
                 
@@ -379,6 +451,8 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
             self?.isShowCoinPayment = false
             self?.showAddCoin = false
             
+            self?.alert.title = LocalizableText.attentionText
+            
             if let error = error as? ErrorResponse {
                 self?.error = error.message.orEmpty()
                 
@@ -435,6 +509,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     func handleDefaultErrorPromoCodeChecking(error: Error) {
         DispatchQueue.main.async { [weak self] in
             self?.isLoading = false
+            self?.alert.title = LocalizableText.attentionText
             
             if let error = error as? ErrorResponse {
                 self?.error = error.message.orEmpty()
@@ -532,6 +607,8 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         DispatchQueue.main.async { [weak self] in
             self?.isLoadingTrxs = false
             self?.productSelected = nil
+            
+            self?.alert.title = LocalizableText.attentionText
             
             if let error = error as? ErrorResponse {
                 self?.error = error.message.orEmpty()
@@ -794,6 +871,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     func handleDefaultErrorFollow(error: Error) {
         DispatchQueue.main.async { [weak self] in
             self?.isLoadingFollow = false
+            self?.alert.title = LocalizableText.attentionText
             
             if let error = error as? ErrorResponse {
                 self?.error = error.message.orEmpty()
@@ -913,6 +991,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
                 } else {
                     self?.isLoading = false
                 }
+                self?.alert.title = LocalizableText.attentionText
                 
                 if let error = failure as? ErrorResponse {
                     
@@ -953,6 +1032,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
             } else {
                 self?.isLoading = false
             }
+            self?.alert.title = LocalizableText.attentionText
             
             if let error = error as? ErrorResponse {
                 self?.error = error.message.orEmpty()
@@ -1131,6 +1211,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
                 } else {
                     self?.isLoading = false
                 }
+                self?.alert.title = LocalizableText.attentionText
                 
                 if let error = failure as? ErrorResponse {
                     
@@ -1160,6 +1241,20 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
                     self?.alert.isError = true
                     self?.isShowAlert = true
                 }
+            }
+        }
+    }
+    
+    func viewExclusiveVideo() {
+        // FIXME: Change to subscribed condition when BE has done
+        if (talentData?.isFollowed).orFalse() {
+            routeToDetailVideo()
+        } else {
+            alert.title = LocalizableText.subscribeAlertTitle
+            alert.message = LocalizableText.subscribeAlertDesc
+            alert.primaryButton = .init(text: LocalizableText.okText, action: {})
+            DispatchQueue.main.async { [weak self] in
+                self?.isShowAlert = true
             }
         }
     }
@@ -1209,6 +1304,10 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         let viewModel = RateCardServiceBookingFormViewModel(backToHome: self.backToHome, talentName: self.talentName.orEmpty(), talentPhoto: self.talentPhoto.orEmpty(), rateCard: RateCardResponse(id: rateCardId, title: title, description: description, price: price, duration: duration, isPrivate: isPrivate))
         
         DispatchQueue.main.async { [weak self] in
+            self?.isShowBundlingSheet = false
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+0.1) { [weak self] in
             self?.route = .rateCardServiceBookingForm(viewModel: viewModel)
         }
     }
@@ -1226,6 +1325,14 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .talentProfileDetail(viewModel: viewModel)
+        }
+    }
+    
+    func routeToDetailVideo() {
+        let viewModel = DetailVideoViewModel(backToHome: { self.backToHome() })
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .detailVideo(viewModel: viewModel)
         }
     }
     

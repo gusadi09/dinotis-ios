@@ -32,7 +32,8 @@ public extension Image {
     
     static let talentProfileComingSoonImage = Image("img-coming-soon-talent-profile", bundle: Bundle.module)
     static let talentProfileNoServiceImage = Image("img-no-service-talent-profile", bundle: Bundle.module)
-	static let talentProfileEmptyGallery = Image("img-empty-gallery", bundle: .module)
+    static let talentProfileEmptyGallery = Image("img-empty-gallery", bundle: .module)
+	static let talentProfileEmptyVideo = Image("img-empty-video", bundle: .module)
     
     static let profileLogoutImage = Image("img-logout-profile", bundle: Bundle.module)
     

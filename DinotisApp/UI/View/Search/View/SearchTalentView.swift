@@ -26,7 +26,7 @@ struct SearchTalentView: View {
 					unwrapping: $viewModel.route,
 					case: /HomeRouting.talentProfileDetail,
 					destination: {viewModel in
-						TalentProfileDetailView(viewModel: viewModel.wrappedValue, tabValue: $tabValue)
+                        CreatorProfileDetailView(viewModel: viewModel.wrappedValue, tabValue: $tabValue)
 					},
 					onNavigate: {_ in},
 					label: {
