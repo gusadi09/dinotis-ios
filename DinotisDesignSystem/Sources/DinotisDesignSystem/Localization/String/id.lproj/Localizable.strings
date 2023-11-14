@@ -673,4 +673,6 @@
 "comment_label" = "Komentar";
 "detail_video_upcoming_session_desc" = "Sesi terdekat yang bisa kamu ikuti";
 
-"minus_total_revenue_warning" = "**Pendapatan kamu minus** dikarenakan harga sesi yang terlalu rendah, **Silahkan naikkan harga sesi kamu**";
+"minus_total_revenue_warning" = "**Pendapatan kamu minus** karena harga sesi yang terlalu rendah. **Disarankan untuk menaikkan harga sesi kamu**.";
+
+
