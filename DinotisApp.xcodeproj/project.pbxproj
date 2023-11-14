@@ -23,6 +23,8 @@
 		4BEACAF72AEFB3E6008E165C /* CreatorStudioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEACAF62AEFB3E6008E165C /* CreatorStudioView.swift */; };
 		4BEACAFB2AF24C84008E165C /* DetailVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEACAFA2AF24C84008E165C /* DetailVideoViewModel.swift */; };
 		4BEACAFE2AF25A82008E165C /* DetailVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEACAFD2AF25A82008E165C /* DetailVideoView.swift */; };
+		4BFAD32F2AFA0A6600E07ABD /* CreatorProfileDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFAD32E2AFA0A6600E07ABD /* CreatorProfileDetailView.swift */; };
+		4BFAD3312AFA0B4700E07ABD /* CreatorProfileDetailView+Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFAD3302AFA0B4700E07ABD /* CreatorProfileDetailView+Component.swift */; };
 		4BFE4E002ACD4CFF00E14890 /* DiscussionListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFE4DFF2ACD4CFF00E14890 /* DiscussionListViewModel.swift */; };
 		4BFE4E022ACD4D2A00E14890 /* DiscussionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFE4E012ACD4D2A00E14890 /* DiscussionListView.swift */; };
 		4BFE4E092AD0264600E14890 /* ReviewListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFE4E082AD0264600E14890 /* ReviewListView.swift */; };
@@ -383,6 +385,8 @@
 		4BEACAF62AEFB3E6008E165C /* CreatorStudioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatorStudioView.swift; sourceTree = "<group>"; };
 		4BEACAFA2AF24C84008E165C /* DetailVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailVideoViewModel.swift; sourceTree = "<group>"; };
 		4BEACAFD2AF25A82008E165C /* DetailVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailVideoView.swift; sourceTree = "<group>"; };
+		4BFAD32E2AFA0A6600E07ABD /* CreatorProfileDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatorProfileDetailView.swift; sourceTree = "<group>"; };
+		4BFAD3302AFA0B4700E07ABD /* CreatorProfileDetailView+Component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CreatorProfileDetailView+Component.swift"; sourceTree = "<group>"; };
 		4BFE4DFF2ACD4CFF00E14890 /* DiscussionListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscussionListViewModel.swift; sourceTree = "<group>"; };
 		4BFE4E012ACD4D2A00E14890 /* DiscussionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscussionListView.swift; sourceTree = "<group>"; };
 		4BFE4E082AD0264600E14890 /* ReviewListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewListView.swift; sourceTree = "<group>"; };
@@ -1668,6 +1672,8 @@
 			children = (
 				ECBA9F3426D63662008CCCDB /* TalentProfileDetailView.swift */,
 				0A0664CE280F0669009EC7C0 /* TalentProfileDetailView+Component.swift */,
+				4BFAD32E2AFA0A6600E07ABD /* CreatorProfileDetailView.swift */,
+				4BFAD3302AFA0B4700E07ABD /* CreatorProfileDetailView+Component.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -3284,6 +3290,7 @@
 				F63A099A289C142A008C7815 /* SyncUserMap.swift in Sources */,
 				EC6A96F127CF17C000282253 /* AfterCallViewModel.swift in Sources */,
 				EC86AD4226C62D1300EB5B78 /* UserEditProfile.swift in Sources */,
+				4BFAD32F2AFA0A6600E07ABD /* CreatorProfileDetailView.swift in Sources */,
 				F67334CF2908EE0C006C1ADF /* BundlingDetailViewModel.swift in Sources */,
 				EC6A96E527CDDDDE00282253 /* TalentProfileDetailViewModel.swift in Sources */,
 				F63A098D289BED1C008C7815 /* SpeakerGridView.swift in Sources */,
@@ -3335,6 +3342,7 @@
 				4BEACAF42AEFAE16008E165C /* CreatorStudioViewModel.swift in Sources */,
 				F67334C92908EE02006C1ADF /* BundlingView.swift in Sources */,
 				EC6A96EC27CF151600282253 /* PrivateVideoCallViewModel.swift in Sources */,
+				4BFAD3312AFA0B4700E07ABD /* CreatorProfileDetailView+Component.swift in Sources */,
 				F67334E52908EE5D006C1ADF /* ScheduleNegotiationChatView.swift in Sources */,
 				F67334BA2908EC26006C1ADF /* TalentCreateBundlingViewModel.swift in Sources */,
 				EC9C4E1F2812574500837469 /* PaymentMethodView+Component.swift in Sources */,

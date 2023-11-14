@@ -15,6 +15,8 @@ public struct DinotisTextEditor: View {
 	let label: String?
 	let placeholder: String
 	let onSubmit: () -> Void
+    
+    @FocusState private var focused: Bool
 
 	public init(
 		_ placeholder: String,
@@ -40,7 +42,7 @@ public struct DinotisTextEditor: View {
 					.foregroundColor(.black)
 			}
 
-			ZStack {
+            ZStack(alignment: .topLeading) {
 
 				#if os(macOS)
 				TextEditor(text: $text)
@@ -48,14 +50,26 @@ public struct DinotisTextEditor: View {
 					.foregroundColor(.black)
 					.textFieldStyle(.plain)
 					.frame(height: 100)
+                    .focused($focused)
 				#else
 				TextEditor(text: $text)
 					.font(.robotoRegular(size: 12))
 					.foregroundColor(.black)
 					.textFieldStyle(.plain)
 					.frame(height: 100)
+                    .focused($focused)
 				#endif
-
+                
+                if text.isEmpty && !focused {
+                    Text(placeholder)
+                        .font(.robotoRegular(size: 12))
+                        .foregroundColor(.DinotisDefault.black3)
+                        .padding(4)
+                        .padding(.top, 4)
+                        .onTapGesture {
+                            focused = true
+                        }
+                }
 			}
 			.padding(5)
 			.background(

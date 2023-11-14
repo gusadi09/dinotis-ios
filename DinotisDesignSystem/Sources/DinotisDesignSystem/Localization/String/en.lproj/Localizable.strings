@@ -675,3 +675,26 @@
 "detail_video_upcoming_session_desc" = "Upcoming sessions you can join";
 
 "minus_total_revenue_warning" = "**Your income is negative** due to the session price being too low. **It's recommended to increase your session price**.";
+
+"subscirbe_card_title" = "Get exclusive access! Subscribe now";
+"subscirbe_card_desc" = "Become a Subscriber to enjoy all video content and replays from your favorite Creators, whenever you want!";
+"subscirbe_cancel_desc" = "Cancel anytime, wherever you want";
+"adaptive_subscribtion_label" = "Adaptive Subscription";
+"subscribe_now_label" = "Subscribe now";
+"for_one_month_label" = "For 1 Month";
+"subscribe_alert_title" = "Let's subscribe first";
+"subscribe_alert_desc" = "To access this video, you need to subscribe first, okay?";
+"request_private_label" = "Request Private";
+"request_ratecard_label" = "Request Ratecard";
+"request_private_desc" = "With 'Request Private,' enjoy an exclusive private call with your favorite creator.";
+"overview_label" = "Overview";
+"public_session_label" = "Public Sessions";
+"exclusive_video_label" = "Exclusive Video";
+"schedule_filter_label" = "Schedule Filter";
+"session_empty_title" = "There are no video call sessions yet";
+"session_empty_desc" = "You can ask %@ to create a session by clicking ";
+"empty_upload_desc" = "No content has been uploaded yet";
+"session_type_label" = "Session Type";
+"message_label" = "Message";
+"default_placeholder" = "Placeholder..";
+"send_request_label" = "Send Request";
