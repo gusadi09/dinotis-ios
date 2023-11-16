@@ -979,7 +979,7 @@ extension EditTalentMeetingView {
                     
                     Button(action: {
                         viewModel.startDate = viewModel.changedStartDate
-                        viewModel.meetingForm.startAt = viewModel.changedStartDate.toStringFormat(with: .utc)
+                        viewModel.meetingForm.startAt = DateUtils.dateFormatter(viewModel.changedStartDate, forFormat: .utcV2)
                         viewModel.showsDatePicker = false
                     }, label: {
                         HStack {
@@ -1026,7 +1026,7 @@ extension EditTalentMeetingView {
                     
                     Button(action: {
                         viewModel.startDate = viewModel.changedStartDate
-                        viewModel.meetingForm.startAt = viewModel.changedStartDate.toStringFormat(with: .utc)
+                        viewModel.meetingForm.startAt = DateUtils.dateFormatter(viewModel.changedStartDate, forFormat: .utcV2)
                         
                         if viewModel.meetingForm.endAt.isEmpty || viewModel.endDate.orCurrentDate() < viewModel.changedStartDate {
                             viewModel.endDate = viewModel.changedStartDate.addingTimeInterval(3600)
@@ -1079,7 +1079,7 @@ extension EditTalentMeetingView {
                     
                     Button(action: {
                         viewModel.endDate = viewModel.changedEndDate
-                        viewModel.meetingForm.endAt = viewModel.changedEndDate.toStringFormat(with: .utc)
+                        viewModel.meetingForm.endAt = DateUtils.dateFormatter(viewModel.changedEndDate, forFormat: .utcV2)
                         viewModel.showsTimeUntilPicker = false
                         
                         if viewModel.meetingForm.startAt.isEmpty {
