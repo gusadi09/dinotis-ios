@@ -1634,7 +1634,7 @@ extension ScheduledFormView {
                     
                     Button(action: {
                         viewModel.startDate = viewModel.changedStartDate
-                        viewModel.meeting.startAt = viewModel.changedStartDate.toStringFormat(with: .utc)
+                        viewModel.meeting.startAt = DateUtils.dateFormatter(viewModel.changedStartDate, forFormat: .utcV2)
                         viewModel.showsDatePicker = false
                     }, label: {
                         HStack {
@@ -1681,7 +1681,7 @@ extension ScheduledFormView {
                     
                     Button(action: {
                         viewModel.startDate = viewModel.changedStartDate
-                        viewModel.meeting.startAt = viewModel.changedStartDate.toStringFormat(with: .utc)
+                        viewModel.meeting.startAt = DateUtils.dateFormatter(viewModel.changedStartDate, forFormat: .utcV2)
                         
                         if viewModel.meeting.endAt.isEmpty || viewModel.endDate.orCurrentDate() < viewModel.changedStartDate {
                             viewModel.endDate = viewModel.changedStartDate.addingTimeInterval(3600)
@@ -1734,7 +1734,7 @@ extension ScheduledFormView {
                     
                     Button(action: {
                         viewModel.endDate = viewModel.changedEndDate
-                        viewModel.meeting.endAt = viewModel.changedEndDate.toStringFormat(with: .utc)
+                        viewModel.meeting.endAt = DateUtils.dateFormatter(viewModel.changedEndDate, forFormat: .utcV2)
                         viewModel.showsTimeUntilPicker = false
                         
                         if viewModel.meeting.startAt.isEmpty {
