@@ -245,6 +245,10 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         return profession
     }
     
+    var isManagementView: Bool {
+        talentData?.management != nil
+    }
+    
     init(
         backToHome: @escaping (() -> Void),
         username: String,

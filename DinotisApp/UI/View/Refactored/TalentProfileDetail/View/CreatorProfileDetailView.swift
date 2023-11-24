@@ -22,6 +22,12 @@ struct CreatorProfileDetailView: View {
     
     @Binding var tabValue: TabRoute
     
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    
+    var hasRegularWidth: Bool {
+        horizontalSizeClass == .regular
+    }
+    
     var body: some View {
         
         GeometryReader { geo in
@@ -80,7 +86,7 @@ struct CreatorProfileDetailView: View {
                     unwrapping: $viewModel.route,
                     case: /HomeRouting.talentProfileDetail,
                     destination: { viewModel in
-                        TalentProfileDetailView(viewModel: viewModel.wrappedValue, tabValue: $tabValue)
+                        CreatorProfileDetailView(viewModel: viewModel.wrappedValue, tabValue: $tabValue)
                     },
                     onNavigate: {_ in},
                     label: {
@@ -106,7 +112,7 @@ struct CreatorProfileDetailView: View {
                 VStack(spacing: 0) {
                     
                     HeaderView(
-                        title: (viewModel.talentData?.username).orEmpty(),
+                        title: viewModel.isManagementView ? LocalizableText.managementProfileLabel : (viewModel.talentData?.username).orEmpty(),
                         headerColor: .DinotisDefault.baseBackground,
                         textColor: .black,
                         leadingButton: {
@@ -152,6 +158,7 @@ struct CreatorProfileDetailView: View {
                         .listRowBackground(Color.clear)
                         .listRowSeparator(.hidden)
                         .listSectionSeparator(.hidden)
+                        .isHidden(viewModel.isManagementView, remove: true)
                         
                         Section {
                             SectionContentView(geometry: geo)

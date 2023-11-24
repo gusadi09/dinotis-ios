@@ -31,6 +31,7 @@ public extension Image {
     static let talentProfileStarAddBlackIcon = Image("ic-star-add-black", bundle: Bundle.module)
     static let talentProfileHeartAddBlackIcon = Image("ic-heart-add-black", bundle: Bundle.module)
     static let talentProfileBalanceWhiteIcon = Image("ic-balance-white", bundle: Bundle.module)
+    static let talentProfilePerson2Icon = Image("ic-person-2", bundle: Bundle.module)
     
     static let notificationIcon = Image("ic-notification", bundle: Bundle.module)
     static let notificationSolidIcon = Image("ic-solid-notification", bundle: Bundle.module)

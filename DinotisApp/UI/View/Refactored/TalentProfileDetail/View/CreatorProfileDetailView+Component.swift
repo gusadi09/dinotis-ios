@@ -16,7 +16,7 @@ extension CreatorProfileDetailView {
     @ViewBuilder
     func ProfileHeaderView() -> some View {
         VStack(spacing: 16) {
-            HStack(alignment: .center, spacing: 20) {
+            HStack(alignment: viewModel.isManagementView ? .top : .center, spacing: 20) {
                 DinotisImageLoader(urlString: (viewModel.talentData?.profilePhoto).orEmpty())
                     .scaledToFill()
                     .frame(width: 84, height: 84)
@@ -24,19 +24,18 @@ extension CreatorProfileDetailView {
                 
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
-                        if viewModel.talentData?.isVerified ?? true {
-                            Text("\(viewModel.talentName.orEmpty()) \(Image.Dinotis.accountVerifiedIcon)")
-                                .font(.robotoBold(size: 16))
-                                .minimumScaleFactor(0.9)
-                                .lineLimit(2)
-                                .foregroundColor(.black)
-                        } else {
-                            Text("\(viewModel.talentName.orEmpty())")
-                                .font(.robotoBold(size: 16))
-                                .minimumScaleFactor(0.9)
-                                .lineLimit(2)
-                                .foregroundColor(.black)
+                        Group {
+                            if viewModel.talentData?.isVerified ?? true {
+                                Text("\(viewModel.talentName.orEmpty()) \(Image.Dinotis.accountVerifiedIcon)")
+                                    
+                            } else {
+                                Text("\(viewModel.talentName.orEmpty())")
+                            }
                         }
+                        .font(.robotoBold(size: 16))
+                        .minimumScaleFactor(0.9)
+                        .lineLimit(2)
+                        .foregroundColor(.black)
                         
                         Spacer()
                     }
@@ -46,12 +45,26 @@ extension CreatorProfileDetailView {
                             .resizable()
                             .scaledToFit()
                             .frame(width: 13)
+                            .isHidden(viewModel.isManagementView, remove: true)
                         
-                        Text(viewModel.professionText)
+                        Text(viewModel.isManagementView ? LocalizableText.managementCreatorLabel : viewModel.professionText)
                             .font(.robotoMedium(size: 12))
                             .minimumScaleFactor(0.9)
                             .foregroundColor(.DinotisDefault.black2)
                     }
+                    
+                    HStack(spacing: 4) {
+                        Image.talentProfilePerson2Icon
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 16)
+                        
+                        Text("\((viewModel.talentData?.management?.managementTalents ?? []).count) \(LocalizableText.creatorTitle)")
+                            .font(.robotoMedium(size: 12))
+                            .minimumScaleFactor(0.9)
+                            .foregroundColor(.DinotisDefault.black2)
+                    }
+                    .isHidden(!viewModel.isManagementView, remove: true)
                     
                     if let data = viewModel.talentData?.managements?.prefix(3), !data.isEmpty {
                         Button {
@@ -151,6 +164,7 @@ extension CreatorProfileDetailView {
                 }
                 .font(.robotoMedium(size: 14))
             }
+            .isHidden(viewModel.isManagementView, remove: true)
         }
         .padding(.horizontal)
     }
@@ -209,7 +223,7 @@ extension CreatorProfileDetailView {
             Button {
                 viewModel.tabNumb = 0
             } label: {
-                Text(LocalizableText.overviewLabel)
+                Text(viewModel.isManagementView ? LocalizableText.talentDetailInformation : LocalizableText.overviewLabel)
                     .font(.robotoBold(size: 14))
                     .foregroundColor(viewModel.tabNumb == 0 ? .DinotisDefault.black1 : .DinotisDefault.black3)
                     .frame(maxWidth: .infinity)
@@ -226,7 +240,7 @@ extension CreatorProfileDetailView {
             Button {
                 viewModel.tabNumb = 1
             } label: {
-                Text(LocalizableText.publicSessionLabel)
+                Text(viewModel.isManagementView ? LocalizableText.creatorTitle : LocalizableText.publicSessionLabel)
                     .font(.robotoBold(size: 14))
                     .foregroundColor(viewModel.tabNumb == 1 ? .DinotisDefault.black1 : .DinotisDefault.black3)
                     .frame(maxWidth: .infinity)
@@ -243,7 +257,7 @@ extension CreatorProfileDetailView {
             Button {
                 viewModel.tabNumb = 2
             } label: {
-                Text(LocalizableText.exclusiveVideoLabel)
+                Text(viewModel.isManagementView ? LocalizableText.tabSession : LocalizableText.exclusiveVideoLabel)
                     .font(.robotoBold(size: 14))
                     .foregroundColor(viewModel.tabNumb == 2 ? .DinotisDefault.black1 : .DinotisDefault.black3)
                     .frame(maxWidth: .infinity)
@@ -269,9 +283,17 @@ extension CreatorProfileDetailView {
         LazyVStack(spacing: 16) {
             switch viewModel.tabNumb {
             case 1:
-                SessionsView()
+                if viewModel.isManagementView {
+                    CreatorList(geo: geometry)
+                } else {
+                    SessionsView()
+                }
             case 2:
-                ExclusiveVideoView()
+                if viewModel.isManagementView {
+                    SessionsView()
+                } else {
+                    ExclusiveVideoView()
+                }
             default:
                 OverviewView(geometry: geometry)
             }
@@ -284,7 +306,7 @@ extension CreatorProfileDetailView {
     func OverviewView(geometry: GeometryProxy) -> some View {
         VStack(alignment: .leading, spacing: 24) {
             VStack(alignment: .leading, spacing: 8) {
-                Text(LocalizableText.talentDetailAboutMe)
+                Text(viewModel.isManagementView ? LocalizableText.talentDetailAboutUs : LocalizableText.talentDetailAboutMe)
                     .font(.robotoBold(size: 14))
                     .foregroundColor(.DinotisDefault.black3)
                 
@@ -332,6 +354,94 @@ extension CreatorProfileDetailView {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal)
+    }
+    
+    @ViewBuilder
+    func CreatorList(geo: GeometryProxy) -> some View {
+        LazyVGrid(
+            columns: Array(
+                repeating: GridItem(.flexible(), spacing: 10),
+                count: hasRegularWidth ? 4 : 2
+            )
+        ) {
+            if let data = viewModel.talentData?.management?.managementTalents {
+                ForEach(data, id: \.id) { item in
+                    Button {
+                        viewModel.routeToMyTalent(talent: (item.user?.username).orEmpty())
+                    } label: {
+                        ManagementCreatorCard(
+                            item.user,
+                            width: geo.size.width/(hasRegularWidth ? 4 : 2) - 22
+                        )
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    func ManagementCreatorCard(_ data: ManagementTalentData?, width: CGFloat) -> some View {
+        var proffessionText: String {
+            var text = ""
+            let data = data?.stringProfessions?.compactMap({ $0 })
+            text = data?.joined(separator: ", ") ?? ""
+            return text
+        }
+        
+        VStack(spacing: 0) {
+            DinotisImageLoader(urlString: (data?.profilePhoto).orEmpty())
+                .scaledToFill()
+                .frame(width: width, height: width)
+                .overlay(alignment: .bottomLeading) {
+                    HStack(spacing: 4) {
+                        Image.talentProfileStarIcon
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 16)
+                        
+                        // FIXME: Change this when the backend send rating response
+                        Text((data?.rating) ?? "– ")
+                            .font(.robotoRegular(size: 12))
+                            .foregroundColor(.black)
+                    }
+                    .padding(4)
+                    .background(Color.DinotisDefault.lightPrimary)
+                    .cornerRadius(8, corners: .topRight)
+                }
+            
+            VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(spacing: 8) {
+                        Text((data?.name).orEmpty())
+                            .font(.robotoBold(size: 14))
+                            .foregroundColor(.DinotisDefault.black1)
+                        
+                        if (data?.isVerified).orFalse() {
+                            Image.sessionCardVerifiedIcon
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 11, height: 11)
+                        }
+                    }
+                    
+                    Text(proffessionText)
+                        .font(.robotoRegular(size: 12))
+                        .foregroundColor(.DinotisDefault.black2)
+                }
+                .lineLimit(1)
+                
+                Rectangle()
+                    .fill(Color.DinotisDefault.lightPrimary)
+                    .frame(height: 1)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(12)
+        }
+        .frame(width: width)
+        .background(Color.white)
+        .cornerRadius(8)
+        .shadow(color: .black.opacity(0.1), radius: 8)
     }
     
     @ViewBuilder
