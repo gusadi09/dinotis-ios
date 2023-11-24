@@ -150,7 +150,6 @@ struct GroupVideoCallView: View {
         })
         .onReceive(viewModel.didSendRequest, perform: {
             dismiss()
-//            viewModel.routeToSetUpVideo()
         })
         .onAppear {
             viewModel.onAppear()
@@ -3048,12 +3047,13 @@ fileprivate extension GroupVideoCallView {
                                     .foregroundColor(.white)
                                     .rotationEffect(.degrees(45))
                                     .frame(height: 18)
+                                    .padding(.vertical, 15)
+                                    .padding(.leading, 16)
+                                    .padding(.trailing, 22)
+                                    .background((viewModel.messageText.isEmpty || !viewModel.messageText.isStringContainWhitespaceAndText()) ? Color.dinotisGray : Color.DinotisDefault.primary)
+                                    .cornerRadius(11)
                             }
-                            .padding(.vertical, 15)
-                            .padding(.leading, 16)
-                            .padding(.trailing, 22)
-                            .background((viewModel.messageText.isEmpty || !viewModel.messageText.isStringContainWhitespaceAndText()) ? Color.dinotisGray : Color.DinotisDefault.primary)
-                            .cornerRadius(11)
+                            .contentShape(RoundedRectangle(cornerRadius: 11))
                             .disabled(viewModel.messageText.isEmpty || !viewModel.messageText.isStringContainWhitespaceAndText())
                             
                         }
@@ -3339,8 +3339,18 @@ fileprivate extension GroupVideoCallView {
                                     textColor: .white,
                                     bgColor: .DinotisDefault.primary
                                 ) {
-                                    viewModel.meeting.participants.kickAll()
-                                    viewModel.leaveMeeting()
+                                    if viewModel.meeting.recording.recordingState == .recording {
+                                        viewModel.meeting.recording.stop()
+                                    } else {
+                                        viewModel.meeting.participants.kickAll()
+                                        viewModel.leaveMeeting()
+                                    }
+                                }
+                                .onChange(of: viewModel.meeting.recording.recordingState) { newValue in
+                                    if newValue == .stopping {
+                                        viewModel.meeting.participants.kickAll()
+                                        viewModel.leaveMeeting()
+                                    }
                                 }
                                 
                                 DinotisPrimaryButton(

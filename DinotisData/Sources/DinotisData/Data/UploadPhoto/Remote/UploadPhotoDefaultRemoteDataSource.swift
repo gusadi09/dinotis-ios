@@ -24,4 +24,8 @@ public final class UploadPhotoDefaultRemoteDataSource: UploadPhotoRemoteDataSour
     public func uploadMultipleImage(with images: [UIImage]) async throws -> UploadMultipleResponse {
         try await self.provider.request(.uploadMultiplePhoto(images), model: UploadMultipleResponse.self)
     }
+    
+    public func uploadVideoSignedURL(with ext: String) async throws -> UploadVideoSignedResponse {
+        try await self.provider.request(.uploadVideoSigned(ext), model: UploadVideoSignedResponse.self)
+    }
 }

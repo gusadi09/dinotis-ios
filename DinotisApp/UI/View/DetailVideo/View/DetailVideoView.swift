@@ -18,7 +18,7 @@ struct DetailVideoView: View {
             VStack(spacing: 0) {
                 HeaderView(
                     type: .textHeader,
-                    title: (viewModel.userData?.username).orEmpty(),
+                    title: (viewModel.videoData?.video?.user?.username).orEmpty(),
                     headerColor: .clear,
                     textColor: .DinotisDefault.black1,
                     leadingButton:  {
@@ -37,70 +37,102 @@ struct DetailVideoView: View {
                                 )
                         }
                     }) {
-                        Button {
-                            
-                        } label: {
-                            Image.talentProfileShareIcon
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 20, height: 20)
-                                .padding(12)
-                                .background(
-                                    Circle()
-                                        .fill(.white)
-                                        .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 0)
-                                )
+                        if let url = viewModel.videoData?.video?.shareUrl {
+                            Button {
+                                viewModel.shareSheet(url: url)
+                            } label: {
+                                Image.talentProfileShareIcon
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 20, height: 20)
+                                    .padding(12)
+                                    .background(
+                                        Circle()
+                                            .fill(.white)
+                                            .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 0)
+                                    )
+                            }
                         }
                     }
                     .transition(.move(edge: .top))
                 
-                DinotisVideoPlayer(url: viewModel.videoData.url!, isAutoPlay: true)
-                    .frame(width: geometry.size.width, height: geometry.size.width * 9 / 16)
-                
-                List {
-                    VStack(spacing: 22) {
-                        VideoDataView()
-                        
-                        CommentCardView()
-                        
-                        Button {
+                if viewModel.isLoading {
+                    
+                    Spacer()
+                    
+                    DinotisLoadingView(.small, hide: !viewModel.isLoading)
+                    
+                    Spacer()
+                } else {
+                    LazyVStack {
+                        if let url = URL(string: viewModel.videoUrl.orEmpty()) {
+                            DinotisVideoPlayer(url: url, isAutoPlay: true)
+                                .frame(width: geometry.size.width, height: geometry.size.width * 9 / 16)
+                        } else {
+                            Rectangle()
+                                .foregroundStyle(Color.black)
+                                .frame(width: geometry.size.width, height: geometry.size.width * 9 / 16)
+                                .overlay(
+                                    LottieView(name: "regular-loading", loopMode: .loop)
+                                        .scaledToFit()
+                                        .frame(height: 50)
+                                )
                             
-                        } label: {
-                            HStack(spacing: 12) {
-                                Text(LocalizableText.detailVideoUpcomingSessionDesc)
-                                    .foregroundColor(.DinotisDefault.black1)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                
-                                Image(systemName: "chevron.right")
-                                    .foregroundColor(.DinotisDefault.black2)
+                        }
+                    }
+                    
+                    List {
+                        Group {
+                            VideoDataView()
+                                .buttonStyle(.plain)
+                            
+                            CommentCardView()
+                                .buttonStyle(.plain)
+                            
+                            if viewModel.state.userType != 2 {
+                                Button {
+                                    
+                                } label: {
+                                    HStack(spacing: 12) {
+                                        Text(LocalizableText.detailVideoUpcomingSessionDesc)
+                                            .foregroundColor(.DinotisDefault.black1)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                        
+                                        Image(systemName: "chevron.right")
+                                            .foregroundColor(.DinotisDefault.black2)
+                                    }
+                                    .font(.robotoBold(size: 16))
+                                }
+                                .buttonStyle(.plain)
+                                .padding(.top)
                             }
-                            .font(.robotoBold(size: 16))
                         }
                         .buttonStyle(.plain)
-                        .padding(.top)
+                        .padding([.horizontal, .top])
+                        .listRowSeparator(.hidden)
+                        .listSectionSeparator(.hidden)
+                        .listRowBackground(Color.clear)
+                        .listRowInsets(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 18))
+                        
+                        if viewModel.state.userType != 2 {
+                            Section {
+                                SessionListView()
+                            } header: {
+                                ListHeaderView()
+                            }
+                            .padding([.horizontal, .bottom])
+                            .listRowSeparator(.hidden)
+                            .listSectionSeparator(.hidden)
+                            .listRowBackground(Color.DinotisDefault.baseBackground)
+                            .listRowInsets(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 18))
+                            .background(Color.DinotisDefault.baseBackground)
+                        }
                     }
-                    .padding([.horizontal, .top])
-                    .listRowSeparator(.hidden)
-                    .listSectionSeparator(.hidden)
-                    .listRowBackground(Color.clear)
-                    .listRowInsets(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 18))
-                    
-                    Section {
-                        SessionListView()
-                    } header: {
-                        ListHeaderView()
+                    .padding(.horizontal, -18)
+                    .listStyle(.plain)
+                    .refreshable {
+                        
                     }
-                    .padding([.horizontal, .bottom])
-                    .listRowSeparator(.hidden)
-                    .listSectionSeparator(.hidden)
-                    .listRowBackground(Color.DinotisDefault.baseBackground)
-                    .listRowInsets(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 18))
-                    .background(Color.DinotisDefault.baseBackground)
-                }
-                .padding(.horizontal, -18)
-                .listStyle(.plain)
-                .refreshable {
-                    
                 }
             }
             .sheet(isPresented: $viewModel.isShowBottomSheet, content: {
@@ -113,15 +145,13 @@ struct DetailVideoView: View {
                 }
             })
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(Color.DinotisDefault.baseBackground)
         .navigationBarTitle(Text(""))
         .navigationBarHidden(true)
         .onAppear {
-            Task {
-                await viewModel.getUsers()
-                await viewModel.getTalentMeeting()
-            }
+            viewModel.onGetDetail()
+            viewModel.onGetUser()
+            viewModel.onAppearGetComments()
         }
     }
 }
@@ -131,40 +161,46 @@ extension DetailVideoView {
     func VideoDataView() -> some View {
         VStack(alignment: .leading, spacing: 12) {
             VStack(alignment: .leading, spacing: 6) {
-                Text(viewModel.videoData.title)
+                Text((viewModel.videoData?.video?.title).orEmpty())
                     .font(.robotoBold(size: 18))
                     .foregroundColor(.DinotisDefault.black1)
                     .multilineTextAlignment(.leading)
                 
                 HStack {
-                    Text(viewModel.dateFormatter(viewModel.videoData.date))
+                    Text(viewModel.dateFormatter((viewModel.videoData?.video?.createdAt).orCurrentDate()))
                     
                     Circle()
                         .frame(width: 4, height: 4)
                     
-                    Text(viewModel.videoData.type)
+                    Text((viewModel.videoData?.video?.videoType?.rawValue).orEmpty().capitalized)
                     
                     Circle()
                         .frame(width: 4, height: 4)
                     
-                    Text(LocalizableText.publicLabel)
+                    Text(viewModel.videoData?.video?.audienceType == .PUBLIC ? LocalizableText.publicLabel : LocalizableText.recordedLabel)
                 }
                 .font(.robotoRegular(size: 12))
                 .foregroundColor(.DinotisDefault.black3)
             }
             
             HStack(spacing: 12) {
-                DinotisImageLoader(urlString: (viewModel.userData?.profilePhoto).orEmpty())
+                DinotisImageLoader(urlString: (viewModel.videoData?.video?.user?.profilePhoto).orEmpty())
                     .scaledToFill()
                     .frame(width: 48, height: 48)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text((viewModel.userData?.name).orEmpty())
-                        .font(.robotoBold(size: 14))
-                        .foregroundColor(.DinotisDefault.black2)
-                        .multilineTextAlignment(.leading)
-                        .lineLimit(2)
+                    HStack(spacing: 3) {
+                        Text((viewModel.videoData?.video?.user?.name).orEmpty())
+                            .font(.robotoBold(size: 14))
+                            .foregroundColor(.DinotisDefault.black2)
+                            .multilineTextAlignment(.leading)
+                            .lineLimit(1)
+                        
+                        if let verif = viewModel.videoData?.video?.user?.isVerified, verif {
+                            Image.sessionCardVerifiedIcon
+                        }
+                    }
                     
                     Text(viewModel.professionText.orEmpty())
                         .font(.robotoRegular(size: 12))
@@ -174,86 +210,90 @@ extension DetailVideoView {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
-                Button {
-                    
-                } label: {
-                    HStack(spacing: 4) {
-                        Image.talentProfileSubsStarWhiteIcon
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 24, height: 24)
+                if viewModel.state.userType != 2 {
+                    Button {
                         
-                        Text(LocalizableText.subscribeLabel)
-                            .font(.robotoMedium(size: 14))
-                            .foregroundColor(.white)
-                    }
-                    .padding(8)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .foregroundColor(.DinotisDefault.primary)
-                    )
-                }
-                .buttonStyle(.plain)
-            }
-            
-            HStack(spacing: 8) {
-                HStack(spacing: -10) {
-                    ForEach(viewModel.videoData.comments.prefix(3), id: \.id) { item in
-                        
-                        DinotisImageLoader(urlString: item.profileImage)
-                            .frame(width: 25, height: 25)
-                            .clipShape(Circle())
-                            .overlay(
-                                Circle()
-                                    .stroke(Color.white, lineWidth: 1)
-                                    .frame(width: 25, height: 25)
-                            )
-                    }
-                    
-                    if viewModel.videoData.comments.count > 3 {
-                        HStack(spacing: 2) {
-                            Circle()
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image.talentProfileSubsStarWhiteIcon
+                                .resizable()
                                 .scaledToFit()
-                                .frame(height: 3)
-                                .foregroundColor(.white)
+                                .frame(width: 24, height: 24)
                             
-                            Circle()
-                                .scaledToFit()
-                                .frame(height: 3)
-                                .foregroundColor(.white)
-                            
-                            Circle()
-                                .scaledToFit()
-                                .frame(height: 3)
+                            Text(LocalizableText.subscribeLabel)
+                                .font(.robotoMedium(size: 14))
                                 .foregroundColor(.white)
                         }
-                        .frame(width: 25, height: 25)
+                        .padding(8)
                         .background(
-                            Circle()
+                            RoundedRectangle(cornerRadius: 12)
+                                .foregroundColor(.DinotisDefault.primary)
+                        )
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            
+            if viewModel.videoData?.video?.videoType == .RECORD {
+                HStack(spacing: 8) {
+                    HStack(spacing: -10) {
+                        ForEach((viewModel.videoData?.meeting?.participantDetails ?? []).prefix(3), id: \.id) { item in
+                            
+                            DinotisImageLoader(urlString: item.profilePhoto.orEmpty())
                                 .frame(width: 25, height: 25)
-                                .foregroundColor(Color(hex: "#CD2DAD")?.opacity(0.75))
+                                .clipShape(Circle())
                                 .overlay(
                                     Circle()
                                         .stroke(Color.white, lineWidth: 1)
                                         .frame(width: 25, height: 25)
                                 )
-                        )
+                        }
+                        
+                        if (viewModel.videoData?.meeting?.participantDetails ?? []).count > 3 {
+                            HStack(spacing: 2) {
+                                Circle()
+                                    .scaledToFit()
+                                    .frame(height: 3)
+                                    .foregroundColor(.white)
+                                
+                                Circle()
+                                    .scaledToFit()
+                                    .frame(height: 3)
+                                    .foregroundColor(.white)
+                                
+                                Circle()
+                                    .scaledToFit()
+                                    .frame(height: 3)
+                                    .foregroundColor(.white)
+                            }
+                            .frame(width: 25, height: 25)
+                            .background(
+                                Circle()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundColor(Color(hex: "#CD2DAD")?.opacity(0.75))
+                                    .overlay(
+                                        Circle()
+                                            .stroke(Color.white, lineWidth: 1)
+                                            .frame(width: 25, height: 25)
+                                    )
+                            )
+                        }
                     }
+                    
+                    Text(LocalizableText.groupSessionLabelWithEmoji)
+                        .font(.robotoMedium(size: 10))
+                        .foregroundColor(.DinotisDefault.primary)
+                        .padding(.vertical, 6)
+                        .padding(.horizontal, 8)
+                        .overlay(
+                            Capsule()
+                                .stroke(Color.DinotisDefault.primary, lineWidth: 1)
+                        )
                 }
-                
-                Text(LocalizableText.groupSessionLabelWithEmoji)
-                    .font(.robotoMedium(size: 10))
-                    .foregroundColor(.DinotisDefault.primary)
-                    .padding(.vertical, 6)
-                    .padding(.horizontal, 8)
-                    .overlay(
-                        Capsule()
-                            .stroke(Color.DinotisDefault.primary, lineWidth: 1)
-                    )
             }
             
             VStack(alignment: .leading) {
-                Text(viewModel.videoData.description)
+                Text((viewModel.videoData?.video?.description).orEmpty())
                     .font(.robotoRegular(size: 14))
                     .foregroundColor(.DinotisDefault.black1)
                     .multilineTextAlignment(.leading)
@@ -286,34 +326,66 @@ extension DetailVideoView {
                     
                     Spacer()
                     
-                    Text("\(LocalizableText.searchSeeAllLabel)(\(viewModel.videoData.commentCount))")
-                        .foregroundColor(.DinotisDefault.primary)
+                    if (viewModel.videoData?.totalComment).orZero() > 0 {
+                        Text("\(LocalizableText.searchSeeAllLabel)(\((viewModel.videoData?.totalComment).orZero()))")
+                            .foregroundColor(.DinotisDefault.primary)
+                    }
                 }
                 .font(.robotoBold(size: 14))
                 
-                HStack(alignment: .top, spacing: 16) {
-                    DinotisImageLoader(urlString: (viewModel.videoData.comments.last?.profileImage).orEmpty())
-                        .scaledToFill()
-                        .frame(width: 48, height: 48)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                    
-                    VStack(alignment: .leading, spacing: 4) {
+                if (viewModel.videoData?.totalComment).orZero() > 0 {
+                    HStack(alignment: .top, spacing: 16) {
+                        
+                        DinotisImageLoader(urlString: (viewModel.videoData?.comment?.user?.profilePhoto).orEmpty())
+                            .scaledToFill()
+                            .frame(width: 48, height: 48)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack(spacing: 3) {
+                                Text((viewModel.videoData?.comment?.user?.name).orEmpty())
+                                    .lineLimit(1)
+                                
+                                if let verif = viewModel.videoData?.comment?.user?.isVerified, verif {
+                                    Image.sessionCardVerifiedIcon
+                                }
+                                
+                                Spacer()
+                                
+                                Text(viewModel.dateFormatter((viewModel.videoData?.comment?.createdAt).orCurrentDate()))
+                            }
+                            .font(.robotoMedium(size: 12))
+                            .foregroundColor(.DinotisDefault.black3)
+                            
+                            Text((viewModel.videoData?.comment?.comment).orEmpty())
+                                .font(.robotoRegular(size: 12))
+                                .foregroundColor(.DinotisDefault.black1)
+                                .multilineTextAlignment(.leading)
+                                .lineLimit(2)
+                        }
+                    }
+                } else {
+                    HStack(spacing: 8) {
+                        DinotisImageLoader(urlString: (viewModel.userData?.profilePhoto).orEmpty())
+                            .scaledToFill()
+                            .frame(width: 36, height: 36)
+                            .clipShape(Circle())
+                        
                         HStack {
-                            Text((viewModel.videoData.comments.last?.name).orEmpty())
-                                .lineLimit(1)
+                            Text(LocalizableText.detailVideoCommentPlaceholder)
+                                .font(.robotoRegular(size: 12))
+                                .foregroundStyle(Color(red: 0.89, green: 0.77, blue: 1))
+                                .multilineTextAlignment(.leading)
                             
                             Spacer()
-                            
-                            Text(viewModel.dateFormatter((viewModel.videoData.comments.last?.date).orCurrentDate()))
                         }
-                        .font(.robotoMedium(size: 12))
-                        .foregroundColor(.DinotisDefault.black3)
-                        
-                        Text((viewModel.videoData.comments.last?.comment).orEmpty())
-                            .font(.robotoRegular(size: 12))
-                            .foregroundColor(.DinotisDefault.black1)
-                            .multilineTextAlignment(.leading)
-                            .lineLimit(2)
+                        .frame(height: 26)
+                        .padding(.vertical, 4)
+                        .padding(.horizontal, 16)
+                        .background(
+                            Capsule()
+                                .foregroundStyle(Color(red: 0.96, green: 0.93, blue: 1))
+                        )
                     }
                 }
             }
@@ -439,40 +511,122 @@ extension DetailVideoView {
                 .foregroundColor(.DinotisDefault.black1)
                 .padding(.bottom)
             
-            ScrollView {
-                LazyVStack(spacing: 16) {
-                    ForEach(viewModel.videoData.comments.sorted(by: { $0.date > $1.date }), id: \.id) { item in
-                        VStack(spacing: 16) {
-                            HStack(alignment: .top, spacing: 16) {
-                                DinotisImageLoader(urlString: item.profileImage)
-                                    .scaledToFill()
-                                    .frame(width: 48, height: 48)
-                                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                                
-                                VStack(alignment: .leading, spacing: 4) {
-                                    HStack {
-                                        Text(item.name)
-                                            .lineLimit(1)
+            if viewModel.isLoadingComment {
+                VStack {
+                    Spacer()
+                    
+                    LottieView(name: "regular-loading", loopMode: .loop)
+                        .scaledToFit()
+                        .frame(height: 40)
+                    
+                    Spacer()
+                }
+            } else {
+                if viewModel.comments.isEmpty {
+                    VStack {
+                        Spacer()
+                        
+                        Text("No comments right now")
+                            .font(.robotoRegular(size: 12))
+                            .foregroundStyle(Color.DinotisDefault.black3)
+                            .multilineTextAlignment(.center)
+                        
+                        Spacer()
+                    }
+                } else {
+                    ScrollView {
+                        LazyVStack(spacing: 16) {
+                            ForEach(viewModel.comments, id: \.id) { item in
+                                if item.id == viewModel.comments.last?.id {
+                                    VStack(spacing: 16) {
+                                        HStack(alignment: .top, spacing: 16) {
+                                            DinotisImageLoader(urlString: (item.user?.profilePhoto).orEmpty())
+                                                .scaledToFill()
+                                                .frame(width: 48, height: 48)
+                                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                            
+                                            VStack(alignment: .leading, spacing: 4) {
+                                                HStack {
+                                                    Text((item.user?.name).orEmpty())
+                                                        .lineLimit(1)
+                                                    
+                                                    Spacer()
+                                                    
+                                                    Text(viewModel.dateFormatter(item.createdAt.orCurrentDate()))
+                                                }
+                                                .font(.robotoMedium(size: 12))
+                                                .foregroundColor(.DinotisDefault.black3)
+                                                
+                                                Text(item.comment.orEmpty())
+                                                    .font(.robotoRegular(size: 12))
+                                                    .foregroundColor(.DinotisDefault.black1)
+                                                    .multilineTextAlignment(.leading)
+                                            }
+                                        }
                                         
-                                        Spacer()
+                                        Divider()
                                         
-                                        Text(viewModel.dateFormatter((item.date)))
+                                        if viewModel.isLoadingMoreComment {
+                                            HStack {
+                                                Spacer()
+                                                
+                                                LottieView(name: "regular-loading", loopMode: .loop)
+                                                    .scaledToFit()
+                                                    .frame(maxHeight: 30)
+                                                
+                                                Spacer()
+                                            }
+                                        }
                                     }
-                                    .font(.robotoMedium(size: 12))
-                                    .foregroundColor(.DinotisDefault.black3)
-                                    
-                                    Text(item.comment)
-                                        .font(.robotoRegular(size: 12))
-                                        .foregroundColor(.DinotisDefault.black1)
-                                        .multilineTextAlignment(.leading)
+                                    .onAppear {
+                                        if item.id == viewModel.comments.last?.id && viewModel.nextCursor != nil {
+                                            Task {
+                                                viewModel.skipComment = viewModel.takeComment
+                                                viewModel.takeComment += 10
+                                                    
+                                                await viewModel.getComments(isMore: true)
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    VStack(spacing: 16) {
+                                        HStack(alignment: .top, spacing: 16) {
+                                            DinotisImageLoader(urlString: (item.user?.profilePhoto).orEmpty())
+                                                .scaledToFill()
+                                                .frame(width: 48, height: 48)
+                                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                            
+                                            VStack(alignment: .leading, spacing: 4) {
+                                                HStack(spacing: 3) {
+                                                    Text((item.user?.name).orEmpty())
+                                                        .lineLimit(1)
+                                                    
+                                                    if let verif = item.user?.isVerified, verif {
+                                                        Image.sessionCardVerifiedIcon
+                                                    }
+                                                    
+                                                    Spacer()
+                                                    
+                                                    Text(viewModel.dateFormatter(item.createdAt.orCurrentDate()))
+                                                }
+                                                .font(.robotoMedium(size: 12))
+                                                .foregroundColor(.DinotisDefault.black3)
+                                                
+                                                Text(item.comment.orEmpty())
+                                                    .font(.robotoRegular(size: 12))
+                                                    .foregroundColor(.DinotisDefault.black1)
+                                                    .multilineTextAlignment(.leading)
+                                            }
+                                        }
+                                        
+                                        Divider()
+                                    }
                                 }
                             }
-                            
-                            Divider()
                         }
+                        .padding(.horizontal)
                     }
                 }
-                .padding(.horizontal)
             }
             
             HStack(alignment: .bottom, spacing: 8) {
@@ -484,19 +638,30 @@ extension DetailVideoView {
                     .cornerRadius(24)
                 
                 Button {
-                    viewModel.addComment()
+                    Task {
+                        await viewModel.postComments()
+                    }
                 } label: {
-                    Image.messageSendIcon
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: 32, maxHeight: 32)
-                        .padding(10)
-                        .background(Color.DinotisDefault.primary)
-                        .frame(width: 40, height: 40)
-                        .clipShape(.circle)
+                    Group {
+                        if viewModel.isLoadingSend {
+                            LottieView(name: "regular-loading", loopMode: .loop)
+                                .scaledToFit()
+                                .frame(maxHeight: 40)
+                                .clipShape(.circle)
+                        } else {
+                            Image.messageSendIcon
+                                .resizable()
+                                .scaledToFit()
+                                .frame(maxWidth: 32, maxHeight: 32)
+                                .padding(10)
+                                .background(Color.DinotisDefault.primary)
+                                .frame(width: 40, height: 40)
+                                .clipShape(.circle)
+                                .opacity(viewModel.disableSendButton() ? 0.7 : 1)
+                        }
+                    }
                 }
                 .disabled(viewModel.disableSendButton())
-                .opacity(viewModel.disableSendButton() ? 0.7 : 1)
             }
             .zIndex(100)
             .padding()
@@ -510,5 +675,5 @@ extension DetailVideoView {
 
 #Preview {
     DetailVideoView()
-        .environmentObject(DetailVideoViewModel(backToHome: {}))
+        .environmentObject(DetailVideoViewModel(videoId: "", backToHome: {}))
 }

@@ -20,6 +20,14 @@ enum LoadMoreType {
     case meeting
 }
 
+enum StudioVideosFilter {
+    case latest
+    case recorded
+    case popular
+    case earliest
+    case archive
+}
+
 final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProductsRequestDelegate, SKPaymentTransactionObserver {
     
     var backToHome: () -> Void
@@ -190,8 +198,8 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     
     @Published var imageIndex = 0
     
-    @Published var currentSection: StudioVideoFilter = .latest
-    @Published var sections: [StudioVideoFilter] = [.latest, .recorded, .popular, .earliest]
+    @Published var currentSection: StudioVideosFilter = .latest
+    @Published var sections: [StudioVideosFilter] = [.latest, .recorded, .popular, .earliest]
     
     @Published var videos: [DummyVideoModel] = [
         .init(title: "Lorem ipsum dolor sit amet consectetur. Aliquet vitae id pellentesque est ",
@@ -275,7 +283,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         self.getTalentDetailMeetingUseCase = getTalentDetailMeetingUseCase
     }
     
-    func chipText(_ section: StudioVideoFilter) -> String {
+    func chipText(_ section: StudioVideosFilter) -> String {
         switch section {
         case .earliest:
             LocalizableText.sortEarliest
@@ -333,9 +341,9 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         }
     }
     
-    func onSendFreePayment(tabValue: Binding<TabRoute>) {
+    func onSendFreePayment(completion: @escaping () -> Void) {
         Task {
-            await sendFreePayment(tabValue: tabValue)
+            await sendFreePayment(completion: completion)
         }
     }
     
@@ -380,7 +388,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         }
     }
     
-    func sendFreePayment(tabValue: Binding<TabRoute>) async {
+    func sendFreePayment(completion: @escaping () -> Void) async {
         onStartedFetch(noLoad: false)
         let params = BookingPaymentRequest(paymentMethod: 99, meetingId: self.meetingId.isEmpty ? nil : self.meetingId, meetingBundleId: bundlingId.isEmpty ? nil : bundlingId)
         
@@ -398,7 +406,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
                     text: LocalizableText.okText,
                     action: {
                         self?.backToHome()
-                        tabValue.wrappedValue = .agenda
+                        completion()
                     }
                 )
                 self?.isShowAlert = true
@@ -1248,7 +1256,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     func viewExclusiveVideo() {
         // FIXME: Change to subscribed condition when BE has done
         if (talentData?.isFollowed).orFalse() {
-            routeToDetailVideo()
+            routeToDetailVideo(id: "")
         } else {
             alert.title = LocalizableText.subscribeAlertTitle
             alert.message = LocalizableText.subscribeAlertDesc
@@ -1328,8 +1336,8 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         }
     }
     
-    func routeToDetailVideo() {
-        let viewModel = DetailVideoViewModel(backToHome: { self.backToHome() })
+    func routeToDetailVideo(id: String) {
+        let viewModel = DetailVideoViewModel(videoId: id, backToHome: { self.backToHome() })
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .detailVideo(viewModel: viewModel)

@@ -1193,7 +1193,7 @@ struct FormScheduleTalentCardView: View {
                         }
                         .padding()
                         .onAppear {
-                            if var timeStart = timeStart {
+                            if let timeStart = timeStart {
                                 changedTimeEnd = timeStart.addingTimeInterval(3600)
                             } else {
                                 changedTimeEnd = Date().addingTimeInterval(7200)
@@ -1223,7 +1223,8 @@ struct FormScheduleTalentCardView_Previews: PreviewProvider {
                     endAt: "",
                     isPrivate: true,
                     slots: 0,
-                    urls: []
+                    urls: [],
+                    archiveRecording: false
                 )
             ),
             onTapRemove: {},

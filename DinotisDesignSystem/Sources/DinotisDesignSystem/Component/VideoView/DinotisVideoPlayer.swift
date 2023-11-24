@@ -22,12 +22,38 @@ public struct DinotisVideoPlayer: UIViewControllerRepresentable {
     public func makeUIViewController(context: Context) -> AVPlayerViewController {
         let controller = AVPlayerViewController()
         let player = AVPlayer(url: url)
+        player.currentItem?.asset.loadValuesAsynchronously(forKeys: ["tracks"], completionHandler: {
+            
+        })
+        
+        controller.player = player
+        
+        DispatchQueue.global().async {
+                   let asset = AVURLAsset(url: url)
+                   let assetKeys = ["playable", "hasProtectedContent"]
+
+                   asset.loadValuesAsynchronously(forKeys: assetKeys) {
+                       var error: NSError?
+                       for key in assetKeys {
+                           let status = asset.statusOfValue(forKey: key, error: &error)
+                           if status == .failed {
+                               // Handle error loading the asset
+                               print("Failed to load \(key): \(error?.localizedDescription ?? "Unknown error")")
+                               return
+                           }
+                       }
+
+                       // All necessary keys loaded successfully
+                       DispatchQueue.main.async {
+                           player.replaceCurrentItem(with: AVPlayerItem(asset: asset))
+                       }
+                   }
+               }
         
         if isAutoPlay {
             player.play()
         }
         
-        controller.player = player
         return controller
     }
     

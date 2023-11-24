@@ -459,7 +459,7 @@ struct TalentHomeView: View {
                                                                     participantsImgUrl: item.participantDetails?.compactMap({
                                                                         $0.profilePhoto.orEmpty()
                                                                     }) ?? [],
-                                                                    isActive: item.endAt.orCurrentDate() > Date(),
+                                                                    isActive: item.endedAt == nil,
                                                                     collaborationCount: (item.meetingCollaborations ?? []).count,
                                                                     collaborationName: (item.meetingCollaborations ?? []).compactMap({
                                                                         (

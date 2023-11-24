@@ -12,6 +12,7 @@ import UIKit
 public enum UploadPhotoTargetType {
     case uploadPhoto(UIImage)
     case uploadMultiplePhoto([UIImage])
+    case uploadVideoSigned(String)
 }
 
 extension UploadPhotoTargetType: DinotisTargetType, AccessTokenAuthorizable {
@@ -22,11 +23,21 @@ extension UploadPhotoTargetType: DinotisTargetType, AccessTokenAuthorizable {
             
         case .uploadMultiplePhoto:
             return[:]
+        case .uploadVideoSigned(let ext):
+            return ["extension": ext]
         }
     }
     
     public var headers: [String : String]? {
-        return ["Content-type": "multipart/form-data"]
+        switch self {
+        case .uploadPhoto(_):
+            return ["Content-type": "multipart/form-data"]
+        case .uploadMultiplePhoto(_):
+            return ["Content-type": "multipart/form-data"]
+        case .uploadVideoSigned(_):
+            return [:]
+        }
+        
     }
     
     public var authorizationType: AuthorizationType? {
@@ -40,6 +51,8 @@ extension UploadPhotoTargetType: DinotisTargetType, AccessTokenAuthorizable {
             
         case .uploadMultiplePhoto:
             return URLEncoding.default
+        case .uploadVideoSigned:
+            return JSONEncoding.default
         }
     }
     
@@ -60,6 +73,8 @@ extension UploadPhotoTargetType: DinotisTargetType, AccessTokenAuthorizable {
             }
             
             return .uploadMultipart(multipartFormData)
+        case .uploadVideoSigned(_):
+            return .requestParameters(parameters: parameters, encoding: parameterEncoding)
         }
     }
     
@@ -70,6 +85,8 @@ extension UploadPhotoTargetType: DinotisTargetType, AccessTokenAuthorizable {
             
         case .uploadMultiplePhoto:
             return "/uploads/multiple"
+        case .uploadVideoSigned(_):
+            return "/uploads/video/signed-url"
         }
     }
     
@@ -79,6 +96,8 @@ extension UploadPhotoTargetType: DinotisTargetType, AccessTokenAuthorizable {
             return .post
             
         case .uploadMultiplePhoto:
+            return .post
+        case .uploadVideoSigned(_):
             return .post
         }
     }

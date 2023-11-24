@@ -15,23 +15,13 @@ final class FeedbackViewModel: ObservableObject {
     
     private let getReasonsUseCase: GetReasonsUseCase
     private let giveReviewUseCase: GiveReviewUseCase
+    private let getDetailMeetingUseCase: GetMeetingDetailUseCase
     
     var backToHome: () -> Void
     var backToScheduleDetail: () -> Void
     
-    init(
-        meetingId: String,
-        getReasonsUseCase: GetReasonsUseCase = GetReasonsDefaultUseCase(),
-        giveReviewUseCase: GiveReviewUseCase = GiveReviewDefaultUseCase(),
-        backToHome: @escaping (() -> Void),
-        backToScheduleDetail: @escaping () -> Void
-    ) {
-        self.meetingId = meetingId
-        self.getReasonsUseCase = getReasonsUseCase
-        self.giveReviewUseCase = giveReviewUseCase
-        self.backToHome = backToHome
-        self.backToScheduleDetail = backToScheduleDetail
-    }
+    @Published var route: HomeRouting? = nil
+    @Published var detail: MeetingDetailResponse?
     
     @Published var rating: Int = 0
     
@@ -47,12 +37,53 @@ final class FeedbackViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var isSuccess = false
     
+    init(
+        meetingId: String,
+        getReasonsUseCase: GetReasonsUseCase = GetReasonsDefaultUseCase(),
+        giveReviewUseCase: GiveReviewUseCase = GiveReviewDefaultUseCase(),
+        getDetailMeetingUseCase: GetMeetingDetailUseCase = GetMeetingDetailDefaultUseCase(),
+        backToHome: @escaping (() -> Void),
+        backToScheduleDetail: @escaping () -> Void
+    ) {
+        self.meetingId = meetingId
+        self.getReasonsUseCase = getReasonsUseCase
+        self.giveReviewUseCase = giveReviewUseCase
+        self.getDetailMeetingUseCase = getDetailMeetingUseCase
+        self.backToHome = backToHome
+        self.backToScheduleDetail = backToScheduleDetail
+    }
+    
     func disableButton() -> Bool {
         guard rating != 0 else { return true }
         if rating > 3 {
             return false
         } else {
             return feedback.isStringContainWhitespaceAndText() ? false : true
+        }
+    }
+    
+    func onGetDetail() {
+        Task {
+            await getDetailMeeting()
+        }
+    }
+    
+    func onGetReason(for rating: Int) {
+        Task {
+            await getReasons(rating: rating)
+        }
+    }
+    
+    func getDetailMeeting() async {
+        let result = await getDetailMeetingUseCase.execute(for: meetingId)
+        
+        switch result {
+        case .success(let response):
+            DispatchQueue.main.async { [weak self] in
+                self?.detail = response
+            }
+        case .failure(_):
+            break
         }
     }
     
@@ -166,6 +197,14 @@ final class FeedbackViewModel: ObservableObject {
         }
     }
     
+    func routeToSetUpVideo() {
+        let viewModel = SetUpVideoViewModel(data: self.detail, backToHome: self.backToHome, backToScheduleDetail: self.backToScheduleDetail)
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .setUpVideo(viewModel: viewModel)
+        }
+    }
+    
     func giveReview() async {
         
         DispatchQueue.main.async { [weak self] in
@@ -191,5 +230,9 @@ final class FeedbackViewModel: ObservableObject {
         case .failure(let error):
             print(error)
         }
+    }
+    
+    func showArchived() -> Bool {
+        (((detail?.endAt).orCurrentDate() < Date() || detail?.endedAt != nil) && (detail?.archiveRecording).orFalse() && !(detail?.isArchived ?? true))
     }
 }

@@ -150,9 +150,9 @@ struct OnboardingView: View {
 		.onAppear {
 			UIPageControl.appearance().currentPageIndicatorTintColor = UIColor(.DinotisDefault.primary)
 			UIPageControl.appearance().pageIndicatorTintColor = UIColor(.DinotisDefault.lightPrimaryActive)
-
-			let configuration = UIImage.SymbolConfiguration(pointSize: 25, weight: .black)
-			UIPageControl.appearance().preferredIndicatorImage = UIImage(systemName: "minus", withConfiguration: configuration)
+//
+//			let configuration = UIImage.SymbolConfiguration(pointSize: 25, weight: .black)
+//			UIPageControl.appearance().preferredIndicatorImage = UIImage(systemName: "minus", withConfiguration: configuration)
 			AppDelegate.orientationLock = .portrait
 			viewModel.checkingSession()
 		}
@@ -160,6 +160,7 @@ struct OnboardingView: View {
 		.navigationBarHidden(true)
 		.onDisappear {
 			UIPageControl.appearance().preferredIndicatorImage = nil
+            viewModel.selectedContent = 0
 		}
 	}
 }

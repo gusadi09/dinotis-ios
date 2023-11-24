@@ -676,6 +676,8 @@
 
 "minus_total_revenue_warning" = "**Your income is negative** due to the session price being too low. **It's recommended to increase your session price**.";
 
+"delete_video_alert_title" = "Delete this video?";
+"delete_video_alert_content" = "Videos that have been deleted cannot be restored";
 "subscirbe_card_title" = "Get exclusive access! Subscribe now";
 "subscirbe_card_desc" = "Become a Subscriber to enjoy all video content and replays from your favorite Creators, whenever you want!";
 "subscirbe_cancel_desc" = "Cancel anytime, wherever you want";
@@ -698,3 +700,5 @@
 "message_label" = "Message";
 "default_placeholder" = "Placeholder..";
 "send_request_label" = "Send Request";
+
+"detail_video_comment_placeholder" = "Write your comment here...";

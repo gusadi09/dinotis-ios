@@ -76,7 +76,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     
     private let addDyteParticipantUseCase: AddDyteParticipantUseCase
     private var cancellables = Set<AnyCancellable>()
-    
+    private let getDetailMeetingUseCase: GetMeetingDetailUseCase
     
     private let getQuestionUseCase: GetQuestionUseCase
     private let putQuestionUseCase: PutQuestionUseCase
@@ -88,6 +88,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     
     private let subject = PassthroughSubject<Void, Never>()
     
+    @Published var detail: MeetingDetailResponse?
     @Published var onSecondTime = 0
     @Published var meeting = DyteiOSClientBuilder().build()
     @Published var localUserId = ""
@@ -203,7 +204,8 @@ final class GroupVideoCallViewModel: ObservableObject {
         getQuestionUseCase: GetQuestionUseCase = GetQuestionDefaultUseCase(),
         putQuestionUseCase: PutQuestionUseCase = PutQuestionDefaultUseCase(),
         sendQuestionUseCase: SendQuestionUseCase = SendQuestionDefaultUseCase(),
-        checkEndMeetingUseCase: CheckEndedMeetingUseCase = CheckEndedMeetingDefaultUseCase()
+        checkEndMeetingUseCase: CheckEndedMeetingUseCase = CheckEndedMeetingDefaultUseCase(),
+        getDetailMeetingUseCase: GetMeetingDetailUseCase = GetMeetingDetailDefaultUseCase()
     ) {
         self.backToHome = backToHome
         self.backToScheduleDetail = backToScheduleDetail
@@ -214,6 +216,7 @@ final class GroupVideoCallViewModel: ObservableObject {
         self.putQuestionUseCase = putQuestionUseCase
         self.sendQuestionUseCase = sendQuestionUseCase
         self.checkEndMeetingUseCase = checkEndMeetingUseCase
+        self.getDetailMeetingUseCase = getDetailMeetingUseCase
         
         var names: [String] = []
         names.append((userMeeting.user?.name).orEmpty())
@@ -222,6 +225,37 @@ final class GroupVideoCallViewModel: ObservableObject {
         }) ?? [])
         self.hostNames = names.joined(separator: ", ")
         
+    }
+    
+    func onGetDetail() {
+        Task {
+            await getDetailMeeting()
+        }
+    }
+    
+    func getDetailMeeting() async {
+        let result = await getDetailMeetingUseCase.execute(for: userMeeting.id.orEmpty())
+        
+        switch result {
+        case .success(let response):
+            DispatchQueue.main.async { [weak self] in
+                self?.detail = response
+            }
+        case .failure(_):
+            break
+        }
+    }
+    
+    func routeToSetUpVideo() {
+        let viewModel = SetUpVideoViewModel(data: self.detail, backToHome: self.backToHome, backToScheduleDetail: self.backToScheduleDetail)
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .setUpVideo(viewModel: viewModel)
+        }
+    }
+    
+    func showArchived() -> Bool {
+        (((detail?.endAt).orCurrentDate() <= Date() || detail?.endedAt != nil) && (detail?.archiveRecording).orFalse() && !(detail?.isArchived ?? true))
     }
     
     func leaveAlertTitle() -> String {
@@ -602,22 +636,17 @@ final class GroupVideoCallViewModel: ObservableObject {
             return
         }
         
-        if isInspected {
+        if isInspected && !showArchived() {
             subject.send()
+            
+        } else if showArchived() {
+            routeToSetUpVideo()
         } else {
             let viewModel = FeedbackViewModel(meetingId: userMeeting.id.orEmpty(), backToHome: self.backToHome, backToScheduleDetail: self.backToScheduleDetail)
             
             DispatchQueue.main.async {[weak self] in
                 self?.route = .feedbackAfterCall(viewModel: viewModel)
             }
-        }
-    }
-    
-    func routeToSetUpVideo() {
-        let viewModel = SetUpVideoViewModel(data: self.userMeeting, backToHome: self.backToHome)
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.route = .setUpVideo(viewModel: viewModel)
         }
     }
     
@@ -647,6 +676,7 @@ final class GroupVideoCallViewModel: ObservableObject {
         disableIdleTimer()
         getRealTime()
         forceAudioWhenMutedBySystem()
+        onGetDetail()
         Task {
             await addParticipant()
             meeting.addMeetingRoomEventsListener(meetingRoomEventsListener: self)
