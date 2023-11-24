@@ -48,6 +48,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Izinkan untuk menggunakan kamera?</string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>Allow for downloads usage</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Izinkan untuk menggunakan Jaringan lokal?</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -115,6 +117,8 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
+		<string>fetch</string>
+		<string>processing</string>
 		<string>remote-notification</string>
 		<string>voip</string>
 	</array>

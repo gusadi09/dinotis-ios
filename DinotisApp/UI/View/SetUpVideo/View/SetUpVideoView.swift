@@ -4,7 +4,7 @@
 //
 //  Created by Irham Naufal on 27/10/23.
 //
-
+import SwiftUINavigation
 import SwiftUI
 import DinotisData
 import DinotisDesignSystem
@@ -14,160 +14,183 @@ struct SetUpVideoView: View {
     @EnvironmentObject var viewModel: SetUpVideoViewModel
     
     var body: some View {
-        VStack(spacing: 0) {
-            ScrollView {
-                VStack(spacing: 28) {
-                    VStack(alignment: .leading, spacing: 16) {
-                        HStack(spacing: 16) {
-                            Image.archiveMediaIcon
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 34, height: 34)
+        ZStack {
+            NavigationLink(
+                unwrapping: $viewModel.route,
+                case: /HomeRouting.creatorStudio,
+                destination: { viewModel in
+                    CreatorStudioView()
+                        .environmentObject(viewModel.wrappedValue)
+                },
+                onNavigate: { _ in },
+                label: {
+                    EmptyView()
+                }
+            )
+            
+            VStack(spacing: 0) {
+                ScrollView {
+                    VStack(spacing: 28) {
+                        VStack(alignment: .leading, spacing: 16) {
+                            HStack(spacing: 16) {
+                                Image.archiveMediaIcon
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 34, height: 34)
+                                
+                                Text(LocalizableText.archiveChooseVideo)
+                                    .font(.robotoBold(size: 18))
+                                    .foregroundColor(.DinotisDefault.black1)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding([.top, .horizontal])
                             
-                            Text(LocalizableText.archiveChooseVideo)
-                                .font(.robotoBold(size: 18))
+                            if viewModel.isLoading {
+                                HStack {
+                                    Spacer()
+                                    
+                                    LottieView(name: "regular-loading", loopMode: .loop)
+                                        .scaledToFit()
+                                        .frame(height: 50)
+                                    
+                                    Spacer()
+                                }
+                                .frame(height: 200)
+                            } else {
+                                ScrollView(.horizontal, showsIndicators: false, content: {
+                                    HStack {
+                                        
+                                        ForEach(viewModel.videos.indices, id: \.self) { index in
+                                            
+                                            Group {
+                                                Image(uiImage: viewModel.thumbnails[index])
+                                                    .resizable()
+                                                    .scaledToFill()
+                                                    .frame(width: 340, height: 200)
+                                                    .clipShape(RoundedRectangle(cornerRadius: 9))
+                                            }
+                                            .overlay {
+                                                Image(systemName: "play.circle.fill")
+                                                    .font(.system(size: 36))
+                                                    .foregroundColor(.white.opacity(0.9))
+                                            }
+                                            .onTapGesture {
+                                                viewModel.showHoverVideo(viewModel.videos[index].downloadUrl.orEmpty())
+                                            }
+                                            .overlay(alignment: .bottomLeading) {
+                                                HStack(spacing: 6) {
+                                                    Text("\(viewModel.formatSecondsToTimestamp(seconds: viewModel.videos[index].recordingDuration.orZero()))")
+                                                        .font(.robotoBold(size: 12))
+                                                        .foregroundColor(.white)
+                                                        .padding(4)
+                                                        .background(Color.black.opacity(0.5))
+                                                        .cornerRadius(6)
+                                                    
+                                                    Button {
+                                                        viewModel.isShowImagePicker[index] = true
+                                                    } label: {
+                                                        Text("\(Image(systemName: "pencil")) \(LocalizableText.editCoverLabel)")
+                                                            .font(.robotoBold(size: 12))
+                                                            .foregroundColor(.white)
+                                                            .padding(4)
+                                                            .padding(.horizontal, 4)
+                                                            .background(Color.black.opacity(0.5))
+                                                            .cornerRadius(6)
+                                                    }
+                                                    .isHidden(viewModel.videos[index].downloadUrl.orEmpty() != viewModel.currentVideo.videoUrl, remove: true)
+                                                }
+                                                .padding(8)
+                                            }
+                                            .overlay(alignment: .topTrailing) {
+                                                Button {
+                                                    withAnimation {
+                                                        viewModel.currentVideo.videoUrl = viewModel.videos[index].downloadUrl.orEmpty()
+                                                        print(viewModel.currentVideo)
+                                                    }
+                                                } label: {
+                                                    (
+                                                        viewModel.videos[index].downloadUrl.orEmpty() == viewModel.currentVideo.videoUrl ?
+                                                        Image.archiveMagentaCheckmarkIcon :
+                                                            Image.archiveInactiveCheckmarkIcon
+                                                    )
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .frame(width: 28, height: 28)
+                                                    .padding(8)
+                                                }
+                                            }
+                                            .sheet(isPresented: $viewModel.isShowImagePicker[index]) {
+                                                ImagePicker(sourceType: .photoLibrary, selectedImage: $viewModel.thumbnails[index])
+                                                    .dynamicTypeSize(.large)
+                                            }
+                                        }
+                                        
+                                    }
+                                    .padding(.horizontal)
+                                })
+                            }
+                        }
+                        
+                        Divider()
+                            .padding(.horizontal)
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(LocalizableText.titleLabel)
+                                .font(.robotoRegular(size: 14))
+                                .foregroundColor(.DinotisDefault.black3)
+                            
+                            Text((viewModel.data?.title).orEmpty())
+                                .font(.robotoRegular(size: 14))
                                 .foregroundColor(.DinotisDefault.black1)
+                                .multilineTextAlignment(.leading)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding([.top, .horizontal])
-                        
-                        ScrollView(.horizontal, showsIndicators: false, content: {
-                            HStack {
-                                ForEach(viewModel.thumbnails.indices, id: \.self) { index in
-                                    let video = viewModel.videos[index]
-                                    Group {
-                                        if viewModel.thumbnails[index] == UIImage() {
-                                            DinotisImageLoader(urlString: video.thumbnail)
-                                                .scaledToFill()
-                                                .frame(width: 340, height: 200)
-                                                .clipShape(RoundedRectangle(cornerRadius: 9))
-                                                
-                                        } else {
-                                            Image(uiImage: viewModel.thumbnails[index])
-                                                .resizable()
-                                                .scaledToFill()
-                                                .frame(width: 340, height: 200)
-                                                .clipShape(RoundedRectangle(cornerRadius: 9))
-                                        }
-                                    }
-                                    .overlay {
-                                        Image(systemName: "play.circle.fill")
-                                            .font(.system(size: 36))
-                                            .foregroundColor(.white.opacity(0.9))
-                                    }
-                                    .onTapGesture {
-                                        viewModel.showHoverVideo(video.url)
-                                    }
-                                    .overlay(alignment: .bottomLeading) {
-                                        HStack(spacing: 6) {
-                                            Text(video.duration)
-                                                .font(.robotoBold(size: 12))
-                                                .foregroundColor(.white)
-                                                .padding(4)
-                                                .background(Color.black.opacity(0.5))
-                                                .cornerRadius(6)
-                                            
-                                            Button {
-                                                viewModel.isShowImagePicker[index] = true
-                                            } label: {
-                                                Text("\(Image(systemName: "pencil")) \(LocalizableText.editCoverLabel)")
-                                                    .font(.robotoBold(size: 12))
-                                                    .foregroundColor(.white)
-                                                    .padding(4)
-                                                    .padding(.horizontal, 4)
-                                                    .background(Color.black.opacity(0.5))
-                                                    .cornerRadius(6)
-                                            }
-                                            .isHidden(!video.isSelected, remove: true)
-                                        }
-                                        .padding(8)
-                                    }
-                                    .overlay(alignment: .topTrailing) {
-                                        Button {
-                                            withAnimation {
-                                                viewModel.videos[index].isSelected.toggle()
-                                            }
-                                        } label: {
-                                            (
-                                                video.isSelected ?
-                                                Image.archiveMagentaCheckmarkIcon :
-                                                    Image.archiveInactiveCheckmarkIcon
-                                            )
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: 28, height: 28)
-                                            .padding(8)
-                                        }
-                                    }
-                                    .sheet(isPresented: $viewModel.isShowImagePicker[index]) {
-                                        ImagePicker(sourceType: .photoLibrary, selectedImage: $viewModel.thumbnails[index])
-                                            .dynamicTypeSize(.large)
-                                    }
-                                }
-                            }
-                            .padding(.horizontal)
-                        })
-                    }
-                    
-                    Divider()
                         .padding(.horizontal)
-                    
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(LocalizableText.titleLabel)
-                            .font(.robotoRegular(size: 14))
-                            .foregroundColor(.DinotisDefault.black3)
                         
-                        Text(viewModel.data.title.orEmpty())
-                            .font(.robotoRegular(size: 14))
-                            .foregroundColor(.DinotisDefault.black1)
-                            .multilineTextAlignment(.leading)
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(LocalizableText.descriptionLabel)
+                                .font(.robotoRegular(size: 14))
+                                .foregroundColor(.DinotisDefault.black3)
+                            
+                            Text((viewModel.data?.description).orEmpty())
+                                .font(.robotoRegular(size: 14))
+                                .foregroundColor(.DinotisDefault.black1)
+                                .multilineTextAlignment(.leading)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
-                    
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(LocalizableText.descriptionLabel)
-                            .font(.robotoRegular(size: 14))
-                            .foregroundColor(.DinotisDefault.black3)
-                        
-                        Text(viewModel.data.meetingDescription.orEmpty())
-                            .font(.robotoRegular(size: 14))
-                            .foregroundColor(.DinotisDefault.black1)
-                            .multilineTextAlignment(.leading)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
                 }
-            }
-            .background(Color.DinotisDefault.baseBackground.ignoresSafeArea())
-            
-            HStack(spacing: 10) {
-                DinotisSecondaryButton(
-                    text: LocalizableText.archiveLabel,
-                    type: .adaptiveScreen,
-                    textColor: .DinotisDefault.black1,
-                    bgColor: .DinotisDefault.lightPrimary,
-                    strokeColor: .DinotisDefault.primary
-                ) {
-                    viewModel.isShowArchiveSheet = true
-                }
+                .background(Color.DinotisDefault.baseBackground.ignoresSafeArea())
                 
-                DinotisPrimaryButton(
-                    text: LocalizableText.uploadLabel,
-                    type: .adaptiveScreen,
-                    textColor: .white,
-                    bgColor: .DinotisDefault.primary
-                ) {
-                    viewModel.isShowUploadeSheet = true
+                HStack(spacing: 10) {
+                    DinotisSecondaryButton(
+                        text: LocalizableText.archiveLabel,
+                        type: .adaptiveScreen,
+                        textColor: .DinotisDefault.black1,
+                        bgColor: .DinotisDefault.lightPrimary,
+                        strokeColor: .DinotisDefault.primary
+                    ) {
+                        viewModel.isShowArchiveSheet = true
+                    }
+                    
+                    DinotisPrimaryButton(
+                        text: LocalizableText.uploadLabel,
+                        type: .adaptiveScreen,
+                        textColor: .white,
+                        bgColor: .DinotisDefault.primary
+                    ) {
+                        viewModel.isShowUploadeSheet = true
+                    }
                 }
+                .padding()
+                .background(Color.white.ignoresSafeArea())
             }
-            .padding()
-            .background(Color.white.ignoresSafeArea())
         }
         .navigationBarTitle(Text(""))
         .navigationBarHidden(true)
         .onAppear {
-            viewModel.getData()
+            viewModel.onGetRecordings()
         }
         .sheet(isPresented: $viewModel.isShowArchiveSheet, content: {
             if #available(iOS 16.0, *) {
@@ -229,7 +252,8 @@ extension SetUpVideoView {
                 textColor: .white,
                 bgColor: .DinotisDefault.primary
             ) {
-                
+                viewModel.isShowArchiveSheet = false
+                viewModel.routeToCreatorStudio()
             }
         }
         .padding()
@@ -323,7 +347,7 @@ extension SetUpVideoView {
                 textColor: .white,
                 bgColor: .DinotisDefault.primary
             ) {
-                
+                viewModel.isShowUploadeSheet = false
             }
         }
         .padding()
@@ -332,7 +356,7 @@ extension SetUpVideoView {
     
     @ViewBuilder
     func HoverVideoView() -> some View {
-        if let url = URL(string: viewModel.currentVideo), viewModel.isShowHoverVideo {
+        if let url = URL(string: viewModel.currentVideo.videoUrl), viewModel.isShowHoverVideo {
             ZStack {
                 Color.black.opacity(0.4).ignoresSafeArea()
                     .onTapGesture {
@@ -354,5 +378,5 @@ extension SetUpVideoView {
 
 #Preview {
     SetUpVideoView()
-        .environmentObject(SetUpVideoViewModel(data: .init(id: nil, title: "This is Dummy Title", meetingDescription: "Laslkdja laksjdalksjd laksjd alksjd alksdj alksdj", price: nil, startAt: nil, endAt: nil, isPrivate: nil, isLiveStreaming: nil, slots: nil, participants: nil, userID: nil, startedAt: nil, endedAt: nil, createdAt: nil, updatedAt: nil, deletedAt: nil, bookings: nil, user: nil, participantDetails: nil, meetingBundleId: nil, meetingRequestId: nil, status: nil, meetingRequest: nil, expiredAt: nil, background: nil, meetingCollaborations: nil, meetingUrls: nil, meetingUploads: nil, roomSid: nil, dyteMeetingId: nil, isInspected: nil, reviews: nil), backToHome: {}))
+        .environmentObject(SetUpVideoViewModel(data: nil, backToHome: {}, backToScheduleDetail: {}))
 }

@@ -675,6 +675,8 @@
 
 "minus_total_revenue_warning" = "**Pendapatan kamu minus** karena harga sesi yang terlalu rendah. **Disarankan untuk menaikkan harga sesi kamu**.";
 
+"delete_video_alert_title" = "Ingin menghapus video ini?";
+"delete_video_alert_content" = "Video yang telah dihapus tidak dapat dikembalikan lagi";
 
 "subscirbe_card_title" = "Subscribe sekarang untuk dapatkan akses eksklusif!";
 "subscirbe_card_desc" = "Dengan menjadi Subscriber, kamu bisa menikmati semua konten video dan tayangan ulang dari Kreator favoritmu, kapanpun kamu mau!";
@@ -698,3 +700,5 @@
 "message_label" = "Pesan";
 "default_placeholder" = "Placeholder..";
 "send_request_label" = "Kirim Request";
+
+"detail_video_comment_placeholder" = "Tulis komentarmu disini...";

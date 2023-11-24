@@ -75,4 +75,8 @@ public final class MeetingsDefaultRemoteDataSource: MeetingsRemoteDataSource {
     public func getMeetingFee() async throws -> MeetingFeeResponse {
         try await self.provider.request(.getMeetingFee, model: MeetingFeeResponse.self)
     }
+    
+    public func getRecordings(for meetingId: String) async throws -> RecordingResponse {
+        try await self.provider.request(.getRecordings(meetingId), model: RecordingResponse.self)
+    }
 }

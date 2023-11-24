@@ -149,6 +149,7 @@
 		EC7B1EA427BCD3AF00471219 /* LocaleText.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7B1EA327BCD3AF00471219 /* LocaleText.swift */; };
 		EC7B1EA827BCE52400471219 /* TalentHomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7B1EA727BCE52400471219 /* TalentHomeViewModel.swift */; };
 		EC7B1EAA27BCE65A00471219 /* VerifiedCondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7B1EA927BCE65A00471219 /* VerifiedCondition.swift */; };
+		EC7E53062AF3516700D7AA50 /* netfox in Frameworks */ = {isa = PBXBuildFile; productRef = EC7E53052AF3516700D7AA50 /* netfox */; };
 		EC86AD4226C62D1300EB5B78 /* UserEditProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC86AD4126C62D1300EB5B78 /* UserEditProfile.swift */; };
 		EC87CC80280923DE00812A5D /* UserHomeView+Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC87CC7F280923DE00812A5D /* UserHomeView+Component.swift */; };
 		EC88F42B272D8CBE0051749F /* TrendingTalent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC88F42A272D8CBE0051749F /* TrendingTalent.swift */; };
@@ -723,6 +724,7 @@
 				F63A0968289BBCEB008C7815 /* TwilioVideo in Frameworks */,
 				F63A096B289BBD79008C7815 /* TwilioSyncClient in Frameworks */,
 				ECF7096728C1E7AD0093E020 /* CountryPicker in Frameworks */,
+				EC7E53062AF3516700D7AA50 /* netfox in Frameworks */,
 				EC38FEEF287BD8A00007CFC6 /* OneSignal in Frameworks */,
 				ECB0A26A28FED3210050EC71 /* FirebaseDatabase in Frameworks */,
 				F63A096E289BBDCC008C7815 /* TwilioLivePlayer in Frameworks */,
@@ -3078,6 +3080,7 @@
 				EC72920B2A4374E400C9AAD5 /* DyteiOSCore */,
 				EC7292102A4375D800C9AAD5 /* TwilioConversationsClient */,
 				EC2551FA2A8FE28B001CE6C5 /* AlertToast */,
+				EC7E53052AF3516700D7AA50 /* netfox */,
 			);
 			productName = DinotisApp;
 			productReference = ECBA13E226B78F77004D452C /* DinotisDev.app */;
@@ -3133,6 +3136,7 @@
 				EC7292092A430BA700C9AAD5 /* XCRemoteSwiftPackageReference "DyteMobileCoreiOS" */,
 				EC72920F2A4375D800C9AAD5 /* XCRemoteSwiftPackageReference "conversations-ios" */,
 				EC2551F92A8FE28B001CE6C5 /* XCRemoteSwiftPackageReference "AlertToast" */,
+				EC7E53042AF3516700D7AA50 /* XCRemoteSwiftPackageReference "netfox" */,
 			);
 			productRefGroup = ECBA13E326B78F77004D452C /* Products */;
 			projectDirPath = "";
@@ -4161,6 +4165,14 @@
 				minimumVersion = 0.1.4;
 			};
 		};
+		EC7E53042AF3516700D7AA50 /* XCRemoteSwiftPackageReference "netfox" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kasketis/netfox";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.21.0;
+			};
+		};
 		EC8BB8C327D223460078216B /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
@@ -4330,6 +4342,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EC789C6927C4C33C005872E2 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */;
 			productName = Introspect;
+		};
+		EC7E53052AF3516700D7AA50 /* netfox */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EC7E53042AF3516700D7AA50 /* XCRemoteSwiftPackageReference "netfox" */;
+			productName = netfox;
 		};
 		EC8BB8C427D223460078216B /* IQKeyboardManagerSwift */ = {
 			isa = XCSwiftPackageProductDependency;

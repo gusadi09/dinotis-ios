@@ -37,15 +37,18 @@ final class DetailVideoViewModel: ObservableObject {
     
     private let getUserUseCase: GetUserUseCase
     private let getTalentMeetingUseCase: GetCreatorMeetingListUseCase
+    private let getDetailVideoUseCase: GetDetailVideoUseCase
+    private let postCommentUseCase: PostCommentUseCase
+    private let getCommentsUseCase: GetCommentsUseCase
+    let videoId: String
     
     @Published var userData: UserResponse?
+    @Published var state = StateObservable.shared
     @Published var meetingData = [MeetingDetailResponse]()
-    @Published var videoData: DummyVideoModel = .init(
-        title: "Lorem ipsum dolor sit amet consectetur. Aliquet vitae id pellentesque est ",
-        description: "Lorem ipsum dolor sit amet consectetur. Mattis et ut fusce eget turpis in tellus sit. Ultrices est rhoncus vestibulum lectus non. Dui duis etiam dictum quam ut condimentum lacinia. Lorem egestas duis in sollicitudin diam in nec. Eu tincidunt ultricies et id semper erat morbi sed urna. Viverra pulvinar ultrices viverra nisi ac et viverra. Habitasse quis et volutpat dolor lectus aliquet.",
-        thumbnail: "https://esports.id/img/article/854920211125095801.jpg",
-        comments: [.init(name: "Ahmad Deni"), .init(name: "Baharudin"), .init(name: "Salsabilla Adriani"), .init(name: "Nabila Smith"), .init(name: "Basuki")]
-    )
+    @Published var videoData: DetailVideosResponse?
+    @Published var comments = [GeneralComments]()
+    
+    @Published var videoUrl: String?
     
     @Published var route: HomeRouting?
     
@@ -59,28 +62,67 @@ final class DetailVideoViewModel: ObservableObject {
     @Published var success: Bool = false
     @Published var isLoading = false
     
+    @Published var isLoadingComment = false
+    @Published var isLoadingMoreComment = false
+    @Published var takeComment = 10
+    @Published var skipComment = 0
+    
+    @Published var isLoadingSend = false
+    
+    @Published var nextCursor: Int? = 0
+    
     @Published var isShowFullText = false
     
     var backToHome: () -> Void
     
     var professionText: String? {
-        (userData?.stringProfessions?.joined(separator: ", "))
+        (videoData?.video?.user?.professions?.joined(separator: ", "))
     }
     
     init(
         getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
         getTalentMeetingUseCase: GetCreatorMeetingListUseCase = GetCreatorMeetingListDefaultUseCase(),
+        getDetailVideoUseCase: GetDetailVideoUseCase = GetDetailVideoDefaultUseCase(),
+        postCommentUseCase: PostCommentUseCase = PostCommentDefaultUseCase(),
+        getCommentsUseCase: GetCommentsUseCase = GetCommentsDefaultUseCase(),
+        videoId: String,
         backToHome: @escaping () -> Void
     ) {
         self.getUserUseCase = getUserUseCase
         self.getTalentMeetingUseCase = getTalentMeetingUseCase
+        self.getDetailVideoUseCase = getDetailVideoUseCase
+        self.postCommentUseCase = postCommentUseCase
+        self.getCommentsUseCase = getCommentsUseCase
+        self.videoId = videoId
         self.backToHome = backToHome
     }
     
-    func onStartedFetch() {
+    func onStartedFetch(isComment: Bool = false, isMore: Bool = false, isSended: Bool = false) {
         DispatchQueue.main.async {[weak self] in
+            if !isSended {
+                if isComment {
+                    if isMore {
+                        self?.isLoadingMoreComment = true
+                    } else {
+                        self?.isLoadingComment = true
+                    }
+                } else {
+                    self?.isLoading = true
+                }
+            }
+            
             self?.isError = false
-            self?.isLoading = true
+            
+            self?.error = nil
+            self?.success = false
+        }
+    }
+    
+    func onStartedSend() {
+        DispatchQueue.main.async {[weak self] in
+            self?.isLoadingSend = true
+            self?.isError = false
+            
             self?.error = nil
             self?.success = false
         }
@@ -101,10 +143,10 @@ final class DetailVideoViewModel: ObservableObject {
         }
     }
     
-    func getUsers() async {
+    func getDetailVideo() async {
         onStartedFetch()
         
-        let result = await getUserUseCase.execute()
+        let result = await getDetailVideoUseCase.execute(for: videoId)
         
         switch result {
         case .success(let success):
@@ -112,36 +154,72 @@ final class DetailVideoViewModel: ObservableObject {
                 self?.success = true
                 self?.isLoading = false
                 
-                self?.userData = success
-
-                OneSignal.setExternalUserId(success.id.orEmpty())
-                OneSignal.sendTag("isTalent", value: "true")
+                self?.videoData = success
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: .init(block: { [weak self] in
+                    self?.videoUrl = success.video?.videoUrl
+                }))
             }
         case .failure(let failure):
             handleDefaultError(error: failure)
         }
     }
     
-    func getTalentMeeting() async {
-        onStartedFetch()
-
-        let result = await getTalentMeetingUseCase.execute(with: .init(take: 15, skip: 0, isStarted: "", isEnded: "false", isAvailable: "true"))
+//    func onGetMeeting() {
+//        Task {
+//            await getTalentMeeting()
+//        }
+//    }
+    
+    func onGetDetail() {
+        Task {
+            await getDetailVideo()
+        }
+    }
+    
+    func onGetUser() {
+        Task {
+            await getUsers()
+        }
+    }
+    
+//    func getTalentMeeting() async {
+//        onStartedFetch()
+//
+//        let result = await getTalentMeetingUseCase.execute(with: .init(take: 15, skip: 0, isStarted: "", isEnded: "false", isAvailable: "true"))
+//
+//        switch result {
+//        case .success(let success):
+//            DispatchQueue.main.async { [weak self] in
+//                self?.success = true
+//                self?.isLoading = false
+//                self?.meetingData = success.data?.meetings ?? []
+//            }
+//        case .failure(let failure):
+//            handleDefaultError(error: failure)
+//        }
+//    }
+    
+    func getUsers() async {
+        let result = await getUserUseCase.execute()
         
         switch result {
         case .success(let success):
             DispatchQueue.main.async { [weak self] in
-                self?.success = true
-                self?.isLoading = false
-                self?.meetingData = success.data?.meetings ?? []
+                
+                self?.userData = success
             }
         case .failure(let failure):
             handleDefaultError(error: failure)
         }
     }
     
-    func handleDefaultError(error: Error) {
+    func handleDefaultError(error: Error, isComment: Bool = false) {
         DispatchQueue.main.async { [weak self] in
             self?.isLoading = false
+            self?.isLoadingMoreComment = false
+            self?.isLoadingComment = false
+            self?.isLoadingSend = false
 
             if let error = error as? ErrorResponse {
 
@@ -158,20 +236,72 @@ final class DetailVideoViewModel: ObservableObject {
         }
     }
     
-    func addComment() {
-        let comment: DummyCommentModel = .init(
-            name: (userData?.name).orEmpty(),
-            profileImage: (userData?.profilePhoto).orEmpty(),
-            comment: commentText,
-            date: .now
-        )
-        DispatchQueue.main.async { [weak self] in
-            self?.videoData.comments.append(comment)
-            self?.commentText = ""
+    func disableSendButton() -> Bool {
+        commentText.isEmpty || !commentText.isStringContainWhitespaceAndText() || isLoadingSend
+    }
+    
+    @MainActor func shareSheet(url: String) {
+        
+        guard let url = URL(string: url) else { return }
+        let activityView = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+        
+        if let rootVC = UIApplication.shared.windows.first?.rootViewController {
+            DispatchQueue.main.async {
+                rootVC.present(activityView, animated: true) {}
+            }
+            
+        }
+        
+    }
+    
+    func getComments(isMore: Bool, isSended: Bool = false) async {
+        
+        onStartedFetch(isComment: true, isMore: isMore, isSended: isSended)
+        
+        let result = await getCommentsUseCase.execute(for: videoId, skip: skipComment, take: takeComment)
+        
+        switch result {
+        case .success(let success):
+            DispatchQueue.main.async { [weak self] in
+                self?.isLoadingMoreComment = false
+                self?.isLoadingComment = false
+                
+                if isMore {
+                    self?.comments += (success.data ?? [])
+                } else {
+                    self?.comments = success.data ?? []
+                }
+                
+                self?.nextCursor = success.nextCursor
+            }
+        case .failure(let error):
+            handleDefaultError(error: error, isComment: true)
         }
     }
     
-    func disableSendButton() -> Bool {
-        commentText.isEmpty || !commentText.isStringContainWhitespaceAndText()
+    func onAppearGetComments() {
+        Task {
+            await getComments(isMore: false, isSended: false)
+        }
+    }
+    
+    func postComments() async {
+        onStartedSend()
+        
+        let result = await postCommentUseCase.execute(for: videoId, comment: commentText)
+        
+        switch result {
+        case .success(_):
+            DispatchQueue.main.async { [weak self] in
+                self?.isLoadingSend = false
+                self?.commentText = ""
+            }
+            
+            self.skipComment = 0
+            self.takeComment = 10
+            await self.getComments(isMore: false, isSended: true)
+        case .failure(let failure):
+            handleDefaultError(error: failure, isComment: true)
+        }
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import DinotisDesignSystem
+import DinotisData
 import SwiftUI
 import SwiftUINavigation
 
@@ -49,7 +50,7 @@ struct CreatorStudioView: View {
                 textColor: .DinotisDefault.black1,
                 leadingButton:  {
                     Button {
-                        dismiss()
+                        viewModel.backToHome()
                     } label: {
                         Image.generalBackIcon
                             .resizable()
@@ -103,14 +104,21 @@ struct CreatorStudioView: View {
                     .ignoresSafeArea(edges: .bottom)
             )
             .refreshable {
-                
+                if viewModel.currentSection != StudioVideoFilter.archive.rawValue {
+                    viewModel.mineVideoRequest = MineVideoRequest()
+                    viewModel.onLoadMineVideo()
+                } else {
+                    viewModel.skipArchived = 0
+                    viewModel.takeArchived = 5
+                    viewModel.onLoadArchivedVideo()
+                }
             }
         }
         .background(Color.DinotisDefault.baseBackground)
         .navigationBarTitle(Text(""))
         .navigationBarHidden(true)
         .sheet(isPresented: $viewModel.isShowPicker, content: {
-            VideoPickerView(videoURL: $viewModel.currentVideo.url)
+            VideoPickerView(videoURL: $viewModel.selectedVideo)
                 .onDisappear {
                     viewModel.showEditorWhenPosting()
                 }
@@ -124,8 +132,56 @@ struct CreatorStudioView: View {
             }
         })
         .fullScreenCover(isPresented: $viewModel.isShowPostEditor, content: {
-            PostEditorView()
+            PostEditorView(isEdit: viewModel.isEdit)
         })
+        .onAppear {
+            viewModel.onLoadUser()
+            viewModel.onLoadMineVideo()
+        }
+        .onChange(of: viewModel.currentSection) { newValue in
+            viewModel.videos = []
+            viewModel.mineVideoRequest.skip = 0
+            viewModel.mineVideoRequest.take = 5
+            viewModel.skipArchived = 0
+            viewModel.takeArchived = 5
+            
+            if newValue != StudioVideoFilter.archive.rawValue {
+                viewModel.archivedVideo = []
+            }
+            
+            if newValue != StudioVideoFilter.archive.rawValue {
+                if newValue == MineVideoSorting.asc.rawValue {
+                    viewModel.mineVideoRequest.sort = MineVideoSorting.asc
+                    viewModel.mineVideoRequest.videoType = nil
+                } else if newValue == MineVideoSorting.desc.rawValue {
+                    viewModel.mineVideoRequest.sort = MineVideoSorting.desc
+                    viewModel.mineVideoRequest.videoType = nil
+                } else if newValue == MineVideoVideoType.RECORD.rawValue {
+                    viewModel.mineVideoRequest.sort = nil
+                    viewModel.mineVideoRequest.videoType = MineVideoVideoType.RECORD
+                }
+                
+                viewModel.onLoadMineVideo()
+            } else {
+                viewModel.onLoadArchivedVideo()
+            }
+            
+        }
+        .dinotisAlert(
+            isPresent: $viewModel.isShowDelete,
+            type: .general,
+            title: LocalizableText.creatorStudioDeleteVideoAlertTitle,
+            isError: false,
+            message: LocalizableText.creatorStudioDeleteVideoAlertContent,
+            primaryButton: .init(text: LocalizableText.cancelLabel, action: {}),
+            secondaryButton: .init(text: LocalizableText.deleteLabel, action: {
+                Task {
+                    if let id = viewModel.selectedId {
+                        await viewModel.deleteVideo(id: id)
+                    }
+                }
+            })
+        )
     }
 }
 
@@ -135,27 +191,73 @@ extension CreatorStudioView {
         ScrollView(.horizontal, showsIndicators: false) {
             ScrollViewReader { scrollView in
                 HStack(spacing: 8) {
-                    ForEach(viewModel.sections, id: \.self) { section in
+                    ForEach(viewModel.sortSections, id: \.self) { section in
                         Button {
                             withAnimation {
-                                viewModel.currentSection = section
-                                scrollView.scrollTo(section, anchor: .center)
+                                viewModel.currentSection = section.rawValue
+                                scrollView.scrollTo(section.rawValue, anchor: .center)
                             }
                         } label: {
-                            Text(viewModel.chipText(section))
-                                .font(viewModel.currentSection == section ? .robotoBold(size: 14) : .robotoRegular(size: 14))
-                                .foregroundColor(viewModel.currentSection == section ? .DinotisDefault.primary : .DinotisDefault.black1)
+                            Text(viewModel.chipText(section.rawValue))
+                                .font(viewModel.currentSection == section.rawValue ? .robotoBold(size: 14) : .robotoRegular(size: 14))
+                                .foregroundColor(viewModel.currentSection == section.rawValue ? .DinotisDefault.primary : .DinotisDefault.black1)
                                 .padding(.horizontal, 12)
                                 .padding(.vertical, 8)
-                                .background(viewModel.currentSection == section ? Color.DinotisDefault.lightPrimary : .white)
+                                .background(viewModel.currentSection == section.rawValue ? Color.DinotisDefault.lightPrimary : .white)
                                 .cornerRadius(20)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 20)
                                         .inset(by: 0.5)
-                                        .stroke(viewModel.currentSection == section ? Color.DinotisDefault.primary : Color.DinotisDefault.brightPrimary, lineWidth: 1)
+                                        .stroke(viewModel.currentSection == section.rawValue ? Color.DinotisDefault.primary : Color.DinotisDefault.brightPrimary, lineWidth: 1)
                                 )
                         }
-                        .id(section)
+                        .id(section.rawValue)
+                    }
+                    
+                    ForEach(viewModel.sections, id: \.self) { section in
+                        Button {
+                            withAnimation {
+                                viewModel.currentSection = section.rawValue
+                                scrollView.scrollTo(section.rawValue, anchor: .center)
+                            }
+                        } label: {
+                            Text(viewModel.chipText(section.rawValue))
+                                .font(viewModel.currentSection == section.rawValue ? .robotoBold(size: 14) : .robotoRegular(size: 14))
+                                .foregroundColor(viewModel.currentSection == section.rawValue ? .DinotisDefault.primary : .DinotisDefault.black1)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
+                                .background(viewModel.currentSection == section.rawValue ? Color.DinotisDefault.lightPrimary : .white)
+                                .cornerRadius(20)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .inset(by: 0.5)
+                                        .stroke(viewModel.currentSection == section.rawValue ? Color.DinotisDefault.primary : Color.DinotisDefault.brightPrimary, lineWidth: 1)
+                                )
+                        }
+                        .id(section.rawValue)
+                    }
+                    
+                    ForEach(viewModel.archieveSections, id: \.self) { section in
+                        Button {
+                            withAnimation {
+                                viewModel.currentSection = section.rawValue
+                                scrollView.scrollTo(section.rawValue, anchor: .center)
+                            }
+                        } label: {
+                            Text(viewModel.chipText(section.rawValue))
+                                .font(viewModel.currentSection == section.rawValue ? .robotoBold(size: 14) : .robotoRegular(size: 14))
+                                .foregroundColor(viewModel.currentSection == section.rawValue ? .DinotisDefault.primary : .DinotisDefault.black1)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
+                                .background(viewModel.currentSection == section.rawValue ? Color.DinotisDefault.lightPrimary : .white)
+                                .cornerRadius(20)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .inset(by: 0.5)
+                                        .stroke(viewModel.currentSection == section.rawValue ? Color.DinotisDefault.primary : Color.DinotisDefault.brightPrimary, lineWidth: 1)
+                                )
+                        }
+                        .id(section.rawValue)
                     }
                 }
                 .padding()
@@ -167,34 +269,97 @@ extension CreatorStudioView {
     func VideoListView() -> some View {
         Group {
             switch viewModel.currentSection {
-            case .archive:
-                if viewModel.videos.isEmpty {
-                    Text("Belum ada konten yang di archive")
-                        .font(.robotoRegular(size: 14))
-                        .foregroundColor(.DinotisDefault.black2)
-                        .padding()
+            case StudioVideoFilter.archive.rawValue:
+                if viewModel.isLoading {
+                    DinotisLoadingView(.small, hide: false)
                 } else {
-                    VStack(spacing: 8) {
+                    if viewModel.archivedVideo.isEmpty {
+                        Text("Belum ada konten yang di archive")
+                            .font(.robotoRegular(size: 14))
+                            .foregroundColor(.DinotisDefault.black2)
+                            .padding()
+                    } else {
                         ForEach(viewModel.archivedVideo, id: \.id) { video in
-                            ArchivedVideoCard(video)
+                            if video.id == viewModel.archivedVideo.last?.id {
+                                ArchivedVideoCard(video)
+                                    .onAppear {
+                                        Task {
+                                            if video.id == viewModel.archivedVideo.last?.id {
+                                                if viewModel.nextCursor != nil {
+                                                    viewModel.skipArchived = viewModel.takeArchived
+                                                    viewModel.takeArchived += 5
+                                                    
+                                                    await viewModel.getArchived(isMore: true)
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .listRowInsets(EdgeInsets(top: 0, leading: 36, bottom: viewModel.isLoadingMore ? 0 : -15, trailing: 36))
+                                
+                                if viewModel.isLoadingMore {
+                                    HStack {
+                                        Spacer()
+                                        
+                                        ProgressView()
+                                            .progressViewStyle(.circular)
+                                        
+                                        Spacer()
+                                    }
+                                    .listRowInsets(EdgeInsets(top: 0, leading: 36, bottom: -15, trailing: 36))
+                                }
+                            } else {
+                                ArchivedVideoCard(video)
+                                    .listRowInsets(EdgeInsets(top: 0, leading: 36, bottom: -15, trailing: 36))
+                            }
+                            
                         }
                     }
-                    .padding(.horizontal)
                 }
                 
             default:
-                if viewModel.videos.isEmpty {
-                    Text("Belum ada konten yang di upload")
-                        .font(.robotoRegular(size: 14))
-                        .foregroundColor(.DinotisDefault.black2)
-                        .padding()
+                if viewModel.isLoading {
+                    DinotisLoadingView(.small, hide: false)
                 } else {
-                    VStack(spacing: 16) {
+                    if viewModel.videos.isEmpty {
+                        Text("Belum ada konten yang di upload")
+                            .font(.robotoRegular(size: 14))
+                            .foregroundColor(.DinotisDefault.black2)
+                            .padding()
+                    } else {
                         ForEach(viewModel.videos, id: \.id) { video in
-                            VideoCard(video)
+                            if video.id == viewModel.videos.last?.id {
+                                VideoCard(video)
+                                    .onAppear {
+                                        Task {
+                                            if video.id == viewModel.videos.last?.id {
+                                                if viewModel.nextCursor != nil {
+                                                    viewModel.mineVideoRequest.skip = viewModel.mineVideoRequest.take
+                                                    viewModel.mineVideoRequest.take += 5
+                                                    
+                                                    await viewModel.getMineVideo(isMore: true)
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .listRowInsets(EdgeInsets(top: 0, leading: 36, bottom: 0, trailing: 36))
+                                
+                                if viewModel.isLoadingMore {
+                                    HStack {
+                                        Spacer()
+                                        
+                                        ProgressView()
+                                            .progressViewStyle(.circular)
+                                        
+                                        Spacer()
+                                    }
+                                    .listRowInsets(EdgeInsets(top: 0, leading: 36, bottom: 0, trailing: 36))
+                                }
+                            } else {
+                                VideoCard(video)
+                                    .listRowInsets(EdgeInsets(top: 0, leading: 36, bottom: 0, trailing: 36))
+                            }
                         }
                     }
-                    .padding(.horizontal)
                 }
             }
         }
@@ -203,9 +368,9 @@ extension CreatorStudioView {
     }
     
     @ViewBuilder
-    func VideoCard(_ video: DummyVideoModel) -> some View {
+    func VideoCard(_ video: MineVideoData) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            DinotisImageLoader(urlString: video.thumbnail)
+            DinotisImageLoader(urlString: video.cover.orEmpty())
                 .scaledToFill()
                 .frame(width: 358, height: 202)
                 .clipShape(RoundedRectangle(cornerRadius: 14))
@@ -215,21 +380,24 @@ extension CreatorStudioView {
                         .foregroundColor(.white)
                 }
                 .onTapGesture {
-                    viewModel.routeToDetailVideo()
+                    viewModel.routeToDetailVideo(id: video.id.orEmpty())
                 }
             
             VStack(alignment: .leading, spacing: 5) {
                 HStack(alignment: .top) {
-                    Text(video.title)
+                    Text(video.title.orEmpty())
                         .font(.robotoBold(size: 16))
                         .foregroundColor(.DinotisDefault.black1)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding([.leading], 4)
                         .onTapGesture {
-                            viewModel.routeToDetailVideo()
+                            viewModel.routeToDetailVideo(id: video.id.orEmpty())
                         }
+                    
+                    Spacer()
                     
                     Menu {
                         Button {
+                            viewModel.selectedId = video.id
                             viewModel.editVideo(video)
                         } label: {
                             Label(
@@ -239,7 +407,8 @@ extension CreatorStudioView {
                         }
                         
                         Button {
-                            
+                            viewModel.selectedId = video.id
+                            viewModel.isShowDelete = true
                         } label: {
                             Label(
                                 title: { Text(LocalizableText.deleteLabel) },
@@ -247,36 +416,42 @@ extension CreatorStudioView {
                             )
                         }
                         
-                        Button {
-                            
-                        } label: {
-                            Label(
-                                title: { Text(LocalizableText.downloadLabel) },
-                                icon: { Image.studioDocumentUploadIcon }
-                            )
-                        }
+//                        Button {
+//                            
+//                        } label: {
+//                            Label(
+//                                title: { Text(LocalizableText.downloadLabel) },
+//                                icon: { Image.studioDocumentUploadIcon }
+//                            )
+//                        }
                     } label: {
                         Image(systemName: "ellipsis")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 25)
+                            .font(.system(size: 25, weight: .bold))
                             .foregroundColor(.DinotisDefault.black2)
-                            .rotationEffect(.degrees(90))
+                            .padding([.trailing], 4)
                             .padding([.top, .leading])
+                            .contentShape(Rectangle())
                     }
                     
                 }
                 
                 HStack {
-                    Text(viewModel.dateFormatter(video.date))
+                    Text(viewModel.dateFormatter(video.createdAt.orCurrentDate()))
                         .font(.robotoMedium(size: 12))
                     
                     Circle()
                         .frame(width: 4, height: 4)
                     
-                    Text(video.type)
+                    Text((video.videoType?.rawValue).orEmpty().capitalized)
                         .font(.robotoMedium(size: 12))
                 }
                 .foregroundColor(.DinotisDefault.black3)
+                .padding([.leading], 4)
                 .onTapGesture {
-                    viewModel.routeToDetailVideo()
+                    viewModel.routeToDetailVideo(id: video.id.orEmpty())
                 }
             }
             
@@ -285,7 +460,7 @@ extension CreatorStudioView {
     }
     
     @ViewBuilder
-    func PostEditorView() -> some View {
+    func PostEditorView(isEdit: Bool) -> some View {
         VStack(spacing: 0) {
             HStack {
                 Button {
@@ -298,15 +473,40 @@ extension CreatorStudioView {
                 
                 Spacer()
                 
-                DinotisCapsuleButton(text: LocalizableText.postLabel, textColor: .white, bgColor: .DinotisDefault.primary) {
-                    if viewModel.uploadState == .select {
-                        viewModel.startUpload()
-                    } else {
-                        viewModel.dismissEditor()
+                if isEdit && viewModel.isLoadingEdit {
+                        LottieView(name: "regular-loading", loopMode: .loop)
+                            .scaledToFit()
+                            .frame(height: 25)
+                            .padding(10)
+                            .padding(.horizontal, 6)
+                } else {
+                    DinotisCapsuleButton(text: LocalizableText.postLabel, textColor: .white, bgColor: .DinotisDefault.primary) {
+                        Task {
+                            if isEdit {
+                                guard let id = viewModel.selectedId else { return }
+                                if viewModel.thumbnail != UIImage() {
+                                    await viewModel.uploadCoverEdit(viewModel.thumbnail)
+                                }
+                                
+                                await viewModel.editVideoItem(id: id, for: viewModel.currentVideo)
+                            } else {
+                                if viewModel.uploadState == .select {
+                                    let backgroundQueue = DispatchQueue.global(qos: .background)
+                                    
+                                    backgroundQueue.async {
+                                        Task {
+                                            await viewModel.startUpload()
+                                        }
+                                    }
+                                } else {
+                                    viewModel.dismissEditor()
+                                }
+                            }
+                        }
                     }
+                    .opacity(viewModel.disablePostButton() ? 0.5 : 1)
+                    .disabled(viewModel.disablePostButton())
                 }
-                .opacity(viewModel.disablePostButton() ? 0.5 : 1)
-                .disabled(viewModel.disablePostButton())
             }
             .padding()
             
@@ -321,7 +521,7 @@ extension CreatorStudioView {
                         Button {
                             viewModel.isShowUploadSheet = true
                         } label: {
-                            Text("\(viewModel.viewerTypeText(viewModel.currentVideo.viewerType)) \(Image(systemName: "chevron.down"))")
+                            Text("\(viewModel.viewerTypeText(viewModel.currentVideo.audienceType)) \(Image(systemName: "chevron.down"))")
                                 .font(.robotoBold(size: 14))
                                 .foregroundColor(.DinotisDefault.primary)
                                 .padding(.horizontal, 16)
@@ -341,7 +541,7 @@ extension CreatorStudioView {
                     } label: {
                         Group {
                             if viewModel.thumbnail == UIImage() {
-                                DinotisImageLoader(urlString: viewModel.currentVideo.thumbnail)
+                                DinotisImageLoader(urlString: viewModel.currentVideo.cover)
                             } else {
                                 Image(uiImage: viewModel.thumbnail)
                                     .resizable()
@@ -356,6 +556,7 @@ extension CreatorStudioView {
                                 .foregroundColor(.white)
                         }
                     }
+                    .disabled(viewModel.isLoadingEdit)
                     .overlay(alignment: .bottomLeading) {
                         Button {
                             viewModel.isShowImagePicker = true
@@ -371,6 +572,7 @@ extension CreatorStudioView {
                                 )
                         }
                         .padding(8)
+                        .disabled(viewModel.isLoadingEdit)
                     }
                     
                     VStack(alignment: .leading, spacing: 8) {
@@ -380,6 +582,7 @@ extension CreatorStudioView {
                         
                         MultilineTextField("Placeholder", text: $viewModel.currentVideo.title)
                             .tint(Color.DinotisDefault.primary)
+                            .disabled(viewModel.isLoadingEdit)
                     }
                     
                     VStack(alignment: .leading, spacing: 8) {
@@ -389,6 +592,7 @@ extension CreatorStudioView {
                         
                         MultilineTextField("Placeholder", text: $viewModel.currentVideo.description)
                             .tint(Color.DinotisDefault.primary)
+                            .disabled(viewModel.isLoadingEdit)
                     }
                 }
                 .padding([.horizontal, .bottom])
@@ -397,7 +601,7 @@ extension CreatorStudioView {
         .frame(maxWidth: .infinity)
         .background(Color.white)
         .overlay {
-            HoverVideoView()
+            HoverVideoView(isEdit: isEdit, webVideoUrl: viewModel.currentVideo.videoUrl)
         }
         .sheet(isPresented: $viewModel.isShowUploadSheet, content: {
             if #available(iOS 16.0, *) {
@@ -414,8 +618,8 @@ extension CreatorStudioView {
     }
     
     @ViewBuilder
-    func HoverVideoView() -> some View {
-        if let url = viewModel.currentVideo.url, viewModel.isShowHoverVideo {
+    func HoverVideoView(isEdit: Bool = false, webVideoUrl: String) -> some View {
+        if let url = viewModel.selectedVideo, viewModel.isShowHoverVideo && !isEdit {
             ZStack {
                 Color.black.opacity(0.4).ignoresSafeArea()
                     .onTapGesture {
@@ -425,6 +629,22 @@ extension CreatorStudioView {
                     }
                 
                 DinotisVideoPlayer(url: url)
+                    .frame(maxHeight: 210)
+                    .cornerRadius(9)
+                    .padding()
+                    .frame(maxHeight: .infinity, alignment: .topLeading)
+                    .padding(.top, 100)
+            }
+        } else if let webUrl = URL(string: webVideoUrl), viewModel.isShowHoverVideo && isEdit {
+            ZStack {
+                Color.black.opacity(0.4).ignoresSafeArea()
+                    .onTapGesture {
+                        withAnimation {
+                            viewModel.isShowHoverVideo = false
+                        }
+                    }
+                
+                DinotisVideoPlayer(url: webUrl)
                     .frame(maxHeight: 210)
                     .cornerRadius(9)
                     .padding()
@@ -454,7 +674,7 @@ extension CreatorStudioView {
             VStack(spacing: 8) {
                 Button {
                     withAnimation {
-                        viewModel.currentVideo.viewerType = .publicly
+                        viewModel.currentVideo.audienceType = ViewerType.publicly.type
                     }
                 } label: {
                     VStack(spacing: 8) {
@@ -466,14 +686,14 @@ extension CreatorStudioView {
                                 .font(.robotoRegular(size: 12))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        .foregroundColor(viewModel.currentVideo.viewerType == .publicly ? .white : .DinotisDefault.black1)
+                        .foregroundColor(viewModel.currentVideo.audienceType == ViewerType.publicly.type ? .white : .DinotisDefault.black1)
                         .padding()
                         .background(
                             RoundedRectangle(cornerRadius: 12)
-                                .foregroundColor(viewModel.currentVideo.viewerType == .publicly ? Color.DinotisDefault.primary : .clear)
+                                .foregroundColor(viewModel.currentVideo.audienceType == ViewerType.publicly.type ? Color.DinotisDefault.primary : .clear)
                         )
                         .overlay {
-                            if viewModel.currentVideo.viewerType != .publicly {
+                            if viewModel.currentVideo.audienceType != ViewerType.publicly.type {
                                 RoundedRectangle(cornerRadius: 12)
                                     .inset(by: 0.5)
                                     .stroke(Color(red: 0.91, green: 0.91, blue: 0.91), lineWidth: 1)
@@ -484,7 +704,7 @@ extension CreatorStudioView {
                 
                 Button {
                     withAnimation {
-                        viewModel.currentVideo.viewerType = .subscriber
+                        viewModel.currentVideo.audienceType = ViewerType.subscriber.type
                     }
                 } label: {
                     VStack(spacing: 8) {
@@ -496,14 +716,14 @@ extension CreatorStudioView {
                                 .font(.robotoRegular(size: 12))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        .foregroundColor(viewModel.currentVideo.viewerType == .subscriber ? .white : .DinotisDefault.black1)
+                        .foregroundColor(viewModel.currentVideo.audienceType == ViewerType.subscriber.type ? .white : .DinotisDefault.black1)
                         .padding()
                         .background(
                             RoundedRectangle(cornerRadius: 12)
-                                .foregroundColor(viewModel.currentVideo.viewerType == .subscriber ? Color.DinotisDefault.primary : .clear)
+                                .foregroundColor(viewModel.currentVideo.audienceType == ViewerType.subscriber.type ? Color.DinotisDefault.primary : .clear)
                         )
                         .overlay {
-                            if viewModel.currentVideo.viewerType != .subscriber {
+                            if viewModel.currentVideo.audienceType != ViewerType.subscriber.type {
                                 RoundedRectangle(cornerRadius: 12)
                                     .inset(by: 0.5)
                                     .stroke(Color(red: 0.91, green: 0.91, blue: 0.91), lineWidth: 1)
@@ -561,7 +781,13 @@ extension CreatorStudioView {
                     Spacer()
                     
                     Button {
-                        viewModel.startUpload()
+                        let backgroundQueue = DispatchQueue.global(qos: .background)
+                        
+                        backgroundQueue.async {
+                            Task {
+                                await viewModel.startUpload()
+                            }
+                        }
                     } label: {
                         Text("\(Image(systemName: "arrow.clockwise")) \(LocalizableText.tryAgainLabel)")
                             .font(.robotoBold(size: 12))
@@ -598,6 +824,7 @@ extension CreatorStudioView {
             Button {
                 withAnimation {
                     viewModel.uploadState = .initial
+                    viewModel.uploadProgress = 0.0
                 }
             } label: {
                 Text(LocalizableText.cancelUploadLabel)
@@ -655,24 +882,24 @@ extension CreatorStudioView {
     }
     
     @ViewBuilder
-    func ArchivedVideoCard(_ video: DummyArchiveModel) -> some View {
+    func ArchivedVideoCard(_ video: ArchivedData) -> some View {
         Button {
-            viewModel.routeToSessionRecordingList()
+            viewModel.routeToSessionRecordingList(videos: video.recordings ?? [])
         } label: {
             VStack(alignment: .leading, spacing: 8) {
-                Text(video.title)
+                Text(video.title.orEmpty())
                     .font(.robotoBold(size: 15))
                     .foregroundColor(.DinotisDefault.black2)
                     .multilineTextAlignment(.leading)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
                 HStack(spacing: 8) {
-                    Text("\(video.videoCount) Videos")
+                    Text("\((video.recordings?.count).orZero()) Videos")
                     
                     Circle()
                         .frame(width: 3, height: 3)
                     
-                    Text(viewModel.dateFormatter(video.date))
+                    Text(viewModel.dateFormatter(video.endAt.orCurrentDate()))
                 }
                 .font(.robotoMedium(size: 12))
                 .foregroundColor(.DinotisDefault.black3)
@@ -682,6 +909,7 @@ extension CreatorStudioView {
                 RoundedRectangle(cornerRadius: 12)
                     .stroke(Color.DinotisDefault.black3.opacity(0.5), lineWidth: 1)
             }
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
     }

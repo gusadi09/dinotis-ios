@@ -118,6 +118,8 @@ public struct MeetingDetailResponse: Codable, Hashable {
     public let reviews: [ReviewSuccessResponse]?
     public let participantDetails: [UserResponse]?
     public let meetingFee: MeetingFeeData?
+    public let archiveRecording: Bool?
+    public let isArchived: Bool?
     
     public init(
         id: String = "",
@@ -157,7 +159,9 @@ public struct MeetingDetailResponse: Codable, Hashable {
         isInspected: Bool? = nil,
         reviews: [ReviewSuccessResponse]? = [],
         participantDetails: [UserResponse]? = [],
-        meetingFee: MeetingFeeData? = nil
+        meetingFee: MeetingFeeData? = nil,
+        archiveRecording: Bool? = nil,
+        isArchived: Bool? = nil
     ) {
         self.id = id
         self.title = title
@@ -197,6 +201,8 @@ public struct MeetingDetailResponse: Codable, Hashable {
         self.reviews = reviews
         self.participantDetails = participantDetails
         self.meetingFee = meetingFee
+        self.archiveRecording = archiveRecording
+        self.isArchived = isArchived
     }
     
     public static func == (lhs: MeetingDetailResponse, rhs: MeetingDetailResponse) -> Bool {

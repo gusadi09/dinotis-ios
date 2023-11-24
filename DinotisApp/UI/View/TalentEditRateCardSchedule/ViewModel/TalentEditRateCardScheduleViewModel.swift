@@ -218,13 +218,14 @@ final class TalentEditRateCardScheduleViewModel: ObservableObject {
             endAt: DateUtils.dateFormatter(timeEnd, forFormat: .utcV2),
             isPrivate: meetingForm.isPrivate,
             slots: meetingForm.slots,
-            urls: []
+            urls: [], 
+            archiveRecording: false
         )
         
         let result = await editMeetingUseCase.execute(for: meetingID, with: body)
         
         switch result {
-        case .success(let success):
+        case .success(_):
             DispatchQueue.main.async { [weak self] in
                 self?.isLoading = false
                 self?.isShowSuccess = true

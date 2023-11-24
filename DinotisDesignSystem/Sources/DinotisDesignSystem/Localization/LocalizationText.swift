@@ -3095,6 +3095,18 @@ public enum LocalizableText {
         bundle: .module,
         comment: "minus total revenue warning on schedule form"
     )
+    
+    public static let creatorStudioDeleteVideoAlertTitle = NSLocalizedString(
+        "delete_video_alert_title",
+        bundle: .module,
+        comment: "alert title for creator studio"
+    )
+    
+    public static let creatorStudioDeleteVideoAlertContent = NSLocalizedString(
+        "delete_video_alert_content",
+        bundle: .module,
+        comment: "alert content for creator studio"
+    )
     public static let subscirbeCardTitle = NSLocalizedString(
         "subscirbe_card_title",
         bundle: .module,
@@ -3211,6 +3223,12 @@ public enum LocalizableText {
             name
         )
     }
+    
+    public static let detailVideoCommentPlaceholder = NSLocalizedString(
+        "detail_video_comment_placeholder",
+        bundle: .module,
+        comment: "comment placeholder"
+    )
 }
 
 

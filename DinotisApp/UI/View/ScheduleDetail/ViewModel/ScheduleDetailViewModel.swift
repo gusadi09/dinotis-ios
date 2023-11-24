@@ -955,7 +955,7 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
     }
     
     func routeToSessionRecordingList() {
-        let viewModel = SessionRecordingListViewModel(backToHome: { self.backToHome() })
+        let viewModel = SessionRecordingListViewModel(videos: [], backToHome: { self.backToHome() })
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .sessionRecordingList(viewModel: viewModel)

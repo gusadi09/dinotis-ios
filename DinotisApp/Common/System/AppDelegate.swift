@@ -15,6 +15,7 @@ import SwiftKeychainWrapper
 import OneSignal
 import Firebase
 import DinotisData
+import netfox
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
@@ -24,6 +25,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 		// Override point for customization after application launch.
 
+#if DEBUG
+        NFX.sharedInstance().start()
+        NFX.sharedInstance().ignoreURLs(["https://api-silos.dyte.io"])
+#endif
 		OneSignal.setLogLevel(.LL_VERBOSE, visualLevel: .LL_NONE)
         
         UNUserNotificationCenter.current().delegate = self
