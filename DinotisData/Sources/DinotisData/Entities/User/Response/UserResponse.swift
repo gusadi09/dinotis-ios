@@ -432,8 +432,9 @@ public struct ManagementTalentData: Codable {
 	public let isVerified: Bool?
 	public let isVisible: Bool?
 	public let isActive: Bool?
+    public let rating: String?
 
-	public init(id: String?, name: String?, username: String?, profilePhoto: String?, profileDescription: String?, professions: [ProfessionData]?, userHighlights: [HighlightData]?, isVerified: Bool?, isVisible: Bool?, isActive: Bool?, stringProfessions: [String]?) {
+    public init(id: String?, name: String?, username: String?, profilePhoto: String?, profileDescription: String?, professions: [ProfessionData]?, userHighlights: [HighlightData]?, isVerified: Bool?, isVisible: Bool?, isActive: Bool?, stringProfessions: [String]?, rating: String? = nil) {
 		self.id = id
 		self.name = name
 		self.username = username
@@ -445,6 +446,7 @@ public struct ManagementTalentData: Codable {
 		self.isVerified = isVerified
 		self.isVisible = isVisible
 		self.isActive = isActive
+        self.rating = rating
 	}
 }
 

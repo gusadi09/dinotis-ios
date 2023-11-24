@@ -286,6 +286,7 @@
 "talent_detail_services" = "Services";
 "talent_detail_review" = "Reviews";
 "talent_detail_about_me" = "About Me";
+"talent_detail_about_us" = "About Us";
 "talent_detail_gallery" = "Gallery";
 "talent_detail_empty_review_title" = "Woops, this creator haven't reviews yet";
 "talent_detail_empty_review_content" = "Don't forget to give review, for you who was joined this creator session ☺️💜";
@@ -702,3 +703,5 @@
 "send_request_label" = "Send Request";
 
 "detail_video_comment_placeholder" = "Write your comment here...";
+"management_creator_label" = "Creator Management";
+"management_profile_label" = "Management Profile";

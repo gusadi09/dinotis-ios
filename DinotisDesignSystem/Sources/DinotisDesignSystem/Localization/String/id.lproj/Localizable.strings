@@ -29,7 +29,7 @@
 "title_audience" = "Audiens";
 "description_audience_login" = "Mulai ngobrol dengan kreator";
 
-"title_creator" = "Kreators";
+"title_creator" = "Kreator";
 "description_creator_login" = "Mulai ngobrol dengan Audiens";
 
 "title_login" = "Masuk Akun";
@@ -286,6 +286,7 @@
 "talent_detail_services" = "Layanan";
 "talent_detail_review" = "Ulasan";
 "talent_detail_about_me" = "Tentang Aku";
+"talent_detail_about_us" = "Tentang Kami";
 "talent_detail_gallery" = "Galeri";
 "talent_detail_empty_review_title" = "Wahhh, ulasan kreator ini masih kosong nih";
 "talent_detail_empty_review_content" = "Buat kamu yang pernah ikut sesi kreator ini, jangan lupa kasih ulasan ya ☺️💜";
@@ -702,3 +703,5 @@
 "send_request_label" = "Kirim Request";
 
 "detail_video_comment_placeholder" = "Tulis komentarmu disini...";
+"management_creator_label" = "Manajemen Kreator";
+"management_profile_label" = "Profile Manajemen";

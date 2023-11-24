@@ -3229,6 +3229,22 @@ public enum LocalizableText {
         bundle: .module,
         comment: "comment placeholder"
     )
+    public static let talentDetailAboutUs = NSLocalizedString(
+        "talent_detail_about_us",
+        bundle: .module,
+        comment: "talent detail about us label"
+    )
+    public static let managementCreatorLabel = NSLocalizedString(
+        "management_creator_label",
+        bundle: .module,
+        comment: "management creator label"
+    )
+    public static let managementProfileLabel = NSLocalizedString(
+        "management_profile_label",
+        bundle: .module,
+        comment: "management profile label"
+    )
+    
 }
 
 
