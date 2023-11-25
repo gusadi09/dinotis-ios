@@ -47,4 +47,8 @@ public final class ArchieveDefaultRemoteDataSource: ArchieveRemoteDataSource {
     public func getArchived(skip: Int, take: Int) async throws -> ArchivedResponse {
         try await self.provider.request(.getArchieved(skip, take), model: ArchivedResponse.self)
     }
+    
+    public func getVideoList(with param: VideoListRequest) async throws -> MineVideoResponse {
+        try await self.provider.request(.getVideoList(param), model: MineVideoResponse.self)
+    }
 }

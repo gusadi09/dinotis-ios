@@ -46,4 +46,8 @@ public final class ArchieveDefaultRepository: ArchieveRepository {
     public func provideGetArchived(skip: Int, take: Int) async throws -> ArchivedResponse {
         try await self.remote.getArchived(skip: skip, take: take)
     }
+    
+    public func provideGetVideoList(with param: VideoListRequest) async throws -> MineVideoResponse {
+        try await self.remote.getVideoList(with: param)
+    }
 }
