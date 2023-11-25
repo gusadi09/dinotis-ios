@@ -25,6 +25,24 @@ public struct VideosRequest: Codable {
     }
 }
 
+public struct VideoListRequest: Codable {
+    public var username: String
+    public var take: Int = 5
+    public var skip: Int = 0
+    public var sort: MineVideoSorting? = .asc
+    public var audienceType: MineVideoAudienceType? = nil
+    public var videoType: MineVideoVideoType? = nil
+    
+    public init(username: String, take: Int = 5, skip: Int = 0, sort: MineVideoSorting? = .asc, audienceType: MineVideoAudienceType? = nil, videoType: MineVideoVideoType? = nil) {
+        self.username = username
+        self.take = take
+        self.skip = skip
+        self.sort = sort
+        self.audienceType = audienceType
+        self.videoType = videoType
+    }
+}
+
 public struct MineVideoRequest: Codable {
     public var take: Int = 5
     public var skip: Int = 0

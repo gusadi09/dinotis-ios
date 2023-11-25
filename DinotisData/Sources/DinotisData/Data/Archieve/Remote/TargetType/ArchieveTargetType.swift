@@ -17,6 +17,7 @@ public enum ArchieveTargetType {
     case postComment(String, String)
     case getComments(String, Int, Int)
     case getArchieved(Int, Int)
+    case getVideoList(VideoListRequest)
 }
 
 extension ArchieveTargetType: DinotisTargetType, AccessTokenAuthorizable {
@@ -47,6 +48,8 @@ extension ArchieveTargetType: DinotisTargetType, AccessTokenAuthorizable {
                 "skip": skip,
                 "take": take
             ]
+        case .getVideoList(let param):
+            return param.toJSON()
         }
     }
     
@@ -67,6 +70,8 @@ extension ArchieveTargetType: DinotisTargetType, AccessTokenAuthorizable {
         case .getComments(_, _, _):
             return [:]
         case .getArchieved(_, _):
+            return [:]
+        case .getVideoList:
             return [:]
         }
         
@@ -94,26 +99,14 @@ extension ArchieveTargetType: DinotisTargetType, AccessTokenAuthorizable {
             return URLEncoding.default
         case .getArchieved(_, _):
             return URLEncoding.default
+        case .getVideoList:
+            return URLEncoding.default
         }
     }
     
     public var task: Task {
         switch self {
-        case .postVideos(_):
-            return .requestParameters(parameters: parameters, encoding: parameterEncoding)
-        case .getMineVideo(_):
-            return .requestParameters(parameters: parameters, encoding: parameterEncoding)
-        case .deleteVideo(_):
-            return .requestParameters(parameters: parameters, encoding: parameterEncoding)
-        case .getDetailVideo(_):
-            return .requestParameters(parameters: parameters, encoding: parameterEncoding)
-        case .editVideo(_, _):
-            return .requestParameters(parameters: parameters, encoding: parameterEncoding)
-        case .postComment(_, _):
-            return .requestParameters(parameters: parameters, encoding: parameterEncoding)
-        case .getComments(_, _, _):
-            return .requestParameters(parameters: parameters, encoding: parameterEncoding)
-        case .getArchieved(_, _):
+        default:
             return .requestParameters(parameters: parameters, encoding: parameterEncoding)
         }
     }
@@ -136,6 +129,8 @@ extension ArchieveTargetType: DinotisTargetType, AccessTokenAuthorizable {
             return "/comments/video/\(id)"
         case .getArchieved(_, _):
             return "/videos/archived"
+        case .getVideoList(let param):
+            return "/videos/\(param.username)/user"
         }
     }
     
@@ -156,6 +151,8 @@ extension ArchieveTargetType: DinotisTargetType, AccessTokenAuthorizable {
         case .getComments(_, _, _):
             return .get
         case .getArchieved(_, _):
+            return .get
+        case .getVideoList:
             return .get
         }
     }

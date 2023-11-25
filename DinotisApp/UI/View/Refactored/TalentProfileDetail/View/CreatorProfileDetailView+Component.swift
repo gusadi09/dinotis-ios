@@ -136,8 +136,11 @@ extension CreatorProfileDetailView {
                     .buttonStyle(.plain)
                     
                     Button {
-                        viewModel.isShowSubscribeSheet = true
-                        viewModel.isLastSubscribeSheet = false
+//                        viewModel.isShowSubscribeSheet = true
+//                        viewModel.isLastSubscribeSheet = false
+                        if let url = URL(string: viewModel.subscribeURL()) {
+                            openURL(url)
+                        }
                     } label: {
                         HStack(spacing: 4) {
                             Image.talentProfileStarAddBlackIcon
@@ -256,6 +259,11 @@ extension CreatorProfileDetailView {
             
             Button {
                 viewModel.tabNumb = 2
+                if viewModel.videos.isEmpty {
+                    Task {
+                        await viewModel.getVideoList(isMore: false)
+                    }
+                }
             } label: {
                 Text(viewModel.isManagementView ? LocalizableText.tabSession : LocalizableText.exclusiveVideoLabel)
                     .font(.robotoBold(size: 14))
@@ -673,25 +681,34 @@ extension CreatorProfileDetailView {
     func ExclusiveVideoView() -> some View {
         LazyVStack(spacing: 16) {
             ListHeaderView()
-            if viewModel.videos.isEmpty {
-                VStack(spacing: 21) {
-                    Image.talentProfileEmptyVideo
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: 240, maxHeight: 240)
-                    
-                    Text(LocalizableText.emptyUploadDesc)
-                        .font(.robotoRegular(size: 14))
-                        .foregroundColor(.DinotisDefault.black2)
-                }
-                .padding()
+                .zIndex(100)
+                .layoutPriority(1)
+            
+            if viewModel.isLoadingVideoList {
+                LottieView(name: "regular-loading", loopMode: .loop)
+                    .scaledToFit()
+                    .frame(height: 50)
             } else {
-                VStack(spacing: 16) {
-                    ForEach(viewModel.videos, id: \.id) { video in
-                        VideoCard(video)
+                if viewModel.videos.isEmpty {
+                    VStack(spacing: 21) {
+                        Image.talentProfileEmptyVideo
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: 240, maxHeight: 240)
+                        
+                        Text(LocalizableText.emptyUploadDesc)
+                            .font(.robotoRegular(size: 14))
+                            .foregroundColor(.DinotisDefault.black2)
                     }
+                    .padding()
+                } else {
+                    VStack(spacing: 16) {
+                        ForEach(viewModel.videos, id: \.id) { video in
+                            VideoCard(video)
+                        }
+                    }
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal)
             }
         }
         .frame(maxWidth: .infinity)
@@ -704,9 +721,15 @@ extension CreatorProfileDetailView {
                 HStack(spacing: 8) {
                     ForEach(viewModel.sections, id: \.self) { section in
                         Button {
-                            withAnimation {
-                                viewModel.currentSection = section
-                                scrollView.scrollTo(section, anchor: .center)
+                            if viewModel.currentSection != section {
+                                withAnimation {
+                                    viewModel.currentSection = section
+                                    scrollView.scrollTo(section, anchor: .center)
+                                }
+                                
+                                Task {
+                                    await viewModel.getVideoList(isMore: false)
+                                }
                             }
                         } label: {
                             Text(viewModel.chipText(section))
@@ -722,6 +745,7 @@ extension CreatorProfileDetailView {
                                         .stroke(viewModel.currentSection == section ? Color.DinotisDefault.primary : Color.DinotisDefault.brightPrimary, lineWidth: 1)
                                 )
                         }
+                        .buttonStyle(.plain)
                         .id(section)
                     }
                 }
@@ -731,41 +755,58 @@ extension CreatorProfileDetailView {
     }
     
     @ViewBuilder
-    func VideoCard(_ video: DummyVideoModel) -> some View {
+    func VideoCard(_ video: MineVideoData) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            DinotisImageLoader(urlString: video.thumbnail)
+            DinotisImageLoader(urlString: video.cover.orEmpty())
                 .scaledToFill()
-                .frame(width: 358, height: 202)
-                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .frame(maxWidth: 358, maxHeight: 202)
                 .overlay {
-                    Image(systemName: "play.circle.fill")
-                        .font(.system(size: 50))
-                        .foregroundColor(.white)
+                    Button {
+                        viewModel.viewExclusiveVideo(id: video.id.orEmpty())
+                    } label: {
+                        ZStack {
+                            Color.black.opacity(0.05)
+                            Image(systemName: "play.circle.fill")
+                                .font(.system(size: 50))
+                                .foregroundColor(.white)
+                        }
+                        .frame(maxWidth: 358, maxHeight: 202)
+                    }
+                    .buttonStyle(.plain)
                 }
+                .clipShape(RoundedRectangle(cornerRadius: 14))
             
-            VStack(alignment: .leading, spacing: 5) {
-                Text(video.title)
-                    .font(.robotoBold(size: 16))
-                    .foregroundColor(.DinotisDefault.black1)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+            Button {
+                viewModel.viewExclusiveVideo(id: video.id.orEmpty())
+            } label: {
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(video.title.orEmpty())
+                        .font(.robotoBold(size: 16))
+                        .foregroundColor(.DinotisDefault.black1)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    HStack {
+                        Text(viewModel.dateFormatter(video.createdAt.orCurrentDate()))
+                            .font(.robotoMedium(size: 12))
+                        
+                        Circle()
+                            .frame(width: 4, height: 4)
+                        
+                        Text((video.videoType?.rawValue).orEmpty().capitalized)
+                            .font(.robotoMedium(size: 12))
+                        
+                        Circle()
+                            .frame(width: 4, height: 4)
+                        
+                        Text((video.audienceType?.rawValue).orEmpty().capitalized)
+                            .font(.robotoMedium(size: 12))
+                    }
+                    .foregroundColor(.DinotisDefault.black3)
+                }
                 
-                HStack {
-                    Text(viewModel.dateFormatter(video.date))
-                        .font(.robotoMedium(size: 12))
-                    
-                    Circle()
-                        .frame(width: 4, height: 4)
-                    
-                    Text(video.type)
-                        .font(.robotoMedium(size: 12))
-                }
-                .foregroundColor(.DinotisDefault.black3)
             }
-            
+            .buttonStyle(.plain)
             Divider()
-        }
-        .onTapGesture {
-            viewModel.viewExclusiveVideo()
         }
     }
     

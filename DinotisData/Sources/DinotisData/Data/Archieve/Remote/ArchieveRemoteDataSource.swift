@@ -16,4 +16,5 @@ public protocol ArchieveRemoteDataSource {
     func getComments(videoId: String, skip: Int, take: Int) async throws -> CommentsResponse
     func postComment(videoId: String, comment: String) async throws -> SuccessResponse
     func getArchived(skip: Int, take: Int) async throws -> ArchivedResponse
+    func getVideoList(with param: VideoListRequest) async throws -> MineVideoResponse
 }

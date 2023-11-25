@@ -23,6 +23,7 @@ struct CreatorProfileDetailView: View {
     @Binding var tabValue: TabRoute
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.openURL) var openURL
     
     var hasRegularWidth: Bool {
         horizontalSizeClass == .regular
@@ -214,6 +215,10 @@ struct CreatorProfileDetailView: View {
                     .refreshable {
                         viewModel.resetList()
                         viewModel.onScreenAppear()
+                        
+                        Task {
+                            await viewModel.getVideoList(isMore: false)
+                        }
                     }
                     .padding(.horizontal, -18)
                     

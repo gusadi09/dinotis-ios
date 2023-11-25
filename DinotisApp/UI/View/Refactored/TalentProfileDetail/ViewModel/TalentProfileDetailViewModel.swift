@@ -18,12 +18,13 @@ enum LoadMoreType {
     case rateCard
     case review
     case meeting
+    case video
 }
 
 enum StudioVideosFilter {
     case latest
     case recorded
-    case popular
+    case publicAudience
     case earliest
     case archive
 }
@@ -49,6 +50,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     private let unfollowUseCase: UnfollowCreatorUseCase
     private let getReviewsUseCase: GetReviewsUseCase
     private let getTalentDetailMeetingUseCase: GetCreatorDetailMeetingListUseCase
+    private let getVideoListUseCase: GetVideoListUseCase
     
     @Published var filterSelection = LocalizableText.talentDetailAvailableSessions
     @Published var filterSelectionReview = "Semua Ulasan"
@@ -73,6 +75,8 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     @Published var isLoadingMore = false
     @Published var isLoadingMoreRateCard = false
     @Published var isLoadingMoreReview = false
+    @Published var isLoadingVideoList = false
+    @Published var isLoadingMoreVideoList = false
     @Published var isError = false
     @Published var success = false
     @Published var error: String?
@@ -96,6 +100,8 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     @Published var qrCodeUrl: String?
     
     @Published var config = Configuration.shared
+    
+    @Published var urlLinked = Configuration.shared.environment.openURL
     
     @Published var userData: UserResponse?
     @Published var userName: String?
@@ -133,6 +139,27 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     @Published var bundlingData = [DinotisData.BundlingData]()
     @Published var rateCardList = [RateCardResponse]()
     @Published var reviewData = [ReviewData]()
+    @Published var videos = [MineVideoData]()
+    
+    var videoParam: VideoListRequest {
+        var param: VideoListRequest = .init(username: (self.talentData?.username).orEmpty())
+        let unsubscribed = talentData?.subscription == nil || talentData?.subscription?.subscriptionType == "UNSUBSCRIBED"
+        
+        param.audienceType = unsubscribed ? .PUBLIC : .SUBSCRIBER
+        
+        switch currentSection {
+        case .recorded:
+            param.videoType = .RECORD
+        case .publicAudience:
+            param.audienceType = .PUBLIC
+        case .earliest:
+            param.sort = .asc
+        default:
+            param.sort = .desc
+        }
+        
+        return param
+    }
     
     @Published var payments = UserBookingPayment(
         id: "",
@@ -199,19 +226,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     @Published var imageIndex = 0
     
     @Published var currentSection: StudioVideosFilter = .latest
-    @Published var sections: [StudioVideosFilter] = [.latest, .recorded, .popular, .earliest]
-    
-    @Published var videos: [DummyVideoModel] = [
-        .init(title: "Lorem ipsum dolor sit amet consectetur. Aliquet vitae id pellentesque est ",
-              description: "Lorem ipsum dolor sit amet consectetur. Mattis et ut fusce eget turpis in tellus sit. Ultrices est rhoncus vestibulum lectus non. Dui duis etiam dictum quam ut condimentum lacinia. Lorem egestas duis in sollicitudin diam in nec. Eu tincidunt ultricies et id semper erat morbi sed urna. Viverra pulvinar ultrices viverra nisi ac et viverra. Habitasse quis et volutpat dolor lectus aliquet.",
-              thumbnail: "https://esports.id/img/article/854920211125095801.jpg"),
-        .init(title: "Lorem ipsum dolor sit amet consectetur. Aliquet vitae id pellentesque est ",
-              description: "Lorem ipsum dolor sit amet consectetur. Mattis et ut fusce eget turpis in tellus sit. Ultrices est rhoncus vestibulum lectus non. Dui duis etiam dictum quam ut condimentum lacinia. Lorem egestas duis in sollicitudin diam in nec. Eu tincidunt ultricies et id semper erat morbi sed urna. Viverra pulvinar ultrices viverra nisi ac et viverra. Habitasse quis et volutpat dolor lectus aliquet.",
-              thumbnail: "https://esports.id/img/article/854920211125095801.jpg"),
-        .init(title: "Lorem ipsum dolor sit amet consectetur. Aliquet vitae id pellentesque est ",
-              description: "Lorem ipsum dolor sit amet consectetur. Mattis et ut fusce eget turpis in tellus sit. Ultrices est rhoncus vestibulum lectus non. Dui duis etiam dictum quam ut condimentum lacinia. Lorem egestas duis in sollicitudin diam in nec. Eu tincidunt ultricies et id semper erat morbi sed urna. Viverra pulvinar ultrices viverra nisi ac et viverra. Habitasse quis et volutpat dolor lectus aliquet.",
-              thumbnail: "https://esports.id/img/article/854920211125095801.jpg"),
-    ]
+    @Published var sections: [StudioVideosFilter] = [.latest, .recorded, .earliest, .publicAudience]
     
     @Published var isLockPrivate = false
     @Published var requestSessionMessage = ""
@@ -266,7 +281,8 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         followUseCase: FollowCreatorUseCase = FollowCreatorDefaultUseCase(),
         unfollowUseCase: UnfollowCreatorUseCase = UnfollowCreatorDefaultUseCase(),
         coinVerificationUseCase: CoinVerificationUseCase = CoinVerificationDefaultUseCase(),
-        getTalentDetailMeetingUseCase: GetCreatorDetailMeetingListUseCase = GetCreatorDetailMeetingListDefaultUseCase()
+        getTalentDetailMeetingUseCase: GetCreatorDetailMeetingListUseCase = GetCreatorDetailMeetingListDefaultUseCase(),
+        getVideoListUseCase: GetVideoListUseCase = GetVideoListDefaultUseCase()
     ) {
         self.username = username
         self.backToHome = backToHome
@@ -285,6 +301,11 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         self.unfollowUseCase = unfollowUseCase
         self.coinVerificationUseCase = coinVerificationUseCase
         self.getTalentDetailMeetingUseCase = getTalentDetailMeetingUseCase
+        self.getVideoListUseCase = getVideoListUseCase
+    }
+    
+    func subscribeURL() -> String {
+        return urlLinked + "user/talent/" + (talentData?.username).orEmpty()
     }
     
     func chipText(_ section: StudioVideosFilter) -> String {
@@ -295,8 +316,8 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
             LocalizableText.sortLatest
         case .recorded:
             LocalizableText.recordedLabel
-        case .popular:
-            LocalizableText.popularLabel
+        case .publicAudience:
+            LocalizableText.publicLabel
         case .archive:
             LocalizableText.archiveLabel
         }
@@ -965,10 +986,17 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
                     self?.isLoadingMoreRateCard = true
                 case .review:
                     self?.isLoadingMoreReview = true
+                case .video:
+                    self?.isLoadingMoreVideoList = true
                 }
                 
             } else {
-                self?.isLoading = true
+                switch type {
+                case .video:
+                    self?.isLoadingVideoList = true
+                default:
+                    self?.isLoading = true
+                }
             }
             self?.isError = false
             self?.error = nil
@@ -1034,6 +1062,27 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
                     self?.isShowAlert = true
                 }
             }
+        }
+    }
+    
+    func getVideoList(isMore: Bool) async {
+        onStartFetchWithPagination(isMore: isMore, type: .video)
+        
+        let result = await getVideoListUseCase.execute(with: videoParam)
+        
+        switch result {
+        case .success(let response):
+            DispatchQueue.main.async {[weak self] in
+                if isMore {
+                    self?.isLoadingMoreVideoList = false
+                    self?.videos += response.data ?? []
+                } else {
+                    self?.isLoadingVideoList = false
+                    self?.videos = response.data ?? []
+                }
+            }
+        case .failure(let error):
+            print("ERROR ASU: \(error)")
         }
     }
     
@@ -1257,17 +1306,17 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         }
     }
     
-    func viewExclusiveVideo() {
-        // FIXME: Change to subscribed condition when BE has done
-        if (talentData?.isFollowed).orFalse() {
-            routeToDetailVideo(id: "")
-        } else {
+    func viewExclusiveVideo(id: String) {
+        let unsubscribed = talentData?.subscription == nil || talentData?.subscription?.subscriptionType == "UNSUBSCRIBED"
+        if unsubscribed {
             alert.title = LocalizableText.subscribeAlertTitle
             alert.message = LocalizableText.subscribeAlertDesc
             alert.primaryButton = .init(text: LocalizableText.okText, action: {})
             DispatchQueue.main.async { [weak self] in
                 self?.isShowAlert = true
             }
+        } else {
+            routeToDetailVideo(id: id)
         }
     }
     
@@ -1394,6 +1443,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
             self?.meetingParam.take = 15
             self?.meetingData = []
             self?.bundlingData = []
+            self?.videos = []
             
             self?.onGetTalentMeeting(by: (self?.talentData?.id).orEmpty(), isMore: false)
             self?.onGetRateCardList(by: (self?.talentData?.id).orEmpty(), isMore: false)
