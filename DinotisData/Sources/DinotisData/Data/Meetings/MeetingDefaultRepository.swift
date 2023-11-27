@@ -74,4 +74,8 @@ public final class MeetingsDefaultRepository: MeetingsRepository {
     public func provideGetMeetingFee() async throws -> MeetingFeeResponse {
         try await self.remote.getMeetingFee()
     }
+    
+    public func provideGetRecordings(for meetingId: String) async throws -> RecordingResponse {
+        try await self.remote.getRecordings(for: meetingId)
+    }
 }

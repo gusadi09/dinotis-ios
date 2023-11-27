@@ -7,6 +7,7 @@
 
 import SwiftUI
 import DinotisDesignSystem
+import SwiftUINavigation
 import WaterfallGrid
 
 struct AftercallFeedbackView: View {
@@ -21,6 +22,19 @@ struct AftercallFeedbackView: View {
     
     var body: some View {
         ZStack(alignment: .bottom) {
+            NavigationLink(
+                unwrapping: $viewModel.route,
+                case: /HomeRouting.setUpVideo,
+                destination: { viewModel in
+                    SetUpVideoView()
+                        .environmentObject(viewModel.wrappedValue)
+                },
+                onNavigate: {_ in},
+                label: {
+                    EmptyView()
+                }
+            )
+            
             Color.DinotisDefault.baseBackground
                 .ignoresSafeArea()
             
@@ -162,22 +176,17 @@ struct AftercallFeedbackView: View {
         }
         .navigationBarTitle(Text(""))
         .navigationBarHidden(true)
-        .onChange(of: viewModel.reasons, perform: { newValue in
-            print(newValue)
-        })
         .onAppear {
-            Task {
-                await viewModel.getReasons(rating: 0)
-                await viewModel.getReasons(rating: 1)
-                await viewModel.getReasons(rating: 2)
-                await viewModel.getReasons(rating: 3)
-                await viewModel.getReasons(rating: 4)
-                await viewModel.getReasons(rating: 5)
-            }
+            viewModel.onGetDetail()
+            
+            viewModel.onGetReason(for: 0)
+            viewModel.onGetReason(for: 1)
+            viewModel.onGetReason(for: 2)
+            viewModel.onGetReason(for: 3)
+            viewModel.onGetReason(for: 4)
+            viewModel.onGetReason(for: 5)
         }
         .fullScreenCover(isPresented: $viewModel.isSuccess) {
-            self.viewModel.backToScheduleDetail()
-        } content: {
             ZStack(alignment: .bottom) {
                 Color.DinotisDefault.primary
                     .ignoresSafeArea()
@@ -209,9 +218,13 @@ struct AftercallFeedbackView: View {
                     Spacer()
                 }
             }
-            .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now()+3) {
-                    self.viewModel.isSuccess = false
+            .onTapGesture {
+                self.viewModel.isSuccess = false
+                
+                if viewModel.showArchived() {
+                    self.viewModel.routeToSetUpVideo()
+                } else {
+                    self.viewModel.backToScheduleDetail()
                 }
             }
         }

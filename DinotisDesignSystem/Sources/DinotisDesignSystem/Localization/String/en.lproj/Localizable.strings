@@ -202,6 +202,7 @@
 "booking_rate_card_message_subtitle" = "* Please input the day and time for the Private Call that you wish to schedule.";
 "minute_in_duration" = "%lld Minutes";
 "private_video_call_label" = "Private Video Call";
+"group_video_call_label" = "Group Video Call";
 "price_label" = "Price";
 "note_for_creator_placeholder" = "Enter message for creator here...";
 "note_for_creator_title" = "Leave message for creator!";
@@ -285,6 +286,7 @@
 "talent_detail_services" = "Services";
 "talent_detail_review" = "Reviews";
 "talent_detail_about_me" = "About Me";
+"talent_detail_about_us" = "About Us";
 "talent_detail_gallery" = "Gallery";
 "talent_detail_empty_review_title" = "Woops, this creator haven't reviews yet";
 "talent_detail_empty_review_content" = "Don't forget to give review, for you who was joined this creator session ☺️💜";
@@ -669,5 +671,45 @@
 "cancel_upload_label" = "Cancel upload";
 "general_continue_label" = "Continue";
 "upload_video_label" = "Upload video";
+"subscribe_label" = "Subscribe";
+"subscribed_label" = "Subscribed";
+"comment_label" = "Comment";
+"detail_video_upcoming_session_desc" = "Upcoming sessions you can join";
 
 "minus_total_revenue_warning" = "**Your income is negative** due to the session price being too low. **It's recommended to increase your session price**.";
+
+"delete_video_alert_title" = "Delete this video?";
+"delete_video_alert_content" = "Videos that have been deleted cannot be restored";
+"subscirbe_card_title" = "Get exclusive access! Subscribe now";
+"subscirbe_card_desc" = "Become a Subscriber to enjoy all video content and replays from your favorite Creators, whenever you want!";
+"subscirbe_cancel_desc" = "Cancel anytime, wherever you want";
+"adaptive_subscribtion_label" = "Adaptive Subscription";
+"subscribe_now_label" = "Subscribe now";
+"for_one_month_label" = "For 1 Month";
+"subscribe_alert_title" = "Let's subscribe first";
+"subscribe_alert_desc" = "To access this video, you need to subscribe first, okay?";
+"request_private_label" = "Request Private";
+"request_ratecard_label" = "Request Ratecard";
+"request_private_desc" = "With 'Request Private,' enjoy an exclusive private call with your favorite creator.";
+"overview_label" = "Overview";
+"public_session_label" = "Public Sessions";
+"exclusive_video_label" = "Exclusive Video";
+"schedule_filter_label" = "Schedule Filter";
+"session_empty_title" = "There are no video call sessions yet";
+"session_empty_desc" = "You can ask %@ to create a session by clicking ";
+"empty_upload_desc" = "No content has been uploaded yet";
+"session_type_label" = "Session Type";
+"message_label" = "Message";
+"default_placeholder" = "Placeholder..";
+"send_request_label" = "Send Request";
+
+"detail_video_comment_placeholder" = "Write your comment here...";
+"management_creator_label" = "Creator Management";
+"management_profile_label" = "Management Profile";
+
+"creator_studio_empty_archive" = "No archived content yet";
+"creator_studio_empty_upload" = "No uploaded content yet";
+"creator_studio_archive_title_placeholder" = "Enter your archive title...";
+"creator_studio_archive_desc_placeholder" = "Enter your archive description...";
+
+"creator_availability_success_text" = "Successfully changed your availability.";

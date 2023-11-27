@@ -23,4 +23,5 @@ public protocol MeetingsRemoteDataSource {
     func approveInvitation(with isApprove: Bool, for meetingId: String) async throws -> SuccessResponse
     func getClosestSession() async throws -> ClosestMeetingResponse
     func getMeetingFee() async throws -> MeetingFeeResponse
+    func getRecordings(for meetingId: String) async throws -> RecordingResponse
 }

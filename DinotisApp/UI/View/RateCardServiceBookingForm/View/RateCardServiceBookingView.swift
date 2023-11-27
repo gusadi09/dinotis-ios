@@ -685,10 +685,20 @@ extension RateCardServiceBookingView {
                         type: .adaptiveScreen,
                         textColor: .white,
                         bgColor: .DinotisDefault.primary) {
-                            viewModel.isPresent = false
-                            DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
-                                withAnimation {
-                                    viewModel.showPaymentMenu = true
+                            if viewModel.rateCard.price == nil ||
+                                viewModel.rateCard.price.orEmpty() == "" ||
+                                viewModel.rateCard.price.orEmpty() == "0"
+                            {
+                                Task {
+                                    viewModel.isPresent = false
+                                    await viewModel.coinPayment(99)
+                                }
+                            } else {
+                                viewModel.isPresent = false
+                                DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                                    withAnimation {
+                                        viewModel.showPaymentMenu = true
+                                    }
                                 }
                             }
                         }

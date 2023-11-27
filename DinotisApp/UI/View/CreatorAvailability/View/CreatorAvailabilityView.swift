@@ -7,6 +7,7 @@
 
 import SwiftUI
 import DinotisDesignSystem
+import AlertToast
 
 struct CreatorAvailabilityView: View {
     
@@ -18,65 +19,70 @@ struct CreatorAvailabilityView: View {
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            HeaderView(
-                type: .textHeader,
-                title: LocalizableText.profileAvailabilityLabel,
-                headerColor: .clear,
-                textColor: .DinotisDefault.black1,
-                leadingButton:  {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image.generalBackIcon
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 20, height: 20)
-                            .padding(12)
-                            .background(
-                                Circle()
-                                    .fill(.white)
-                                    .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 0)
-                            )
-                    }
-                })
-            
-            ScrollView {
-                VStack {
-                    Button {
-                        viewModel.isShowSubscriptionSheet = true
-                    } label: {
-                        HStack {
-                            VStack(alignment: .leading, spacing: 6, content: {
-                                Text(LocalizableText.profileSetSubscriptionTitle)
-                                    .font(.robotoBold(size: 16))
-                                    .foregroundColor(.DinotisDefault.black1)
-                                
-                                Text(LocalizableText.profileSetSubscriptionDesc)
-                                    .font(.robotoRegular(size: 12))
-                                    .foregroundColor(.DinotisDefault.black3)
-                            })
-                            .multilineTextAlignment(.leading)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            
-                            Image(systemName: "chevron.right")
-                                .font(.system(size: 20, weight: .heavy))
-                                .foregroundColor(.DinotisDefault.black1)
+        ZStack {
+            VStack(spacing: 0) {
+                HeaderView(
+                    type: .textHeader,
+                    title: LocalizableText.profileAvailabilityLabel,
+                    headerColor: .clear,
+                    textColor: .DinotisDefault.black1,
+                    leadingButton:  {
+                        Button {
+                            dismiss()
+                        } label: {
+                            Image.generalBackIcon
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20, height: 20)
+                                .padding(12)
+                                .background(
+                                    Circle()
+                                        .fill(.white)
+                                        .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 0)
+                                )
                         }
-                        .padding(.vertical, 24)
-                        .padding(.horizontal, 18)
-                        .background(.white)
-                        .cornerRadius(12)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .inset(by: 0.5)
-                                .stroke(Color(red: 0.91, green: 0.91, blue: 0.91), lineWidth: 1)
-                            
-                        )
+                    })
+                
+                ScrollView {
+                    VStack {
+                        Button {
+                            viewModel.isShowSubscriptionSheet = true
+                        } label: {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 6, content: {
+                                    Text(LocalizableText.profileSetSubscriptionTitle)
+                                        .font(.robotoBold(size: 16))
+                                        .foregroundColor(.DinotisDefault.black1)
+                                    
+                                    Text(LocalizableText.profileSetSubscriptionDesc)
+                                        .font(.robotoRegular(size: 12))
+                                        .foregroundColor(.DinotisDefault.black3)
+                                })
+                                .multilineTextAlignment(.leading)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 20, weight: .heavy))
+                                    .foregroundColor(.DinotisDefault.black1)
+                            }
+                            .padding(.vertical, 24)
+                            .padding(.horizontal, 18)
+                            .background(.white)
+                            .cornerRadius(12)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .inset(by: 0.5)
+                                    .stroke(Color(red: 0.91, green: 0.91, blue: 0.91), lineWidth: 1)
+                                
+                            )
+                        }
                     }
+                    .padding()
                 }
-                .padding()
             }
+            
+            DinotisLoadingView(.fullscreen, hide: false)
+                .isHidden(!viewModel.isLoading, remove: true)
         }
         .background(Color.DinotisDefault.baseBackground.ignoresSafeArea())
         .navigationBarTitle(Text(""))
@@ -90,7 +96,24 @@ struct CreatorAvailabilityView: View {
                 SetSubscriptionView()
             }
         })
-        
+        .toast(isPresenting: $viewModel.isSuccess, alert: {
+            AlertToast(displayMode: .hud, type: .regular, maxWidth: UIScreen.main.bounds.width/1.2, title: LocalizableText.creatorAvailabilitySuccessText)
+        })
+        .dinotisAlert(
+            isPresent: $viewModel.isError,
+            type: .general,
+            title: LocalizableText.attentionText,
+            isError: true,
+            message: viewModel.isRefreshFailed ? LocalizableText.alertSessionExpired : viewModel.error,
+            primaryButton: .init(text: LocalizableText.okText, action: {
+                if viewModel.isRefreshFailed {
+                    viewModel.routeToRoot()
+                }
+            })
+        )
+        .onAppear {
+            viewModel.onGetUser()
+        }
     }
 }
 
@@ -123,7 +146,7 @@ extension CreatorAvailabilityView {
                             .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
-                        Toggle("", isOn: $viewModel.hasSetSubscription)
+                        Toggle("", isOn: $viewModel.request.availability)
                             .labelsHidden()
                             .tint(Color.DinotisDefault.green)
                     }
@@ -151,20 +174,21 @@ extension CreatorAvailabilityView {
                         Menu {
                             Button(LocalizableText.subscriptionPaidMonthly) {
                                 withAnimation {
-                                    viewModel.subscriptionType = .monthly
+                                    viewModel.request.type = .MONTHLY
                                 }
                             }
                             
                             Button(LocalizableText.subscriptionPaidFree) {
                                 withAnimation {
-                                    viewModel.subscriptionType = .free
+                                    viewModel.request.price = 0
+                                    viewModel.request.type = .FREE
                                 }
                             }
                         } label: {
                             HStack(spacing: 4) {
                                 Text(viewModel.subscriptionTypeText)
                                     .font(.robotoRegular(size: 12))
-                                    .foregroundColor(viewModel.subscriptionType == nil ? .DinotisDefault.black3 : .DinotisDefault.black1)
+                                    .foregroundColor(viewModel.request.type == nil ? .DinotisDefault.black3 : .DinotisDefault.black1)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                 
                                 Image(systemName: "chevron.down")
@@ -178,10 +202,10 @@ extension CreatorAvailabilityView {
                             )
                         }
                     }
-                    .disabled(!viewModel.hasSetSubscription)
-                    .opacity(viewModel.hasSetSubscription ? 1 : 0.5)
+                    .disabled(!viewModel.request.availability)
+                    .opacity(viewModel.request.availability ? 1 : 0.5)
                     
-                    if viewModel.subscriptionType == .monthly {
+                    if viewModel.request.type == .MONTHLY {
                         VStack(alignment: .leading, spacing: 8) {
                             HStack(spacing: 10) {
                                 Image.sessionCardCoinYellowPurpleIcon
@@ -202,13 +226,15 @@ extension CreatorAvailabilityView {
                                 
                                 TextField("10.000", text: $viewModel.subscriptionAmount)
                                     .font(.robotoRegular(size: 12))
-                                    .foregroundColor(viewModel.subscriptionType == nil ? .DinotisDefault.black3 : .DinotisDefault.black1)
+                                    .foregroundColor(viewModel.request.type == nil ? .DinotisDefault.black3 : .DinotisDefault.black1)
                                     .autocorrectionDisabled()
                                     .keyboardType(.numberPad)
                                     .tint(Color.DinotisDefault.primary)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .onChange(of: viewModel.subscriptionAmount) { newValue in
-                                        viewModel.checkZeroAtFirst(newValue)
+                                        let intPrice = Int(newValue.replacingOccurrences(of: ".", with: "")).orZero()
+                                        viewModel.request.price = intPrice
+                                        viewModel.subscriptionAmount = intPrice.toDecimal()
                                     }
                                 
                                 Text("/\(LocalizableText.monthLabel)")
@@ -227,8 +253,8 @@ extension CreatorAvailabilityView {
                                 .foregroundColor(.DinotisDefault.black3)
                                 .multilineTextAlignment(.leading)
                         }
-                        .disabled(!viewModel.hasSetSubscription)
-                        .opacity(viewModel.hasSetSubscription ? 1 : 0.5)
+                        .disabled(!viewModel.request.availability)
+                        .opacity(viewModel.request.availability ? 1 : 0.5)
                     }
                 }
                 .padding(.horizontal)
@@ -238,13 +264,22 @@ extension CreatorAvailabilityView {
                 text: LocalizableText.saveLabel,
                 type: .adaptiveScreen,
                 textColor: .white,
-                bgColor: .DinotisDefault.primary
+                bgColor: ((viewModel.subscriptionAmount == "0" || viewModel.subscriptionAmount.isEmpty) && viewModel.request.type == .MONTHLY) || viewModel.request.type == nil ? .DinotisDefault.primary.opacity(0.6) : .DinotisDefault.primary
             ) {
                 viewModel.isShowSubscriptionSheet = false
+                Task {
+                    await viewModel.setAvailability()
+                }
             }
+            .disabled(((viewModel.subscriptionAmount == "0" || viewModel.subscriptionAmount.isEmpty) && viewModel.request.type == .MONTHLY) || viewModel.request.type == nil)
             .padding()
         }
         .padding(.vertical)
+        .onAppear {
+            let intPrice = Int(viewModel.subscriptionAmount.replacingOccurrences(of: ".", with: "")).orZero()
+            viewModel.request.price = intPrice
+            viewModel.subscriptionAmount = intPrice.toDecimal()
+        }
     }
 }
 

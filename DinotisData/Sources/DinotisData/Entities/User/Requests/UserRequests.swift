@@ -57,3 +57,15 @@ public struct EditUserPhotoRequest: Codable {
         self.profilePhoto = profilePhoto
     }
 }
+
+public struct CreatorAvailabilityRequest: Codable {
+    public var availability: Bool
+    public var price: Int
+    public var type: SubscriptionUserType?
+    
+    public init(availability: Bool, price: Int, type: SubscriptionUserType?) {
+        self.availability = availability
+        self.price = price
+        self.type = type
+    }
+}

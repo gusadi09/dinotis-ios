@@ -55,7 +55,7 @@ struct UserScheduleDetail: View {
                         unwrapping: $viewModel.route,
                         case: /HomeRouting.talentProfileDetail,
                         destination: {viewModel in
-                            TalentProfileDetailView(viewModel: viewModel.wrappedValue, tabValue: $mainTabValue)
+                            CreatorProfileDetailView(viewModel: viewModel.wrappedValue, tabValue: $mainTabValue)
                         },
                         onNavigate: {_ in},
                         label: {
