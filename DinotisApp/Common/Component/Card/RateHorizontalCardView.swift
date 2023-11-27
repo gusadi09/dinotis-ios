@@ -95,10 +95,17 @@ struct RateHorizontalCardView: View {
 						.scaledToFit()
 						.frame(height: 16)
 
-					Text((item?.price).orEmpty().toCurrency())
-						.font(.robotoBold(size: 12))
-						.foregroundColor(.DinotisDefault.primary)
-						.multilineTextAlignment(.leading)
+                    if (item?.price).orEmpty().isEmpty || (item?.price).orEmpty() == "0" {
+                        Text(LocalizableText.freeText)
+                            .font(.robotoBold(size: 12))
+                            .foregroundColor(.DinotisDefault.primary)
+                            .multilineTextAlignment(.leading)
+                    } else {
+                        Text((item?.price).orEmpty().toCurrency())
+                            .font(.robotoBold(size: 12))
+                            .foregroundColor(.DinotisDefault.primary)
+                            .multilineTextAlignment(.leading)
+                    }
 				}
 			}
 

@@ -44,4 +44,8 @@ public final class UsersDefaultRemoteDataSource: UsersRemoteDataSource {
     public func deleteUserAccount() async throws -> SuccessResponse {
         try await provider.request(.deleteUser, model: SuccessResponse.self)
 	}
+    
+    public func creatorAvailability(body: CreatorAvailabilityRequest) async throws -> SuccessResponse {
+        try await self.provider.request(.creatorAvailability(body), model: SuccessResponse.self)
+    }
 }

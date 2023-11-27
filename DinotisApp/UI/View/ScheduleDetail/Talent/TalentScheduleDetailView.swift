@@ -159,9 +159,14 @@ struct TalentScheduleDetailView: View {
                                         )
                                         .padding(.horizontal)
                                     })
+                                    .padding(.bottom, viewModel.videos.isEmpty ? 8: 0)
                                     
                                     Button(action: {
-                                        viewModel.routeToSessionRecordingList()
+                                        if viewModel.showArchived() {
+                                            viewModel.routeToSetUpVideo()
+                                        } else {
+                                            viewModel.routeToSessionRecordingList()
+                                        }
                                     }, label: {
                                         HStack {
                                             Image.archiveDownloadDocumentIcon
@@ -169,7 +174,7 @@ struct TalentScheduleDetailView: View {
                                                 .scaledToFit()
                                                 .frame(height: 28)
                                             
-                                            Text(LocalizableText.seeSessionRecordingLabel)
+                                            Text(viewModel.showArchived() ? "Upload Rekaman Sesi" : LocalizableText.seeSessionRecordingLabel)
                                                 .font(.robotoRegular(size: 14))
                                                 .foregroundColor(.black)
                                             
@@ -186,7 +191,7 @@ struct TalentScheduleDetailView: View {
                                         .padding(.horizontal)
                                     })
                                     .padding(.vertical, 8)
-                                    .isHidden(true, remove: true)
+                                    .isHidden(viewModel.videos.isEmpty, remove: true)
                                     
                                     VStack {
                                         Text(LocaleText.revenueSummaryText)
@@ -471,6 +476,19 @@ struct TalentScheduleDetailView: View {
 							label: {
 								EmptyView()
 							})
+                        
+                        NavigationLink(
+                            unwrapping: $viewModel.route,
+                            case: /HomeRouting.setUpVideo,
+                            destination: { viewModel in
+                                SetUpVideoView()
+                                    .environmentObject(viewModel.wrappedValue)
+                            },
+                            onNavigate: {_ in},
+                            label: {
+                                EmptyView()
+                            }
+                        )
 					}
 					.onChange(of: viewModel.successDetail) { _ in
 						guard let meet = viewModel.dataMeeting else {return}
@@ -727,7 +745,9 @@ struct TalentScheduleDetailView: View {
         .onAppear(perform: {
             Task {
                 await viewModel.getDetailMeeting()
+                viewModel.onGetRecordings()
             }
+
             stateObservable.spotlightedIdentity = ""
             StateObservable.shared.cameraPositionUsed = .front
             StateObservable.shared.twilioRole = ""

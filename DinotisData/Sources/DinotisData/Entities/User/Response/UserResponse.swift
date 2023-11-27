@@ -45,6 +45,7 @@ public struct UserResponse: Codable, Hashable {
     public let meetingCount: Int?
     public let followerCount: Int?
     public let rating: String?
+    public let userAvailability: UserAvailabilityData?
 
 	public init(
 		coinBalance: CoinBalanceData?,
@@ -75,7 +76,8 @@ public struct UserResponse: Codable, Hashable {
 		managements: [ManagementWrappedData]?,
         meetingCount: Int?,
         followerCount: Int?,
-        rating: String?
+        rating: String?,
+        userAvailability: UserAvailabilityData?
 	) {
 		self.coinBalance = coinBalance
 		self.createdAt = createdAt
@@ -106,6 +108,7 @@ public struct UserResponse: Codable, Hashable {
         self.meetingCount = meetingCount
         self.followerCount =  followerCount
         self.rating = rating
+        self.userAvailability = userAvailability
 	}
 }
 
@@ -183,7 +186,8 @@ public extension UserResponse {
 			managements: nil,
             meetingCount: 1,
             followerCount: 1,
-            rating: "5"
+            rating: "5",
+            userAvailability: UserAvailabilityData(id: 1, availability: true, type: .FREE, price: "0")
 		)
 	}
 
@@ -252,7 +256,8 @@ public extension UserResponse {
 			managements: nil,
             meetingCount: 1,
             followerCount: 1,
-            rating: "5"
+            rating: "5",
+            userAvailability: UserAvailabilityData(id: 1, availability: true, type: .FREE, price: "0")
 		).toJSONData()
 	}
 }
@@ -432,8 +437,9 @@ public struct ManagementTalentData: Codable {
 	public let isVerified: Bool?
 	public let isVisible: Bool?
 	public let isActive: Bool?
+    public let rating: String?
 
-	public init(id: String?, name: String?, username: String?, profilePhoto: String?, profileDescription: String?, professions: [ProfessionData]?, userHighlights: [HighlightData]?, isVerified: Bool?, isVisible: Bool?, isActive: Bool?, stringProfessions: [String]?) {
+    public init(id: String?, name: String?, username: String?, profilePhoto: String?, profileDescription: String?, professions: [ProfessionData]?, userHighlights: [HighlightData]?, isVerified: Bool?, isVisible: Bool?, isActive: Bool?, stringProfessions: [String]?, rating: String? = nil) {
 		self.id = id
 		self.name = name
 		self.username = username
@@ -445,7 +451,22 @@ public struct ManagementTalentData: Codable {
 		self.isVerified = isVerified
 		self.isVisible = isVisible
 		self.isActive = isActive
+        self.rating = rating
 	}
+}
+
+public struct UserAvailabilityData: Codable {
+    public let id: Int?
+    public let availability: Bool?
+    public let type: SubscriptionUserType?
+    public let price: String?
+    
+    public init(id: Int?, availability: Bool?, type: SubscriptionUserType?, price: String?) {
+        self.id = id
+        self.availability = availability
+        self.type = type
+        self.price = price
+    }
 }
 
 //{

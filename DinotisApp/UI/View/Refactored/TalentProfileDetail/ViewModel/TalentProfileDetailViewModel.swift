@@ -18,6 +18,15 @@ enum LoadMoreType {
     case rateCard
     case review
     case meeting
+    case video
+}
+
+enum StudioVideosFilter {
+    case latest
+    case recorded
+    case publicAudience
+    case earliest
+    case archive
 }
 
 final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProductsRequestDelegate, SKPaymentTransactionObserver {
@@ -41,6 +50,8 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     private let unfollowUseCase: UnfollowCreatorUseCase
     private let getReviewsUseCase: GetReviewsUseCase
     private let getTalentDetailMeetingUseCase: GetCreatorDetailMeetingListUseCase
+    private let getVideoListUseCase: GetVideoListUseCase
+    private let subscribeUseCase: SubscribeUseCase
     
     @Published var filterSelection = LocalizableText.talentDetailAvailableSessions
     @Published var filterSelectionReview = "Semua Ulasan"
@@ -65,12 +76,17 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     @Published var isLoadingMore = false
     @Published var isLoadingMoreRateCard = false
     @Published var isLoadingMoreReview = false
+    @Published var isLoadingVideoList = false
+    @Published var isLoadingMoreVideoList = false
     @Published var isError = false
     @Published var success = false
     @Published var error: String?
     
     @Published var alert = AlertAttribute()
     @Published var isShowAlert = false
+    
+    @Published var currentImageIndex = 0
+    @Published var isShowImageDetail = false
     
     @Published var isShowManagements = false
     @Published var isShowCollabList = false
@@ -85,6 +101,8 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     @Published var qrCodeUrl: String?
     
     @Published var config = Configuration.shared
+    
+    @Published var urlLinked = Configuration.shared.environment.openURL
     
     @Published var userData: UserResponse?
     @Published var userName: String?
@@ -114,6 +132,9 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     @Published var totalPayment = 0
     @Published var extraFee = 0
     
+    @Published var isLoadingPaySubs = false
+    @Published var isSuccessSubs = false
+    
     @Published var isPresent = false
     @Published var bookingId = ""
     @Published var filterOption = [OptionQueryResponse]()
@@ -122,6 +143,27 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     @Published var bundlingData = [DinotisData.BundlingData]()
     @Published var rateCardList = [RateCardResponse]()
     @Published var reviewData = [ReviewData]()
+    @Published var videos = [MineVideoData]()
+    
+    var videoParam: VideoListRequest {
+        var param: VideoListRequest = .init(username: (self.talentData?.username).orEmpty())
+        let unsubscribed = talentData?.subscription == nil || talentData?.subscription?.subscriptionType == "UNSUBSCRIBED"
+        
+        param.audienceType = unsubscribed ? .PUBLIC : .SUBSCRIBER
+        
+        switch currentSection {
+        case .recorded:
+            param.videoType = .RECORD
+        case .publicAudience:
+            param.audienceType = .PUBLIC
+        case .earliest:
+            param.sort = .asc
+        default:
+            param.sort = .desc
+        }
+        
+        return param
+    }
     
     @Published var payments = UserBookingPayment(
         id: "",
@@ -187,6 +229,45 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     
     @Published var imageIndex = 0
     
+    @Published var currentSection: StudioVideosFilter = .latest
+    @Published var sections: [StudioVideosFilter] = [.latest, .recorded, .earliest, .publicAudience]
+    
+    @Published var isLockPrivate = false
+    @Published var requestSessionMessage = ""
+    @Published var requestSessionType: RequestScheduleType = .groupType
+    var requestSessionText: String {
+        switch requestSessionType {
+        case .privateType:
+            LocalizableText.privateVideoCallLabel
+        default:
+            LocalizableText.groupVideoCallLabel
+        }
+    }
+    
+    @Published var isShowBundlingSheet = false
+    
+    @Published var isShowSubscribeSheet = false
+    @Published var isLastSubscribeSheet = false
+    var subsSheetHeight: CGFloat {
+        isLastSubscribeSheet ? 450 : 320
+    }
+    
+    var professionText: String {
+        var profession = ""
+        
+        let data = talentData?.professions?.compactMap({
+            $0.profession?.name
+        })
+        
+        profession = (data?.joined(separator: ", ")).orEmpty()
+        
+        return profession
+    }
+    
+    var isManagementView: Bool {
+        talentData?.management != nil
+    }
+    
     init(
         backToHome: @escaping (() -> Void),
         username: String,
@@ -204,7 +285,9 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         followUseCase: FollowCreatorUseCase = FollowCreatorDefaultUseCase(),
         unfollowUseCase: UnfollowCreatorUseCase = UnfollowCreatorDefaultUseCase(),
         coinVerificationUseCase: CoinVerificationUseCase = CoinVerificationDefaultUseCase(),
-        getTalentDetailMeetingUseCase: GetCreatorDetailMeetingListUseCase = GetCreatorDetailMeetingListDefaultUseCase()
+        getTalentDetailMeetingUseCase: GetCreatorDetailMeetingListUseCase = GetCreatorDetailMeetingListDefaultUseCase(),
+        getVideoListUseCase: GetVideoListUseCase = GetVideoListDefaultUseCase(),
+        subscribeUseCase: SubscribeUseCase = SubscribeDefaultUseCase()
     ) {
         self.username = username
         self.backToHome = backToHome
@@ -223,6 +306,33 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         self.unfollowUseCase = unfollowUseCase
         self.coinVerificationUseCase = coinVerificationUseCase
         self.getTalentDetailMeetingUseCase = getTalentDetailMeetingUseCase
+        self.getVideoListUseCase = getVideoListUseCase
+        self.subscribeUseCase = subscribeUseCase
+    }
+    
+    func subscribeURL() -> String {
+        return urlLinked + "user/talent/" + (talentData?.username).orEmpty()
+    }
+    
+    func chipText(_ section: StudioVideosFilter) -> String {
+        switch section {
+        case .earliest:
+            LocalizableText.sortEarliest
+        case .latest:
+            LocalizableText.sortLatest
+        case .recorded:
+            LocalizableText.recordedLabel
+        case .publicAudience:
+            LocalizableText.publicLabel
+        case .archive:
+            LocalizableText.archiveLabel
+        }
+    }
+    
+    func dateFormatter(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd MMM, yyyy"
+        return formatter.string(from: date)
     }
     
     func routeToInvoice(id: String) {
@@ -262,9 +372,9 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         }
     }
     
-    func onSendFreePayment(tabValue: Binding<TabRoute>) {
+    func onSendFreePayment(completion: @escaping () -> Void) {
         Task {
-            await sendFreePayment(tabValue: tabValue)
+            await sendFreePayment(completion: completion)
         }
     }
     
@@ -275,6 +385,8 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
             self?.showPaymentMenu = false
             self?.isShowCoinPayment = false
             self?.showAddCoin = false
+            self?.isLoadingPaySubs = false
+            self?.alert.title = LocalizableText.attentionText
             
             if let error = error as? ErrorResponse {
                 
@@ -296,6 +408,12 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
                     self?.alert.message = error.message.orEmpty()
                     self?.alert.isError = true
                     self?.isShowAlert = true
+                    self?.alert.primaryButton = .init(
+                        text: LocalizableText.okText,
+                        action: {
+                            
+                        }
+                    )
                 }
             } else {
                 self?.isError = true
@@ -308,7 +426,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         }
     }
     
-    func sendFreePayment(tabValue: Binding<TabRoute>) async {
+    func sendFreePayment(completion: @escaping () -> Void) async {
         onStartedFetch(noLoad: false)
         let params = BookingPaymentRequest(paymentMethod: 99, meetingId: self.meetingId.isEmpty ? nil : self.meetingId, meetingBundleId: bundlingId.isEmpty ? nil : bundlingId)
         
@@ -326,7 +444,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
                     text: LocalizableText.okText,
                     action: {
                         self?.backToHome()
-                        tabValue.wrappedValue = .agenda
+                        completion()
                     }
                 )
                 self?.isShowAlert = true
@@ -378,6 +496,8 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
             self?.showPaymentMenu = false
             self?.isShowCoinPayment = false
             self?.showAddCoin = false
+            
+            self?.alert.title = LocalizableText.attentionText
             
             if let error = error as? ErrorResponse {
                 self?.error = error.message.orEmpty()
@@ -435,6 +555,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     func handleDefaultErrorPromoCodeChecking(error: Error) {
         DispatchQueue.main.async { [weak self] in
             self?.isLoading = false
+            self?.alert.title = LocalizableText.attentionText
             
             if let error = error as? ErrorResponse {
                 self?.error = error.message.orEmpty()
@@ -532,6 +653,8 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         DispatchQueue.main.async { [weak self] in
             self?.isLoadingTrxs = false
             self?.productSelected = nil
+            
+            self?.alert.title = LocalizableText.attentionText
             
             if let error = error as? ErrorResponse {
                 self?.error = error.message.orEmpty()
@@ -794,6 +917,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     func handleDefaultErrorFollow(error: Error) {
         DispatchQueue.main.async { [weak self] in
             self?.isLoadingFollow = false
+            self?.alert.title = LocalizableText.attentionText
             
             if let error = error as? ErrorResponse {
                 self?.error = error.message.orEmpty()
@@ -875,10 +999,17 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
                     self?.isLoadingMoreRateCard = true
                 case .review:
                     self?.isLoadingMoreReview = true
+                case .video:
+                    self?.isLoadingMoreVideoList = true
                 }
                 
             } else {
-                self?.isLoading = true
+                switch type {
+                case .video:
+                    self?.isLoadingVideoList = true
+                default:
+                    self?.isLoading = true
+                }
             }
             self?.isError = false
             self?.error = nil
@@ -913,6 +1044,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
                 } else {
                     self?.isLoading = false
                 }
+                self?.alert.title = LocalizableText.attentionText
                 
                 if let error = failure as? ErrorResponse {
                     
@@ -946,6 +1078,27 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         }
     }
     
+    func getVideoList(isMore: Bool) async {
+        onStartFetchWithPagination(isMore: isMore, type: .video)
+        
+        let result = await getVideoListUseCase.execute(with: videoParam)
+        
+        switch result {
+        case .success(let response):
+            DispatchQueue.main.async {[weak self] in
+                if isMore {
+                    self?.isLoadingMoreVideoList = false
+                    self?.videos += response.data ?? []
+                } else {
+                    self?.isLoadingVideoList = false
+                    self?.videos = response.data ?? []
+                }
+            }
+        case .failure(let error):
+            print("ERROR ASU: \(error)")
+        }
+    }
+    
     func handleDefaultErrorRateCard(error: Error, isMore: Bool) {
         DispatchQueue.main.async { [weak self] in
             if isMore {
@@ -953,6 +1106,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
             } else {
                 self?.isLoading = false
             }
+            self?.alert.title = LocalizableText.attentionText
             
             if let error = error as? ErrorResponse {
                 self?.error = error.message.orEmpty()
@@ -1131,6 +1285,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
                 } else {
                     self?.isLoading = false
                 }
+                self?.alert.title = LocalizableText.attentionText
                 
                 if let error = failure as? ErrorResponse {
                     
@@ -1161,6 +1316,20 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
                     self?.isShowAlert = true
                 }
             }
+        }
+    }
+    
+    func viewExclusiveVideo(item: MineVideoData) {
+        let unsubscribed = (talentData?.subscription == nil || talentData?.subscription?.subscriptionType == "UNSUBSCRIBED") && item.audienceType == .SUBSCRIBER
+        if unsubscribed {
+            alert.title = LocalizableText.subscribeAlertTitle
+            alert.message = LocalizableText.subscribeAlertDesc
+            alert.primaryButton = .init(text: LocalizableText.okText, action: {})
+            DispatchQueue.main.async { [weak self] in
+                self?.isShowAlert = true
+            }
+        } else {
+            routeToDetailVideo(id: item.id.orEmpty())
         }
     }
     
@@ -1209,6 +1378,10 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         let viewModel = RateCardServiceBookingFormViewModel(backToHome: self.backToHome, talentName: self.talentName.orEmpty(), talentPhoto: self.talentPhoto.orEmpty(), rateCard: RateCardResponse(id: rateCardId, title: title, description: description, price: price, duration: duration, isPrivate: isPrivate))
         
         DispatchQueue.main.async { [weak self] in
+            self?.isShowBundlingSheet = false
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+0.1) { [weak self] in
             self?.route = .rateCardServiceBookingForm(viewModel: viewModel)
         }
     }
@@ -1226,6 +1399,14 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .talentProfileDetail(viewModel: viewModel)
+        }
+    }
+    
+    func routeToDetailVideo(id: String) {
+        let viewModel = DetailVideoViewModel(videoId: id, backToHome: { self.backToHome() })
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .detailVideo(viewModel: viewModel)
         }
     }
     
@@ -1275,6 +1456,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
             self?.meetingParam.take = 15
             self?.meetingData = []
             self?.bundlingData = []
+            self?.videos = []
             
             self?.onGetTalentMeeting(by: (self?.talentData?.id).orEmpty(), isMore: false)
             self?.onGetRateCardList(by: (self?.talentData?.id).orEmpty(), isMore: false)
@@ -1302,4 +1484,25 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         
     }
     
+    @MainActor
+    func subscribe(with methodID: Int) async {
+        
+        self.isLoadingPaySubs = true
+        self.isError = false
+        self.error = nil
+        self.isRefreshFailed = false
+        self.isSuccessSubs = false
+        
+        let result = await subscribeUseCase.execute(for: (talentData?.id).orEmpty(), with: methodID)
+        
+        switch result {
+        case .success(_):
+            self.isSuccessSubs = true
+            self.isLoadingPaySubs = false
+            
+            self.onGetDetailCreator()
+        case .failure(let error):
+            handleDefaultError(error: error)
+        }
+    }
 }

@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import Moya
 
 public final class UploadPhotoDefaultRepository: UploadPhotoRepository {
     
@@ -22,5 +23,9 @@ public final class UploadPhotoDefaultRepository: UploadPhotoRepository {
     
     public func provideUploadMultipleImage(with images: [UIImage]) async throws -> UploadMultipleResponse {
         try await self.remote.uploadMultipleImage(with: images)
+    }
+    
+    public func provideUploadVideoSignedURL(with ext: String) async throws -> UploadVideoSignedResponse {
+        try await self.remote.uploadVideoSignedURL(with: ext)
     }
 }
