@@ -1287,13 +1287,17 @@ extension TalentProfileDetailView {
                         bgColor: .DinotisDefault.primary) {
                             
                             if viewModel.freeTrans {
-                                viewModel.onSendFreePayment(tabValue: self._tab)
+                                viewModel.onSendFreePayment {
+                                    self.tab = .agenda
+                                }
                             } else {
                                 viewModel.isPresent = false
                                 DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
                                     withAnimation {
                                         if (viewModel.selectedMeeting?.price).orEmpty() == "0" {
-                                            viewModel.onSendFreePayment(tabValue: self._tab)
+                                            viewModel.onSendFreePayment{
+                                                self.tab = .agenda
+                                            }
                                         } else {
                                             viewModel.showPaymentMenu = true
                                         }

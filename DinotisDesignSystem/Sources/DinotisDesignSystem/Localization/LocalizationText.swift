@@ -3069,12 +3069,212 @@ public enum LocalizableText {
         bundle: .module,
         comment: "upload video label"
     )
+    public static let subscribeLabel = NSLocalizedString(
+        "subscribe_label",
+        bundle: .module,
+        comment: "subscribe label"
+    )
+    public static let commentLabel = NSLocalizedString(
+        "comment_label",
+        bundle: .module,
+        comment: "comment label"
+    )
+    public static let detailVideoUpcomingSessionDesc = NSLocalizedString(
+        "detail_video_upcoming_session_desc",
+        bundle: .module,
+        comment: "detail video upcoming session desc"
+    )
+    public static let groupVideoCallLabel = NSLocalizedString(
+        "group_video_call_label",
+        bundle: .module,
+        comment: "group video call label"
+    )
     
     public static let scheduleFormMinusTotalRevenueWarning = NSLocalizedString(
         "minus_total_revenue_warning",
         bundle: .module,
         comment: "minus total revenue warning on schedule form"
     )
+    
+    public static let creatorStudioDeleteVideoAlertTitle = NSLocalizedString(
+        "delete_video_alert_title",
+        bundle: .module,
+        comment: "alert title for creator studio"
+    )
+    
+    public static let creatorStudioDeleteVideoAlertContent = NSLocalizedString(
+        "delete_video_alert_content",
+        bundle: .module,
+        comment: "alert content for creator studio"
+    )
+    public static let subscirbeCardTitle = NSLocalizedString(
+        "subscirbe_card_title",
+        bundle: .module,
+        comment: "subscirbe card title"
+    )
+    public static let subscirbeCardDesc = NSLocalizedString(
+        "subscirbe_card_desc",
+        bundle: .module,
+        comment: "subscirbe card desc"
+    )
+    public static let subscirbeCancelDesc = NSLocalizedString(
+        "subscirbe_cancel_desc",
+        bundle: .module,
+        comment: "subscirbe cancel desc"
+    )
+    public static let adaptiveSubscribtionLabel = NSLocalizedString(
+        "adaptive_subscribtion_label",
+        bundle: .module,
+        comment: "adaptive subscribtion label"
+    )
+    public static let subscribeNowLabel = NSLocalizedString(
+        "subscribe_now_label",
+        bundle: .module,
+        comment: "subscribe now label"
+    )
+    public static let forOneMonthLabel = NSLocalizedString(
+        "for_one_month_label",
+        bundle: .module,
+        comment: "for one month label"
+    )
+    public static let subscribeAlertTitle = NSLocalizedString(
+        "subscribe_alert_title",
+        bundle: .module,
+        comment: "subscribe alert title"
+    )
+    public static let subscribeAlertDesc = NSLocalizedString(
+        "subscribe_alert_desc",
+        bundle: .module,
+        comment: "subscribe alert description"
+    )
+    public static let requestPrivateLabel = NSLocalizedString(
+        "request_private_label",
+        bundle: .module,
+        comment: "request private label"
+    )
+    public static let requestPrivateDesc = NSLocalizedString(
+        "request_private_desc",
+        bundle: .module,
+        comment: "request private desc"
+    )
+    public static let requestRatecardLabel = NSLocalizedString(
+        "request_ratecard_label",
+        bundle: .module,
+        comment: "request ratecard label"
+    )
+    public static let overviewLabel = NSLocalizedString(
+        "overview_label",
+        bundle: .module,
+        comment: "overview label"
+    )
+    public static let publicSessionLabel = NSLocalizedString(
+        "public_session_label",
+        bundle: .module,
+        comment: "public session label"
+    )
+    public static let exclusiveVideoLabel = NSLocalizedString(
+        "exclusive_video_label",
+        bundle: .module,
+        comment: "exclusive video label"
+    )
+    public static let scheduleFilterLabel = NSLocalizedString(
+        "schedule_filter_label",
+        bundle: .module,
+        comment: "schedule filter label"
+    )
+    public static let sessionEmptyTitle = NSLocalizedString(
+        "session_empty_title",
+        bundle: .module,
+        comment: "session empty title"
+    )
+    public static let emptyUploadDesc = NSLocalizedString(
+        "empty_upload_desc",
+        bundle: .module,
+        comment: "empty upload desc"
+    )
+    public static let sessionTypeLabel = NSLocalizedString(
+        "session_type_label",
+        bundle: .module,
+        comment: "session type label"
+    )
+    public static let messageLabel = NSLocalizedString(
+        "message_label",
+        bundle: .module,
+        comment: "message label"
+    )
+    public static let defaultPlaceholder = NSLocalizedString(
+        "default_placeholder",
+        bundle: .module,
+        comment: "default placeholder"
+    )
+    public static let sendRequestLabel = NSLocalizedString(
+        "send_request_label",
+        bundle: .module,
+        comment: "send request label"
+    )
+    
+    public static func sessionEmptyDesc(name: String) -> String {
+        String(
+            format: NSLocalizedString(
+                "session_empty_desc",
+                bundle: .module,
+                comment: "session empty desc"
+            ),
+            name
+        )
+    }
+    
+    public static let detailVideoCommentPlaceholder = NSLocalizedString(
+        "detail_video_comment_placeholder",
+        bundle: .module,
+        comment: "comment placeholder"
+    )
+    public static let talentDetailAboutUs = NSLocalizedString(
+        "talent_detail_about_us",
+        bundle: .module,
+        comment: "talent detail about us label"
+    )
+    public static let managementCreatorLabel = NSLocalizedString(
+        "management_creator_label",
+        bundle: .module,
+        comment: "management creator label"
+    )
+    public static let managementProfileLabel = NSLocalizedString(
+        "management_profile_label",
+        bundle: .module,
+        comment: "management profile label"
+    )
+    
+    public static let creatorStudioEmptyArchive = NSLocalizedString(
+        "creator_studio_empty_archive",
+        bundle: .module,
+        comment: "empty text for archive general"
+    )
+    public static let creatorStudioEmptyUpload = NSLocalizedString(
+        "creator_studio_empty_upload",
+        bundle: .module,
+        comment: "empty text for upload general"
+    )
+    public static let creatorStudioArchiveTitlePlaceholder = NSLocalizedString(
+        "creator_studio_archive_title_placeholder",
+        bundle: .module,
+        comment: "title of archive placeholder"
+    )
+    public static let creatorStudioArchiveDescPlaceholder = NSLocalizedString(
+        "creator_studio_archive_desc_placeholder",
+        bundle: .module,
+        comment: "desc of archive placeholder"
+    )
+    
+    public static let creatorAvailabilitySuccessText = NSLocalizedString(
+        "creator_availability_success_text",
+        bundle: .module,
+        comment: "success text when edit availability"
+    )
+    
+    public static let subscribedLabel = NSLocalizedString(
+        "subscribed_label",
+        bundle: .module,
+        comment: "subscribed"
+    )
 }
-
-

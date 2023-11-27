@@ -412,37 +412,38 @@ extension EditTalentMeetingView {
                 }
                 .padding(16)
                 
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text(LocalizableText.scheduleFormEnableVideoArchieveTitle)
-                            .font(.robotoMedium(size: 14))
-                            .fontWeight(.semibold)
-                            .foregroundColor(.DinotisDefault.black2)
+                if !viewModel.meetingForm.isPrivate {
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text(LocalizableText.scheduleFormEnableVideoArchieveTitle)
+                                .font(.robotoMedium(size: 14))
+                                .fontWeight(.semibold)
+                                .foregroundColor(.DinotisDefault.black2)
+                            
+                            Text(LocalizableText.scheduleFormEnableVideoArchieveSubtitle)
+                                .font(.robotoRegular(size: 10))
+                                .foregroundColor(.DinotisDefault.black3)
+                                .multilineTextAlignment(.leading)
+                        }
                         
-                        Text(LocalizableText.scheduleFormEnableVideoArchieveSubtitle)
-                            .font(.robotoRegular(size: 10))
-                            .foregroundColor(.DinotisDefault.black3)
-                            .multilineTextAlignment(.leading)
+                        Spacer()
+                        
+                        Toggle("", isOn: $viewModel.isArchieve)
+                            .labelsHidden()
+                            .tint(.DinotisDefault.primary)
+                            .disabled(viewModel.isDisableEdit)
                     }
-                    
-                    Spacer()
-                    
-                    Toggle("", isOn: $viewModel.isArchieve)
-                        .labelsHidden()
-                        .tint(.DinotisDefault.primary)
-                        .disabled(viewModel.isDisableEdit)
+                    .padding(12)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
+                    )
+                    .background(
+                        RoundedRectangle(cornerRadius: 6)
+                            .foregroundStyle(viewModel.isDisableEdit ? Color.DinotisDefault.black3.opacity(0.1) : Color.clear)
+                    )
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 16)
                 }
-                .padding(12)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
-                )
-                .background(
-                    RoundedRectangle(cornerRadius: 6)
-                        .foregroundStyle(viewModel.isDisableEdit ? Color.DinotisDefault.black3.opacity(0.1) : Color.clear)
-                )
-                .padding(.horizontal, 16)
-                .padding(.bottom, 16)
-                .isHidden(true, remove: true)
                 
                 VStack(alignment: .leading) {
                     HStack(spacing: 10) {

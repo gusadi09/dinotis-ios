@@ -16,4 +16,5 @@ public protocol UsersRepository {
 	func provideUserCurrentBalance() async throws -> CurrentBalanceResponse
 	func provideUpdateImage(with photo: EditUserPhotoRequest) async throws -> SuccessResponse
 	func provideDeleteUserAccount() async throws -> SuccessResponse
+    func provideCreatorAvailability(body: CreatorAvailabilityRequest) async throws -> SuccessResponse
 }

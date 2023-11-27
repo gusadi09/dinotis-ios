@@ -43,4 +43,8 @@ public final class UsersDefaultRepository: UsersRepository {
 	public func provideDeleteUserAccount() async throws -> SuccessResponse {
 		try await remoteDataSource.deleteUserAccount()
 	}
+    
+    public func provideCreatorAvailability(body: CreatorAvailabilityRequest) async throws -> SuccessResponse {
+        try await self.remoteDataSource.creatorAvailability(body: body)
+    }
 }

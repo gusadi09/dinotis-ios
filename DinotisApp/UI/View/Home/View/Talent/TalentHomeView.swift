@@ -67,7 +67,7 @@ struct TalentHomeView: View {
         private var columns: [GridItem] {
             [GridItem](
                 repeating: GridItem(.flexible(), spacing: 24, alignment: .top),
-                count: 3
+                count: 4
             )
         }
         
@@ -416,7 +416,6 @@ struct TalentHomeView: View {
                                                     }
                                                 }
                                                 .buttonStyle(.plain)
-                                                .isHidden(true, remove: true)
                                             }
                                             .padding(.vertical, 12)
                                         }
@@ -460,7 +459,7 @@ struct TalentHomeView: View {
                                                                     participantsImgUrl: item.participantDetails?.compactMap({
                                                                         $0.profilePhoto.orEmpty()
                                                                     }) ?? [],
-                                                                    isActive: item.endAt.orCurrentDate() > Date(),
+                                                                    isActive: item.endedAt == nil,
                                                                     collaborationCount: (item.meetingCollaborations ?? []).count,
                                                                     collaborationName: (item.meetingCollaborations ?? []).compactMap({
                                                                         (

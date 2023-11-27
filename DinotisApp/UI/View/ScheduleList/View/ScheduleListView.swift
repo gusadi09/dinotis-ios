@@ -66,7 +66,7 @@ struct ScheduleListView: View {
                     unwrapping: $viewModel.route,
                     case: /HomeRouting.talentProfileDetail,
                     destination: {viewModel in
-                        TalentProfileDetailView(viewModel: viewModel.wrappedValue, tabValue: $mainTabSelection)
+                        CreatorProfileDetailView(viewModel: viewModel.wrappedValue, tabValue: $mainTabSelection)
                     },
                     onNavigate: {_ in},
                     label: {

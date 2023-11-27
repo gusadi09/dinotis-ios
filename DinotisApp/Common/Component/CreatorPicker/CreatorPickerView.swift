@@ -180,7 +180,8 @@ struct CreatorPickerView: View {
                                                 managements: nil,
                                                 meetingCount: nil,
                                                 followerCount: nil,
-                                                rating: nil
+                                                rating: nil, 
+                                                userAvailability: nil
                                             ),
                                             approvedAt: nil,
                                             declinedAt: nil
@@ -263,7 +264,8 @@ struct CreatorPickerView: View {
                                                 managements: nil,
                                                 meetingCount: nil,
                                                 followerCount: nil,
-                                                rating: nil
+                                                rating: nil,
+                                                userAvailability: nil
                                             ),
                                             approvedAt: nil,
                                             declinedAt: nil

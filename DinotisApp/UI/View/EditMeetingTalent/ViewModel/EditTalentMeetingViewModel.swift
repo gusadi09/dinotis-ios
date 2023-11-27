@@ -39,7 +39,7 @@ final class EditTalentMeetingViewModel: ObservableObject {
     @Published var talent = [MeetingCollaborationData]()
     @Published var maxEdit = 0
     
-    @Published var meetingForm = AddMeetingRequest(title: "", description: "", price: 0, startAt: "", endAt: "", isPrivate: false, slots: 0, managementId: nil, urls: [])
+    @Published var meetingForm = AddMeetingRequest(title: "", description: "", price: 0, startAt: "", endAt: "", isPrivate: false, slots: 0, managementId: nil, urls: [], archiveRecording: false)
     
     @Published var isRefreshFailed = false
     
@@ -298,6 +298,7 @@ final class EditTalentMeetingViewModel: ObservableObject {
                     $0.management?.id == success.managementId
                 })?.management?.user?.name
                 
+                self?.isArchieve = success.archiveRecording.orFalse()
                 self?.isChangedCostManagement = true
                 self?.percentageRaw = Double((success.meetingFee?.userFeePercentage).orZero())/100
                 self?.percentageString = "\((success.meetingFee?.userFeePercentage).orZero())"
@@ -342,7 +343,8 @@ final class EditTalentMeetingViewModel: ObservableObject {
             urls: self.meetingForm.urls,
             collaborations: self.meetingForm.collaborations,
             userFeePercentage: Int(percentageString) ?? Int(percentageRaw*100),
-            talentFeePercentage: Int(percentageFaresForCreatorStr) ?? Int(percentageFaresForCreator*100)
+            talentFeePercentage: Int(percentageFaresForCreatorStr) ?? Int(percentageFaresForCreator*100),
+            archiveRecording: self.meetingForm.isPrivate ? false : self.isArchieve
         )
         
         let result = await editMeetingUseCase.execute(for: meetingID, with: meetingForm)

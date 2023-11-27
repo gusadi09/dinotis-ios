@@ -1070,7 +1070,7 @@ extension ScheduledFormView {
                             RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
                         )
                         .onChange(of: viewModel.meeting.title) { value in
-                            viewModel.isFieldDescError = value.isEmpty
+                            viewModel.isFieldDescError = false
                         }
                     
                     if viewModel.isFieldTitleError {
@@ -1095,7 +1095,7 @@ extension ScheduledFormView {
                             RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
                         )
                         .onChange(of: viewModel.meeting.description) { value in
-                            viewModel.isFieldDescError = value.isEmpty
+                            viewModel.isFieldDescError = false
                         }
                     
                     if viewModel.isFieldDescError {
@@ -1114,32 +1114,33 @@ extension ScheduledFormView {
                 }
                 .padding(16)
                 
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text(LocalizableText.scheduleFormEnableVideoArchieveTitle)
-                            .font(.robotoMedium(size: 14))
-                            .fontWeight(.semibold)
-                            .foregroundColor(.DinotisDefault.black2)
+                if viewModel.selectedSession == LocaleText.groupcallLabel {
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text(LocalizableText.scheduleFormEnableVideoArchieveTitle)
+                                .font(.robotoMedium(size: 14))
+                                .fontWeight(.semibold)
+                                .foregroundColor(.DinotisDefault.black2)
+                            
+                            Text(LocalizableText.scheduleFormEnableVideoArchieveSubtitle)
+                                .font(.robotoRegular(size: 10))
+                                .foregroundColor(.DinotisDefault.black3)
+                                .multilineTextAlignment(.leading)
+                        }
                         
-                        Text(LocalizableText.scheduleFormEnableVideoArchieveSubtitle)
-                            .font(.robotoRegular(size: 10))
-                            .foregroundColor(.DinotisDefault.black3)
-                            .multilineTextAlignment(.leading)
+                        Spacer()
+                        
+                        Toggle("", isOn: $viewModel.isArchieve)
+                            .labelsHidden()
+                            .tint(.DinotisDefault.green)
                     }
-                    
-                    Spacer()
-                    
-                    Toggle("", isOn: $viewModel.isArchieve)
-                        .labelsHidden()
-                        .tint(.DinotisDefault.green)
+                    .padding(12)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
+                    )
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 16)
                 }
-                .padding(12)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
-                )
-                .padding(.horizontal, 16)
-                .padding(.bottom, 16)
-                .isHidden(true, remove: true)
                 
                 VStack(alignment: .leading) {
                     HStack(spacing: 10) {
