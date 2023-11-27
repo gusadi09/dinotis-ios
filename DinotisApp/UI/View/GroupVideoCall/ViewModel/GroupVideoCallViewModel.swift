@@ -993,6 +993,7 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
 }
 
 extension GroupVideoCallViewModel: DyteParticipantEventsListener {
+    
     func onActiveSpeakerChanged(participant: DyteJoinedMeetingParticipant) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) { [weak self] in
             self?.host = self?.meeting.participants.joined.first(where: { item in

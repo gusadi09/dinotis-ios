@@ -72,6 +72,7 @@ final class DetailVideoViewModel: ObservableObject {
     @Published var nextCursor: Int? = 0
     
     @Published var isShowFullText = false
+    @Published var urlLinked = Configuration.shared.environment.openURL
     
     var backToHome: () -> Void
     
@@ -303,5 +304,9 @@ final class DetailVideoViewModel: ObservableObject {
         case .failure(let failure):
             handleDefaultError(error: failure, isComment: true)
         }
+    }
+    
+    func subscribeURL() -> String {
+        return urlLinked + "user/talent/" + (videoData?.video?.user?.username).orEmpty()
     }
 }
