@@ -358,7 +358,7 @@ extension CreatorProfileDetailView {
     
     @ViewBuilder
     func SectionContentView(geometry: GeometryProxy) -> some View {
-        LazyVStack(spacing: 16) {
+        Group {
             switch viewModel.tabNumb {
             case 1:
                 if viewModel.isManagementView {
@@ -676,10 +676,11 @@ extension CreatorProfileDetailView {
             }
             .padding(.horizontal)
         } else {
-            LazyVStack(alignment: .leading, spacing: 8) {
+            Group {
                 Text(LocalizableText.talentDetailAvailableSessions)
                     .font(.robotoBold(size: 18))
                     .foregroundColor(.DinotisDefault.black1)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 
                 ForEach(viewModel.meetingData.unique(), id: \.id) { items in
                     SessionCard(
@@ -729,6 +730,7 @@ extension CreatorProfileDetailView {
                             }
                         }
                         .buttonStyle(.plain)
+                        .padding(.top, -16)
                 }
             }
             .padding(.horizontal)
@@ -749,9 +751,8 @@ extension CreatorProfileDetailView {
     
     @ViewBuilder
     func ExclusiveVideoView() -> some View {
-        LazyVStack(spacing: 16) {
+        Group {
             ListHeaderView()
-                .zIndex(100)
                 .layoutPriority(1)
             
             if viewModel.isLoadingVideoList {
@@ -772,9 +773,31 @@ extension CreatorProfileDetailView {
                     }
                     .padding()
                 } else {
-                    VStack(spacing: 16) {
+                    Group {
                         ForEach(viewModel.videos, id: \.id) { video in
                             VideoCard(video)
+                                .padding(.top, -16)
+                                .onAppear {
+                                    Task {
+                                        if (viewModel.videos.last?.id).orEmpty() == video.id.orEmpty() && viewModel.nextCursorExclusiveVideo != nil {
+                                            viewModel.videoParam.skip = viewModel.videoParam.skip
+                                            viewModel.videoParam.take += 15
+                                            await viewModel.getVideoList(isMore: true)
+                                        }
+                                    }
+                                }
+                        }
+                        
+                        if viewModel.isLoadingMoreVideoList {
+                            HStack {
+                                Spacer()
+                                
+                                ProgressView()
+                                    .progressViewStyle(.circular)
+                                
+                                Spacer()
+                            }
+                            .padding()
                         }
                     }
                     .padding(.horizontal)
