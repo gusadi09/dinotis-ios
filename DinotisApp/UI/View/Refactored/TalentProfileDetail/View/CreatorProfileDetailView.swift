@@ -277,7 +277,7 @@ struct CreatorProfileDetailView: View {
                     )
                 }
                 
-                DinotisLoadingView(.fullscreen, hide: !viewModel.isLoading)
+                DinotisLoadingView(.fullscreen, hide: !viewModel.isLoading || !viewModel.isLoadingPaySubs)
             }
             .overlay {
                 ImageDetailView()

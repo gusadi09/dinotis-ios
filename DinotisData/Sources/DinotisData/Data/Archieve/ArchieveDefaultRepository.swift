@@ -47,6 +47,10 @@ public final class ArchieveDefaultRepository: ArchieveRepository {
         try await self.remote.getArchived(skip: skip, take: take)
     }
     
+    public func providePostArchive(meetingId: String) async throws -> SuccessResponse {
+        try await self.remote.postArchive(meetingId: meetingId)
+    }
+    
     public func provideGetVideoList(with param: VideoListRequest) async throws -> MineVideoResponse {
         try await self.remote.getVideoList(with: param)
     }

@@ -182,6 +182,18 @@ struct CreatorStudioView: View {
                 }
             })
         )
+        .dinotisAlert(
+            isPresent: $viewModel.isError,
+            type: .general,
+            title: LocalizableText.attentionText,
+            isError: true,
+            message: viewModel.isRefreshFailed ? LocalizableText.alertSessionExpired : viewModel.error,
+            primaryButton: .init(text: LocalizableText.okText, action: {
+                if viewModel.isRefreshFailed {
+                    viewModel.routeToRoot()
+                }
+            })
+        )
     }
 }
 
@@ -274,7 +286,7 @@ extension CreatorStudioView {
                     DinotisLoadingView(.small, hide: false)
                 } else {
                     if viewModel.archivedVideo.isEmpty {
-                        Text("Belum ada konten yang di archive")
+                        Text(LocalizableText.creatorStudioEmptyArchive)
                             .font(.robotoRegular(size: 14))
                             .foregroundColor(.DinotisDefault.black2)
                             .padding()
@@ -321,7 +333,7 @@ extension CreatorStudioView {
                     DinotisLoadingView(.small, hide: false)
                 } else {
                     if viewModel.videos.isEmpty {
-                        Text("Belum ada konten yang di upload")
+                        Text(LocalizableText.creatorStudioEmptyUpload)
                             .font(.robotoRegular(size: 14))
                             .foregroundColor(.DinotisDefault.black2)
                             .padding()
@@ -580,7 +592,7 @@ extension CreatorStudioView {
                             .font(.robotoRegular(size: 14))
                             .foregroundColor(.DinotisDefault.black3)
                         
-                        MultilineTextField("Placeholder", text: $viewModel.currentVideo.title)
+                        MultilineTextField(LocalizableText.creatorStudioArchiveTitlePlaceholder, text: $viewModel.currentVideo.title)
                             .tint(Color.DinotisDefault.primary)
                             .disabled(viewModel.isLoadingEdit)
                     }
@@ -590,7 +602,7 @@ extension CreatorStudioView {
                             .font(.robotoRegular(size: 14))
                             .foregroundColor(.DinotisDefault.black3)
                         
-                        MultilineTextField("Placeholder", text: $viewModel.currentVideo.description)
+                        MultilineTextField(LocalizableText.creatorStudioArchiveDescPlaceholder, text: $viewModel.currentVideo.description)
                             .tint(Color.DinotisDefault.primary)
                             .disabled(viewModel.isLoadingEdit)
                     }

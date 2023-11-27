@@ -10,6 +10,7 @@ import DinotisData
 import DinotisDesignSystem
 import SwiftUI
 import Moya
+import OneSignal
 
 enum StudioVideoFilter: String, Codable {
     case archive = "ARCHIEVE"
@@ -31,6 +32,7 @@ final class CreatorStudioViewModel: ObservableObject {
     private let editVideoUseCase: EditVideoItemUseCase
     private let getDetailVideoUseCase: GetDetailVideoUseCase
     private let getArchivedUseCase: GetArchivedUseCase
+    private var stateObservable = StateObservable.shared
     
     @Published var isEdit = false
     @Published var route: HomeRouting?
@@ -587,5 +589,15 @@ final class CreatorStudioViewModel: ObservableObject {
             }
         }
         
+    }
+    
+    func routeToRoot() {
+        NavigationUtil.popToRootView()
+        self.stateObservable.userType = 0
+        self.stateObservable.isVerified = ""
+        self.stateObservable.refreshToken = ""
+        self.stateObservable.accessToken = ""
+        self.stateObservable.isAnnounceShow = false
+        OneSignal.setExternalUserId("")
     }
 }

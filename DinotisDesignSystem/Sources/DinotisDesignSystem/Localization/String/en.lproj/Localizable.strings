@@ -672,6 +672,7 @@
 "general_continue_label" = "Continue";
 "upload_video_label" = "Upload video";
 "subscribe_label" = "Subscribe";
+"subscribed_label" = "Subscribed";
 "comment_label" = "Comment";
 "detail_video_upcoming_session_desc" = "Upcoming sessions you can join";
 
@@ -705,3 +706,10 @@
 "detail_video_comment_placeholder" = "Write your comment here...";
 "management_creator_label" = "Creator Management";
 "management_profile_label" = "Management Profile";
+
+"creator_studio_empty_archive" = "No archived content yet";
+"creator_studio_empty_upload" = "No uploaded content yet";
+"creator_studio_archive_title_placeholder" = "Enter your archive title...";
+"creator_studio_archive_desc_placeholder" = "Enter your archive description...";
+
+"creator_availability_success_text" = "Successfully changed your availability.";

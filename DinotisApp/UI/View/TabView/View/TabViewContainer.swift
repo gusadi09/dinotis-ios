@@ -84,7 +84,7 @@ struct TabViewContainer: View {
                     unwrapping: $viewModel.route,
                     case: /HomeRouting.talentProfileDetail
                 ) { viewModel in
-                    TalentProfileDetailView(viewModel: viewModel.wrappedValue, tabValue: $viewModel.tab)
+                    CreatorProfileDetailView(viewModel: viewModel.wrappedValue, tabValue: $viewModel.tab)
                 } onNavigate: { _ in
                     
                 } label: {

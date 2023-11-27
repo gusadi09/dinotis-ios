@@ -48,6 +48,10 @@ public final class ArchieveDefaultRemoteDataSource: ArchieveRemoteDataSource {
         try await self.provider.request(.getArchieved(skip, take), model: ArchivedResponse.self)
     }
     
+    public func postArchive(meetingId: String) async throws -> SuccessResponse {
+        try await self.provider.request(.archieveVideo(meetingId), model: SuccessResponse.self)
+    }
+    
     public func getVideoList(with param: VideoListRequest) async throws -> MineVideoResponse {
         try await self.provider.request(.getVideoList(param), model: MineVideoResponse.self)
     }

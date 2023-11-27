@@ -16,6 +16,7 @@ public enum UsersTargetType {
 	case userCurrentBalance
 	case updateImage(EditUserPhotoRequest)
 	case deleteUser
+    case creatorAvailability(CreatorAvailabilityRequest)
 }
 
 extension UsersTargetType: DinotisTargetType, AccessTokenAuthorizable {
@@ -35,7 +36,9 @@ extension UsersTargetType: DinotisTargetType, AccessTokenAuthorizable {
 			return .bearer
 		case .deleteUser:
 			return .bearer
-		}
+        case .creatorAvailability(_):
+            return .bearer
+        }
 	}
 	
 	var parameterEncoding: Moya.ParameterEncoding {
@@ -54,7 +57,9 @@ extension UsersTargetType: DinotisTargetType, AccessTokenAuthorizable {
 			return JSONEncoding.default
 		case .deleteUser:
 			return URLEncoding.default
-		}
+        case .creatorAvailability(_):
+            return JSONEncoding.default
+        }
 	}
 	
     public var task: Task {
@@ -77,7 +82,9 @@ extension UsersTargetType: DinotisTargetType, AccessTokenAuthorizable {
 			return photoUrl.toJSON()
 		case .deleteUser:
 			return [:]
-		}
+        case .creatorAvailability(let req):
+            return req.toJSON()
+        }
 	}
 	
     public var path: String {
@@ -96,7 +103,9 @@ extension UsersTargetType: DinotisTargetType, AccessTokenAuthorizable {
 			return "/users/profile-photo"
 		case .deleteUser:
 			return "/users/me"
-		}
+        case .creatorAvailability(_):
+            return "/users/availability"
+        }
 	}
 	
     public var method:Moya.Method {
@@ -115,6 +124,8 @@ extension UsersTargetType: DinotisTargetType, AccessTokenAuthorizable {
 			return .post
 		case .deleteUser:
 			return .delete
-		}
+        case .creatorAvailability(_):
+            return .post
+        }
 	}
 }

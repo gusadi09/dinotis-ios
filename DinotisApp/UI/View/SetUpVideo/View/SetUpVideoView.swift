@@ -75,6 +75,7 @@ struct SetUpVideoView: View {
                                                     .foregroundColor(.white.opacity(0.9))
                                             }
                                             .onTapGesture {
+                                                viewModel.selectedIdx = index
                                                 viewModel.showHoverVideo(viewModel.videos[index].downloadUrl.orEmpty())
                                             }
                                             .overlay(alignment: .bottomLeading) {
@@ -104,6 +105,7 @@ struct SetUpVideoView: View {
                                             .overlay(alignment: .topTrailing) {
                                                 Button {
                                                     withAnimation {
+                                                        viewModel.selectedIdx = index
                                                         viewModel.currentVideo.videoUrl = viewModel.videos[index].downloadUrl.orEmpty()
                                                         print(viewModel.currentVideo)
                                                     }
@@ -186,6 +188,9 @@ struct SetUpVideoView: View {
                 .padding()
                 .background(Color.white.ignoresSafeArea())
             }
+            
+            DinotisLoadingView(.fullscreen, hide: false)
+                .isHidden(!viewModel.isLoadingUpload || !viewModel.isLoadingArchieve, remove: true)
         }
         .navigationBarTitle(Text(""))
         .navigationBarHidden(true)
@@ -211,6 +216,18 @@ struct SetUpVideoView: View {
         .overlay {
             HoverVideoView()
         }
+        .dinotisAlert(
+            isPresent: $viewModel.isError,
+            type: .general,
+            title: LocalizableText.attentionText,
+            isError: true,
+            message: viewModel.isRefreshFailed ? LocalizableText.alertSessionExpired : viewModel.error,
+            primaryButton: .init(text: LocalizableText.okText, action: {
+                if viewModel.isRefreshFailed {
+                    viewModel.routeToRoot()
+                }
+            })
+        )
     }
 }
 
@@ -253,7 +270,9 @@ extension SetUpVideoView {
                 bgColor: .DinotisDefault.primary
             ) {
                 viewModel.isShowArchiveSheet = false
-                viewModel.routeToCreatorStudio()
+                Task {
+                    await viewModel.archive()
+                }
             }
         }
         .padding()
@@ -348,6 +367,18 @@ extension SetUpVideoView {
                 bgColor: .DinotisDefault.primary
             ) {
                 viewModel.isShowUploadeSheet = false
+                switch viewModel.viewerType {
+                case .publicly:
+                    viewModel.currentVideo.audienceType = MineVideoAudienceType.PUBLIC.rawValue
+                case .subscriber:
+                    viewModel.currentVideo.audienceType = MineVideoAudienceType.SUBSCRIBER.rawValue
+                }
+                
+                Task {
+                    if let idx = viewModel.selectedIdx {
+                        await viewModel.uploadCover(idx)
+                    }
+                }
             }
         }
         .padding()

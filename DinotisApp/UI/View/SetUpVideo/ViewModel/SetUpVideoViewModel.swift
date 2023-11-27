@@ -8,6 +8,7 @@
 import DinotisData
 import SwiftUI
 import AVKit
+import OneSignal
 
 enum ViewerType {
     case publicly
@@ -30,12 +31,16 @@ final class SetUpVideoViewModel: ObservableObject {
     private let uploadImageUseCase: SinglePhotoUseCase
     private let postVideoUseCase: PostVideoUseCase
     private let getRecordingsUseCase: GetRecordingsUseCase
+    private let archiveRecordUseCase: ArchiveRecordUseCase
+    private var stateObservable = StateObservable.shared
     
     @Published var currentVideo: VideosRequest = .init(cover: "", title: "", description: "", videoUrl: "", meetingId: nil, audienceType: ViewerType.publicly.type)
     @Published var data: MeetingDetailResponse?
     @Published var videos = [RecordingData]()
+    @Published var selectedIdx: Int? = nil
     
     @Published var isLoadingUpload = false
+    @Published var isLoadingArchieve = false
     @Published var isLoading = false
     @Published var isError = false
     @Published var isRefreshFailed = false
@@ -48,7 +53,7 @@ final class SetUpVideoViewModel: ObservableObject {
     @Published var thumbnails: [UIImage] = []
     @Published var isShowImagePicker = [Bool]()
     
-    @Published var viewerType: ViewerType? = .publicly
+    @Published var viewerType: ViewerType = .publicly
     @Published var route: HomeRouting?
     
     var backToHome: () -> Void
@@ -60,7 +65,8 @@ final class SetUpVideoViewModel: ObservableObject {
         backToScheduleDetail: @escaping () -> Void,
         uploadImageUseCase: SinglePhotoUseCase = SinglePhotoDefaultUseCase(),
         postVideoUseCase: PostVideoUseCase = PostVideoDefaultUseCase(),
-        getRecordingsUseCase: GetRecordingsUseCase = GetRecordingsDefaultUseCase()
+        getRecordingsUseCase: GetRecordingsUseCase = GetRecordingsDefaultUseCase(),
+        archiveRecordUseCase: ArchiveRecordUseCase = ArchiveRecordDefaultUseCase()
     ) {
         self.data = data
         self.backToHome = backToHome
@@ -68,6 +74,7 @@ final class SetUpVideoViewModel: ObservableObject {
         self.uploadImageUseCase = uploadImageUseCase
         self.postVideoUseCase = postVideoUseCase
         self.getRecordingsUseCase = getRecordingsUseCase
+        self.archiveRecordUseCase = archiveRecordUseCase
     }
     
     func fetchStarted() {
@@ -186,7 +193,30 @@ final class SetUpVideoViewModel: ObservableObject {
     }
     
     @MainActor
+    func archive() async {
+        self.isLoadingArchieve = true
+        self.isError = false
+        self.error = ""
+        
+        let result = await archiveRecordUseCase.execute(with: (data?.id).orEmpty())
+        
+        switch result {
+        case .success(_):
+            DispatchQueue.main.async {[weak self] in
+                self?.isLoadingArchieve = false
+                
+                self?.routeToCreatorStudio()
+            }
+        case .failure(let error):
+           handleDefaultError(error: error)
+        }
+    }
+    
+    @MainActor
     func uploadCover(_ index: Int) async {
+        self.isLoadingUpload = true
+        self.isError = false
+        self.error = ""
         
         let result = await uploadImageUseCase.execute(with: self.thumbnails[index])
         
@@ -196,16 +226,7 @@ final class SetUpVideoViewModel: ObservableObject {
             self.currentVideo.cover = response
             await postVideo(self.currentVideo)
         case .failure(let error):
-            DispatchQueue.main.async { [weak self] in
-                self?.currentVideo = .init(cover: "", title: "", description: "", videoUrl: "", meetingId: "", audienceType: ViewerType.publicly.type)
-                self?.thumbnails[index] = UIImage()
-            }
-            
-            if let error = error as? ErrorResponse {
-                print("\(error)")
-            } else {
-                print("\(error)")
-            }
+            handleDefaultError(error: error)
         }
     }
     
@@ -218,20 +239,23 @@ final class SetUpVideoViewModel: ObservableObject {
         switch result {
         case .success(_):
             DispatchQueue.main.async { [weak self] in
+                self?.isLoadingUpload = false
                 self?.currentVideo = .init(cover: "", title: "", description: "", videoUrl: "", meetingId: nil, audienceType: ViewerType.publicly.type)
                 
                 self?.routeToCreatorStudio()
             }
         case .failure(let error):
-            DispatchQueue.main.async { [weak self] in
-                self?.currentVideo = .init(cover: "", title: "", description: "", videoUrl: "", meetingId: nil, audienceType: ViewerType.publicly.type)
-            }
-            
-            if let error = error as? ErrorResponse {
-                print("\(error)")
-            } else {
-                print("\(error)")
-            }
+            handleDefaultError(error: error)
         }
+    }
+    
+    func routeToRoot() {
+        NavigationUtil.popToRootView()
+        self.stateObservable.userType = 0
+        self.stateObservable.isVerified = ""
+        self.stateObservable.refreshToken = ""
+        self.stateObservable.accessToken = ""
+        self.stateObservable.isAnnounceShow = false
+        OneSignal.setExternalUserId("")
     }
 }

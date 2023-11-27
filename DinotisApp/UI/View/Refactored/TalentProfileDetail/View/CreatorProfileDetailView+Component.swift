@@ -88,19 +88,118 @@ extension CreatorProfileDetailView {
                 }
             }
             
-            VStack(spacing: 8) {
-                DinotisPrimaryButton(
-                    text: "🔥 \(LocalizableText.requestPrivateLabel)",
-                    type: .adaptiveScreen,
-                    height: 40,
-                    textColor: .white,
-                    bgColor: .DinotisDefault.primary
-                ) {
-                    viewModel.isShowBundlingSheet = true
+            if let avail = viewModel.talentData?.userAvailability?.availability, avail {
+                VStack(spacing: 8) {
+                    DinotisPrimaryButton(
+                        text: "🔥 \(LocalizableText.requestPrivateLabel)",
+                        type: .adaptiveScreen,
+                        height: 40,
+                        textColor: .white,
+                        bgColor: .DinotisDefault.primary
+                    ) {
+                        viewModel.isShowBundlingSheet = true
+                    }
+                    .shineEffect()
+                    
+                    HStack(spacing: 6) {
+                        Button {
+                            viewModel.followUnfollowCreator()
+                        } label: {
+                            HStack(spacing: 4) {
+                                if viewModel.isLoadingFollow {
+                                    ProgressView()
+                                        .progressViewStyle(.circular)
+                                } else {
+                                    Image.talentProfileHeartAddBlackIcon
+                                        .renderingMode(.template)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 20)
+                                        .isHidden((viewModel.talentData?.isFollowed).orFalse(), remove: true)
+                                    
+                                    Text((viewModel.talentData?.isFollowed).orFalse() ? LocalizableText.talentDetailFollowing : LocalizableText.talentDetailFollow)
+                                }
+                            }
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .foregroundColor((viewModel.talentData?.isFollowed).orFalse() ? .DinotisDefault.black2 : .DinotisDefault.primary)
+                            .frame(maxWidth: .infinity, maxHeight: 40, alignment: .center)
+                            .background((viewModel.talentData?.isFollowed).orFalse() ? Color(red: 0.91, green: 0.91, blue: 0.91) : .DinotisDefault.lightPrimary)
+                            .cornerRadius(12)
+                            .overlay {
+                                if !(viewModel.talentData?.isFollowed).orFalse() {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .inset(by: 0.55)
+                                        .stroke(Color.DinotisDefault.primary, lineWidth: 1)
+                                }
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        
+                        if let subs = viewModel.talentData?.subscription?.subscriptionType, subs != "UNSUBSCRIBED" {
+                            Button {
+                                
+                            } label: {
+                                HStack(spacing: 4) {
+                                    Text(LocalizableText.subscribedLabel)
+                                }
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
+                                .foregroundColor(.DinotisDefault.black2)
+                                .frame(maxWidth: .infinity, maxHeight: 40, alignment: .center)
+                                .background(Color(red: 0.91, green: 0.91, blue: 0.91))
+                                .cornerRadius(12)
+                            }
+                            .disabled(true)
+                            .buttonStyle(.plain)
+                        } else {
+                            Button {
+//                                viewModel.isShowSubscribeSheet = true
+//                                viewModel.isLastSubscribeSheet = false
+                                if let url = URL(string: viewModel.subscribeURL()) {
+                                    openURL(url)
+                                }
+                            } label: {
+                                HStack(spacing: 4) {
+                                    Image.talentProfileStarAddBlackIcon
+                                        .renderingMode(.template)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 20)
+                                    
+                                    Text(LocalizableText.subscribeLabel)
+                                }
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
+                                .foregroundColor(.DinotisDefault.primary)
+                                .frame(maxWidth: .infinity, maxHeight: 40, alignment: .center)
+                                .background(Color.DinotisDefault.lightPrimary)
+                                .cornerRadius(12)
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .inset(by: 0.55)
+                                        .stroke(Color.DinotisDefault.primary, lineWidth: 1)
+                                }
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                    .font(.robotoMedium(size: 14))
                 }
-                .shineEffect()
-                
-                HStack(spacing: 6) {
+                .isHidden(viewModel.isManagementView, remove: true)
+            } else {
+                HStack(spacing: 8) {
+                    DinotisPrimaryButton(
+                        text: "🔥 \(LocalizableText.requestPrivateLabel)",
+                        type: .adaptiveScreen,
+                        height: 40,
+                        textColor: .white,
+                        bgColor: .DinotisDefault.primary
+                    ) {
+                        viewModel.isShowBundlingSheet = true
+                    }
+                    .shineEffect()
+                    
                     Button {
                         viewModel.followUnfollowCreator()
                     } label: {
@@ -134,40 +233,11 @@ extension CreatorProfileDetailView {
                         }
                     }
                     .buttonStyle(.plain)
-                    
-                    Button {
-//                        viewModel.isShowSubscribeSheet = true
-//                        viewModel.isLastSubscribeSheet = false
-                        if let url = URL(string: viewModel.subscribeURL()) {
-                            openURL(url)
-                        }
-                    } label: {
-                        HStack(spacing: 4) {
-                            Image.talentProfileStarAddBlackIcon
-                                .renderingMode(.template)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 20)
-                            
-                            Text(LocalizableText.subscribeLabel)
-                        }
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 8)
-                        .foregroundColor(.DinotisDefault.primary)
-                        .frame(maxWidth: .infinity, maxHeight: 40, alignment: .center)
-                        .background(Color.DinotisDefault.lightPrimary)
-                        .cornerRadius(12)
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 12)
-                                .inset(by: 0.55)
-                                .stroke(Color.DinotisDefault.primary, lineWidth: 1)
-                        }
-                    }
-                    .buttonStyle(.plain)
+                    .font(.robotoMedium(size: 14))
                 }
-                .font(.robotoMedium(size: 14))
+                .isHidden(viewModel.isManagementView, remove: true)
             }
-            .isHidden(viewModel.isManagementView, remove: true)
+            
         }
         .padding(.horizontal)
     }
@@ -830,9 +900,16 @@ extension CreatorProfileDetailView {
                 }
             }
             
-            SubscribeCard(price: "", withButton: !viewModel.isLastSubscribeSheet) {
-                withAnimation {
-                    viewModel.isLastSubscribeSheet = true
+            SubscribeCard(price: (viewModel.talentData?.userAvailability?.price).orEmpty(), withButton: !viewModel.isLastSubscribeSheet) {
+                if (viewModel.talentData?.userAvailability?.price).orEmpty() == "0" {
+                    // run free pay
+                    Task {
+                        await viewModel.subscribe(with: 99)
+                    }
+                } else {
+                    withAnimation {
+                        viewModel.isLastSubscribeSheet = true
+                    }
                 }
             }
             .frame(maxHeight: .infinity, alignment: .top)
@@ -843,7 +920,12 @@ extension CreatorProfileDetailView {
                     .foregroundColor(.black)
                 
                 Button {
-                    
+                    Task {
+                        viewModel.isShowSubscribeSheet = false
+                        viewModel.isLastSubscribeSheet = false
+                        
+                        await viewModel.subscribe(with: 10)
+                    }
                 } label: {
                     HStack(spacing: 15) {
                         Image.paymentAppleIcon
@@ -896,6 +978,7 @@ extension CreatorProfileDetailView {
                             .foregroundColor(.DinotisDefault.lightPrimary)
                     )
                 }
+                .isHidden(true, remove: true)
             }
             .isHidden(!viewModel.isLastSubscribeSheet, remove: true)
         }
