@@ -12,6 +12,7 @@ struct DetailVideoView: View {
     
     @EnvironmentObject var viewModel: DetailVideoViewModel
     @Environment(\.dismiss) var dismiss
+    @Environment(\.openURL) var openURL
     
     var body: some View {
         GeometryReader { geometry in
@@ -105,6 +106,7 @@ struct DetailVideoView: View {
                                 }
                                 .buttonStyle(.plain)
                                 .padding(.top)
+                                .isHidden(true, remove: true)
                             }
                         }
                         .buttonStyle(.plain)
@@ -126,12 +128,13 @@ struct DetailVideoView: View {
                             .listRowBackground(Color.DinotisDefault.baseBackground)
                             .listRowInsets(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 18))
                             .background(Color.DinotisDefault.baseBackground)
+                            .isHidden(true, remove: true)
                         }
                     }
                     .padding(.horizontal, -18)
                     .listStyle(.plain)
                     .refreshable {
-                        
+                        await viewModel.getDetailVideo()
                     }
                 }
             }
@@ -212,7 +215,9 @@ extension DetailVideoView {
                 
                 if viewModel.state.userType != 2 {
                     Button {
-                        
+                        if let url = URL(string: viewModel.subscribeURL()) {
+                            openURL(url)
+                        }
                     } label: {
                         HStack(spacing: 4) {
                             Image.talentProfileSubsStarWhiteIcon

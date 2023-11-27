@@ -832,7 +832,7 @@ extension CreatorProfileDetailView {
                 .frame(maxWidth: 358, maxHeight: 202)
                 .overlay {
                     Button {
-                        viewModel.viewExclusiveVideo(id: video.id.orEmpty())
+                        viewModel.viewExclusiveVideo(item: video)
                     } label: {
                         ZStack {
                             Color.black.opacity(0.05)
@@ -847,7 +847,7 @@ extension CreatorProfileDetailView {
                 .clipShape(RoundedRectangle(cornerRadius: 14))
             
             Button {
-                viewModel.viewExclusiveVideo(id: video.id.orEmpty())
+                viewModel.viewExclusiveVideo(item: video)
             } label: {
                 VStack(alignment: .leading, spacing: 5) {
                     Text(video.title.orEmpty())

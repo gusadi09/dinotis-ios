@@ -1319,8 +1319,8 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         }
     }
     
-    func viewExclusiveVideo(id: String) {
-        let unsubscribed = talentData?.subscription == nil || talentData?.subscription?.subscriptionType == "UNSUBSCRIBED"
+    func viewExclusiveVideo(item: MineVideoData) {
+        let unsubscribed = (talentData?.subscription == nil || talentData?.subscription?.subscriptionType == "UNSUBSCRIBED") && item.audienceType == .SUBSCRIBER
         if unsubscribed {
             alert.title = LocalizableText.subscribeAlertTitle
             alert.message = LocalizableText.subscribeAlertDesc
@@ -1329,7 +1329,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
                 self?.isShowAlert = true
             }
         } else {
-            routeToDetailVideo(id: id)
+            routeToDetailVideo(id: item.id.orEmpty())
         }
     }
     
