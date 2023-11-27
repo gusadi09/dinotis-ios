@@ -166,6 +166,7 @@ struct CreatorProfileDetailView: View {
                         } header: {
                             SectionHeaderView()
                         }
+                        .listRowSpacing(0)
                         .headerProminence(.increased)
                         .listRowInsets(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 18))
                         .listRowSeparator(.hidden)

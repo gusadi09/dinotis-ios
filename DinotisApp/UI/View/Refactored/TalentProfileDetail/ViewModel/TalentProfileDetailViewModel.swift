@@ -70,6 +70,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     @Published var nextCursorRateCard: Int? = 0
     @Published var nextCursorMeeting: Int? = 0
     @Published var nextCursorReview: Int? = 0
+    @Published var nextCursorExclusiveVideo: Int? = 0
     
     @Published var isLoadingFollow = false
     @Published var isLoading = false
@@ -146,23 +147,27 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     @Published var videos = [MineVideoData]()
     
     var videoParam: VideoListRequest {
-        var param: VideoListRequest = .init(username: (self.talentData?.username).orEmpty())
-        let unsubscribed = talentData?.subscription == nil || talentData?.subscription?.subscriptionType == "UNSUBSCRIBED"
-        
-        param.audienceType = unsubscribed ? .PUBLIC : .SUBSCRIBER
-        
-        switch currentSection {
-        case .recorded:
-            param.videoType = .RECORD
-        case .publicAudience:
-            param.audienceType = .PUBLIC
-        case .earliest:
-            param.sort = .asc
-        default:
-            param.sort = .desc
+        get {
+            var param: VideoListRequest = .init(username: (self.talentData?.username).orEmpty())
+            let unsubscribed = talentData?.subscription == nil || talentData?.subscription?.subscriptionType == "UNSUBSCRIBED"
+            
+            param.audienceType = unsubscribed ? .PUBLIC : .SUBSCRIBER
+            
+            switch currentSection {
+            case .recorded:
+                param.videoType = .RECORD
+            case .publicAudience:
+                param.audienceType = .PUBLIC
+            case .earliest:
+                param.sort = .asc
+            default:
+                param.sort = .desc
+            }
+            
+            return param
         }
         
-        return param
+        set {}
     }
     
     @Published var payments = UserBookingPayment(
@@ -1093,9 +1098,51 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
                     self?.isLoadingVideoList = false
                     self?.videos = response.data ?? []
                 }
+                self?.nextCursorExclusiveVideo = response.nextCursor
             }
         case .failure(let error):
-            print("ERROR ASU: \(error)")
+            handleDefaultErrorVideoList(error: error, isMore: isMore)
+        }
+    }
+    
+    func handleDefaultErrorVideoList(error: Error, isMore: Bool) {
+        DispatchQueue.main.async { [weak self] in
+            if isMore {
+                self?.isLoadingMoreVideoList = false
+            } else {
+                self?.isLoadingVideoList = false
+            }
+            self?.alert.title = LocalizableText.attentionText
+            
+            if let error = error as? ErrorResponse {
+                self?.error = error.message.orEmpty()
+                
+                
+                if error.statusCode.orZero() == 401 {
+                    self?.isRefreshFailed.toggle()
+                    self?.alert.isError = true
+                    self?.alert.message = LocalizableText.alertSessionExpired
+                    self?.alert.primaryButton = .init(
+                        text: LocalizableText.okText,
+                        action: {
+                            self?.routeToRoot()
+                        }
+                    )
+                    self?.isShowAlert = true
+                } else {
+                    self?.isError = true
+                    self?.alert.message = error.message.orEmpty()
+                    self?.alert.isError = true
+                    self?.isShowAlert = true
+                }
+            } else {
+                self?.isError = true
+                self?.error = error.localizedDescription
+                self?.alert.message = error.localizedDescription
+                self?.alert.isError = true
+                self?.isShowAlert = true
+            }
+            
         }
     }
     
@@ -1452,6 +1499,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         DispatchQueue.main.async { [weak self] in
             self?.nextCursorMeeting = 0
             self?.nextCursorRateCard = 0
+            self?.nextCursorExclusiveVideo = 0
             self?.meetingParam.skip = 0
             self?.meetingParam.take = 15
             self?.meetingData = []
