@@ -16,4 +16,5 @@ public protocol UsersRemoteDataSource {
 	func userCurrentBalance() async throws -> CurrentBalanceResponse
 	func updateImage(with photo: EditUserPhotoRequest) async throws -> SuccessResponse
 	func deleteUserAccount() async throws -> SuccessResponse
+    func creatorAvailability(body: CreatorAvailabilityRequest) async throws -> SuccessResponse
 }

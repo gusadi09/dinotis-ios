@@ -16,5 +16,6 @@ public protocol ArchieveRepository {
     func provideGetComments(videoId: String, skip: Int, take: Int) async throws -> CommentsResponse
     func providePostComment(videoId: String, comment: String) async throws -> SuccessResponse
     func provideGetArchived(skip: Int, take: Int) async throws -> ArchivedResponse
+    func providePostArchive(meetingId: String) async throws -> SuccessResponse
     func provideGetVideoList(with param: VideoListRequest) async throws -> MineVideoResponse
 }

@@ -154,8 +154,9 @@ public struct TalentFromSearchResponse: Codable {
     public let management: UserManagementData?
     public let managements: [ManagementWrappedData]?
     public let subscription: SubscriptionResponse?
+    public let userAvailability: UserAvailabilityData?
     
-    public init(id: String?, name: String?, username: String?, profileDescription: String?, profilePhoto: String?, isVerified: Bool?, isFollowed: Bool?, rating: String?, meetingCount: Int?, followerCount: Int?, professions: [ProfessionData]?, userHighlights: [HighlightData]?, management: UserManagementData?, managements: [ManagementWrappedData]?, subscription: SubscriptionResponse?) {
+    public init(id: String?, name: String?, username: String?, profileDescription: String?, profilePhoto: String?, isVerified: Bool?, isFollowed: Bool?, rating: String?, meetingCount: Int?, followerCount: Int?, professions: [ProfessionData]?, userHighlights: [HighlightData]?, management: UserManagementData?, managements: [ManagementWrappedData]?, subscription: SubscriptionResponse?, userAvailability: UserAvailabilityData?) {
         self.id = id
         self.name = name
         self.username = username
@@ -171,5 +172,6 @@ public struct TalentFromSearchResponse: Codable {
         self.management = management
         self.managements = managements
         self.subscription = subscription
+        self.userAvailability = userAvailability
     }
 }

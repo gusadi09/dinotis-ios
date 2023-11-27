@@ -51,6 +51,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     private let getReviewsUseCase: GetReviewsUseCase
     private let getTalentDetailMeetingUseCase: GetCreatorDetailMeetingListUseCase
     private let getVideoListUseCase: GetVideoListUseCase
+    private let subscribeUseCase: SubscribeUseCase
     
     @Published var filterSelection = LocalizableText.talentDetailAvailableSessions
     @Published var filterSelectionReview = "Semua Ulasan"
@@ -130,6 +131,9 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     
     @Published var totalPayment = 0
     @Published var extraFee = 0
+    
+    @Published var isLoadingPaySubs = false
+    @Published var isSuccessSubs = false
     
     @Published var isPresent = false
     @Published var bookingId = ""
@@ -245,7 +249,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     @Published var isShowSubscribeSheet = false
     @Published var isLastSubscribeSheet = false
     var subsSheetHeight: CGFloat {
-        isLastSubscribeSheet ? 550 : 340
+        isLastSubscribeSheet ? 450 : 320
     }
     
     var professionText: String {
@@ -282,7 +286,8 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         unfollowUseCase: UnfollowCreatorUseCase = UnfollowCreatorDefaultUseCase(),
         coinVerificationUseCase: CoinVerificationUseCase = CoinVerificationDefaultUseCase(),
         getTalentDetailMeetingUseCase: GetCreatorDetailMeetingListUseCase = GetCreatorDetailMeetingListDefaultUseCase(),
-        getVideoListUseCase: GetVideoListUseCase = GetVideoListDefaultUseCase()
+        getVideoListUseCase: GetVideoListUseCase = GetVideoListDefaultUseCase(),
+        subscribeUseCase: SubscribeUseCase = SubscribeDefaultUseCase()
     ) {
         self.username = username
         self.backToHome = backToHome
@@ -302,6 +307,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         self.coinVerificationUseCase = coinVerificationUseCase
         self.getTalentDetailMeetingUseCase = getTalentDetailMeetingUseCase
         self.getVideoListUseCase = getVideoListUseCase
+        self.subscribeUseCase = subscribeUseCase
     }
     
     func subscribeURL() -> String {
@@ -379,6 +385,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
             self?.showPaymentMenu = false
             self?.isShowCoinPayment = false
             self?.showAddCoin = false
+            self?.isLoadingPaySubs = false
             self?.alert.title = LocalizableText.attentionText
             
             if let error = error as? ErrorResponse {
@@ -401,6 +408,12 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
                     self?.alert.message = error.message.orEmpty()
                     self?.alert.isError = true
                     self?.isShowAlert = true
+                    self?.alert.primaryButton = .init(
+                        text: LocalizableText.okText,
+                        action: {
+                            
+                        }
+                    )
                 }
             } else {
                 self?.isError = true
@@ -1471,4 +1484,25 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         
     }
     
+    @MainActor
+    func subscribe(with methodID: Int) async {
+        
+        self.isLoadingPaySubs = true
+        self.isError = false
+        self.error = nil
+        self.isRefreshFailed = false
+        self.isSuccessSubs = false
+        
+        let result = await subscribeUseCase.execute(for: (talentData?.id).orEmpty(), with: methodID)
+        
+        switch result {
+        case .success(_):
+            self.isSuccessSubs = true
+            self.isLoadingPaySubs = false
+            
+            self.onGetDetailCreator()
+        case .failure(let error):
+            handleDefaultError(error: error)
+        }
+    }
 }

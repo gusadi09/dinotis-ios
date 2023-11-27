@@ -24,7 +24,7 @@ struct FollowedCreatorView: View {
           unwrapping: $viewModel.route,
           case: /HomeRouting.talentProfileDetail
         ) { viewModel in
-          TalentProfileDetailView(viewModel: viewModel.wrappedValue, tabValue: $tabValue)
+          CreatorProfileDetailView(viewModel: viewModel.wrappedValue, tabValue: $tabValue)
         } onNavigate: { _ in
           
         } label: {

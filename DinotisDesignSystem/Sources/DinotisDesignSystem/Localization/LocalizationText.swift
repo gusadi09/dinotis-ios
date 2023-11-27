@@ -3245,6 +3245,36 @@ public enum LocalizableText {
         comment: "management profile label"
     )
     
+    public static let creatorStudioEmptyArchive = NSLocalizedString(
+        "creator_studio_empty_archive",
+        bundle: .module,
+        comment: "empty text for archive general"
+    )
+    public static let creatorStudioEmptyUpload = NSLocalizedString(
+        "creator_studio_empty_upload",
+        bundle: .module,
+        comment: "empty text for upload general"
+    )
+    public static let creatorStudioArchiveTitlePlaceholder = NSLocalizedString(
+        "creator_studio_archive_title_placeholder",
+        bundle: .module,
+        comment: "title of archive placeholder"
+    )
+    public static let creatorStudioArchiveDescPlaceholder = NSLocalizedString(
+        "creator_studio_archive_desc_placeholder",
+        bundle: .module,
+        comment: "desc of archive placeholder"
+    )
+    
+    public static let creatorAvailabilitySuccessText = NSLocalizedString(
+        "creator_availability_success_text",
+        bundle: .module,
+        comment: "success text when edit availability"
+    )
+    
+    public static let subscribedLabel = NSLocalizedString(
+        "subscribed_label",
+        bundle: .module,
+        comment: "subscribed"
+    )
 }
-
-

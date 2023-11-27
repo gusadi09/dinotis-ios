@@ -671,6 +671,7 @@
 "general_continue_label" = "Lanjutkan";
 "upload_video_label" = "Unggah video";
 "subscribe_label" = "Subscribe";
+"subscribed_label" = "Subscribed";
 "comment_label" = "Komentar";
 "detail_video_upcoming_session_desc" = "Sesi terdekat yang bisa kamu ikuti";
 
@@ -705,3 +706,10 @@
 "detail_video_comment_placeholder" = "Tulis komentarmu disini...";
 "management_creator_label" = "Manajemen Kreator";
 "management_profile_label" = "Profile Manajemen";
+
+"creator_studio_empty_archive" = "Belum ada konten yang di arsip";
+"creator_studio_empty_upload" = "Belum ada konten yang di unggah";
+"creator_studio_archive_title_placeholder" = "Masukkan judul arsip kamu";
+"creator_studio_archive_desc_placeholder" = "Masukkan deskripsi arsip kamu";
+
+"creator_availability_success_text" = "Berhasil merubah ketersediaan kamu.";

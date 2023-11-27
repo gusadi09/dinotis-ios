@@ -56,6 +56,7 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
     private let coinVerificationUseCase: CoinVerificationUseCase
     private let getTipAmountsUseCase: GetTipAmountsUseCase
     private let conversationTokenUseCase: ConversationTokenUseCase
+    private let getRecordingsUseCase: GetRecordingsUseCase
     
     @Published var typeAlert: ScheduleDetailAlert = .error
     @Published var isShowAlert = false
@@ -139,6 +140,8 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
     @Published var isReviewSuccess = false
     @Published var attachmentURL = ""
     
+    @Published var videos = [RecordingData]()
+    
     @Published var showAlreadyReview = false
     @Published var showReviewSheet = false
     @Published var reviewRating = 0
@@ -180,6 +183,7 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
         coinVerificationUseCase: CoinVerificationUseCase = CoinVerificationDefaultUseCase(),
         getTipAmountsUseCase: GetTipAmountsUseCase = GetTipAmountsDefaultUseCase(),
         conversationTokenUseCase: ConversationTokenUseCase = ConversationTokenDefaultUseCase(),
+        getRecordingsUseCase: GetRecordingsUseCase = GetRecordingsDefaultUseCase(),
         bookingId: String,
         backToHome: @escaping (() -> Void),
         talentName: String = "",
@@ -206,6 +210,26 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
         self.deleteMeetingUseCase = deleteMeetingUseCase
         self.coinVerificationUseCase = coinVerificationUseCase
         self.getTipAmountsUseCase = getTipAmountsUseCase
+        self.getRecordingsUseCase = getRecordingsUseCase
+    }
+    
+    func onGetRecordings() {
+        Task {
+            await getRecordings()
+        }
+    }
+    
+    func getRecordings() async {
+        let result = await getRecordingsUseCase.execute(for: (self.dataMeeting?.id).orEmpty())
+        
+        switch result {
+        case .success(let response):
+            DispatchQueue.main.async { [weak self] in
+                self?.videos = response.data ?? []
+            }
+        case .failure:
+            break
+        }
     }
     
     func routeToRoot() {
@@ -625,7 +649,6 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
         onGetUser()
         onGetDetailBooking()
         onGetTipAmounts()
-        
     }
     
     @MainActor
@@ -898,6 +921,18 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
         }
     }
 
+    func routeToSetUpVideo() {
+        let viewModel = SetUpVideoViewModel(data: self.dataMeeting, backToHome: self.backToHome, backToScheduleDetail: { self.route = nil })
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .setUpVideo(viewModel: viewModel)
+        }
+    }
+    
+    func showArchived() -> Bool {
+        ((dataMeeting?.archiveRecording).orFalse() && !(dataMeeting?.isArchived ?? true))
+    }
+    
 	func routeToEditSchedule() {
 		let viewModel = EditTalentMeetingViewModel(meetingID: bookingId, backToHome: self.backToHome)
 
@@ -955,7 +990,7 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
     }
     
     func routeToSessionRecordingList() {
-        let viewModel = SessionRecordingListViewModel(videos: [], backToHome: { self.backToHome() })
+        let viewModel = SessionRecordingListViewModel(videos: self.videos, backToHome: { self.backToHome() })
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .sessionRecordingList(viewModel: viewModel)
