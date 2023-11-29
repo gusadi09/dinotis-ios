@@ -154,11 +154,11 @@ extension CreatorProfileDetailView {
                             .buttonStyle(.plain)
                         } else {
                             Button {
-//                                viewModel.isShowSubscribeSheet = true
-//                                viewModel.isLastSubscribeSheet = false
-                                if let url = URL(string: viewModel.subscribeURL()) {
-                                    openURL(url)
-                                }
+                                viewModel.isShowSubscribeSheet = true
+                                viewModel.isLastSubscribeSheet = false
+//                                if let url = URL(string: viewModel.subscribeURL()) {
+//                                    openURL(url)
+//                                }
                             } label: {
                                 HStack(spacing: 4) {
                                     Image.talentProfileStarAddBlackIcon
