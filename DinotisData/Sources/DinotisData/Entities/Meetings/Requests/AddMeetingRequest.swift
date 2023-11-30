@@ -21,8 +21,9 @@ public struct AddMeetingRequest: Codable {
     public var userFeePercentage: Int?
     public var talentFeePercentage: Int?
     public var archiveRecording: Bool
+    public var collaboratorAudienceVisibility: Bool?
     
-    public init(title: String, description: String, price: Int, startAt: String, endAt: String, isPrivate: Bool, slots: Int, managementId: Int? = nil, urls: [MeetingURLrequest], collaborations: [String]? = nil, userFeePercentage: Int? = nil, talentFeePercentage: Int? = nil, archiveRecording: Bool) {
+    public init(title: String, description: String, price: Int, startAt: String, endAt: String, isPrivate: Bool, slots: Int, managementId: Int? = nil, urls: [MeetingURLrequest], collaborations: [String]? = nil, userFeePercentage: Int? = nil, talentFeePercentage: Int? = nil, archiveRecording: Bool, collaboratorAudienceVisibility: Bool) {
         self.title = title
         self.description = description
         self.price = price
@@ -36,6 +37,7 @@ public struct AddMeetingRequest: Codable {
         self.userFeePercentage = userFeePercentage
         self.talentFeePercentage = talentFeePercentage
         self.archiveRecording = archiveRecording
+        self.collaboratorAudienceVisibility = collaboratorAudienceVisibility
     }
 }
 

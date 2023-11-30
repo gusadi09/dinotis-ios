@@ -37,6 +37,7 @@
 "hint_phone" = "Enter your phone number";
 "alert_phone_unregister" = "*The phone number you entered has not been registered";
 "alert_phone_wrong" = "*The phone number you entered is invalid";
+"alert_phone_already_register" = "*The phone number you entered is already registered";
 "hint_password" = "Enter Password";
 "alert_password_wrong" = "*The password you entered is incorrect";
 "link_forgot" = "Forgot password?";
@@ -713,3 +714,31 @@
 "creator_studio_archive_desc_placeholder" = "Enter your archive description...";
 
 "creator_availability_success_text" = "Successfully changed your availability.";
+
+"unsubscribe_alert_title" = "Cancel this subscription?";
+"unsubscribe_alert_desc" = "Videos that have been deleted cannot be restored";
+"no_label" = "No";
+"yes_cancel_label" = "Yes, Cancel";
+"follow_label" = "Follow";
+"unfollow_label" = "Unfollow";
+"unsubscribe_label" = "Unsubscribe";
+
+"subscription_card_title" = "You have become a Subscriber";
+"subscription_cancel_desc" = "Cancel anytime, wherever you want";
+"subscription_expired_remaining" = "%lld Days remaining";
+"cancel_subscription_label" = "Cancel Subscription";
+"subscription_success_label" = "Subscription Success";
+"creator_name_label" = "Creator's Name";
+"duration_label" = "Duration";
+"dinotis_coin" = "Dinotis Coin";
+"subscription_label" = "Subscription";
+"subscription_end_time_at" = "End time at **%@**";
+"free_subscription_label" = "Free Subscription";
+"premium_subscription_label" = "Premium Subscription";
+"adaptive_label" = "Adaptive";
+"revenue_detail_text" = "See revenue details";
+"total_income_text" = "Total Income";
+"income_detail_text" = "Income Details";
+"total_audience_text" = "Total Audience";
+"visibilty_collaborator_text" = "Collaborator Data Visibility";
+"collaborator_text" = "Collaborators can view Audience traffic data";

@@ -1304,6 +1304,14 @@ extension ScheduledFormView {
                                 .overlay(RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0))
                                 .onChange(of: viewModel.selectedSession) { val in
                                     viewModel.meeting.isPrivate = val.contains(LocaleText.privateCallLabel)
+                                    viewModel.peopleGroup = "1"
+                                    viewModel.pricePerPeople = ""
+                                    viewModel.isChangedCostManagement = false
+                                    viewModel.percentageString = "0"
+                                    viewModel.percentageRaw = 0.0
+                                    viewModel.percentageFaresForCreatorRaw = 1.0
+                                    viewModel.percentageFaresForCreator = 1.0
+                                    viewModel.percentageFaresForCreatorStr = "100"
                                 }
                                 .onAppear {
                                     viewModel.selectedSession = viewModel.meeting.isPrivate ? LocaleText.privateCallLabel : LocaleText.groupcallLabel
@@ -1384,6 +1392,7 @@ extension ScheduledFormView {
                             .overlay(
                                 RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
                             )
+
                             
                             if !viewModel.talent.isEmpty {
                                 VStack(spacing: 15) {
@@ -1489,6 +1498,30 @@ extension ScheduledFormView {
                                 .padding(.top, 5)
                             }
                             
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    Text(LocalizableText.visibilityCollaboratorText)
+                                        .font(.robotoMedium(size: 14))
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.DinotisDefault.black2)
+                                    
+                                    Text(LocalizableText.collaboratorText)
+                                        .font(.robotoRegular(size: 10))
+                                        .foregroundColor(.DinotisDefault.black3)
+                                        .multilineTextAlignment(.leading)
+                                }
+                                
+                                Spacer()
+                                
+                                Toggle("", isOn: $viewModel.isVisibility)
+                                    .labelsHidden()
+                                    .tint(.DinotisDefault.green)
+                            }
+                            .padding(12)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
+                            )
+                            .padding(.top, 10)
                         }
                         .padding(.horizontal, 16)
                         .padding(.bottom, 16)

@@ -39,7 +39,7 @@ final class EditTalentMeetingViewModel: ObservableObject {
     @Published var talent = [MeetingCollaborationData]()
     @Published var maxEdit = 0
     
-    @Published var meetingForm = AddMeetingRequest(title: "", description: "", price: 0, startAt: "", endAt: "", isPrivate: false, slots: 0, managementId: nil, urls: [], archiveRecording: false)
+    @Published var meetingForm = AddMeetingRequest(title: "", description: "", price: 0, startAt: "", endAt: "", isPrivate: false, slots: 0, managementId: nil, urls: [], archiveRecording: false, collaboratorAudienceVisibility: false)
     
     @Published var isRefreshFailed = false
     
@@ -66,6 +66,7 @@ final class EditTalentMeetingViewModel: ObservableObject {
     @Published var minimumPeopleError = false
     
     @Published var isArchieve = false
+    @Published var isVisible = false
     
     @Published var arrSession = [LocaleText.privateCallLabel, LocaleText.groupcallLabel]
     @Published var selectedSession = ""
@@ -299,6 +300,7 @@ final class EditTalentMeetingViewModel: ObservableObject {
                 })?.management?.user?.name
                 
                 self?.isArchieve = success.archiveRecording.orFalse()
+                self?.isVisible = success.collaboratorAudienceVisibility.orFalse()
                 self?.isChangedCostManagement = true
                 self?.percentageRaw = Double((success.meetingFee?.userFeePercentage).orZero())/100
                 self?.percentageString = "\((success.meetingFee?.userFeePercentage).orZero())"
@@ -344,7 +346,8 @@ final class EditTalentMeetingViewModel: ObservableObject {
             collaborations: self.meetingForm.collaborations,
             userFeePercentage: Int(percentageString) ?? Int(percentageRaw*100),
             talentFeePercentage: Int(percentageFaresForCreatorStr) ?? Int(percentageFaresForCreator*100),
-            archiveRecording: self.meetingForm.isPrivate ? false : self.isArchieve
+            archiveRecording: self.meetingForm.isPrivate ? false : self.isArchieve,
+            collaboratorAudienceVisibility: self.meetingForm.isPrivate ? false : self.isVisible
         )
         
         let result = await editMeetingUseCase.execute(for: meetingID, with: meetingForm)

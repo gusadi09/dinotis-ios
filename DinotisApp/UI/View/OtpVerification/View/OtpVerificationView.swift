@@ -93,7 +93,7 @@ struct OtpVerificationView: View {
                                 .padding(.bottom)
                             }
                             .onReceive(viewModel.timer) { _ in
-                                viewModel.onReceiveTimer()
+                                viewModel.receiveTimerBackground()
                             }
 							.padding([.horizontal, .bottom])
                         }
