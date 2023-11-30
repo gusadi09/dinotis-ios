@@ -184,7 +184,7 @@ struct CreatorPickerView: View {
                                                 userAvailability: nil
                                             ),
                                             approvedAt: nil,
-                                            declinedAt: nil
+                                            declinedAt: nil, bookingCount: 0
                                         )
                                     )
                                     arrUsername = arrTalent.compactMap({
@@ -268,7 +268,7 @@ struct CreatorPickerView: View {
                                                 userAvailability: nil
                                             ),
                                             approvedAt: nil,
-                                            declinedAt: nil
+                                            declinedAt: nil, bookingCount: 0
                                         )
                                     )
                                     arrUsername = arrTalent.compactMap({

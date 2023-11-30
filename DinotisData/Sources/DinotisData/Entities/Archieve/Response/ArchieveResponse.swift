@@ -33,7 +33,7 @@ public struct MineVideoUserData: Codable {
     }
 }
 
-public struct MineVideoData: Codable {
+public struct MineVideoData: Codable, Hashable {
     public let id: String?
     public let cover: String?
     public let title: String?
@@ -64,6 +64,14 @@ public struct MineVideoData: Codable {
         self.deletedAt = deletedAt
         self.user = user
         self.shareUrl = shareUrl
+    }
+    
+    public static func == (lhs: MineVideoData, rhs: MineVideoData) -> Bool {
+        return lhs.id == rhs.id
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }
 

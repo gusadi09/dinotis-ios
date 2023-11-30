@@ -75,8 +75,9 @@ final class ScheduledFormViewModel: ObservableObject {
     
     @Published var isRefreshFailed = false
     
-    @Published var meeting = AddMeetingRequest(title: "", description: "", price: 0, startAt: "", endAt: "", isPrivate: true, slots: 1, managementId: nil, urls: [], archiveRecording: false)
+    @Published var meeting = AddMeetingRequest(title: "", description: "", price: 0, startAt: "", endAt: "", isPrivate: true, slots: 1, managementId: nil, urls: [], archiveRecording: false, collaboratorAudienceVisibility: false)
     @Published var isArchieve = false
+    @Published var isVisibility = false
     
     @Published var arrSession = [LocaleText.privateCallLabel, LocaleText.groupcallLabel]
     @Published var selectedSession = ""
@@ -315,6 +316,7 @@ final class ScheduledFormViewModel: ObservableObject {
     func submitMeeting() {
         UIApplication.shared.endEditing()
         meeting.archiveRecording = meeting.isPrivate ? false : isArchieve
+        meeting.collaboratorAudienceVisibility = meeting.isPrivate ? false : isVisibility
         meeting.userFeePercentage = isChangedCostManagement && Double(pricePerPeople).orZero() > 0.0 ? Int(percentageString) ?? Int(percentageRaw*100) : 100
         meeting.talentFeePercentage = isChangedCostManagement && Double(pricePerPeople).orZero() > 0.0 ? Int(percentageFaresForCreatorStr) ?? Int(percentageFaresForCreator*100) : 0
         meeting.slots = Int(peopleGroup) ?? 1

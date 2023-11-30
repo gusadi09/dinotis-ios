@@ -260,7 +260,7 @@ struct PrivateVideoCallView : View {
 						.frame(height: 10)
 						.foregroundColor(.white)
 
-					Text("End-to-End Encryption")
+					Text("End-to-End Encrypted")
 						.font(.robotoRegular(size: 10))
 						.foregroundColor(.white)
 				}
