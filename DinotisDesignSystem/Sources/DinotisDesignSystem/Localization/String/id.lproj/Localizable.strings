@@ -721,3 +721,17 @@
 "follow_label" = "Follow";
 "unfollow_label" = "Unfollow";
 "unsubscribe_label" = "Unsubscribe";
+
+"subscription_card_title" = "Kamu telah menjadi Subscriber";
+"subscription_cancel_desc" = "Batalkan kapan saja, sesuai keinginanmu";
+"subscription_expired_remaining" = "%lld Hari tersisa";
+"cancel_subscription_label" = "Cancel Subscription";
+"subscription_success_label" = "Subscription Berhasil";
+"creator_name_label" = "Nama Creator";
+"duration_label" = "Durasi";
+"dinotis_coin" = "Dinotis Coin";
+"subscription_label" = "Subscription";
+"subscription_end_time_at" = "Berakhir pada **%@**";
+"free_subscription_label" = "Subscription Gratis";
+"premium_subscription_label" = "Subscription Premium";
+"adaptive_label" = "Adaptif";

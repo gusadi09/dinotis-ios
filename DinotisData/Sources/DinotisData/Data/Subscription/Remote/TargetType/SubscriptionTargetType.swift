@@ -11,6 +11,7 @@ import Moya
 public enum SubscriptionTargetType {
     case subscribe(String, Int)
     case unsubscribe(String)
+    case getSubscriptions(GeneralParameterRequest)
 }
 
 extension SubscriptionTargetType: DinotisTargetType, AccessTokenAuthorizable {
@@ -24,6 +25,9 @@ extension SubscriptionTargetType: DinotisTargetType, AccessTokenAuthorizable {
             
         case .unsubscribe(let userId):
             return ["userId" : userId]
+            
+        case .getSubscriptions(let param):
+            return param.toJSON()
         }
     }
     
@@ -41,6 +45,8 @@ extension SubscriptionTargetType: DinotisTargetType, AccessTokenAuthorizable {
     
     var parameterEncoding: Moya.ParameterEncoding {
         switch self {
+        case .getSubscriptions:
+            return URLEncoding.queryString
         default:
             return JSONEncoding.default
         }
@@ -56,11 +62,15 @@ extension SubscriptionTargetType: DinotisTargetType, AccessTokenAuthorizable {
             return "/subscription/subscribe"
         case .unsubscribe:
             return "/subscription/unsubscribe"
+        case .getSubscriptions:
+            return "/subscription/subscriptions"
         }
     }
     
     public var method: Moya.Method {
         switch self {
+        case .getSubscriptions:
+            return .get
         default:
             return .post
         }
