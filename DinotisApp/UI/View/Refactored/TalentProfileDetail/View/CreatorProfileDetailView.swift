@@ -448,7 +448,8 @@ struct CreatorProfileDetailView: View {
             title: viewModel.alert.title,
             isError: viewModel.alert.isError,
             message: viewModel.alert.message,
-            primaryButton: viewModel.alert.primaryButton
+            primaryButton: viewModel.alert.primaryButton,
+            secondaryButton: viewModel.alert.secondaryButton
         )
         .sheet(isPresented: $viewModel.isShowManagements) {
             if #available(iOS 16.0, *) {

@@ -713,3 +713,11 @@
 "creator_studio_archive_desc_placeholder" = "Enter your archive description...";
 
 "creator_availability_success_text" = "Successfully changed your availability.";
+
+"unsubscribe_alert_title" = "Cancel this subscription?";
+"unsubscribe_alert_desc" = "Videos that have been deleted cannot be restored";
+"no_label" = "No";
+"yes_cancel_label" = "Yes, Cancel";
+"follow_label" = "Follow";
+"unfollow_label" = "Unfollow";
+"unsubscribe_label" = "Unsubscribe";

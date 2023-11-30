@@ -713,3 +713,11 @@
 "creator_studio_archive_desc_placeholder" = "Masukkan deskripsi arsip kamu";
 
 "creator_availability_success_text" = "Berhasil merubah ketersediaan kamu.";
+
+"unsubscribe_alert_title" = "Ingin membatalkan subcription?";
+"unsubscribe_alert_desc" = "Jika membatalkan langganan, kamu akan kehilangan akses ke konten eksklusif %@";
+"no_label" = "Tidak";
+"yes_cancel_label" = "Ya, Batalkan";
+"follow_label" = "Follow";
+"unfollow_label" = "Unfollow";
+"unsubscribe_label" = "Unsubscribe";

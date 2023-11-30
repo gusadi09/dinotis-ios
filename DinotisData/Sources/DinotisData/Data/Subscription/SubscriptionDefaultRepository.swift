@@ -18,4 +18,8 @@ public final class SubscriptionDefaultRepository: SubscriptionRepository {
     public func providePostSubscribe(userId: String, methodId: Int) async throws -> SubscriptionResponse {
         try await self.remoteDataSource.postSubscribe(userId: userId, methodId: methodId)
     }
+    
+    public func providePostUnsubscribe(with userId: String) async throws -> SuccessResponse {
+        try await self.remoteDataSource.postUnsubscribe(with: userId)
+    }
 }
