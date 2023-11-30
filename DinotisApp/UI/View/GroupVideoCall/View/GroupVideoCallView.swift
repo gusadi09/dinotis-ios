@@ -285,7 +285,7 @@ struct GroupVideoCallView: View {
 
                                         Button {
                                             withAnimation {
-                                                if viewModel.meeting.stage.onStage.isEmpty {
+                                                if viewModel.meeting.participants.active.isEmpty {
                                                     viewModel.isShowViewerModeGuide = false
                                                     viewModel.currentGuide = nil
                                                 } else {
@@ -1953,7 +1953,7 @@ fileprivate extension GroupVideoCallView {
     struct RemoteScreenShareVideoContainerView: View {
         
         @ObservedObject var viewModel: GroupVideoCallViewModel
-        @Binding var participant: DyteScreenShareMeetingParticipant?
+        @Binding var participant: DyteJoinedMeetingParticipant?
         
         var body: some View {
             ZStack(alignment: .bottomLeading) {

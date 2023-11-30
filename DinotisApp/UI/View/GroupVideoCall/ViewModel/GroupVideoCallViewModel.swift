@@ -182,8 +182,8 @@ final class GroupVideoCallViewModel: ObservableObject {
     ]
     
     @Published var participants = [DyteJoinedMeetingParticipant]()
-    @Published var screenShareUser = [DyteScreenShareMeetingParticipant]()
-    @Published var screenShareId: DyteScreenShareMeetingParticipant?
+    @Published var screenShareUser = [DyteJoinedMeetingParticipant]()
+    @Published var screenShareId: DyteJoinedMeetingParticipant?
     @Published var pinned: DyteJoinedMeetingParticipant?
     @Published var host: DyteJoinedMeetingParticipant?
     @Published var lastActive: DyteJoinedMeetingParticipant?
@@ -939,8 +939,8 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     func onMeetingRoomJoinCompleted() {
         self.setPage(to: 0)
         self.participants = meeting.participants.active
-        self.screenShareUser = meeting.participants.screenshares
-        self.screenShareId = meeting.participants.screenshares.first
+        self.screenShareUser = meeting.participants.screenShares
+        self.screenShareId = meeting.participants.screenShares.first
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) { [weak self] in
             self?.host = self?.meeting.participants.joined.first(where: { item in
                 item.presetName.contains(PresetConstant.host.value)
@@ -993,6 +993,42 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
 }
 
 extension GroupVideoCallViewModel: DyteParticipantEventsListener {
+    func onAllParticipantsUpdated(allParticipants: [DyteParticipant]) {
+        self.participants.removeAll()
+        self.participants = meeting.participants.active
+    }
+    
+    func onScreenShareEnded(participant: DyteJoinedMeetingParticipant) {
+        if meeting.participants.screenShares.count != screenShareUser.count {
+            self.screenShareUser = meeting.participants.screenShares
+        }
+        if self.screenShareId == nil || self.meeting.participants.screenShares.count <= 1 {
+            self.screenShareId = nil
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+                self.screenShareId = self.meeting.participants.screenShares.last
+            }
+        }
+        
+        if self.meeting.participants.screenShares.isEmpty {
+            self.index = 1
+        }
+    }
+    
+    func onScreenShareStarted(participant: DyteJoinedMeetingParticipant) {
+        if meeting.participants.screenShares.count != screenShareUser.count {
+            self.screenShareUser = meeting.participants.screenShares
+        }
+        if self.screenShareId == nil || self.meeting.participants.screenShares.count <= 1 {
+            self.screenShareId = nil
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+                self.screenShareId = self.meeting.participants.screenShares.first
+            }
+        }
+        
+        if self.meeting.participants.screenShares.isEmpty {
+            self.index = 0
+        }
+    }
     
     func onActiveSpeakerChanged(participant: DyteJoinedMeetingParticipant) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) { [weak self] in
@@ -1043,38 +1079,6 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
         self.participants = meeting.participants.active
     }
     
-    func onScreenShareEnded(participant: DyteScreenShareMeetingParticipant) {
-        if meeting.participants.screenshares.count != screenShareUser.count {
-            self.screenShareUser = meeting.participants.screenshares
-        }
-        if self.screenShareId == nil || self.meeting.participants.screenshares.count <= 1 {
-            self.screenShareId = nil
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
-                self.screenShareId = self.meeting.participants.screenshares.last
-            }
-        }
-        
-        if self.meeting.participants.screenshares.isEmpty {
-            self.index = 1
-        }
-    }
-    
-    func onScreenShareStarted(participant: DyteScreenShareMeetingParticipant) {
-        if meeting.participants.screenshares.count != screenShareUser.count {
-            self.screenShareUser = meeting.participants.screenshares
-        }
-        if self.screenShareId == nil || self.meeting.participants.screenshares.count <= 1 {
-            self.screenShareId = nil
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
-                self.screenShareId = self.meeting.participants.screenshares.first
-            }
-        }
-        
-        if self.meeting.participants.screenshares.isEmpty {
-            self.index = 0
-        }
-    }
-    
     func onActiveParticipantsChanged(active: [DyteJoinedMeetingParticipant]) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) { [weak self] in
             self?.host = self?.meeting.participants.joined.first(where: { item in
@@ -1105,8 +1109,8 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
     }
     
     func onScreenSharesUpdated() {
-        if meeting.participants.screenshares.count != screenShareUser.count {
-            self.screenShareUser = meeting.participants.screenshares
+        if meeting.participants.screenShares.count != screenShareUser.count {
+            self.screenShareUser = meeting.participants.screenShares
         }
     }
     
@@ -1123,6 +1127,10 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
 }
 
 extension GroupVideoCallViewModel: DyteSelfEventsListener {
+    func onVideoDeviceChanged(videoDevice: DyteVideoDevice) {
+        
+    }
+    
     func onRoomMessage(type: String, payload: [String : Any]) {
         
     }
@@ -1260,6 +1268,14 @@ extension GroupVideoCallViewModel: DyteWaitlistEventsListener {
 }
 
 extension GroupVideoCallViewModel: DyteStageEventListener {
+    func onParticipantStartedPresenting(participant: DyteJoinedMeetingParticipant) {
+        
+    }
+    
+    func onParticipantStoppedPresenting(participant: DyteJoinedMeetingParticipant) {
+        
+    }
+    
     func onParticipantRemovedFromStage(participant: DyteJoinedMeetingParticipant) {
         if participant.id == meeting.localUser.id {
             DispatchQueue.main.async { [weak self] in
