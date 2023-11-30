@@ -117,7 +117,7 @@ extension CreatorProfileDetailView {
                                         .frame(height: 20)
                                         .isHidden((viewModel.talentData?.isFollowed).orFalse(), remove: true)
                                     
-                                    Text((viewModel.talentData?.isFollowed).orFalse() ? LocalizableText.talentDetailFollowing : LocalizableText.talentDetailFollow)
+                                    Text((viewModel.talentData?.isFollowed).orFalse() ? LocalizableText.unfollowLabel : LocalizableText.followLabel)
                                 }
                             }
                             .padding(.horizontal, 12)
@@ -136,53 +136,39 @@ extension CreatorProfileDetailView {
                         }
                         .buttonStyle(.plain)
                         
-                        if let subs = viewModel.talentData?.subscription?.subscriptionType, subs != "UNSUBSCRIBED" {
-                            Button {
-                                
-                            } label: {
-                                HStack(spacing: 4) {
-                                    Text(LocalizableText.subscribedLabel)
-                                }
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 8)
-                                .foregroundColor(.DinotisDefault.black2)
-                                .frame(maxWidth: .infinity, maxHeight: 40, alignment: .center)
-                                .background(Color(red: 0.91, green: 0.91, blue: 0.91))
-                                .cornerRadius(12)
-                            }
-                            .disabled(true)
-                            .buttonStyle(.plain)
-                        } else {
-                            Button {
+                        Button {
+                            if viewModel.canSubscribe {
                                 viewModel.isShowSubscribeSheet = true
                                 viewModel.isLastSubscribeSheet = false
-//                                if let url = URL(string: viewModel.subscribeURL()) {
-//                                    openURL(url)
-//                                }
-                            } label: {
-                                HStack(spacing: 4) {
-                                    Image.talentProfileStarAddBlackIcon
-                                        .renderingMode(.template)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(height: 20)
-                                    
-                                    Text(LocalizableText.subscribeLabel)
-                                }
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 8)
-                                .foregroundColor(.DinotisDefault.primary)
-                                .frame(maxWidth: .infinity, maxHeight: 40, alignment: .center)
-                                .background(Color.DinotisDefault.lightPrimary)
-                                .cornerRadius(12)
-                                .overlay {
+                            } else {
+                                viewModel.showUnsubscribeAlert()
+                            }
+                        } label: {
+                            HStack(spacing: 4) {
+                                Image.talentProfileStarAddBlackIcon
+                                    .renderingMode(.template)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 20)
+                                    .isHidden(!viewModel.canSubscribe, remove: true)
+                                
+                                Text(viewModel.canSubscribe ? LocalizableText.subscribeLabel : LocalizableText.unsubscribeLabel)
+                            }
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .foregroundColor(viewModel.canSubscribe ? .DinotisDefault.primary : .DinotisDefault.black2)
+                            .frame(maxWidth: .infinity, maxHeight: 40, alignment: .center)
+                            .background(viewModel.canSubscribe ? Color.DinotisDefault.lightPrimary : Color(red: 0.91, green: 0.91, blue: 0.91))
+                            .cornerRadius(12)
+                            .overlay {
+                                if viewModel.canSubscribe {
                                     RoundedRectangle(cornerRadius: 12)
                                         .inset(by: 0.55)
                                         .stroke(Color.DinotisDefault.primary, lineWidth: 1)
                                 }
                             }
-                            .buttonStyle(.plain)
                         }
+                        .buttonStyle(.plain)
                     }
                     .font(.robotoMedium(size: 14))
                 }
@@ -215,7 +201,7 @@ extension CreatorProfileDetailView {
                                     .frame(height: 20)
                                     .isHidden((viewModel.talentData?.isFollowed).orFalse(), remove: true)
                                 
-                                Text((viewModel.talentData?.isFollowed).orFalse() ? LocalizableText.talentDetailFollowing : LocalizableText.talentDetailFollow)
+                                Text((viewModel.talentData?.isFollowed).orFalse() ? LocalizableText.unfollowLabel : LocalizableText.followLabel)
                             }
                         }
                         .padding(.horizontal, 12)

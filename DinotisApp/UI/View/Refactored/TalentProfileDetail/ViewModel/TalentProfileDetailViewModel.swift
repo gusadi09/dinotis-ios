@@ -52,6 +52,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     private let getTalentDetailMeetingUseCase: GetCreatorDetailMeetingListUseCase
     private let getVideoListUseCase: GetVideoListUseCase
     private let subscribeUseCase: SubscribeUseCase
+    private let unsubscribeUseCase: UnsubscribeUseCase
     
     @Published var filterSelection = LocalizableText.talentDetailAvailableSessions
     @Published var filterSelectionReview = "Semua Ulasan"
@@ -149,9 +150,8 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     var videoParam: VideoListRequest {
         get {
             var param: VideoListRequest = .init(username: (self.talentData?.username).orEmpty())
-            let unsubscribed = talentData?.subscription == nil || talentData?.subscription?.subscriptionType == "UNSUBSCRIBED"
             
-            param.audienceType = unsubscribed ? .PUBLIC : .SUBSCRIBER
+            param.audienceType = canSubscribe ? .PUBLIC : .SUBSCRIBER
             
             switch currentSection {
             case .recorded:
@@ -273,6 +273,10 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         talentData?.management != nil
     }
     
+    var canSubscribe: Bool {
+        talentData?.subscription == nil || talentData?.subscription?.subscriptionType == "UNSUBSCRIBED"
+    }
+    
     init(
         backToHome: @escaping (() -> Void),
         username: String,
@@ -292,7 +296,8 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         coinVerificationUseCase: CoinVerificationUseCase = CoinVerificationDefaultUseCase(),
         getTalentDetailMeetingUseCase: GetCreatorDetailMeetingListUseCase = GetCreatorDetailMeetingListDefaultUseCase(),
         getVideoListUseCase: GetVideoListUseCase = GetVideoListDefaultUseCase(),
-        subscribeUseCase: SubscribeUseCase = SubscribeDefaultUseCase()
+        subscribeUseCase: SubscribeUseCase = SubscribeDefaultUseCase(),
+        unsubscribeUseCase: UnsubscribeUseCase = UnsubscribeDefaultUseCase()
     ) {
         self.username = username
         self.backToHome = backToHome
@@ -313,6 +318,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         self.getTalentDetailMeetingUseCase = getTalentDetailMeetingUseCase
         self.getVideoListUseCase = getVideoListUseCase
         self.subscribeUseCase = subscribeUseCase
+        self.unsubscribeUseCase = unsubscribeUseCase
     }
     
     func subscribeURL() -> String {
@@ -1367,7 +1373,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     }
     
     func viewExclusiveVideo(item: MineVideoData) {
-        let unsubscribed = (talentData?.subscription == nil || talentData?.subscription?.subscriptionType == "UNSUBSCRIBED") && item.audienceType == .SUBSCRIBER
+        let unsubscribed = canSubscribe && item.audienceType == .SUBSCRIBER
         if unsubscribed {
             alert.title = LocalizableText.subscribeAlertTitle
             alert.message = LocalizableText.subscribeAlertDesc
@@ -1548,6 +1554,45 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
             self.isSuccessSubs = true
             self.isLoadingPaySubs = false
             
+            self.onGetDetailCreator()
+        case .failure(let error):
+            handleDefaultError(error: error)
+        }
+    }
+    
+    @MainActor
+    func showUnsubscribeAlert() {
+        self.alert = .init(
+            title: LocalizableText.unsubscribeAlertTitle,
+            message: LocalizableText.unsubscribeAlertDesc(name: (talentData?.username).orEmpty()),
+            primaryButton: .init(
+                text: LocalizableText.noLabel,
+                action: {
+                    self.alert.secondaryButton = nil
+                }
+            ),
+            secondaryButton: .init(
+                text: LocalizableText.yesCancelLabel,
+                action: {
+                    Task {
+                        await self.unsubscribe()
+                    }
+                    self.alert.secondaryButton = nil
+                }
+            )
+        )
+        
+        self.isShowAlert = true
+    }
+    
+    @MainActor
+    func unsubscribe() async {
+        self.isError = false
+        
+        let result = await unsubscribeUseCase.execute(with: (talentData?.id).orEmpty())
+        
+        switch result {
+        case .success:
             self.onGetDetailCreator()
         case .failure(let error):
             handleDefaultError(error: error)

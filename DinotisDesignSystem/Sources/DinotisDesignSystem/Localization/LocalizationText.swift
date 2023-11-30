@@ -3277,4 +3277,45 @@ public enum LocalizableText {
         bundle: .module,
         comment: "subscribed"
     )
+    public static let yesCancelLabel = NSLocalizedString(
+        "yes_cancel_label",
+        bundle: .module,
+        comment: "yes cancel label"
+    )
+    public static let noLabel = NSLocalizedString(
+        "no_label",
+        bundle: .module,
+        comment: "no label"
+    )
+    public static let unsubscribeAlertTitle = NSLocalizedString(
+        "unsubscribe_alert_title",
+        bundle: .module,
+        comment: "unsubscribe alert title"
+    )
+    public static let followLabel = NSLocalizedString(
+        "follow_label",
+        bundle: .module,
+        comment: "follow label"
+    )
+    public static let unfollowLabel = NSLocalizedString(
+        "unfollow_label",
+        bundle: .module,
+        comment: "unfollow label"
+    )
+    public static let unsubscribeLabel = NSLocalizedString(
+        "unsubscribe_label",
+        bundle: .module,
+        comment: "unsubscribe label"
+    )
+    
+    public static func unsubscribeAlertDesc(name: String) -> String {
+        String(
+            format: NSLocalizedString(
+                "unsubscribe_alert_desc",
+                bundle: .module,
+                comment: "unsubscribe alert description"
+            ),
+            name
+        )
+    }
 }
