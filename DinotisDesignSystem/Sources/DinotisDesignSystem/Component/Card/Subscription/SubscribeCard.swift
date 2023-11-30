@@ -96,7 +96,8 @@ public struct SubscribeCard: View {
             Text(LocalizableText.subscirbeCancelDesc)
                 .font(.robotoRegular(size: 10))
                 .foregroundColor(.white)
-                .isHidden(withButton, remove: true)
+                .isHidden(true, remove: true)
+//                .isHidden(withButton, remove: true)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 24)

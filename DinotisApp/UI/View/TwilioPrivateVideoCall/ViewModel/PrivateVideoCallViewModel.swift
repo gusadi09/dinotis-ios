@@ -176,6 +176,7 @@ final class PrivateVideoCallViewModel: ObservableObject {
         onStartFetch(sendReport: false)
 
 		self.stringTime = "00:00:00"
+        self.timer?.invalidate()
 
         let result = await checkMeetingEndUseCase.execute(for: meeting.id.orEmpty())
         
@@ -186,9 +187,10 @@ final class PrivateVideoCallViewModel: ObservableObject {
                 self?.isLoading = false
 
                 self?.futureDate = success.endAt.orCurrentDate()
+                self?.stringTime = "00:00:00"
                 guard let isEnded = success.isEnd else { return }
                 self?.isMeetingForceEnd = isEnded
-                self?.getRealTime()
+//                self?.getRealTime()
             }
         case .failure(let failure):
             handleDefaultError(error: failure)
