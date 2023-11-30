@@ -278,7 +278,7 @@ struct CreatorProfileDetailView: View {
                     )
                 }
                 
-                DinotisLoadingView(.fullscreen, hide: !viewModel.isLoading || !viewModel.isLoadingPaySubs)
+                DinotisLoadingView(.fullscreen, hide: !viewModel.isLoading && !viewModel.isLoadingPaySubs)
             }
             .overlay {
                 ImageDetailView()
@@ -434,6 +434,9 @@ struct CreatorProfileDetailView: View {
                     }
                     .dynamicTypeSize(.large)
                 }
+            })
+            .fullScreenCover(isPresented: $viewModel.isShowInvoice, content: {
+                SubscriptionInvoice()
             })
         }
         .dinotisAlert(

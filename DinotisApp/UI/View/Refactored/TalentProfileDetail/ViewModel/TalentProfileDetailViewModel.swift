@@ -68,10 +68,10 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     
     @Published var selectedMeeting: MeetingDetailResponse?
     
-    @Published var nextCursorRateCard: Int? = 0
-    @Published var nextCursorMeeting: Int? = 0
-    @Published var nextCursorReview: Int? = 0
-    @Published var nextCursorExclusiveVideo: Int? = 0
+    @Published var nextCursorRateCard: Int?
+    @Published var nextCursorMeeting: Int?
+    @Published var nextCursorReview: Int?
+    @Published var nextCursorExclusiveVideo: Int?
     
     @Published var isLoadingFollow = false
     @Published var isLoading = false
@@ -147,27 +147,24 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     @Published var reviewData = [ReviewData]()
     @Published var videos = [MineVideoData]()
     
-    var videoParam: VideoListRequest {
-        get {
-            var param: VideoListRequest = .init(username: (self.talentData?.username).orEmpty())
-            
-            param.audienceType = canSubscribe ? .PUBLIC : .SUBSCRIBER
-            
-            switch currentSection {
-            case .recorded:
-                param.videoType = .RECORD
-            case .publicAudience:
-                param.audienceType = .PUBLIC
-            case .earliest:
-                param.sort = .asc
-            default:
-                param.sort = .desc
-            }
-            
-            return param
+    @Published var videoParam: GeneralParameterRequest = .init(skip: 0, take: 5)
+    private var _videoParameter: VideoListRequest {
+        var param: VideoListRequest = .init(username: (self.talentData?.username).orEmpty(), take: videoParam.take, skip: videoParam.skip)
+        
+        param.audienceType = canSubscribe ? .PUBLIC : nil
+        
+        switch currentSection {
+        case .recorded:
+            param.videoType = .RECORD
+        case .publicAudience:
+            param.audienceType = .PUBLIC
+        case .earliest:
+            param.sort = .asc
+        default:
+            param.sort = .desc
         }
         
-        set {}
+        return param
     }
     
     @Published var payments = UserBookingPayment(
@@ -249,12 +246,15 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         }
     }
     
+    @Published var isShowInvoice = false
     @Published var isShowBundlingSheet = false
+    
+    @Published var invoiceData: SubscriptionResponse = .init(id: nil, userId: nil, talentId: nil, startAt: nil, endAt: nil)
     
     @Published var isShowSubscribeSheet = false
     @Published var isLastSubscribeSheet = false
     var subsSheetHeight: CGFloat {
-        isLastSubscribeSheet ? 450 : 320
+        canSubscribe ? (isLastSubscribeSheet ? 450 : 320) : 360
     }
     
     var professionText: String {
@@ -1089,23 +1089,28 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         }
     }
     
+    @MainActor
     func getVideoList(isMore: Bool) async {
         onStartFetchWithPagination(isMore: isMore, type: .video)
         
-        let result = await getVideoListUseCase.execute(with: videoParam)
+        if !isMore {
+            videoParam.take = 5
+            videoParam.skip = 0
+        }
+        
+        let result = await getVideoListUseCase.execute(with: _videoParameter)
         
         switch result {
         case .success(let response):
-            DispatchQueue.main.async {[weak self] in
-                if isMore {
-                    self?.isLoadingMoreVideoList = false
-                    self?.videos += response.data ?? []
-                } else {
-                    self?.isLoadingVideoList = false
-                    self?.videos = response.data ?? []
-                }
-                self?.nextCursorExclusiveVideo = response.nextCursor
+            if isMore {
+                self.isLoadingMoreVideoList = false
+                self.videos += response.data ?? []
+            } else {
+                self.isLoadingVideoList = false
+                self.videos = response.data ?? []
             }
+            self.videos = self.videos.unique()
+            self.nextCursorExclusiveVideo = response.nextCursor
         case .failure(let error):
             handleDefaultErrorVideoList(error: error, isMore: isMore)
         }
@@ -1539,6 +1544,31 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     }
     
     @MainActor
+    func trySubscribe(with methodId: Int) {
+        let subscriptionPrice = Int((talentData?.userAvailability?.price).orEmpty()).orZero()
+        let coinBalance = Int((userData?.coinBalance?.current).orEmpty()).orZero()
+        
+        if subscriptionPrice > coinBalance {
+            alert = .init(
+                title: LocalizableText.attentionText,
+                message: LocalizableText.tippingNotEnoughBalance,
+                primaryButton: .init(
+                    text: LocalizableText.tippingTopUpNow,
+                    action: {
+                        self.showAddCoin = true
+                    }
+                ),
+                secondaryButton: .init(text: LocalizableText.okText, action: {})
+            )
+            isShowAlert = true
+        } else {
+            Task {
+                await subscribe(with: methodId)
+            }
+        }
+    }
+    
+    @MainActor
     func subscribe(with methodID: Int) async {
         
         self.isLoadingPaySubs = true
@@ -1550,11 +1580,14 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         let result = await subscribeUseCase.execute(for: (talentData?.id).orEmpty(), with: methodID)
         
         switch result {
-        case .success(_):
+        case .success(let response):
+            self.invoiceData = response
+            
             self.isSuccessSubs = true
             self.isLoadingPaySubs = false
             
             self.onGetDetailCreator()
+            self.isShowInvoice = true
         case .failure(let error):
             handleDefaultError(error: error)
         }
