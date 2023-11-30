@@ -1224,7 +1224,7 @@ struct FormScheduleTalentCardView_Previews: PreviewProvider {
                     isPrivate: true,
                     slots: 0,
                     urls: [],
-                    archiveRecording: false
+                    archiveRecording: false, collaboratorAudienceVisibility: false
                 )
             ),
             onTapRemove: {},

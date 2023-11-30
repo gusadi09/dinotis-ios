@@ -219,7 +219,7 @@ final class TalentEditRateCardScheduleViewModel: ObservableObject {
             isPrivate: meetingForm.isPrivate,
             slots: meetingForm.slots,
             urls: [], 
-            archiveRecording: false
+            archiveRecording: false, collaboratorAudienceVisibility: false
         )
         
         let result = await editMeetingUseCase.execute(for: meetingID, with: body)

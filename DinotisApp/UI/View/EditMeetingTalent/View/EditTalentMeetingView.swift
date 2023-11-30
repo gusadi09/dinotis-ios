@@ -87,30 +87,6 @@ struct EditTalentMeetingView: View {
                         }
                         .padding()
                     }
-//					ScrollViews(axes: .vertical, showsIndicators: false) { value in
-//						DispatchQueue.main.async {
-//							if value.y < 0 {
-//								self.colorTab = Color.white
-//							} else {
-//								self.colorTab = Color.clear
-//							}
-//						}
-//					} content: {
-//						VStack {
-//                            FormScheduleTalentCardView(
-//                                collab: $viewModel.talent,
-//                                managements: $viewModel.managements,
-//                                meetingForm: $viewModel.meetingForm,
-//                                onTapRemove: {},
-//                                isShowRemove: false,
-//                                isEdit: true,
-//                                disableEdit: viewModel.isDisableEdit,
-//                                maxEdit: $viewModel.maxEdit
-////                            )
-//                            
-//						}
-//						.padding(.vertical, 15)
-//					}
 
 					VStack(spacing: 0) {
 						Button(action: {

@@ -350,7 +350,7 @@ struct TalentHomeView: View {
                                                                     .frame(width: 45, height: 45)
                                                             )
                                                         
-                                                        Text(LocaleText.createSessionSchedule)
+                                                        Text(LocalizableText.creatorCreateSessionLabel)
                                                             .foregroundColor(.black)
                                                             .font(.robotoRegular(size: 10))
                                                             .multilineTextAlignment(.center)

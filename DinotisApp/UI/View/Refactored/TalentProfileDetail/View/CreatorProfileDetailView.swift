@@ -166,6 +166,7 @@ struct CreatorProfileDetailView: View {
                         } header: {
                             SectionHeaderView()
                         }
+                        .listRowSpacing(0)
                         .headerProminence(.increased)
                         .listRowInsets(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 18))
                         .listRowSeparator(.hidden)
@@ -277,7 +278,7 @@ struct CreatorProfileDetailView: View {
                     )
                 }
                 
-                DinotisLoadingView(.fullscreen, hide: !viewModel.isLoading || !viewModel.isLoadingPaySubs)
+                DinotisLoadingView(.fullscreen, hide: !viewModel.isLoading && !viewModel.isLoadingPaySubs)
             }
             .overlay {
                 ImageDetailView()
@@ -434,6 +435,9 @@ struct CreatorProfileDetailView: View {
                     .dynamicTypeSize(.large)
                 }
             })
+            .fullScreenCover(isPresented: $viewModel.isShowInvoice, content: {
+                SubscriptionInvoice()
+            })
         }
         .dinotisAlert(
             isPresent: $viewModel.requestSuccess,
@@ -447,7 +451,8 @@ struct CreatorProfileDetailView: View {
             title: viewModel.alert.title,
             isError: viewModel.alert.isError,
             message: viewModel.alert.message,
-            primaryButton: viewModel.alert.primaryButton
+            primaryButton: viewModel.alert.primaryButton,
+            secondaryButton: viewModel.alert.secondaryButton
         )
         .sheet(isPresented: $viewModel.isShowManagements) {
             if #available(iOS 16.0, *) {

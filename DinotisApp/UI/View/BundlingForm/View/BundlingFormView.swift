@@ -12,7 +12,6 @@ import SwiftUINavigation
 struct BundlingFormView: View {
 
 	@ObservedObject var viewModel: BundlingFormViewModel
-
 	@Environment(\.dismiss) var dismiss
 
     var body: some View {

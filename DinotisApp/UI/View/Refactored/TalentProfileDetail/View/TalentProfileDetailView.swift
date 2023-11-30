@@ -639,11 +639,11 @@ struct TalentProfileDetailView: View {
     }
 }
 
-struct TalentProfileDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        TalentProfileDetailView(viewModel: TalentProfileDetailViewModel(backToHome: {}, username: "ramzramzz"), tabValue: .constant(.agenda))
-    }
-}
+//struct TalentProfileDetailView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        TalentProfileDetailView(viewModel: TalentProfileDetailViewModel(backToHome: {}, username: "ramzramzz"), tabValue: .constant(.agenda))
+//    }
+//}
 
 extension TalentProfileDetailView {
     struct ManagementBottomSheet: View {
