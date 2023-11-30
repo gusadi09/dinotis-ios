@@ -18,6 +18,18 @@ extension Double {
 
 		return fm.string(from: self).orEmpty()
 	}
+    
+    func toPriceFormat() -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.locale = Locale(identifier: "id_ID")
+        
+        if let formattedNumber = formatter.string(from: NSNumber(value: self)) {
+            return formattedNumber.replacingOccurrences(of: "Rp", with: "")
+        } else {
+            return ""
+        }
+    }
 }
 
 extension String {
@@ -43,3 +55,4 @@ extension String {
 		}
 	}
 }
+

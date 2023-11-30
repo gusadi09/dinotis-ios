@@ -188,4 +188,5 @@ public extension Image {
     static let studioDocumentUploadIcon = Image("ic-document-upload", bundle: .module)
     static let studioPencilIcon = Image("ic-pencil-black", bundle: .module)
     static let studioTrashIcon = Image("ic-trash-black", bundle: .module)
+    static let chevronUp = Image("ic-chevron-up", bundle: .module)
 }
