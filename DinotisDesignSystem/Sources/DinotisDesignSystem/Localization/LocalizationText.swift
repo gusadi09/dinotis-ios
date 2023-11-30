@@ -107,6 +107,11 @@ public enum LocalizableText {
 		bundle: .module,
 		comment: "usage for alert when wrong phone number"
 	)
+    public static let alertPhoneAlreadyRegistered = NSLocalizedString(
+        "alert_phone_already_register",
+        bundle: .module,
+        comment: "already registered error"
+    )
 	public static let passwordHint = NSLocalizedString(
 		"hint_password",
 		bundle: .module,
@@ -3396,4 +3401,40 @@ public enum LocalizableText {
             date
         )
     }
+    public static let revenueDetailText = NSLocalizedString(
+        "revenue_detail_text",
+        bundle: .module,
+        comment: ""
+    )
+    
+    public static let totalIncomeText = NSLocalizedString(
+        "total_income_text",
+        bundle: .module,
+        comment: ""
+    )
+    
+    public static let incomeDetailText = NSLocalizedString(
+        "income_detail_text",
+        bundle: .module,
+        comment: ""
+    )
+    
+    public static let totalAudienceText = NSLocalizedString(
+        "total_audience_text",
+        bundle: .module,
+        comment: ""
+    )
+    
+    public static let visibilityCollaboratorText = NSLocalizedString(
+        "visibilty_collaborator_text",
+        bundle: .module,
+        comment: ""
+    )
+    
+    public static let collaboratorText = NSLocalizedString(
+        "collaborator_text",
+        bundle: .module,
+        comment: ""
+    )
+    
 }

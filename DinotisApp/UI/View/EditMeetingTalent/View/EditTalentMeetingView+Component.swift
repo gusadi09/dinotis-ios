@@ -821,6 +821,34 @@ extension EditTalentMeetingView {
                                 .padding(.top, 5)
                             }
                             
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    Text(LocalizableText.visibilityCollaboratorText)
+                                        .font(.robotoMedium(size: 14))
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.DinotisDefault.black2)
+                                    
+                                    Text(LocalizableText.collaboratorText)
+                                        .font(.robotoRegular(size: 10))
+                                        .foregroundColor(.DinotisDefault.black3)
+                                        .multilineTextAlignment(.leading)
+                                }
+                                
+                                Spacer()
+                                
+                                Toggle("", isOn: $viewModel.isVisible)
+                                    .labelsHidden()
+                                    .tint(.DinotisDefault.green)
+                                    .disabled(viewModel.isDisableEdit)
+                            }
+                            .padding(12)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
+                            )
+                            .background(
+                                RoundedRectangle(cornerRadius: 6)
+                                    .foregroundStyle(viewModel.isDisableEdit ? Color.DinotisDefault.black3.opacity(0.1) : Color.clear)
+                            )
                         }
                         .padding(.horizontal, 16)
                         .padding(.bottom, 16)

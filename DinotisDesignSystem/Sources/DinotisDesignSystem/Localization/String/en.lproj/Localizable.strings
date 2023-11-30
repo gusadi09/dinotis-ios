@@ -37,6 +37,7 @@
 "hint_phone" = "Enter your phone number";
 "alert_phone_unregister" = "*The phone number you entered has not been registered";
 "alert_phone_wrong" = "*The phone number you entered is invalid";
+"alert_phone_already_register" = "*The phone number you entered is already registered";
 "hint_password" = "Enter Password";
 "alert_password_wrong" = "*The password you entered is incorrect";
 "link_forgot" = "Forgot password?";
@@ -735,3 +736,9 @@
 "free_subscription_label" = "Free Subscription";
 "premium_subscription_label" = "Premium Subscription";
 "adaptive_label" = "Adaptive";
+"revenue_detail_text" = "See revenue details";
+"total_income_text" = "Total Income";
+"income_detail_text" = "Income Details";
+"total_audience_text" = "Total Audience";
+"visibilty_collaborator_text" = "Collaborator Data Visibility";
+"collaborator_text" = "Collaborators can view Audience traffic data";

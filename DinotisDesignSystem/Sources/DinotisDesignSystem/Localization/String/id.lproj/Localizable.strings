@@ -37,6 +37,7 @@
 "hint_phone" = "Masukan nomor handphone";
 "alert_phone_unregister" = "*Nomor telepon yang anda masukkan belum terdaftar";
 "alert_phone_wrong" = "*Nomor telepon yang anda masukkan tidak valid";
+"alert_phone_already_register" = "*Nomor telepon yang anda masukkan sudah terdaftar";
 "hint_password" = "Masukan Kata Sandi";
 "alert_password_wrong" = "*Kata sandi yang anda masukkan salah";
 "link_forgot" = "Lupa kata sandi?";
@@ -735,3 +736,9 @@
 "free_subscription_label" = "Subscription Gratis";
 "premium_subscription_label" = "Subscription Premium";
 "adaptive_label" = "Adaptif";
+"revenue_detail_text" = "Lihat detail pendapatan";
+"total_income_text" = "Total Pendapatan";
+"income_detail_text" = "Detail Pendapatan";
+"total_audience_text" = "Jumlah Audiens";
+"visibilty_collaborator_text" = "Visibilitas Data Kolaborator";
+"collaborator_text" = "Kolaborator dapat melihat data lalu lintas Audiens";

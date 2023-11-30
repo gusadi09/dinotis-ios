@@ -11,20 +11,21 @@ import CurrencyFormatter
 import DinotisDesignSystem
 
 struct TalentDetailScheduleCardView: View {
-	@Binding var data: MeetingDetailResponse
-	
-	@State var isShowMenu = false
+    @Binding var data: MeetingDetailResponse
+    
+    @State var isShowMenu = false
     @State var isShowCollabList = false
     @State var isTextComplete = false
-	
-	var onTapEdit: (() -> Void)
-	
-	var onTapDelete: (() -> Void)
-	
-	var onTapEnd: (() -> Void)
-	
-	var body: some View {
-		ZStack(alignment: .topTrailing) {
+    @ObservedObject var stateObservable = StateObservable.shared
+    
+    var onTapEdit: (() -> Void)
+    
+    var onTapDelete: (() -> Void)
+    
+    var onTapEnd: (() -> Void)
+    
+    var body: some View {
+        ZStack(alignment: .topTrailing) {
             VStack(alignment: .leading, spacing: 20) {
                 if data.endedAt != nil {
                     Text(LocalizableText.stepSessionDone)
@@ -348,9 +349,9 @@ struct TalentDetailScheduleCardView: View {
                                                     .foregroundColor(.DinotisDefault.orange)
                                             }
                                         }
-                                        
                                         Spacer()
                                     }
+                                    
                                 }
                                 
                                 if (data.meetingCollaborations ?? []).count > 3 {
@@ -364,6 +365,8 @@ struct TalentDetailScheduleCardView: View {
                                     }
                                 }
                             }
+                            
+                            
                         }
                         .padding(.top, 8)
                     }
@@ -423,13 +426,13 @@ struct TalentDetailScheduleCardView: View {
                     
                 }
             }
-			.padding()
-			.background(Color.white)
-			.cornerRadius(12)
-			.shadow(color: Color("dinotis-shadow-1").opacity(0.08), radius: 10, x: 0, y: 0)
-			.padding()
-
-		}
+            .padding()
+            .background(Color.white)
+            .cornerRadius(12)
+            .shadow(color: Color("dinotis-shadow-1").opacity(0.08), radius: 10, x: 0, y: 0)
+            .padding()
+            
+        }
         .sheet(isPresented: $isShowCollabList, content: {
             if #available(iOS 16.0, *) {
                 SelectedCollabCreatorView(isEdit: false, arrUsername: .constant((data.meetingCollaborations ?? []).compactMap({
@@ -448,44 +451,44 @@ struct TalentDetailScheduleCardView: View {
                 .dynamicTypeSize(.large)
             }
         })
-		.onTapGesture {
-			isShowMenu = false
-		}
-		.onDisappear {
-			isShowMenu = false
-		}
-	}
+        .onTapGesture {
+            isShowMenu = false
+        }
+        .onDisappear {
+            isShowMenu = false
+        }
+    }
 }
 
 private let dateFormatter: DateFormatter = {
-	let formatter = DateFormatter()
-	formatter.dateStyle = .short
-	formatter.locale = Locale.current
-	formatter.dateFormat = "EEEE, dd MMMM yyyy"
-	return formatter
+    let formatter = DateFormatter()
+    formatter.dateStyle = .short
+    formatter.locale = Locale.current
+    formatter.dateFormat = "EEEE, dd MMMM yyyy"
+    return formatter
 }()
 
 private let dateISOFormatter: DateFormatter = {
-	let dateFormatter = DateFormatter()
-	dateFormatter.locale = Locale.current
-	dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-	return dateFormatter
+    let dateFormatter = DateFormatter()
+    dateFormatter.locale = Locale.current
+    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+    return dateFormatter
 }()
 
 private let timeFormatter: DateFormatter = {
-	let formatter = DateFormatter()
-	formatter.dateStyle = .short
-	formatter.locale = Locale.current
-	formatter.dateFormat = "HH.mm"
-	return formatter
+    let formatter = DateFormatter()
+    formatter.dateStyle = .short
+    formatter.locale = Locale.current
+    formatter.dateFormat = "HH.mm"
+    return formatter
 }()
 
 private let currencyFormatter: CurrencyFormatter = {
-	let fm = CurrencyFormatter()
-	
-	fm.currency = .rupiah
-	fm.locale = CurrencyLocale.indonesian
-	fm.decimalDigits = 0
-	
-	return fm
+    let fm = CurrencyFormatter()
+    
+    fm.currency = .rupiah
+    fm.locale = CurrencyLocale.indonesian
+    fm.decimalDigits = 0
+    
+    return fm
 }()

@@ -297,7 +297,7 @@ final class LoginViewModel: ObservableObject {
 				if error.errorCode == "USER_ALREADY_REGISTERED" {
 					self?.isPhoneNumberError = true
                     self?.phoneNumberError = []
-					self?.phoneNumberError?.append(LocalizableText.alertPhoneWrong)
+					self?.phoneNumberError?.append(LocalizableText.alertPhoneAlreadyRegistered)
 				}
 			} else if self?.statusCode == 422 {
 				print(error)

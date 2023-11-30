@@ -75,6 +75,8 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
     
     @Published var startPresented = false
     
+    @Published var isDetail = false
+    
     @Published var participantDetail = [UserResponse]()
     
     @Published var meetingForm = MeetingForm(id: String.random(), title: "", description: "", price: 10000, startAt: "", endAt: "", isPrivate: true, slots: 0, urls: [])

@@ -14,6 +14,7 @@ struct BundlingView: View {
     @Environment(\.dismiss) var dismiss
     
     @ObservedObject var viewModel: BundlingViewModel
+//    @Binding var meetingDetail: MeetingDetailResponse
     
     var body: some View {
         GeometryReader { geo in
