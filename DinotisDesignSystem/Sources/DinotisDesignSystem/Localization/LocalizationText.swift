@@ -3437,4 +3437,9 @@ public enum LocalizableText {
         comment: ""
     )
     
+    public static let videoCallPollingPromotion = NSLocalizedString(
+        "video_call_polling_promotion",
+        bundle: .module,
+        comment: ""
+    )
 }

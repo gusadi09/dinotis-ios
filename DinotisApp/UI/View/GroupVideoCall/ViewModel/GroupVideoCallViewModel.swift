@@ -196,6 +196,8 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var qnaBoxContentHeight: CGFloat = 0
     @Published var mainLobbyTimer: Timer?
     
+    @Published var isCreatePoll = false
+    
     init(
         backToHome: @escaping () -> Void,
         backToScheduleDetail: @escaping () -> Void,

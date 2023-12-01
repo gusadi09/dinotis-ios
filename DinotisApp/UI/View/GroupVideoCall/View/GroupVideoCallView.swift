@@ -2063,6 +2063,7 @@ fileprivate extension GroupVideoCallView {
                         ParticipantTabView(viewModel: viewModel)
                     case 2:
                         PollingView()
+                            .environmentObject(viewModel)
                     default:
                         EmptyView()
                     }
@@ -2936,30 +2937,6 @@ fileprivate extension GroupVideoCallView {
                         ScrollView {
                             VStack {
                                 ForEach(viewModel.meeting.chat.messages, id: \.self) { message in
-//                                    let currentHeader = (author: message.displayName, date: message.time)
-//                                    if let prevHeader = previousHeader, prevHeader == currentHeader {
-//                                        VStack {
-//                                            switch message.type {
-//                                            case .text:
-//                                                if let chat = message as? DyteTextMessage {
-//                                                    ChatBubbleView(
-//                                                        messageBody: chat.message,
-//                                                        isAuthorYou: message.userId == viewModel.localUserId
-//                                                    )
-//                                                }
-//
-//                                            default:
-//                                                EmptyView()
-//                                            }
-//                                        }
-//                                        .padding(.horizontal)
-//                                        .id(message)
-//                                        .onAppear {
-////                                            viewModel.hasNewMessage = false
-//                                            previousHeader = currentHeader
-//                                        }
-//                                        .frame(maxWidth: .infinity, alignment: .leading)
-//                                    } else {
                                         VStack(alignment: .leading, spacing: 9) {
                                             ChatHeaderView(
                                                 author: message.displayName,
@@ -2993,9 +2970,7 @@ fileprivate extension GroupVideoCallView {
                                         .id(message)
                                         .onAppear {
                                             viewModel.hasNewMessage = false
-//                                            previousHeader = currentHeader
                                         }
-//                                    }
                                 }
                                 
                             }
@@ -3145,9 +3120,67 @@ fileprivate extension GroupVideoCallView {
     
     
     struct PollingView: View {
+        @EnvironmentObject var viewModel: GroupVideoCallViewModel
         
         var body: some View {
-            Text("Hello World")
+            VStack(spacing: 0) {
+                ScrollView(.vertical, showsIndicators: false) {
+                    LazyVStack {
+                        if viewModel.meeting.localUser.canDoParticipantHostControls() {
+                            if viewModel.isCreatePoll {
+                                //create form
+                            } else {
+                                ForEach(0...5, id: \.self) { item in
+                                    Text("Index \(item)")
+                                }
+                            }
+                        } else {
+                            ForEach(0...5, id: \.self) { item in
+                                Text("Index \(item)")
+                            }
+                        }
+                    }
+                }
+                
+                if viewModel.meeting.localUser.canDoParticipantHostControls() {
+                    VStack(spacing: 8) {
+                        Text(LocalizableText.videoCallPollingPromotion)
+                            .font(.robotoRegular(size: 12))
+                            .foregroundStyle(Color.DinotisDefault.black3)
+                            .multilineTextAlignment(.center)
+                        
+                        if viewModel.isCreatePoll {
+                            DinotisSecondaryButton(
+                                text: LocalizableText.videoCallCancelPollTitle,
+                                type: .adaptiveScreen,
+                                height: 50,
+                                textColor: .white,
+                                bgColor: .clear,
+                                strokeColor: .DinotisDefault.primary)
+                            {
+                                withAnimation(.spring()) {
+                                    viewModel.isCreatePoll = false
+                                }
+                            }
+                            
+                        } else {
+                            DinotisPrimaryButton(
+                                text: LocalizableText.videoCallCreateNewPollTitle,
+                                type: .adaptiveScreen,
+                                height: 50,
+                                textColor: .white,
+                                bgColor: .DinotisDefault.primary,
+                                isLoading: .constant(false))
+                            {
+                                withAnimation(.spring()) {
+                                    viewModel.isCreatePoll = true
+                                }
+                            }
+                        }
+                    }
+                    .padding()
+                }
+            }
         }
     }
     
