@@ -172,8 +172,8 @@ final class GroupVideoCallViewModel: ObservableObject {
     
     @Published var bottomSheetTabItems: [TabBarItem] = [
         .init(id: 0, title: LocalizableText.labelChat),
-        .init(id: 1, title: LocalizableText.participant)
-//        .init(id: 2, title: LocalizableText.labelPolls)
+        .init(id: 1, title: LocalizableText.participant),
+        .init(id: 2, title: LocalizableText.labelPolls)
     ]
     
     @Published var qnaTabItems: [TabBarItem] = [
@@ -1219,17 +1219,6 @@ extension GroupVideoCallViewModel: DyteChatEventsListener {
     
 }
 
-//extension GroupVideoCallViewModel: DytePollEventsListener {
-//    func onNewPoll(poll: DytePollMessage) {
-//
-//    }
-//
-//    func onPollUpdates(pollMessages: [DytePollMessage]) {
-//
-//    }
-//
-//}
-
 extension GroupVideoCallViewModel: DyteRecordingEventsListener {
     func onMeetingRecordingEnded() {
         
@@ -1266,6 +1255,16 @@ extension GroupVideoCallViewModel: DyteWaitlistEventsListener {
         
     }
     
+}
+
+extension GroupVideoCallViewModel: DytePollEventsListener {
+    func onNewPoll(poll: DytePollMessage) {
+        
+    }
+    
+    func onPollUpdates(pollMessages: [DytePollMessage]) {
+        
+    }
 }
 
 extension GroupVideoCallViewModel: DyteStageEventListener {

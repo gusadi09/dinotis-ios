@@ -1267,7 +1267,7 @@ fileprivate extension GroupVideoCallView {
                             .padding(10)
                             .contentShape(Rectangle())
                         }
-                        .isHidden(true, remove: true)
+//                        .isHidden(true, remove: true)
                         
                         Button {
                             viewModel.showingMoreMenu = false
@@ -2061,8 +2061,8 @@ fileprivate extension GroupVideoCallView {
                         ChatView(viewModel: viewModel)
                     case 1:
                         ParticipantTabView(viewModel: viewModel)
-//                    case 2:
-//                        PollingView()
+                    case 2:
+                        PollingView()
                     default:
                         EmptyView()
                     }
@@ -3145,168 +3145,10 @@ fileprivate extension GroupVideoCallView {
     
     
     struct PollingView: View {
-        @State var isPollCard: Bool = false
-        @State var fieldPoll: String = ""
-        @State var isAdd: Bool = false
-        @State var isPollCreated = false
-        @State var addPoll = 0
-        @State private var forms: [FormData] = []
-        @State private var isCheckedOne: Bool = false
-        @State private var isCheckedTwo: Bool = false
         
         var body: some View {
-            GeometryReader {geo in
-                ZStack {
-                    Color.dinotisGray.ignoresSafeArea()
-                    VStack(alignment: .leading) {
-                        
-                        if isPollCreated {
-                            
-                            VStack(alignment: .leading) {
-                                Text(LocalizableText.videoCallPollByHost)
-                                    .foregroundColor(.white)
-                                    .font(.robotoBold(size: 16))
-                                
-                                VStack(alignment: .leading) {
-                                    Text(fieldPoll)
-                                        .foregroundColor(.white)
-                                    ForEach(forms.indices, id: \.self) { index in
-                                        PollFinish(form: $forms[index])
-                                    }
-                                }.padding()
-                                    .background(RoundedRectangle(cornerRadius: 10).foregroundColor(Color.grayChat))
-                                    .frame(width: calculateContentWidth(geometry: geo))
-                                
-                            }.padding()
-                            Spacer()
-                            
-                        } else {
-                            Spacer()
-                            if isPollCard {
-                                //
-                                ScrollView {
-                                    VStack {
-                                        Text(LocalizableText.videoCallPollQuestionTitle)
-                                            .foregroundColor(.white)
-                                            .padding(.top,10)
-                                        
-                                        if #available(iOS 16.0, *) {
-                                            TextField("", text: $fieldPoll, axis: .vertical)
-//                                                .placeholder(when: fieldPoll.isEmpty, placeholder: {
-//                                                    Text(LocalizableText.videoCallPollQuestionPlaceholder).foregroundColor(.white)
-//                                                })
-                                                .autocorrectionDisabled(true)
-                                                .lineLimit(3, reservesSpace: true)
-                                                .padding(5)
-                                                .overlay {
-                                                    RoundedRectangle(cornerRadius: 8)
-                                                        .stroke(UIApplication.shared.windows.first?.overrideUserInterfaceStyle == .dark ? Color.white : Color(.systemGray3), lineWidth: 1)
-                                                        .background(Color.dinotisBgForm)
-                                                }
-                                                .padding()
-                                        } else {
-                                            // Fallback on earlier versions
-                                        }
-                                        
-                                        ForEach(forms.indices, id: \.self) { index in
-                                            FormRowView(form: $forms[index])
-                                        }
-                                        
-                                        HStack {
-                                            Button {
-                                                isAdd.toggle()
-                                                addForm()
-                                                
-                                            } label: {
-                                                Image(systemName: "plus")
-                                                    .resizable()
-                                                    .frame(width: 10, height: 10)
-                                                    .foregroundColor(.DinotisDefault.primary)
-                                                Text(LocalizableText.videoCallPollAddOption)
-                                                    .foregroundColor(.DinotisDefault.primary)
-                                                
-                                            }
-                                            
-                                        }
-                                        
-                                        
-                                        VStack {
-                                            Toggle(isOn: $isCheckedOne) {
-                                                Text(LocalizableText.anonymousText)
-                                            }
-                                            .toggleStyle(CheckboxStyle())
-                                            Toggle(isOn: $isCheckedTwo) {
-                                                Text(LocalizableText.videoCallPollHideResult)
-                                            }
-                                            .toggleStyle(CheckboxStyle())
-                                            
-                                            
-                                            
-                                        }.padding(.trailing, 210)
-                                        
-                                        
-                                        Button {
-                                            isPollCreated.toggle()
-                                        } label: {
-                                            Text(LocalizableText.videoCallCreatePollTitle)
-                                                .foregroundColor(Color.white)
-                                                .padding()
-                                                .frame(maxWidth: .infinity)
-                                                .background(Color.DinotisDefault.primary).cornerRadius(10)
-                                                .border(Color.DinotisDefault.primary).cornerRadius(10)
-                                        }
-                                        .padding()
-                                        //
-                                        
-                                    }
-                                    .background(RoundedRectangle(cornerRadius: 10).foregroundColor(Color.grayChat))
-                                    .frame(width: calculateContentWidth(geometry: geo))
-                                }
-                                .padding()
-                            }
-                            
-                            
-                            VStack {
-                                Text(LocalizableText.videoCallCreatePollFooter)
-                                    .font(.system(size: 15))
-                                    .foregroundColor(.white)
-                                
-                                Button {
-                                    isPollCard.toggle()
-                                    
-                                } label: {
-                                    Text(isPollCard ? LocalizableText.videoCallCancelPollTitle : LocalizableText.videoCallCreateNewPollTitle)
-                                        .foregroundColor(isPollCard ? Color.DinotisDefault.primary : Color.white)
-                                        .padding()
-                                        .frame(maxWidth: .infinity)
-                                        .background(!isPollCard ? Color.DinotisDefault.primary : Color.clear).cornerRadius(10)
-                                        .border(Color.DinotisDefault.primary).cornerRadius(10)
-                                }.padding()
-                                
-                            }
-                            
-                        }
-                        
-                    }
-                    
-                    .frame(height: geo.size.height/1)
-                    
-                }
-            }
+            Text("Hello World")
         }
-        
-        private func addForm() {
-            forms.append(FormData())
-        }
-        
-        private func deleteForm(at indices: IndexSet) {
-            forms.remove(atOffsets: indices)
-        }
-        
-        private func calculateContentWidth(geometry: GeometryProxy) -> CGFloat {
-            return geometry.size.width - 40
-        }
-        
     }
     
     struct LeaveSessionAlert: View {
