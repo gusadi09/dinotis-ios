@@ -517,7 +517,7 @@ fileprivate extension GroupVideoCallView {
                     
                     VStack {
                         if viewModel.isJoined {
-                            if viewModel.meeting.stage.onStage.isEmpty {
+                            if viewModel.meeting.participants.active.isEmpty {
                                 VStack(spacing: 15) {
                                     Spacer()
                                     
@@ -1461,7 +1461,7 @@ fileprivate extension GroupVideoCallView {
                         }
                     }
                 )
-                .isHidden(viewModel.meeting.stage.onStage.isEmpty, remove: viewModel.meeting.stage.onStage.isEmpty)
+                .isHidden(viewModel.meeting.participants.active.isEmpty, remove: viewModel.meeting.participants.active.isEmpty)
                 
                 Button {
                     withAnimation(.spring()) {
@@ -1626,7 +1626,7 @@ fileprivate extension GroupVideoCallView {
                 
                     HStack(spacing: 0) {
                         (
-                            viewModel.meeting.localUser.fetchAudioEnabled() ?
+                            viewModel.meeting.localUser.audioEnabled ?
                             Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon
                         )
                         .resizable()
@@ -1659,7 +1659,7 @@ fileprivate extension GroupVideoCallView {
             ZStack(alignment: .bottomLeading) {
                 if viewModel.index == 0 && ((viewModel.pinned?.id).orEmpty() == participant.id || (viewModel.host?.id).orEmpty() == participant.id || (viewModel.lastActive?.id).orEmpty() == participant.id) {
                     if viewModel.pinned == nil && viewModel.screenShareUser.isEmpty && viewModel.host == nil && viewModel.lastActive == nil {
-                        if participant.fetchVideoEnabled() {
+                        if participant.videoEnabled {
                             if let video = participant.getVideoView() {
                                 UIVideoView(videoView: video, width: .infinity, height: 270)
                                     .frame(height: 270)
@@ -1699,7 +1699,7 @@ fileprivate extension GroupVideoCallView {
                     }
                     
                 } else {
-                    if participant.fetchVideoEnabled() {
+                    if participant.videoEnabled {
                         if let video = participant.getVideoView() {
                             UIVideoView(videoView: video, width: .infinity, height: 270)
                                 .frame(height: 270)
@@ -1736,7 +1736,7 @@ fileprivate extension GroupVideoCallView {
                 
                 HStack(spacing: 0) {
                     (
-                        participant.fetchAudioEnabled() ?
+                        participant.audioEnabled ?
                         Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon
                     )
                     .resizable()
@@ -1777,7 +1777,7 @@ fileprivate extension GroupVideoCallView {
                     RoundedRectangle(cornerRadius: 10)
                         .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
                 } else {
-                    if participant?.fetchVideoEnabled() ?? false {
+                    if participant?.videoEnabled ?? false {
                         if let video = participant?.getVideoView() {
                             UIVideoView(videoView: video, width: .infinity, height: .infinity)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -1826,7 +1826,7 @@ fileprivate extension GroupVideoCallView {
                 
                 HStack(spacing: 0) {
                     (
-                        (participant?.fetchAudioEnabled() ?? false) ?
+                        (participant?.audioEnabled ?? false) ?
                         Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon
                     )
                     .resizable()
@@ -1865,7 +1865,7 @@ fileprivate extension GroupVideoCallView {
             ZStack(alignment: .bottomLeading) {
                 if viewModel.index == 0 && ((viewModel.pinned?.id).orEmpty() == participant.id || (viewModel.host?.id).orEmpty() == participant.id || (viewModel.lastActive?.id).orEmpty() == participant.id) {
                     if viewModel.pinned == nil && viewModel.screenShareUser.isEmpty && viewModel.host == nil && viewModel.lastActive == nil {
-                        if participant.fetchVideoEnabled() {
+                        if participant.videoEnabled {
                             if let video = participant.getVideoView() {
                                 UIVideoView(videoView: video, width: .infinity, height: .infinity)
                                     .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -1901,7 +1901,7 @@ fileprivate extension GroupVideoCallView {
                     }
                     
                 } else {
-                    if participant.fetchVideoEnabled() {
+                    if participant.videoEnabled {
                         if let video = participant.getVideoView() {
                             UIVideoView(videoView: video, width: .infinity, height: .infinity)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -1920,7 +1920,7 @@ fileprivate extension GroupVideoCallView {
                 
                 HStack(spacing: 0) {
                     (
-                        participant.fetchAudioEnabled() ?
+                        participant.audioEnabled ?
                         Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon
                     )
                     .resizable()
@@ -1978,7 +1978,7 @@ fileprivate extension GroupVideoCallView {
                 
                 HStack(spacing: 0) {
                     (
-                        (participant?.fetchAudioEnabled() ?? false) ?
+                        (participant?.audioEnabled ?? false) ?
                         Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon
                     )
                     .resizable()
@@ -2636,17 +2636,17 @@ fileprivate extension GroupVideoCallView {
                         }
                     }
                     
-                    if !viewModel.meeting.stage.onStage.isEmpty {
+                    if !viewModel.meeting.participants.active.isEmpty {
                         Section(
                             header: HStack {
-                                Text("\(LocalizableText.speakerTitle) (\(viewModel.meeting.stage.onStage.count))")
+                                Text("\(LocalizableText.speakerTitle) (\(viewModel.meeting.participants.active.count))")
                                     .font(.robotoBold(size: 16))
                                     .foregroundColor(.white)
                                 
                                 Spacer()
                             }
                         ) {
-                            ForEach(viewModel.meeting.stage.onStage, id: \.id) { participant in
+                            ForEach(viewModel.meeting.participants.active, id: \.id) { participant in
                                 HStack(spacing: 16) {
                                     if participant.picture == nil {
                                         Circle()
@@ -2676,12 +2676,12 @@ fileprivate extension GroupVideoCallView {
                                     Spacer()
                                     
                                     HStack(spacing: 8) {
-                                        (participant.fetchAudioEnabled() ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
+                                        (participant.audioEnabled ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
                                             .resizable()
                                             .scaledToFit()
                                             .frame(width: 24)
 
-                                        (participant.fetchVideoEnabled() ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
+                                        (participant.videoEnabled ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
                                             .resizable()
                                             .scaledToFit()
                                             .frame(width: 24)
@@ -2827,12 +2827,12 @@ fileprivate extension GroupVideoCallView {
                                                     .foregroundColor(.white)
                                             )
                                         } else {
-                                            (participant.fetchAudioEnabled() ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
+                                            (participant.audioEnabled ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
                                                 .resizable()
                                                 .scaledToFit()
                                                 .frame(width: 24)
                                             
-                                            (participant.fetchVideoEnabled() ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
+                                            (participant.videoEnabled ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
                                                 .resizable()
                                                 .scaledToFit()
                                                 .frame(width: 24)
