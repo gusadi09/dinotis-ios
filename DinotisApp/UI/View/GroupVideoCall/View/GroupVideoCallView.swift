@@ -3128,7 +3128,7 @@ fileprivate extension GroupVideoCallView {
                     LazyVStack {
                         if viewModel.meeting.localUser.canDoParticipantHostControls() {
                             if viewModel.isCreatePoll {
-                                //create form
+                                PollingFormView()
                             } else {
                                 ForEach(0...5, id: \.self) { item in
                                     Text("Index \(item)")
@@ -3142,45 +3142,162 @@ fileprivate extension GroupVideoCallView {
                     }
                 }
                 
-                if viewModel.meeting.localUser.canDoParticipantHostControls() {
+                if viewModel.meeting.localUser.canDoParticipantHostControls(),
+                   !viewModel.isCreatePoll {
                     VStack(spacing: 8) {
                         Text(LocalizableText.videoCallPollingPromotion)
                             .font(.robotoRegular(size: 12))
                             .foregroundStyle(Color.DinotisDefault.black3)
                             .multilineTextAlignment(.center)
                         
-                        if viewModel.isCreatePoll {
-                            DinotisSecondaryButton(
-                                text: LocalizableText.videoCallCancelPollTitle,
-                                type: .adaptiveScreen,
-                                height: 50,
-                                textColor: .white,
-                                bgColor: .clear,
-                                strokeColor: .DinotisDefault.primary)
-                            {
-                                withAnimation(.spring()) {
-                                    viewModel.isCreatePoll = false
-                                }
-                            }
-                            
-                        } else {
-                            DinotisPrimaryButton(
-                                text: LocalizableText.videoCallCreateNewPollTitle,
-                                type: .adaptiveScreen,
-                                height: 50,
-                                textColor: .white,
-                                bgColor: .DinotisDefault.primary,
-                                isLoading: .constant(false))
-                            {
-                                withAnimation(.spring()) {
-                                    viewModel.isCreatePoll = true
-                                }
+                        DinotisPrimaryButton(
+                            text: LocalizableText.videoCallCreateNewPollTitle,
+                            type: .adaptiveScreen,
+                            height: 50,
+                            textColor: .white,
+                            bgColor: .DinotisDefault.primary,
+                            isLoading: .constant(false))
+                        {
+                            withAnimation(.spring()) {
+                                viewModel.isCreatePoll = true
                             }
                         }
                     }
                     .padding()
                 }
             }
+            .background(Color(red: 0.15, green: 0.16, blue: 0.16))
+        }
+    }
+    
+    struct PollingFormView: View {
+        
+        @EnvironmentObject var viewModel: GroupVideoCallViewModel
+        @FocusState var editorFocused: Bool
+        
+        var body: some View {
+            VStack(spacing: 12) {
+                Text(LocalizableText.videoCallPollQuestionTitle)
+                    .font(.robotoBold(size: 14))
+                    .foregroundColor(.white)
+                    .padding(10)
+                
+                ZStack(alignment: .topLeading) {
+                    #if os(macOS)
+                    TextEditor(text: $viewModel.createPollData.question)
+                        .font(.robotoRegular(size: 12))
+                        .foregroundColor(.white)
+                        .textFieldStyle(.plain)
+                        .frame(height: 75)
+                        .textEditorBackground(Color(red: 0.18, green: 0.19, blue: 0.2))
+                        .focused($editorFocused)
+                    #else
+                    TextEditor(text: $viewModel.createPollData.question)
+                        .font(.robotoRegular(size: 12))
+                        .foregroundColor(.white)
+                        .textFieldStyle(.plain)
+                        .frame(height: 75)
+                        .textEditorBackground(Color(red: 0.18, green: 0.19, blue: 0.2))
+                        .focused($editorFocused)
+                    #endif
+                    
+                    if viewModel.createPollData.question.isEmpty && !editorFocused {
+                        Text(LocalizableText.videoCallPollQuestionPlaceholder)
+                            .font(.robotoRegular(size: 12))
+                            .foregroundColor(.DinotisDefault.black3)
+                            .padding(4)
+                            .padding(.top, 4)
+                            .onTapGesture {
+                                editorFocused = true
+                            }
+                    }
+                }
+                .tint(.DinotisDefault.primary)
+                .padding(12)
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .foregroundColor(Color(red: 0.18, green: 0.19, blue: 0.2))
+                )
+                
+                ForEach($viewModel.createPollData.options, id:\.id) { $option in
+                    HStack(spacing: 8) {
+                        TextField(LocalizableText.videoCallMessagePlaceholder, text: $option.text)
+                            .font(.robotoRegular(size: 12))
+                            .foregroundColor(.white)
+                            .textFieldStyle(.plain)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical)
+                            .tint(.DinotisDefault.primary)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .foregroundColor(Color(red: 0.18, green: 0.19, blue: 0.2))
+                            )
+                        
+                        if viewModel.createPollData.options.last?.id == option.id,
+                           viewModel.createPollData.options.count > 2 {
+                            Button {
+                                withAnimation {
+                                    viewModel.createPollData.options.removeLast(1)
+                                }
+                            } label: {
+                                ZStack {
+                                    Rectangle()
+                                        .foregroundColor(Color(red: 0.18, green: 0.19, blue: 0.2))
+                                    
+                                    Rectangle()
+                                        .foregroundColor(.white)
+                                        .frame(height: 3)
+                                        .padding(.horizontal, 7)
+                                }
+                                .frame(width: 32, height: 32)
+                                .cornerRadius(4)
+                            }
+                        }
+                    }
+                }
+                
+                Button("+ \(LocalizableText.videoCallPollAddOption)") {
+                    withAnimation {
+                        viewModel.createPollData.options.append(.init())
+                    }
+                }
+                .font(.robotoBold(size: 12))
+                .foregroundColor(.DinotisDefault.lightPrimary)
+                
+                DinotisPrimaryButton(
+                    text: LocalizableText.videoCallCreatePollTitle,
+                    type: .adaptiveScreen,
+                    height: 50,
+                    textColor: .white,
+                    bgColor: .DinotisDefault.primary,
+                    isLoading: .constant(false))
+                {
+                    withAnimation(.spring()) {
+                        viewModel.dummyPollResult.append(viewModel.createPollData)
+                        viewModel.isCreatePoll = false
+                        viewModel.createPollData = .init()
+                    }
+                }
+                
+                DinotisSecondaryButton(
+                    text: LocalizableText.videoCallCancelPollTitle,
+                    type: .adaptiveScreen,
+                    height: 50,
+                    textColor: .white,
+                    bgColor: .clear,
+                    strokeColor: .DinotisDefault.primary)
+                {
+                    withAnimation(.spring()) {
+                        viewModel.isCreatePoll = false
+                        viewModel.createPollData = .init()
+                    }
+                }
+            }
+            .padding(12)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color(red: 0.21, green: 0.22, blue: 0.22))
+            .cornerRadius(12)
+            .padding(22)
         }
     }
     

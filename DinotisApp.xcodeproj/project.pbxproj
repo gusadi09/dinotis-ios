@@ -10,6 +10,7 @@
 		0A0664CF280F0669009EC7C0 /* TalentProfileDetailView+Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0664CE280F0669009EC7C0 /* TalentProfileDetailView+Component.swift */; };
 		0AE145A22812801E00108948 /* TalentEditProfile+Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE145A12812801E00108948 /* TalentEditProfile+Component.swift */; };
 		37B4DBCF2A8A963B00D3EAA1 /* AfterFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B4DBCE2A8A963B00D3EAA1 /* AfterFeedback.swift */; };
+		4B02E3E22B19F5640079882F /* View+textEditorBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B02E3E12B19F5640079882F /* View+textEditorBackground.swift */; };
 		4B03ED3D2ACC17C4004DD0FA /* InboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B03ED3C2ACC17C4004DD0FA /* InboxView.swift */; };
 		4B03ED3F2ACC18D3004DD0FA /* InboxViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B03ED3E2ACC18D3004DD0FA /* InboxViewModel.swift */; };
 		4B65C03B2AEF8868000FEF4B /* SessionRecordingListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B65C03A2AEF8868000FEF4B /* SessionRecordingListViewModel.swift */; };
@@ -373,6 +374,7 @@
 		0A0664CE280F0669009EC7C0 /* TalentProfileDetailView+Component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TalentProfileDetailView+Component.swift"; sourceTree = "<group>"; };
 		0AE145A12812801E00108948 /* TalentEditProfile+Component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TalentEditProfile+Component.swift"; sourceTree = "<group>"; };
 		37B4DBCE2A8A963B00D3EAA1 /* AfterFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfterFeedback.swift; sourceTree = "<group>"; };
+		4B02E3E12B19F5640079882F /* View+textEditorBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+textEditorBackground.swift"; sourceTree = "<group>"; };
 		4B03ED3C2ACC17C4004DD0FA /* InboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxView.swift; sourceTree = "<group>"; };
 		4B03ED3E2ACC18D3004DD0FA /* InboxViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxViewModel.swift; sourceTree = "<group>"; };
 		4B65C03A2AEF8868000FEF4B /* SessionRecordingListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionRecordingListViewModel.swift; sourceTree = "<group>"; };
@@ -1479,6 +1481,7 @@
 				EC62577F27B7E16F0079AA10 /* UIApplication+EndEditing.swift */,
 				EC4C4E0927DC463D00582AC4 /* Sequence+Uniqued.swift */,
 				EC4C4E0D27DD987000582AC4 /* UIImage+Ext.swift */,
+				4B02E3E12B19F5640079882F /* View+textEditorBackground.swift */,
 			);
 			path = SwiftUI;
 			sourceTree = "<group>";
@@ -3243,6 +3246,7 @@
 				EC28CD5727A110480023A745 /* PaymentInstruction.swift in Sources */,
 				EC25CF3C280DAE66000E3D9A /* ResetPasswordViewModel.swift in Sources */,
 				EC91B40A26CEA73000C5358C /* OnChangeExt.swift in Sources */,
+				4B02E3E22B19F5640079882F /* View+textEditorBackground.swift in Sources */,
 				ECBCA2A5286192DD00EB1656 /* CoinHistoryCard.swift in Sources */,
 				ECD51FCA28A125F0000B1F6C /* SyncManager.swift in Sources */,
 				4BEACAF72AEFB3E6008E165C /* CreatorStudioView.swift in Sources */,

@@ -104,6 +104,9 @@ final class GroupVideoCallViewModel: ObservableObject {
         baseUrl: "https://api.cluster.dyte.in/v2"
     )
     
+    @Published var createPollData: CreatePollRequest = .init()
+    @Published var dummyPollResult = [CreatePollRequest]()
+    
     @Published var route: HomeRouting? = nil
     
     @Published var userMeeting: UserMeetingData
