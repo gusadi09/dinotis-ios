@@ -29,6 +29,7 @@ public struct CreatePollRequest {
 public struct PollOption: Identifiable {
     public var id: UUID = .init()
     public var text: String
+    public var isSelected: Bool = false
     
     public init(text: String = "") {
         self.text = text

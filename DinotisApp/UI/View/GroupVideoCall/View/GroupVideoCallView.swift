@@ -3125,25 +3125,135 @@ fileprivate extension GroupVideoCallView {
         var body: some View {
             VStack(spacing: 0) {
                 ScrollView(.vertical, showsIndicators: false) {
-                    LazyVStack {
-                        if viewModel.meeting.localUser.canDoParticipantHostControls() {
-                            if viewModel.isCreatePoll {
-                                PollingFormView()
-                            } else {
-                                ForEach(0...5, id: \.self) { item in
-                                    Text("Index \(item)")
-                                }
-                            }
+                    LazyVStack(spacing: 12) {
+                        if viewModel.meeting.localUser.canDoParticipantHostControls(),
+                           viewModel.isCreatePoll {
+                            PollingFormView()
                         } else {
-                            ForEach(0...5, id: \.self) { item in
-                                Text("Index \(item)")
+                            if viewModel.dummyPollResult.isEmpty {
+                                Text(LocalizableText.videoCallEmptyPollingDesc)
+                                    .font(.robotoRegular(size: 16))
+                                    .foregroundColor(.white)
+                                    .padding()
+                                    .padding(.top, 70)
+                            } else {
+                                HStack {
+                                    Text(LocalizableText.videoCallPollByHost)
+                                        .font(.robotoBold(size: 14))
+                                        .foregroundColor(.white)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    
+                                    Button {
+                                        withAnimation {
+                                            viewModel.isCreatePoll = true
+                                        }
+                                    } label: {
+                                        Text("\(Image(systemName: "plus")) \(LocalizableText.morePollingLabel)")
+                                            .font(.robotoBold(size: 14))
+                                            .foregroundColor(.white)
+                                            .padding(12)
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .foregroundColor(.DinotisDefault.primary)
+                                            )
+                                    }
+                                    .isHidden(!viewModel.meeting.localUser.canDoParticipantHostControls(), remove: true)
+                                }
+                                .padding()
+                                
+                                ForEach(viewModel.dummyPollResult.indices, id: \.self) { index in
+                                    let poll = viewModel.dummyPollResult[index]
+                                    VStack(alignment: .leading, spacing: 16) {
+                                        Text("\(LocalizableText.pollLabel) \(index+1)")
+                                            .font(.robotoBold(size: 12))
+                                            .foregroundColor(.DinotisDefault.primary)
+                                            .padding(.vertical, 5)
+                                            .padding(.horizontal, 14)
+                                            .background(
+                                                Capsule()
+                                                    .foregroundColor(Color(red: 0.89, green: 0.77, blue: 1))
+                                            )
+                                        
+                                        Text(poll.question)
+                                            .font(.robotoRegular(size: 12))
+                                            .foregroundColor(.white)
+                                            .multilineTextAlignment(.leading)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                        
+                                        VStack(spacing: 0) {
+                                            ForEach(poll.options.indices, id:\.self) { optionIndex in
+                                                let option = poll.options[optionIndex]
+                                                
+                                                Button {
+                                                    viewModel.dummyPollResult[index].options[optionIndex].isSelected.toggle()
+                                                } label: {
+                                                    HStack(spacing: 4) {
+                                                        Image(systemName: option.isSelected ? "checkmark.square.fill" : "square.fill")
+                                                            .foregroundColor(option.isSelected ? .white : .DinotisDefault.black3.opacity(0.5))
+                                                            .font(.system(size: 18))
+                                                        
+                                                        Text(option.text)
+                                                            .font(.robotoRegular(size: 12))
+                                                            .foregroundColor(.white)
+                                                            .multilineTextAlignment(.leading)
+                                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                                    }
+                                                    .padding(8)
+                                                    .padding(.vertical, 8)
+                                                    .background(
+                                                        RoundedRectangle(cornerRadius: 8)
+                                                            .foregroundColor(option.isSelected ? .DinotisDefault.primary : .clear)
+                                                    )
+                                                }
+                                            }
+                                        }
+                                        
+                                        Divider()
+                                        
+                                        VStack(alignment: .leading, spacing: 8) {
+                                            Text("\(LocalizableText.resultLabel):")
+                                                .font(.robotoBold(size: 12))
+                                                .foregroundColor(.white)
+                                                .padding(.bottom, 2)
+                                            
+                                            ForEach(poll.options, id: \.id) { option in
+                                                HStack(spacing: 8) {
+                                                    Circle()
+                                                        .foregroundColor(.DinotisDefault.primary)
+                                                        .frame(width: 9, height: 9)
+                                                    
+                                                    Text(option.text)
+                                                        .font(.robotoRegular(size: 12))
+                                                        .foregroundColor(.white)
+                                                        .multilineTextAlignment(.leading)
+                                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                                    
+                                                    Text("999+")
+                                                        .font(.robotoBold(size: 14))
+                                                        .foregroundColor(.white)
+                                                    
+                                                    Image.videoCallPersonPollingIcon
+                                                        .resizable()
+                                                        .scaledToFit()
+                                                        .frame(width: 18, height: 18)
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .padding(16)
+                                    .background(Color(red: 0.21, green: 0.22, blue: 0.22))
+                                    .cornerRadius(12)
+                                    .padding(.horizontal)
+                                }
+                                .padding(.bottom)
                             }
                         }
                     }
                 }
                 
                 if viewModel.meeting.localUser.canDoParticipantHostControls(),
-                   !viewModel.isCreatePoll {
+                   !viewModel.isCreatePoll,
+                    viewModel.dummyPollResult.isEmpty {
                     VStack(spacing: 8) {
                         Text(LocalizableText.videoCallPollingPromotion)
                             .font(.robotoRegular(size: 12))
