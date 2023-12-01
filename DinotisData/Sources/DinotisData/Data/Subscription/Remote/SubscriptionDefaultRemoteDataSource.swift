@@ -23,4 +23,8 @@ public final class SubscriptionDefaultRemoteDataSource: SubscriptionRemoteDataSo
     public func postUnsubscribe(with userId: String) async throws -> SuccessResponse {
         try await self.provider.request(.unsubscribe(userId), model: SuccessResponse.self)
     }
+    
+    public func getSubscriptions(param: GeneralParameterRequest) async throws -> SubscriptionListResponse {
+        try await self.provider.request(.getSubscriptions(param), model: SubscriptionListResponse.self)
+    }
 }

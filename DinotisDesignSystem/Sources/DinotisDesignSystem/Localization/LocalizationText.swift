@@ -107,6 +107,11 @@ public enum LocalizableText {
 		bundle: .module,
 		comment: "usage for alert when wrong phone number"
 	)
+    public static let alertPhoneAlreadyRegistered = NSLocalizedString(
+        "alert_phone_already_register",
+        bundle: .module,
+        comment: "already registered error"
+    )
 	public static let passwordHint = NSLocalizedString(
 		"hint_password",
 		bundle: .module,
@@ -3318,4 +3323,118 @@ public enum LocalizableText {
             name
         )
     }
+    
+    public static let subscriptionCardTitle = NSLocalizedString(
+        "subscription_card_title",
+        bundle: .module,
+        comment: "subscription card title"
+    )
+    public static let subscriptionCancelDesc = NSLocalizedString(
+        "subscription_cancel_desc",
+        bundle: .module,
+        comment: "subscription cancel description"
+    )
+    public static let cancelSubscriptionLabel = NSLocalizedString(
+        "cancel_subscription_label",
+        bundle: .module,
+        comment: "cancel subscription label"
+    )
+    public static let subscriptionSuccessLabel = NSLocalizedString(
+        "subscription_success_label",
+        bundle: .module,
+        comment: "subscription success label"
+    )
+    public static let creatorNameLabel = NSLocalizedString(
+        "creator_name_label",
+        bundle: .module,
+        comment: "creator name label"
+    )
+    public static let durationLabel = NSLocalizedString(
+        "duration_label",
+        bundle: .module,
+        comment: "duration label"
+    )
+    public static let dinotisCoinLabel = NSLocalizedString(
+        "dinotis_coin",
+        bundle: .module,
+        comment: "dinotis coin label"
+    )
+    public static let subscriptionLabel = NSLocalizedString(
+        "subscription_label",
+        bundle: .module,
+        comment: "subscription label"
+    )
+    public static let freeSubscriptionLabel = NSLocalizedString(
+        "free_subscription_label",
+        bundle: .module,
+        comment: "free subscription label"
+    )
+    public static let premiumSubscriptionLabel = NSLocalizedString(
+        "premium_subscription_label",
+        bundle: .module,
+        comment: "premium subscription label"
+    )
+    public static let adaptiveLabel = NSLocalizedString(
+        "adaptive_label",
+        bundle: .module,
+        comment: "adaptive label"
+    )
+    
+    public static func subscriptionExpiredRemaining(dayCount: Int) -> String {
+        return String(
+            format: NSLocalizedString(
+                "subscription_expired_remaining",
+                bundle: .module,
+                comment: "subscription expired remaining"
+            ),
+            dayCount
+        )
+    }
+    
+    public static func subscriptionEndTimeAt(date: String) -> String {
+        return String(
+            format: NSLocalizedString(
+                "subscription_end_time_at",
+                bundle: .module,
+                comment: "subscription end time at"
+            ),
+            date
+        )
+    }
+    public static let revenueDetailText = NSLocalizedString(
+        "revenue_detail_text",
+        bundle: .module,
+        comment: ""
+    )
+    
+    public static let totalIncomeText = NSLocalizedString(
+        "total_income_text",
+        bundle: .module,
+        comment: ""
+    )
+    
+    public static let incomeDetailText = NSLocalizedString(
+        "income_detail_text",
+        bundle: .module,
+        comment: ""
+    )
+    
+    public static let totalAudienceText = NSLocalizedString(
+        "total_audience_text",
+        bundle: .module,
+        comment: ""
+    )
+    
+    public static let visibilityCollaboratorText = NSLocalizedString(
+        "visibilty_collaborator_text",
+        bundle: .module,
+        comment: ""
+    )
+    
+    public static let collaboratorText = NSLocalizedString(
+        "collaborator_text",
+        bundle: .module,
+        comment: ""
+    )
+    
 }

@@ -120,6 +120,7 @@ public struct MeetingDetailResponse: Codable, Hashable {
     public let meetingFee: MeetingFeeData?
     public let archiveRecording: Bool?
     public let isArchived: Bool?
+    public let collaboratorAudienceVisibility: Bool?
     
     public init(
         id: String = "",
@@ -161,7 +162,8 @@ public struct MeetingDetailResponse: Codable, Hashable {
         participantDetails: [UserResponse]? = [],
         meetingFee: MeetingFeeData? = nil,
         archiveRecording: Bool? = nil,
-        isArchived: Bool? = nil
+        isArchived: Bool? = nil,
+        collaboratorAudienceVisibility: Bool? = nil
     ) {
         self.id = id
         self.title = title
@@ -203,6 +205,7 @@ public struct MeetingDetailResponse: Codable, Hashable {
         self.meetingFee = meetingFee
         self.archiveRecording = archiveRecording
         self.isArchived = isArchived
+        self.collaboratorAudienceVisibility = collaboratorAudienceVisibility
     }
     
     public static func == (lhs: MeetingDetailResponse, rhs: MeetingDetailResponse) -> Bool {
@@ -234,15 +237,17 @@ public struct MeetingCollaborationData: Codable {
     public let username: String?
     public let approvedAt: Date?
     public let declinedAt: Date?
+    public let bookingCount: Int?
     public let user: UserResponse?
     
-    public init(id: Int?, meetingId: String?, username: String?, user: UserResponse?, approvedAt: Date?, declinedAt: Date?) {
+    public init(id: Int?, meetingId: String?, username: String?, user: UserResponse?, approvedAt: Date?, declinedAt: Date?, bookingCount: Int?) {
         self.id = id
         self.meetingId = meetingId
         self.username = username
         self.user = user
         self.approvedAt = approvedAt
         self.declinedAt = declinedAt
+        self.bookingCount = bookingCount
     }
 }
 

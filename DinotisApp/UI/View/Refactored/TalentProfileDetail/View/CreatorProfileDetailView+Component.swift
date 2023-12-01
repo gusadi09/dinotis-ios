@@ -137,12 +137,8 @@ extension CreatorProfileDetailView {
                         .buttonStyle(.plain)
                         
                         Button {
-                            if viewModel.canSubscribe {
-                                viewModel.isShowSubscribeSheet = true
-                                viewModel.isLastSubscribeSheet = false
-                            } else {
-                                viewModel.showUnsubscribeAlert()
-                            }
+                            viewModel.isLastSubscribeSheet = false
+                            viewModel.isShowSubscribeSheet = true
                         } label: {
                             HStack(spacing: 4) {
                                 Image.talentProfileStarAddBlackIcon
@@ -766,8 +762,8 @@ extension CreatorProfileDetailView {
                                 .onAppear {
                                     Task {
                                         if (viewModel.videos.last?.id).orEmpty() == video.id.orEmpty() && viewModel.nextCursorExclusiveVideo != nil {
-                                            viewModel.videoParam.skip = viewModel.videoParam.skip
-                                            viewModel.videoParam.take += 15
+                                            viewModel.videoParam.skip = viewModel.videoParam.take
+                                            viewModel.videoParam.take += 5
                                             await viewModel.getVideoList(isMore: true)
                                         }
                                     }
@@ -909,92 +905,117 @@ extension CreatorProfileDetailView {
                 }
             }
             
-            SubscribeCard(price: (viewModel.talentData?.userAvailability?.price).orEmpty(), withButton: !viewModel.isLastSubscribeSheet) {
-                if (viewModel.talentData?.userAvailability?.price).orEmpty() == "0" {
-                    // run free pay
-                    Task {
-                        await viewModel.subscribe(with: 99)
-                    }
-                } else {
-                    withAnimation {
-                        viewModel.isLastSubscribeSheet = true
-                    }
-                }
-            }
-            .frame(maxHeight: .infinity, alignment: .top)
-            
-            VStack(alignment: .leading, spacing: 16) {
-                Text(LocalizableText.paymentMethodLabel)
-                    .font(.robotoBold(size: 14))
-                    .foregroundColor(.black)
-                
-                Button {
-                    Task {
+            if viewModel.canSubscribe {
+                SubscribeCard(price: (viewModel.talentData?.userAvailability?.price).orEmpty(), withButton: !viewModel.isLastSubscribeSheet) {
+                    if (viewModel.talentData?.userAvailability?.price).orEmpty() == "0" {
+                        // run free pay
+                        viewModel.trySubscribe(with: 99)
                         viewModel.isShowSubscribeSheet = false
-                        viewModel.isLastSubscribeSheet = false
-                        
-                        await viewModel.subscribe(with: 10)
-                    }
-                } label: {
-                    HStack(spacing: 15) {
-                        Image.paymentAppleIcon
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 28)
-                            .foregroundColor(.DinotisDefault.primary)
-                        
-                        Text(LocalizableText.inAppPurchaseLabel)
-                            .font(.robotoBold(size: 12))
-                            .foregroundColor(.DinotisDefault.primary)
-                        
-                        Spacer()
-                        
-                        Image.sessionDetailChevronIcon
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 37)
-                    }
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .foregroundColor(.DinotisDefault.lightPrimary)
-                    )
-                }
-                
-                Button {
-                    
-                } label: {
-                    HStack(spacing: 15) {
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text(LocalizableText.otherPaymentMethodTitle)
-                                .font(.robotoBold(size: 12))
-                            
-                            Text(LocalizableText.otherPaymentMethodDescription)
-                                .font(.robotoRegular(size: 10))
+                    } else {
+                        withAnimation {
+                            viewModel.isLastSubscribeSheet = true
                         }
-                        .foregroundColor(.DinotisDefault.primary)
-                        
-                        Spacer()
-                        
-                        Image.sessionDetailChevronIcon
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 37)
                     }
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .foregroundColor(.DinotisDefault.lightPrimary)
-                    )
                 }
-                .isHidden(true, remove: true)
+                .frame(maxHeight: .infinity, alignment: .top)
+                
+                VStack(alignment: .leading, spacing: 16) {
+                    Text(LocalizableText.paymentMethodLabel)
+                        .font(.robotoBold(size: 14))
+                        .foregroundColor(.black)
+                    
+                    Button {
+                        Task {
+                            viewModel.isShowSubscribeSheet = false
+                            viewModel.isLastSubscribeSheet = false
+                            viewModel.trySubscribe(with: 10)
+                        }
+                    } label: {
+                        HStack(spacing: 15) {
+                            Image.paymentAppleIcon
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 28)
+                                .foregroundColor(.DinotisDefault.primary)
+                            
+                            Text(LocalizableText.inAppPurchaseLabel)
+                                .font(.robotoBold(size: 12))
+                                .foregroundColor(.DinotisDefault.primary)
+                            
+                            Spacer()
+                            
+                            Image.sessionDetailChevronIcon
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 37)
+                        }
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .foregroundColor(.DinotisDefault.lightPrimary)
+                        )
+                    }
+                    
+                    Button {
+                        
+                    } label: {
+                        HStack(spacing: 15) {
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text(LocalizableText.otherPaymentMethodTitle)
+                                    .font(.robotoBold(size: 12))
+                                
+                                Text(LocalizableText.otherPaymentMethodDescription)
+                                    .font(.robotoRegular(size: 10))
+                            }
+                            .foregroundColor(.DinotisDefault.primary)
+                            
+                            Spacer()
+                            
+                            Image.sessionDetailChevronIcon
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 37)
+                        }
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .foregroundColor(.DinotisDefault.lightPrimary)
+                        )
+                    }
+                    .isHidden(true, remove: true)
+                }
+                .isHidden(!viewModel.isLastSubscribeSheet, remove: true)
+            } else {
+                SubscriptionDetail()
             }
-            .isHidden(!viewModel.isLastSubscribeSheet, remove: true)
         }
         .padding()
         .frame(maxHeight: .infinity, alignment: .top)
         .onDisappear {
             viewModel.isLastSubscribeSheet = false
+        }
+    }
+    
+    @ViewBuilder
+    func SubscriptionDetail() -> some View {
+        SubscriptionCard(
+            name: (viewModel.talentData?.name).orEmpty(),
+            imgProfile: (viewModel.talentData?.profilePhoto).orEmpty(),
+            isVerified: (viewModel.talentData?.isVerified).orFalse(),
+            professions: [viewModel.professionText],
+            endAt: (viewModel.talentData?.subscription?.endAt)
+        )
+        .frame(maxHeight: .infinity, alignment: .top)
+        
+        DinotisSecondaryButton(
+            text: LocalizableText.cancelSubscriptionLabel,
+            type: .adaptiveScreen,
+            textColor: .DinotisDefault.primary,
+            bgColor: .white,
+            strokeColor: .DinotisDefault.primary
+        ) {
+            viewModel.isShowSubscribeSheet = false
+            viewModel.showUnsubscribeAlert()
         }
     }
     
@@ -2050,6 +2071,87 @@ extension CreatorProfileDetailView {
                 viewModel.isDescComplete = false
             }
         }
+    }
+    
+    @ViewBuilder
+    func SubscriptionInvoice() -> some View {
+        let durationCounter = Calendar.current.dateComponents([.day], from: .now, to: viewModel.invoiceData.endAt.orCurrentDate()).day.orZero()
+        
+        VStack(spacing: 0) {
+            HeaderView(title: LocalizableText.subscriptionSuccessLabel)
+            
+            ScrollView {
+                Image.Dinotis.paymentSuccessImage
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 213)
+                    .frame(maxWidth: .infinity)
+                    .padding(.bottom, 24)
+                
+                VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(LocalizableText.invoiceLabel)
+                            .font(.robotoRegular(size: 12))
+                        
+                        Text((viewModel.invoiceData.id).orEmpty())
+                            .font(.robotoBold(size: 14))
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(LocalizableText.creatorNameLabel)
+                            .font(.robotoRegular(size: 12))
+                        
+                        Text((viewModel.invoiceData.user?.name).orEmpty())
+                            .font(.robotoBold(size: 14))
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(LocalizableText.paymentMethodLabel)
+                            .font(.robotoRegular(size: 12))
+                        
+                        Text(viewModel.invoiceData.subscriptionPayment?.paymentMethod?.name ?? LocalizableText.dinotisCoinLabel)
+                            .font(.robotoBold(size: 14))
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(LocalizableText.durationLabel)
+                            .font(.robotoRegular(size: 12))
+                        
+                        Text(durationCounter > 0 ? "\(durationCounter+1) \(LocalizableText.dayText)" : LocalizableText.adaptiveSubscribtionLabel)
+                            .font(.robotoBold(size: 14))
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(LocalizableText.totalPaymentLabel)
+                            .font(.robotoRegular(size: 12))
+                        
+                        Group {
+                            if let amount = viewModel.invoiceData.subscriptionPayment?.amount,
+                               amount != "0" {
+                                Text("Rp\(amount.toDecimal())")
+                            } else {
+                                Text(LocalizableText.freeText)
+                            }
+                        }
+                        .font(.robotoBold(size: 14))
+                    }
+                }
+                .foregroundColor(.DinotisDefault.black2)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal)
+            }
+            
+            DinotisPrimaryButton(
+                text: LocalizableText.doneLabel,
+                type: .adaptiveScreen,
+                textColor: .white,
+                bgColor: .DinotisDefault.primary
+            ) {
+                viewModel.isShowInvoice = false
+            }
+            .padding()
+        }
+        .background(Color.DinotisDefault.baseBackground.ignoresSafeArea())
     }
 }
 

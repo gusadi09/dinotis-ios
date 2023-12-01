@@ -101,6 +101,12 @@ final class OtpVerificationViewModel: ObservableObject {
         }
     }
     
+    func receiveTimerBackground() {
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            self?.onReceiveTimer()
+        }
+    }
+    
     func onEditingUnderlineColor() -> Color {
         self.onEdit ? .DinotisDefault.primary : .gray
     }
