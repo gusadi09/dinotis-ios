@@ -3192,12 +3192,12 @@ fileprivate extension GroupVideoCallView {
                                                         HStack(spacing: 4) {
                                                             Image(
                                                                 systemName: option.votes.contains(where: {
-                                                                    $0.name.contains(viewModel.meeting.localUser.name)
+                                                                    $0.id.contains(viewModel.meeting.localUser.userId)
                                                                 }) ? "checkmark.square.fill" : "square.fill"
                                                             )
                                                             .foregroundColor(
                                                                 option.votes.contains(where: {
-                                                                    $0.name.contains(viewModel.meeting.localUser.name)
+                                                                    $0.id.contains(viewModel.meeting.localUser.userId)
                                                                 }) ? .white : .DinotisDefault.black3.opacity(0.5)
                                                             )
                                                             .font(.system(size: 18))
@@ -3222,7 +3222,7 @@ fileprivate extension GroupVideoCallView {
                                                 }
                                             }
                                             .disabled(poll.options.contains(where: { $0.votes.contains {
-                                                $0.name.contains(viewModel.meeting.localUser.name)
+                                                $0.id.contains(viewModel.meeting.localUser.userId)
                                             } }))
                                             
                                             Divider()

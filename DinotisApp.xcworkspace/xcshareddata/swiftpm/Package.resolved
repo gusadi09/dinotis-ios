@@ -1,15 +1,6 @@
 {
   "pins" : [
     {
-      "identity" : "abseil-cpp-swiftpm",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/firebase/abseil-cpp-SwiftPM.git",
-      "state" : {
-        "revision" : "583de9bd60f66b40e78d08599cc92036c2e7e4e1",
-        "version" : "0.20220203.2"
-      }
-    },
-    {
       "identity" : "alamofire",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Alamofire/Alamofire.git",
@@ -19,129 +10,12 @@
       }
     },
     {
-      "identity" : "alerttoast",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/gusadi09/AlertToast.git",
-      "state" : {
-        "branch" : "master",
-        "revision" : "8ab11cfb0e2047a64719ef20f62403bfcc99b387"
-      }
-    },
-    {
-      "identity" : "boringssl-swiftpm",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/firebase/boringssl-SwiftPM.git",
-      "state" : {
-        "revision" : "dd3eda2b05a3f459fc3073695ad1b28659066eab",
-        "version" : "0.9.1"
-      }
-    },
-    {
-      "identity" : "conversations-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/twilio/conversations-ios.git",
-      "state" : {
-        "branch" : "master",
-        "revision" : "950841709e49043c023b94f54cd7e3106ecf3bf5"
-      }
-    },
-    {
-      "identity" : "countrypicker",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/mobven/CountryPicker.git",
-      "state" : {
-        "revision" : "fc84df8310daede33984f673b2b601b452433eec",
-        "version" : "1.0.9"
-      }
-    },
-    {
       "identity" : "currencytext",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/marinofelipe/CurrencyText.git",
       "state" : {
         "revision" : "7575e49fc9518201b0c609aa08dca83ab21b2050",
         "version" : "2.2.0"
-      }
-    },
-    {
-      "identity" : "dytemobilecoreios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/dyte-in/DyteMobileCoreiOS.git",
-      "state" : {
-        "revision" : "75565140d0d1e8f0411bc69ea32e74503d1f3ae2",
-        "version" : "1.25.2"
-      }
-    },
-    {
-      "identity" : "firebase-ios-sdk",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/firebase/firebase-ios-sdk.git",
-      "state" : {
-        "revision" : "7e80c25b51c2ffa238879b07fbfc5baa54bb3050",
-        "version" : "9.6.0"
-      }
-    },
-    {
-      "identity" : "googleappmeasurement",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/google/GoogleAppMeasurement.git",
-      "state" : {
-        "revision" : "c1cfde8067668027b23a42c29d11c246152fe046",
-        "version" : "9.6.0"
-      }
-    },
-    {
-      "identity" : "googledatatransport",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/google/GoogleDataTransport.git",
-      "state" : {
-        "revision" : "a732a4b47f59e4f725a2ea10f0c77e93a7131117",
-        "version" : "9.3.0"
-      }
-    },
-    {
-      "identity" : "googleutilities",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/google/GoogleUtilities.git",
-      "state" : {
-        "revision" : "bc27fad73504f3d4af235de451f02ee22586ebd3",
-        "version" : "7.12.1"
-      }
-    },
-    {
-      "identity" : "grpc-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/grpc/grpc-ios.git",
-      "state" : {
-        "revision" : "8440b914756e0d26d4f4d054a1c1581daedfc5b6",
-        "version" : "1.44.3-grpc"
-      }
-    },
-    {
-      "identity" : "gtm-session-fetcher",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/google/gtm-session-fetcher.git",
-      "state" : {
-        "revision" : "5ccda3981422a84186387dbb763ba739178b529c",
-        "version" : "2.3.0"
-      }
-    },
-    {
-      "identity" : "iqkeyboardmanager",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/hackiftekhar/IQKeyboardManager.git",
-      "state" : {
-        "revision" : "c00b1ae9fa1ad8af4465bb6ca901f6943fc98eba",
-        "version" : "6.5.16"
-      }
-    },
-    {
-      "identity" : "leveldb",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/firebase/leveldb.git",
-      "state" : {
-        "revision" : "9d108e9112aa1d65ce508facf804674546116d9c",
-        "version" : "1.22.3"
       }
     },
     {
@@ -160,51 +34,6 @@
       "state" : {
         "revision" : "c263811c1f3dbf002be9bd83107f7cdc38992b26",
         "version" : "15.0.3"
-      }
-    },
-    {
-      "identity" : "nanopb",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/firebase/nanopb.git",
-      "state" : {
-        "revision" : "819d0a2173aff699fb8c364b6fb906f7cdb1a692",
-        "version" : "2.30909.0"
-      }
-    },
-    {
-      "identity" : "netfox",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kasketis/netfox",
-      "state" : {
-        "revision" : "557576032736fd3140422baefb68b8f76c55088f",
-        "version" : "1.21.0"
-      }
-    },
-    {
-      "identity" : "onesignal-xcframework",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/OneSignal/OneSignal-XCFramework",
-      "state" : {
-        "revision" : "b466a821e03008ecae885ebf79f52e4b88269b06",
-        "version" : "3.12.6"
-      }
-    },
-    {
-      "identity" : "promises",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/google/promises.git",
-      "state" : {
-        "revision" : "e70e889c0196c76d22759eb50d6a0270ca9f1d9e",
-        "version" : "2.3.1"
-      }
-    },
-    {
-      "identity" : "qgrid",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Q-Mobile/QGrid.git",
-      "state" : {
-        "revision" : "804e59f8cb9f66b226685e9369fb82029742b83a",
-        "version" : "0.1.4"
       }
     },
     {
@@ -248,26 +77,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SDWebImage/SDWebImageSwiftUI.git",
       "state" : {
-        "revision" : "aee64ef39b570c44ccf0f884c440fc6494a23c76",
-        "version" : "2.2.5"
-      }
-    },
-    {
-      "identity" : "swift-case-paths",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pointfreeco/swift-case-paths",
-      "state" : {
-        "revision" : "fc45e7b2cfece9dd80b5a45e6469ffe67fe67984",
-        "version" : "0.14.1"
-      }
-    },
-    {
-      "identity" : "swift-protobuf",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-protobuf.git",
-      "state" : {
-        "revision" : "65e8f29b2d63c4e38e736b25c27b83e012159be8",
-        "version" : "1.25.2"
+        "revision" : "5f025e54a03d3d33dff24d7a19331f446f00ed9d",
+        "version" : "2.2.4"
       }
     },
     {
@@ -277,96 +88,6 @@
       "state" : {
         "revision" : "185a3165346a03767101c4f62e9a545a0fe0530f",
         "version" : "4.0.1"
-      }
-    },
-    {
-      "identity" : "swiftui-introspect",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/siteline/SwiftUI-Introspect.git",
-      "state" : {
-        "revision" : "f2616860a41f9d9932da412a8978fec79c06fe24",
-        "version" : "0.1.4"
-      }
-    },
-    {
-      "identity" : "swiftui-navigation",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pointfreeco/swiftui-navigation",
-      "state" : {
-        "revision" : "2694c03284a368168b3e0b8d7ab52626802d2246",
-        "version" : "0.1.0"
-      }
-    },
-    {
-      "identity" : "swiftui-shimmer",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/markiv/SwiftUI-Shimmer.git",
-      "state" : {
-        "revision" : "17b66b0e7d94d2d3f220bbcb021b5026436f06c7",
-        "version" : "1.3.0"
-      }
-    },
-    {
-      "identity" : "trackable-scroll-view",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/maxnatchanon/trackable-scroll-view",
-      "state" : {
-        "branch" : "master",
-        "revision" : "4b094575c2370c3341d0b377a27b46bda4f937f7"
-      }
-    },
-    {
-      "identity" : "twilio-live-player-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/twilio/twilio-live-player-ios",
-      "state" : {
-        "revision" : "97dff98041229cfe90c9d2e5b930c836279a9a48",
-        "version" : "1.1.0"
-      }
-    },
-    {
-      "identity" : "twilio-sync-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/twilio/twilio-sync-ios",
-      "state" : {
-        "branch" : "master",
-        "revision" : "2ac158283044d85cc3ef3fdfb86513132216801f"
-      }
-    },
-    {
-      "identity" : "twilio-video-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/twilio/twilio-video-ios",
-      "state" : {
-        "revision" : "ce0415a404af8e24bd6a3243712c3833d512385e",
-        "version" : "5.7.1"
-      }
-    },
-    {
-      "identity" : "twilsock-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/twilio/twilsock-ios",
-      "state" : {
-        "revision" : "2ac16a8533b128ea47aa2d6a70bf753d31705252",
-        "version" : "2.0.2"
-      }
-    },
-    {
-      "identity" : "waterfallgrid",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/paololeonardi/WaterfallGrid.git",
-      "state" : {
-        "revision" : "944aa82832ed5a9eaaf50862cdd53e3c10ab55eb",
-        "version" : "1.0.1"
-      }
-    },
-    {
-      "identity" : "xctest-dynamic-overlay",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pointfreeco/xctest-dynamic-overlay",
-      "state" : {
-        "revision" : "50843cbb8551db836adec2290bb4bc6bac5c1865",
-        "version" : "0.9.0"
       }
     }
   ],
