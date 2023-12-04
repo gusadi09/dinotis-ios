@@ -285,7 +285,7 @@ struct GroupVideoCallView: View {
 
                                         Button {
                                             withAnimation {
-                                                if viewModel.meeting.stage.onStage.isEmpty {
+                                                if viewModel.meeting.participants.active.isEmpty {
                                                     viewModel.isShowViewerModeGuide = false
                                                     viewModel.currentGuide = nil
                                                 } else {
@@ -517,7 +517,7 @@ fileprivate extension GroupVideoCallView {
                     
                     VStack {
                         if viewModel.isJoined {
-                            if viewModel.meeting.stage.onStage.isEmpty {
+                            if viewModel.meeting.participants.active.isEmpty {
                                 VStack(spacing: 15) {
                                     Spacer()
                                     
@@ -1267,7 +1267,7 @@ fileprivate extension GroupVideoCallView {
                             .padding(10)
                             .contentShape(Rectangle())
                         }
-                        .isHidden(true, remove: true)
+//                        .isHidden(true, remove: true)
                         
                         Button {
                             viewModel.showingMoreMenu = false
@@ -1461,7 +1461,7 @@ fileprivate extension GroupVideoCallView {
                         }
                     }
                 )
-                .isHidden(viewModel.meeting.stage.onStage.isEmpty, remove: viewModel.meeting.stage.onStage.isEmpty)
+                .isHidden(viewModel.meeting.participants.active.isEmpty, remove: viewModel.meeting.participants.active.isEmpty)
                 
                 Button {
                     withAnimation(.spring()) {
@@ -1626,7 +1626,7 @@ fileprivate extension GroupVideoCallView {
                 
                     HStack(spacing: 0) {
                         (
-                            viewModel.meeting.localUser.fetchAudioEnabled() ?
+                            viewModel.meeting.localUser.audioEnabled ?
                             Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon
                         )
                         .resizable()
@@ -1659,7 +1659,7 @@ fileprivate extension GroupVideoCallView {
             ZStack(alignment: .bottomLeading) {
                 if viewModel.index == 0 && ((viewModel.pinned?.id).orEmpty() == participant.id || (viewModel.host?.id).orEmpty() == participant.id || (viewModel.lastActive?.id).orEmpty() == participant.id) {
                     if viewModel.pinned == nil && viewModel.screenShareUser.isEmpty && viewModel.host == nil && viewModel.lastActive == nil {
-                        if participant.fetchVideoEnabled() {
+                        if participant.videoEnabled {
                             if let video = participant.getVideoView() {
                                 UIVideoView(videoView: video, width: .infinity, height: 270)
                                     .frame(height: 270)
@@ -1699,7 +1699,7 @@ fileprivate extension GroupVideoCallView {
                     }
                     
                 } else {
-                    if participant.fetchVideoEnabled() {
+                    if participant.videoEnabled {
                         if let video = participant.getVideoView() {
                             UIVideoView(videoView: video, width: .infinity, height: 270)
                                 .frame(height: 270)
@@ -1736,7 +1736,7 @@ fileprivate extension GroupVideoCallView {
                 
                 HStack(spacing: 0) {
                     (
-                        participant.fetchAudioEnabled() ?
+                        participant.audioEnabled ?
                         Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon
                     )
                     .resizable()
@@ -1777,7 +1777,7 @@ fileprivate extension GroupVideoCallView {
                     RoundedRectangle(cornerRadius: 10)
                         .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
                 } else {
-                    if participant?.fetchVideoEnabled() ?? false {
+                    if participant?.videoEnabled ?? false {
                         if let video = participant?.getVideoView() {
                             UIVideoView(videoView: video, width: .infinity, height: .infinity)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -1826,7 +1826,7 @@ fileprivate extension GroupVideoCallView {
                 
                 HStack(spacing: 0) {
                     (
-                        (participant?.fetchAudioEnabled() ?? false) ?
+                        (participant?.audioEnabled ?? false) ?
                         Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon
                     )
                     .resizable()
@@ -1865,7 +1865,7 @@ fileprivate extension GroupVideoCallView {
             ZStack(alignment: .bottomLeading) {
                 if viewModel.index == 0 && ((viewModel.pinned?.id).orEmpty() == participant.id || (viewModel.host?.id).orEmpty() == participant.id || (viewModel.lastActive?.id).orEmpty() == participant.id) {
                     if viewModel.pinned == nil && viewModel.screenShareUser.isEmpty && viewModel.host == nil && viewModel.lastActive == nil {
-                        if participant.fetchVideoEnabled() {
+                        if participant.videoEnabled {
                             if let video = participant.getVideoView() {
                                 UIVideoView(videoView: video, width: .infinity, height: .infinity)
                                     .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -1901,7 +1901,7 @@ fileprivate extension GroupVideoCallView {
                     }
                     
                 } else {
-                    if participant.fetchVideoEnabled() {
+                    if participant.videoEnabled {
                         if let video = participant.getVideoView() {
                             UIVideoView(videoView: video, width: .infinity, height: .infinity)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -1920,7 +1920,7 @@ fileprivate extension GroupVideoCallView {
                 
                 HStack(spacing: 0) {
                     (
-                        participant.fetchAudioEnabled() ?
+                        participant.audioEnabled ?
                         Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon
                     )
                     .resizable()
@@ -1953,7 +1953,7 @@ fileprivate extension GroupVideoCallView {
     struct RemoteScreenShareVideoContainerView: View {
         
         @ObservedObject var viewModel: GroupVideoCallViewModel
-        @Binding var participant: DyteScreenShareMeetingParticipant?
+        @Binding var participant: DyteJoinedMeetingParticipant?
         
         var body: some View {
             ZStack(alignment: .bottomLeading) {
@@ -1978,7 +1978,7 @@ fileprivate extension GroupVideoCallView {
                 
                 HStack(spacing: 0) {
                     (
-                        (participant?.fetchAudioEnabled() ?? false) ?
+                        (participant?.audioEnabled ?? false) ?
                         Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon
                     )
                     .resizable()
@@ -2061,8 +2061,9 @@ fileprivate extension GroupVideoCallView {
                         ChatView(viewModel: viewModel)
                     case 1:
                         ParticipantTabView(viewModel: viewModel)
-//                    case 2:
-//                        PollingView()
+                    case 2:
+                        PollingView()
+                            .environmentObject(viewModel)
                     default:
                         EmptyView()
                     }
@@ -2636,17 +2637,17 @@ fileprivate extension GroupVideoCallView {
                         }
                     }
                     
-                    if !viewModel.meeting.stage.onStage.isEmpty {
+                    if !viewModel.meeting.participants.active.isEmpty {
                         Section(
                             header: HStack {
-                                Text("\(LocalizableText.speakerTitle) (\(viewModel.meeting.stage.onStage.count))")
+                                Text("\(LocalizableText.speakerTitle) (\(viewModel.meeting.participants.active.count))")
                                     .font(.robotoBold(size: 16))
                                     .foregroundColor(.white)
                                 
                                 Spacer()
                             }
                         ) {
-                            ForEach(viewModel.meeting.stage.onStage, id: \.id) { participant in
+                            ForEach(viewModel.meeting.participants.active, id: \.id) { participant in
                                 HStack(spacing: 16) {
                                     if participant.picture == nil {
                                         Circle()
@@ -2676,12 +2677,12 @@ fileprivate extension GroupVideoCallView {
                                     Spacer()
                                     
                                     HStack(spacing: 8) {
-                                        (participant.fetchAudioEnabled() ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
+                                        (participant.audioEnabled ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
                                             .resizable()
                                             .scaledToFit()
                                             .frame(width: 24)
 
-                                        (participant.fetchVideoEnabled() ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
+                                        (participant.videoEnabled ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
                                             .resizable()
                                             .scaledToFit()
                                             .frame(width: 24)
@@ -2827,12 +2828,12 @@ fileprivate extension GroupVideoCallView {
                                                     .foregroundColor(.white)
                                             )
                                         } else {
-                                            (participant.fetchAudioEnabled() ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
+                                            (participant.audioEnabled ? Image.videoCallMicOnStrokeIcon : Image.videoCallMicOffStrokeIcon)
                                                 .resizable()
                                                 .scaledToFit()
                                                 .frame(width: 24)
                                             
-                                            (participant.fetchVideoEnabled() ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
+                                            (participant.videoEnabled ? Image.videoCallVideoOnStrokeIcon : Image.videoCallVideoOffStrokeIcon)
                                                 .resizable()
                                                 .scaledToFit()
                                                 .frame(width: 24)
@@ -2936,30 +2937,6 @@ fileprivate extension GroupVideoCallView {
                         ScrollView {
                             VStack {
                                 ForEach(viewModel.meeting.chat.messages, id: \.self) { message in
-//                                    let currentHeader = (author: message.displayName, date: message.time)
-//                                    if let prevHeader = previousHeader, prevHeader == currentHeader {
-//                                        VStack {
-//                                            switch message.type {
-//                                            case .text:
-//                                                if let chat = message as? DyteTextMessage {
-//                                                    ChatBubbleView(
-//                                                        messageBody: chat.message,
-//                                                        isAuthorYou: message.userId == viewModel.localUserId
-//                                                    )
-//                                                }
-//
-//                                            default:
-//                                                EmptyView()
-//                                            }
-//                                        }
-//                                        .padding(.horizontal)
-//                                        .id(message)
-//                                        .onAppear {
-////                                            viewModel.hasNewMessage = false
-//                                            previousHeader = currentHeader
-//                                        }
-//                                        .frame(maxWidth: .infinity, alignment: .leading)
-//                                    } else {
                                         VStack(alignment: .leading, spacing: 9) {
                                             ChatHeaderView(
                                                 author: message.displayName,
@@ -2993,9 +2970,7 @@ fileprivate extension GroupVideoCallView {
                                         .id(message)
                                         .onAppear {
                                             viewModel.hasNewMessage = false
-//                                            previousHeader = currentHeader
                                         }
-//                                    }
                                 }
                                 
                             }
@@ -3145,168 +3120,332 @@ fileprivate extension GroupVideoCallView {
     
     
     struct PollingView: View {
-        @State var isPollCard: Bool = false
-        @State var fieldPoll: String = ""
-        @State var isAdd: Bool = false
-        @State var isPollCreated = false
-        @State var addPoll = 0
-        @State private var forms: [FormData] = []
-        @State private var isCheckedOne: Bool = false
-        @State private var isCheckedTwo: Bool = false
+        @EnvironmentObject var viewModel: GroupVideoCallViewModel
         
         var body: some View {
-            GeometryReader {geo in
-                ZStack {
-                    Color.dinotisGray.ignoresSafeArea()
-                    VStack(alignment: .leading) {
-                        
-                        if isPollCreated {
-                            
-                            VStack(alignment: .leading) {
-                                Text(LocalizableText.videoCallPollByHost)
-                                    .foregroundColor(.white)
-                                    .font(.robotoBold(size: 16))
-                                
-                                VStack(alignment: .leading) {
-                                    Text(fieldPoll)
-                                        .foregroundColor(.white)
-                                    ForEach(forms.indices, id: \.self) { index in
-                                        PollFinish(form: $forms[index])
-                                    }
-                                }.padding()
-                                    .background(RoundedRectangle(cornerRadius: 10).foregroundColor(Color.grayChat))
-                                    .frame(width: calculateContentWidth(geometry: geo))
-                                
-                            }.padding()
-                            Spacer()
-                            
+            VStack(spacing: 0) {
+                ScrollView(.vertical, showsIndicators: false) {
+                    LazyVStack(spacing: 12) {
+                        if viewModel.meeting.localUser.canDoParticipantHostControls(),
+                           viewModel.isCreatePoll {
+                            PollingFormView()
                         } else {
-                            Spacer()
-                            if isPollCard {
-                                //
-                                ScrollView {
-                                    VStack {
-                                        Text(LocalizableText.videoCallPollQuestionTitle)
+                            if viewModel.meeting.polls.polls.isEmpty {
+                                Text(LocalizableText.videoCallEmptyPollingDesc)
+                                    .font(.robotoRegular(size: 16))
+                                    .foregroundColor(.white)
+                                    .padding()
+                                    .padding(.top, 70)
+                            } else {
+                                HStack {
+                                    Text(LocalizableText.videoCallPollByHost)
+                                        .font(.robotoBold(size: 14))
+                                        .foregroundColor(.white)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    
+                                    Button {
+                                        withAnimation {
+                                            viewModel.isCreatePoll = true
+                                        }
+                                    } label: {
+                                        Text("\(Image(systemName: "plus")) \(LocalizableText.morePollingLabel)")
+                                            .font(.robotoBold(size: 14))
                                             .foregroundColor(.white)
-                                            .padding(.top,10)
-                                        
-                                        if #available(iOS 16.0, *) {
-                                            TextField("", text: $fieldPoll, axis: .vertical)
-//                                                .placeholder(when: fieldPoll.isEmpty, placeholder: {
-//                                                    Text(LocalizableText.videoCallPollQuestionPlaceholder).foregroundColor(.white)
-//                                                })
-                                                .autocorrectionDisabled(true)
-                                                .lineLimit(3, reservesSpace: true)
-                                                .padding(5)
-                                                .overlay {
-                                                    RoundedRectangle(cornerRadius: 8)
-                                                        .stroke(UIApplication.shared.windows.first?.overrideUserInterfaceStyle == .dark ? Color.white : Color(.systemGray3), lineWidth: 1)
-                                                        .background(Color.dinotisBgForm)
-                                                }
-                                                .padding()
-                                        } else {
-                                            // Fallback on earlier versions
-                                        }
-                                        
-                                        ForEach(forms.indices, id: \.self) { index in
-                                            FormRowView(form: $forms[index])
-                                        }
-                                        
-                                        HStack {
-                                            Button {
-                                                isAdd.toggle()
-                                                addForm()
-                                                
-                                            } label: {
-                                                Image(systemName: "plus")
-                                                    .resizable()
-                                                    .frame(width: 10, height: 10)
+                                            .padding(12)
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 10)
                                                     .foregroundColor(.DinotisDefault.primary)
-                                                Text(LocalizableText.videoCallPollAddOption)
-                                                    .foregroundColor(.DinotisDefault.primary)
-                                                
-                                            }
-                                            
-                                        }
-                                        
-                                        
-                                        VStack {
-                                            Toggle(isOn: $isCheckedOne) {
-                                                Text(LocalizableText.anonymousText)
-                                            }
-                                            .toggleStyle(CheckboxStyle())
-                                            Toggle(isOn: $isCheckedTwo) {
-                                                Text(LocalizableText.videoCallPollHideResult)
-                                            }
-                                            .toggleStyle(CheckboxStyle())
-                                            
-                                            
-                                            
-                                        }.padding(.trailing, 210)
-                                        
-                                        
-                                        Button {
-                                            isPollCreated.toggle()
-                                        } label: {
-                                            Text(LocalizableText.videoCallCreatePollTitle)
-                                                .foregroundColor(Color.white)
-                                                .padding()
-                                                .frame(maxWidth: .infinity)
-                                                .background(Color.DinotisDefault.primary).cornerRadius(10)
-                                                .border(Color.DinotisDefault.primary).cornerRadius(10)
-                                        }
-                                        .padding()
-                                        //
-                                        
+                                            )
                                     }
-                                    .background(RoundedRectangle(cornerRadius: 10).foregroundColor(Color.grayChat))
-                                    .frame(width: calculateContentWidth(geometry: geo))
+                                    .isHidden(!viewModel.meeting.localUser.canDoParticipantHostControls(), remove: true)
                                 }
                                 .padding()
-                            }
-                            
-                            
-                            VStack {
-                                Text(LocalizableText.videoCallCreatePollFooter)
-                                    .font(.system(size: 15))
-                                    .foregroundColor(.white)
                                 
-                                Button {
-                                    isPollCard.toggle()
-                                    
-                                } label: {
-                                    Text(isPollCard ? LocalizableText.videoCallCancelPollTitle : LocalizableText.videoCallCreateNewPollTitle)
-                                        .foregroundColor(isPollCard ? Color.DinotisDefault.primary : Color.white)
-                                        .padding()
-                                        .frame(maxWidth: .infinity)
-                                        .background(!isPollCard ? Color.DinotisDefault.primary : Color.clear).cornerRadius(10)
-                                        .border(Color.DinotisDefault.primary).cornerRadius(10)
-                                }.padding()
-                                
+                                ForEach(viewModel.meeting.polls.polls.indices, id: \.self) { index in
+                                    let poll = viewModel.meeting.polls.polls[index]
+                                    ZStack {
+                                        VStack(alignment: .leading, spacing: 16) {
+                                            Text("\(LocalizableText.pollLabel) \(index+1)")
+                                                .font(.robotoBold(size: 12))
+                                                .foregroundColor(.DinotisDefault.primary)
+                                                .padding(.vertical, 5)
+                                                .padding(.horizontal, 14)
+                                                .background(
+                                                    Capsule()
+                                                        .foregroundColor(Color(red: 0.89, green: 0.77, blue: 1))
+                                                )
+                                            
+                                            Text(poll.question)
+                                                .font(.robotoRegular(size: 12))
+                                                .foregroundColor(.white)
+                                                .multilineTextAlignment(.leading)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                            
+                                            VStack(spacing: 0) {
+                                                ForEach(poll.options.indices, id:\.self) { optionIndex in
+                                                    let option = poll.options[optionIndex]
+                                                    
+                                                    Button {
+                                                        viewModel.isLoadingVoted[index] = true
+                                                        viewModel.meeting.polls.vote(pollMessage: poll, pollOption: option)
+                                                    } label: {
+                                                        HStack(spacing: 4) {
+                                                            Image(
+                                                                systemName: option.votes.contains(where: {
+                                                                    $0.name.contains(viewModel.meeting.localUser.name)
+                                                                }) ? "checkmark.square.fill" : "square.fill"
+                                                            )
+                                                            .foregroundColor(
+                                                                option.votes.contains(where: {
+                                                                    $0.name.contains(viewModel.meeting.localUser.name)
+                                                                }) ? .white : .DinotisDefault.black3.opacity(0.5)
+                                                            )
+                                                            .font(.system(size: 18))
+                                                            
+                                                            Text(option.text)
+                                                                .font(.robotoRegular(size: 12))
+                                                                .foregroundColor(.white)
+                                                                .multilineTextAlignment(.leading)
+                                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                                        }
+                                                        .padding(8)
+                                                        .padding(.vertical, 8)
+                                                        .background(
+                                                            RoundedRectangle(cornerRadius: 8)
+                                                                .foregroundColor(
+                                                                    option.votes.contains(where: {
+                                                                        $0.name.contains(viewModel.meeting.localUser.name)
+                                                                    }) ? .DinotisDefault.primary : .clear
+                                                                )
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                            .disabled(poll.options.contains(where: { $0.votes.contains {
+                                                $0.name.contains(viewModel.meeting.localUser.name)
+                                            } }))
+                                            
+                                            Divider()
+                                            
+                                            VStack(alignment: .leading, spacing: 8) {
+                                                Text("\(LocalizableText.resultLabel):")
+                                                    .font(.robotoBold(size: 12))
+                                                    .foregroundColor(.white)
+                                                    .padding(.bottom, 2)
+                                                
+                                                ForEach(poll.options.indices, id: \.self) { option in
+                                                    HStack(spacing: 8) {
+                                                        Circle()
+                                                            .foregroundColor(.DinotisDefault.primary)
+                                                            .frame(width: 9, height: 9)
+                                                        
+                                                        Text(poll.options[option].text)
+                                                            .font(.robotoRegular(size: 12))
+                                                            .foregroundColor(.white)
+                                                            .multilineTextAlignment(.leading)
+                                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                                        
+                                                        Text(poll.options[option].count > 999 ? "999+" : "\(poll.options[option].count)")
+                                                            .font(.robotoBold(size: 14))
+                                                            .foregroundColor(.white)
+                                                        
+                                                        Image.videoCallPersonPollingIcon
+                                                            .resizable()
+                                                            .scaledToFit()
+                                                            .frame(width: 18, height: 18)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        .padding(16)
+                                        
+                                        if viewModel.isLoadingVoted[index] {
+                                            Color.black.opacity(0.5)
+                                            
+                                            LottieView(name: "regular-loading", loopMode: .loop)
+                                                .scaledToFit()
+                                                .frame(height: 30)
+                                        }
+                                    }
+                                    .background(Color(red: 0.21, green: 0.22, blue: 0.22))
+                                    .cornerRadius(12)
+                                    .padding(.horizontal)
+                                }
+                                .padding(.bottom)
                             }
-                            
                         }
-                        
                     }
-                    
-                    .frame(height: geo.size.height/1)
-                    
+                }
+                
+                if viewModel.meeting.localUser.canDoParticipantHostControls(),
+                   !viewModel.isCreatePoll,
+                   viewModel.meeting.polls.polls.isEmpty {
+                    VStack(spacing: 8) {
+                        Text(LocalizableText.videoCallPollingPromotion)
+                            .font(.robotoRegular(size: 12))
+                            .foregroundStyle(Color.DinotisDefault.black3)
+                            .multilineTextAlignment(.center)
+                        
+                        DinotisPrimaryButton(
+                            text: LocalizableText.videoCallCreateNewPollTitle,
+                            type: .adaptiveScreen,
+                            height: 50,
+                            textColor: .white,
+                            bgColor: .DinotisDefault.primary,
+                            isLoading: .constant(false))
+                        {
+                            withAnimation(.spring()) {
+                                viewModel.isCreatePoll = true
+                            }
+                        }
+                    }
+                    .padding()
                 }
             }
+            .background(Color(red: 0.15, green: 0.16, blue: 0.16))
         }
+    }
+    
+    struct PollingFormView: View {
         
-        private func addForm() {
-            forms.append(FormData())
+        @EnvironmentObject var viewModel: GroupVideoCallViewModel
+        @FocusState var editorFocused: Bool
+        
+        var body: some View {
+            ZStack {
+                VStack(spacing: 12) {
+                    Text(LocalizableText.videoCallPollQuestionTitle)
+                        .font(.robotoBold(size: 14))
+                        .foregroundColor(.white)
+                        .padding(10)
+                    
+                    ZStack(alignment: .topLeading) {
+#if os(macOS)
+                        TextEditor(text: $viewModel.createPollData.question)
+                            .font(.robotoRegular(size: 12))
+                            .foregroundColor(.white)
+                            .textFieldStyle(.plain)
+                            .frame(height: 75)
+                            .textEditorBackground(Color(red: 0.18, green: 0.19, blue: 0.2))
+                            .focused($editorFocused)
+#else
+                        TextEditor(text: $viewModel.createPollData.question)
+                            .font(.robotoRegular(size: 12))
+                            .foregroundColor(.white)
+                            .textFieldStyle(.plain)
+                            .frame(height: 75)
+                            .textEditorBackground(Color(red: 0.18, green: 0.19, blue: 0.2))
+                            .focused($editorFocused)
+#endif
+                        
+                        if viewModel.createPollData.question.isEmpty && !editorFocused {
+                            Text(LocalizableText.videoCallPollQuestionPlaceholder)
+                                .font(.robotoRegular(size: 12))
+                                .foregroundColor(.DinotisDefault.black3)
+                                .padding(4)
+                                .padding(.top, 4)
+                                .onTapGesture {
+                                    editorFocused = true
+                                }
+                        }
+                    }
+                    .tint(.DinotisDefault.primary)
+                    .padding(12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .foregroundColor(Color(red: 0.18, green: 0.19, blue: 0.2))
+                    )
+                    
+                    ForEach($viewModel.createPollData.options, id:\.id) { $option in
+                        HStack(spacing: 8) {
+                            TextField(LocalizableText.videoCallMessagePlaceholder, text: $option.text)
+                                .font(.robotoRegular(size: 12))
+                                .foregroundColor(.white)
+                                .textFieldStyle(.plain)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical)
+                                .tint(.DinotisDefault.primary)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .foregroundColor(Color(red: 0.18, green: 0.19, blue: 0.2))
+                                )
+                            
+                            if viewModel.createPollData.options.last?.id == option.id,
+                               viewModel.createPollData.options.count > 2 {
+                                Button {
+                                    withAnimation {
+                                        viewModel.createPollData.options.removeLast(1)
+                                    }
+                                } label: {
+                                    ZStack {
+                                        Rectangle()
+                                            .foregroundColor(Color(red: 0.18, green: 0.19, blue: 0.2))
+                                        
+                                        Rectangle()
+                                            .foregroundColor(.white)
+                                            .frame(height: 3)
+                                            .padding(.horizontal, 7)
+                                    }
+                                    .frame(width: 32, height: 32)
+                                    .cornerRadius(4)
+                                }
+                            }
+                        }
+                    }
+                    
+                    Button("+ \(LocalizableText.videoCallPollAddOption)") {
+                        withAnimation {
+                            viewModel.createPollData.options.append(.init())
+                        }
+                    }
+                    .font(.robotoBold(size: 12))
+                    .foregroundColor(.DinotisDefault.lightPrimary)
+                    
+                    DinotisPrimaryButton(
+                        text: LocalizableText.videoCallCreatePollTitle,
+                        type: .adaptiveScreen,
+                        height: 50,
+                        textColor: .white,
+                        bgColor: .DinotisDefault.primary,
+                        isLoading: .constant(false))
+                    {
+                        withAnimation(.spring()) {
+                            UIApplication.shared.endEditing()
+                            viewModel.isLoadingPollCreate = true
+                            viewModel.meeting.polls.create(question: viewModel.createPollData.question, options: viewModel.createPollData.options.compactMap({ $0.text }), anonymous: false, hideVotes: false)
+                        }
+                    }
+                    .disabled(viewModel.createPollData.question.isEmpty || viewModel.createPollData.options.contains(where: { $0.text.isEmpty }))
+                    
+                    DinotisSecondaryButton(
+                        text: LocalizableText.videoCallCancelPollTitle,
+                        type: .adaptiveScreen,
+                        height: 50,
+                        textColor: .white,
+                        bgColor: .clear,
+                        strokeColor: .DinotisDefault.primary)
+                    {
+                        withAnimation(.spring()) {
+                            viewModel.isCreatePoll = false
+                            viewModel.createPollData = .init()
+                        }
+                    }
+                }
+                .padding(12)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                
+                if viewModel.isLoadingPollCreate {
+                    Color.black.opacity(0.5)
+                    
+                    LottieView(name: "regular-loading", loopMode: .loop)
+                        .scaledToFit()
+                        .frame(height: 45)
+                }
+            }
+            .background(Color(red: 0.21, green: 0.22, blue: 0.22))
+            .cornerRadius(12)
+            .padding(22)
         }
-        
-        private func deleteForm(at indices: IndexSet) {
-            forms.remove(atOffsets: indices)
-        }
-        
-        private func calculateContentWidth(geometry: GeometryProxy) -> CGFloat {
-            return geometry.size.width - 40
-        }
-        
     }
     
     struct LeaveSessionAlert: View {

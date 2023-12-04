@@ -88,6 +88,8 @@ final class GroupVideoCallViewModel: ObservableObject {
     
     private let subject = PassthroughSubject<Void, Never>()
     
+    @Published var isLoadingVoted = [Bool]()
+    @Published var isLoadingPollCreate = false
     @Published var detail: MeetingDetailResponse?
     @Published var onSecondTime = 0
     @Published var meeting = DyteiOSClientBuilder().build()
@@ -103,6 +105,9 @@ final class GroupVideoCallViewModel: ObservableObject {
         enableVideo: true,
         baseUrl: "https://api.cluster.dyte.in/v2"
     )
+    
+    @Published var createPollData: CreatePollRequest = .init()
+    @Published var dummyPollResult = [CreatePollRequest]()
     
     @Published var route: HomeRouting? = nil
     
@@ -172,8 +177,8 @@ final class GroupVideoCallViewModel: ObservableObject {
     
     @Published var bottomSheetTabItems: [TabBarItem] = [
         .init(id: 0, title: LocalizableText.labelChat),
-        .init(id: 1, title: LocalizableText.participant)
-//        .init(id: 2, title: LocalizableText.labelPolls)
+        .init(id: 1, title: LocalizableText.participant),
+        .init(id: 2, title: LocalizableText.labelPolls)
     ]
     
     @Published var qnaTabItems: [TabBarItem] = [
@@ -182,8 +187,8 @@ final class GroupVideoCallViewModel: ObservableObject {
     ]
     
     @Published var participants = [DyteJoinedMeetingParticipant]()
-    @Published var screenShareUser = [DyteScreenShareMeetingParticipant]()
-    @Published var screenShareId: DyteScreenShareMeetingParticipant?
+    @Published var screenShareUser = [DyteJoinedMeetingParticipant]()
+    @Published var screenShareId: DyteJoinedMeetingParticipant?
     @Published var pinned: DyteJoinedMeetingParticipant?
     @Published var host: DyteJoinedMeetingParticipant?
     @Published var lastActive: DyteJoinedMeetingParticipant?
@@ -195,6 +200,8 @@ final class GroupVideoCallViewModel: ObservableObject {
     
     @Published var qnaBoxContentHeight: CGFloat = 0
     @Published var mainLobbyTimer: Timer?
+    
+    @Published var isCreatePoll = false
     
     init(
         backToHome: @escaping () -> Void,
@@ -217,7 +224,7 @@ final class GroupVideoCallViewModel: ObservableObject {
         self.sendQuestionUseCase = sendQuestionUseCase
         self.checkEndMeetingUseCase = checkEndMeetingUseCase
         self.getDetailMeetingUseCase = getDetailMeetingUseCase
-        
+
         var names: [String] = []
         names.append((userMeeting.user?.name).orEmpty())
         names.append(contentsOf: userMeeting.meetingCollaborations?.compactMap({ item in
@@ -685,7 +692,7 @@ final class GroupVideoCallViewModel: ObservableObject {
             meeting.addSelfEventsListener(selfEventsListener: self)
             meeting.addParticipantEventsListener(participantEventsListener: self)
             meeting.addChatEventsListener(chatEventsListener: self)
-//            meeting.addPollEventsListener(pollEventsListener: self)
+            meeting.addPollEventsListener(pollEventsListener: self)
             meeting.addRecordingEventsListener(recordingEventsListener: self)
             meeting.addWaitlistEventsListener(waitlistEventsListener: self)
             meeting.addStageEventsListener(stageEventsListener: self)
@@ -940,8 +947,8 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
     func onMeetingRoomJoinCompleted() {
         self.setPage(to: 0)
         self.participants = meeting.participants.active
-        self.screenShareUser = meeting.participants.screenshares
-        self.screenShareId = meeting.participants.screenshares.first
+        self.screenShareUser = meeting.participants.screenShares
+        self.screenShareId = meeting.participants.screenShares.first
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) { [weak self] in
             self?.host = self?.meeting.participants.joined.first(where: { item in
                 item.presetName.contains(PresetConstant.host.value)
@@ -956,6 +963,7 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
         self.isPreview = false
         self.pinned = meeting.participants.pinned
         self.localUserId = meeting.localUser.userId
+        self.isLoadingVoted = meeting.polls.polls.compactMap({ _ in false})
     }
     
     func onMeetingRoomJoinFailed(exception: KotlinException) {
@@ -994,6 +1002,42 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
 }
 
 extension GroupVideoCallViewModel: DyteParticipantEventsListener {
+    func onAllParticipantsUpdated(allParticipants: [DyteParticipant]) {
+        self.participants.removeAll()
+        self.participants = meeting.participants.active
+    }
+    
+    func onScreenShareEnded(participant: DyteJoinedMeetingParticipant) {
+        if meeting.participants.screenShares.count != screenShareUser.count {
+            self.screenShareUser = meeting.participants.screenShares
+        }
+        if self.screenShareId == nil || self.meeting.participants.screenShares.count <= 1 {
+            self.screenShareId = nil
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+                self.screenShareId = self.meeting.participants.screenShares.last
+            }
+        }
+        
+        if self.meeting.participants.screenShares.isEmpty {
+            self.index = 1
+        }
+    }
+    
+    func onScreenShareStarted(participant: DyteJoinedMeetingParticipant) {
+        if meeting.participants.screenShares.count != screenShareUser.count {
+            self.screenShareUser = meeting.participants.screenShares
+        }
+        if self.screenShareId == nil || self.meeting.participants.screenShares.count <= 1 {
+            self.screenShareId = nil
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+                self.screenShareId = self.meeting.participants.screenShares.first
+            }
+        }
+        
+        if self.meeting.participants.screenShares.isEmpty {
+            self.index = 0
+        }
+    }
     
     func onActiveSpeakerChanged(participant: DyteJoinedMeetingParticipant) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) { [weak self] in
@@ -1044,38 +1088,6 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
         self.participants = meeting.participants.active
     }
     
-    func onScreenShareEnded(participant: DyteScreenShareMeetingParticipant) {
-        if meeting.participants.screenshares.count != screenShareUser.count {
-            self.screenShareUser = meeting.participants.screenshares
-        }
-        if self.screenShareId == nil || self.meeting.participants.screenshares.count <= 1 {
-            self.screenShareId = nil
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
-                self.screenShareId = self.meeting.participants.screenshares.last
-            }
-        }
-        
-        if self.meeting.participants.screenshares.isEmpty {
-            self.index = 1
-        }
-    }
-    
-    func onScreenShareStarted(participant: DyteScreenShareMeetingParticipant) {
-        if meeting.participants.screenshares.count != screenShareUser.count {
-            self.screenShareUser = meeting.participants.screenshares
-        }
-        if self.screenShareId == nil || self.meeting.participants.screenshares.count <= 1 {
-            self.screenShareId = nil
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
-                self.screenShareId = self.meeting.participants.screenshares.first
-            }
-        }
-        
-        if self.meeting.participants.screenshares.isEmpty {
-            self.index = 0
-        }
-    }
-    
     func onActiveParticipantsChanged(active: [DyteJoinedMeetingParticipant]) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) { [weak self] in
             self?.host = self?.meeting.participants.joined.first(where: { item in
@@ -1106,8 +1118,8 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
     }
     
     func onScreenSharesUpdated() {
-        if meeting.participants.screenshares.count != screenShareUser.count {
-            self.screenShareUser = meeting.participants.screenshares
+        if meeting.participants.screenShares.count != screenShareUser.count {
+            self.screenShareUser = meeting.participants.screenShares
         }
     }
     
@@ -1124,6 +1136,10 @@ extension GroupVideoCallViewModel: DyteParticipantEventsListener {
 }
 
 extension GroupVideoCallViewModel: DyteSelfEventsListener {
+    func onVideoDeviceChanged(videoDevice: DyteVideoDevice) {
+        
+    }
+    
     func onRoomMessage(type: String, payload: [String : Any]) {
         
     }
@@ -1211,17 +1227,6 @@ extension GroupVideoCallViewModel: DyteChatEventsListener {
     
 }
 
-//extension GroupVideoCallViewModel: DytePollEventsListener {
-//    func onNewPoll(poll: DytePollMessage) {
-//
-//    }
-//
-//    func onPollUpdates(pollMessages: [DytePollMessage]) {
-//
-//    }
-//
-//}
-
 extension GroupVideoCallViewModel: DyteRecordingEventsListener {
     func onMeetingRecordingEnded() {
         
@@ -1260,7 +1265,28 @@ extension GroupVideoCallViewModel: DyteWaitlistEventsListener {
     
 }
 
+extension GroupVideoCallViewModel: DytePollEventsListener {
+    func onNewPoll(poll: DytePollMessage) {
+        isLoadingPollCreate = false
+        isCreatePoll = false
+        createPollData = .init()
+    }
+    
+    func onPollUpdates(pollMessages: [DytePollMessage]) {
+        print("POLL: \(pollMessages)")
+        isLoadingVoted = meeting.polls.polls.compactMap({ _ in false })
+    }
+}
+
 extension GroupVideoCallViewModel: DyteStageEventListener {
+    func onParticipantStartedPresenting(participant: DyteJoinedMeetingParticipant) {
+        
+    }
+    
+    func onParticipantStoppedPresenting(participant: DyteJoinedMeetingParticipant) {
+        
+    }
+    
     func onParticipantRemovedFromStage(participant: DyteJoinedMeetingParticipant) {
         if participant.id == meeting.localUser.id {
             DispatchQueue.main.async { [weak self] in

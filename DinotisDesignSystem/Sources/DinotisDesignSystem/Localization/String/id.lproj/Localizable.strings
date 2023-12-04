@@ -742,3 +742,9 @@
 "total_audience_text" = "Jumlah Audiens";
 "visibilty_collaborator_text" = "Visibilitas Data Kolaborator";
 "collaborator_text" = "Kolaborator dapat melihat data lalu lintas Audiens";
+"video_call_polling_promotion" = "Tingkatkan partisipasi Peserta Anda dengan Poling!";
+
+"video_call_empty_polling_desc" = "Belum ada polling yang dibuat oleh Host";
+"more_polling_label" = "More Polling";
+"poll_label" = "Poll";
+"result_label" = "Hasil";
