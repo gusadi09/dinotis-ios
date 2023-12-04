@@ -35,6 +35,8 @@
 		EC0279F527C61D7900B8C392 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0279F427C61D7900B8C392 /* ProfileViewModel.swift */; };
 		EC0279F927C63F8F00B8C392 /* EditProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0279F827C63F8F00B8C392 /* EditProfileViewModel.swift */; };
 		EC04ED3C26C8D83E00E0D473 /* UserHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC04ED3B26C8D83E00E0D473 /* UserHomeView.swift */; };
+		EC05D8282B1DB16400F081C2 /* WhatToTest.en-US.txt in Resources */ = {isa = PBXBuildFile; fileRef = EC05D8272B1DB16400F081C2 /* WhatToTest.en-US.txt */; };
+		EC05D82A2B1DB18700F081C2 /* WhatToTest.id-ID.txt in Resources */ = {isa = PBXBuildFile; fileRef = EC05D8292B1DB18700F081C2 /* WhatToTest.id-ID.txt */; };
 		EC0A513B2AD9E1D700DB2C7A /* regular-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = EC0A513A2AD9E1D700DB2C7A /* regular-loading.json */; };
 		EC0D4C222A8C706A0028B87C /* AftercallFeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0D4C212A8C706A0028B87C /* AftercallFeedbackView.swift */; };
 		EC0D4C252A8C70820028B87C /* FeedbackViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0D4C242A8C70820028B87C /* FeedbackViewModel.swift */; };
@@ -399,6 +401,8 @@
 		EC0279F427C61D7900B8C392 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		EC0279F827C63F8F00B8C392 /* EditProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewModel.swift; sourceTree = "<group>"; };
 		EC04ED3B26C8D83E00E0D473 /* UserHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHomeView.swift; sourceTree = "<group>"; };
+		EC05D8272B1DB16400F081C2 /* WhatToTest.en-US.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "WhatToTest.en-US.txt"; sourceTree = "<group>"; };
+		EC05D8292B1DB18700F081C2 /* WhatToTest.id-ID.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "WhatToTest.id-ID.txt"; sourceTree = "<group>"; };
 		EC0A513A2AD9E1D700DB2C7A /* regular-loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "regular-loading.json"; sourceTree = "<group>"; };
 		EC0D4C212A8C706A0028B87C /* AftercallFeedbackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AftercallFeedbackView.swift; sourceTree = "<group>"; };
 		EC0D4C242A8C70820028B87C /* FeedbackViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackViewModel.swift; sourceTree = "<group>"; };
@@ -1060,6 +1064,15 @@
 				ECBCA2A4286192DD00EB1656 /* CoinHistoryCard.swift */,
 			);
 			path = Card;
+			sourceTree = "<group>";
+		};
+		EC05D8262B1DB13F00F081C2 /* TestFlight */ = {
+			isa = PBXGroup;
+			children = (
+				EC05D8272B1DB16400F081C2 /* WhatToTest.en-US.txt */,
+				EC05D8292B1DB18700F081C2 /* WhatToTest.id-ID.txt */,
+			);
+			path = TestFlight;
 			sourceTree = "<group>";
 		};
 		EC0D4C232A8C70820028B87C /* ViewModel */ = {
@@ -2135,6 +2148,7 @@
 		ECBA13D926B78F77004D452C = {
 			isa = PBXGroup;
 			children = (
+				EC05D8262B1DB13F00F081C2 /* TestFlight */,
 				EC246D3B270588B90084846F /* .swiftlint.yml */,
 				ECBA13E426B78F77004D452C /* DinotisApp */,
 				EC48E2C7287BE236000FD848 /* DinotisNotificationServiceExtension */,
@@ -3177,6 +3191,7 @@
 				ECDAE38F26B7FD9300419194 /* Montserrat-Bold.ttf in Resources */,
 				ECBA13F226B78F78004D452C /* Preview Assets.xcassets in Resources */,
 				ECB0A26728FED1660050EC71 /* GoogleService-Info.plist in Resources */,
+				EC05D8282B1DB16400F081C2 /* WhatToTest.en-US.txt in Resources */,
 				ECD4FC8729C4B93B00FBBC01 /* dinotis-white-lottie-loading.json in Resources */,
 				EC6DBB5A272BC1A50034E803 /* Localizable.strings in Resources */,
 				ECDAE39426B7FD9300419194 /* Montserrat-ExtraLight.ttf in Resources */,
@@ -3188,6 +3203,7 @@
 				ECDAE38E26B7FD9300419194 /* Montserrat-ExtraBold.ttf in Resources */,
 				EC62578627B8B2140079AA10 /* Icon.xcassets in Resources */,
 				ECBA13EF26B78F78004D452C /* Image.xcassets in Resources */,
+				EC05D82A2B1DB18700F081C2 /* WhatToTest.id-ID.txt in Resources */,
 				ECB412A62A978EA300802C07 /* waiting-talent.json in Resources */,
 				ECA0A386271148BC0000739E /* Color.xcassets in Resources */,
 				ECDAE39926B7FD9300419194 /* Montserrat-Italic.ttf in Resources */,

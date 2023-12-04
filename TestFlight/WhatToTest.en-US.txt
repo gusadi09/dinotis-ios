@@ -1,0 +1,5 @@
+- Polling feature on Group Video Call (Creator and Audience).
+- Timer on Resend OTP already running on background (Creator and Audience).
+- Fixing the summary price on Edit Schedule (Creator).
+- App Fee Percentage and price on create schedule form already fixing (Creator).
+- Fixing wording end-to-end encryption to be encrypted (Creator).
