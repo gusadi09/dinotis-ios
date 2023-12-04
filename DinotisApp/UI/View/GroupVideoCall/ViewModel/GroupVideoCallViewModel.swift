@@ -88,6 +88,8 @@ final class GroupVideoCallViewModel: ObservableObject {
     
     private let subject = PassthroughSubject<Void, Never>()
     
+    @Published var isLoadingVoted = [Bool]()
+    @Published var isLoadingPollCreate = false
     @Published var detail: MeetingDetailResponse?
     @Published var onSecondTime = 0
     @Published var meeting = DyteiOSClientBuilder().build()
@@ -222,7 +224,7 @@ final class GroupVideoCallViewModel: ObservableObject {
         self.sendQuestionUseCase = sendQuestionUseCase
         self.checkEndMeetingUseCase = checkEndMeetingUseCase
         self.getDetailMeetingUseCase = getDetailMeetingUseCase
-        
+
         var names: [String] = []
         names.append((userMeeting.user?.name).orEmpty())
         names.append(contentsOf: userMeeting.meetingCollaborations?.compactMap({ item in
@@ -690,7 +692,7 @@ final class GroupVideoCallViewModel: ObservableObject {
             meeting.addSelfEventsListener(selfEventsListener: self)
             meeting.addParticipantEventsListener(participantEventsListener: self)
             meeting.addChatEventsListener(chatEventsListener: self)
-//            meeting.addPollEventsListener(pollEventsListener: self)
+            meeting.addPollEventsListener(pollEventsListener: self)
             meeting.addRecordingEventsListener(recordingEventsListener: self)
             meeting.addWaitlistEventsListener(waitlistEventsListener: self)
             meeting.addStageEventsListener(stageEventsListener: self)
@@ -961,6 +963,7 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
         self.isPreview = false
         self.pinned = meeting.participants.pinned
         self.localUserId = meeting.localUser.userId
+        self.isLoadingVoted = meeting.polls.polls.compactMap({ _ in false})
     }
     
     func onMeetingRoomJoinFailed(exception: KotlinException) {
@@ -1264,11 +1267,14 @@ extension GroupVideoCallViewModel: DyteWaitlistEventsListener {
 
 extension GroupVideoCallViewModel: DytePollEventsListener {
     func onNewPoll(poll: DytePollMessage) {
-        
+        isLoadingPollCreate = false
+        isCreatePoll = false
+        createPollData = .init()
     }
     
     func onPollUpdates(pollMessages: [DytePollMessage]) {
-        
+        print("POLL: \(pollMessages)")
+        isLoadingVoted = meeting.polls.polls.compactMap({ _ in false })
     }
 }
 

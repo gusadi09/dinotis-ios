@@ -3130,7 +3130,7 @@ fileprivate extension GroupVideoCallView {
                            viewModel.isCreatePoll {
                             PollingFormView()
                         } else {
-                            if viewModel.dummyPollResult.isEmpty {
+                            if viewModel.meeting.polls.polls.isEmpty {
                                 Text(LocalizableText.videoCallEmptyPollingDesc)
                                     .font(.robotoRegular(size: 16))
                                     .foregroundColor(.white)
@@ -3161,86 +3161,112 @@ fileprivate extension GroupVideoCallView {
                                 }
                                 .padding()
                                 
-                                ForEach(viewModel.dummyPollResult.indices, id: \.self) { index in
-                                    let poll = viewModel.dummyPollResult[index]
-                                    VStack(alignment: .leading, spacing: 16) {
-                                        Text("\(LocalizableText.pollLabel) \(index+1)")
-                                            .font(.robotoBold(size: 12))
-                                            .foregroundColor(.DinotisDefault.primary)
-                                            .padding(.vertical, 5)
-                                            .padding(.horizontal, 14)
-                                            .background(
-                                                Capsule()
-                                                    .foregroundColor(Color(red: 0.89, green: 0.77, blue: 1))
-                                            )
-                                        
-                                        Text(poll.question)
-                                            .font(.robotoRegular(size: 12))
-                                            .foregroundColor(.white)
-                                            .multilineTextAlignment(.leading)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                        
-                                        VStack(spacing: 0) {
-                                            ForEach(poll.options.indices, id:\.self) { optionIndex in
-                                                let option = poll.options[optionIndex]
-                                                
-                                                Button {
-                                                    viewModel.dummyPollResult[index].options[optionIndex].isSelected.toggle()
-                                                } label: {
-                                                    HStack(spacing: 4) {
-                                                        Image(systemName: option.isSelected ? "checkmark.square.fill" : "square.fill")
-                                                            .foregroundColor(option.isSelected ? .white : .DinotisDefault.black3.opacity(0.5))
+                                ForEach(viewModel.meeting.polls.polls.indices, id: \.self) { index in
+                                    let poll = viewModel.meeting.polls.polls[index]
+                                    ZStack {
+                                        VStack(alignment: .leading, spacing: 16) {
+                                            Text("\(LocalizableText.pollLabel) \(index+1)")
+                                                .font(.robotoBold(size: 12))
+                                                .foregroundColor(.DinotisDefault.primary)
+                                                .padding(.vertical, 5)
+                                                .padding(.horizontal, 14)
+                                                .background(
+                                                    Capsule()
+                                                        .foregroundColor(Color(red: 0.89, green: 0.77, blue: 1))
+                                                )
+                                            
+                                            Text(poll.question)
+                                                .font(.robotoRegular(size: 12))
+                                                .foregroundColor(.white)
+                                                .multilineTextAlignment(.leading)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                            
+                                            VStack(spacing: 0) {
+                                                ForEach(poll.options.indices, id:\.self) { optionIndex in
+                                                    let option = poll.options[optionIndex]
+                                                    
+                                                    Button {
+                                                        viewModel.isLoadingVoted[index] = true
+                                                        viewModel.meeting.polls.vote(pollMessage: poll, pollOption: option)
+                                                    } label: {
+                                                        HStack(spacing: 4) {
+                                                            Image(
+                                                                systemName: option.votes.contains(where: {
+                                                                    $0.name.contains(viewModel.meeting.localUser.name)
+                                                                }) ? "checkmark.square.fill" : "square.fill"
+                                                            )
+                                                            .foregroundColor(
+                                                                option.votes.contains(where: {
+                                                                    $0.name.contains(viewModel.meeting.localUser.name)
+                                                                }) ? .white : .DinotisDefault.black3.opacity(0.5)
+                                                            )
                                                             .font(.system(size: 18))
+                                                            
+                                                            Text(option.text)
+                                                                .font(.robotoRegular(size: 12))
+                                                                .foregroundColor(.white)
+                                                                .multilineTextAlignment(.leading)
+                                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                                        }
+                                                        .padding(8)
+                                                        .padding(.vertical, 8)
+                                                        .background(
+                                                            RoundedRectangle(cornerRadius: 8)
+                                                                .foregroundColor(
+                                                                    option.votes.contains(where: {
+                                                                        $0.name.contains(viewModel.meeting.localUser.name)
+                                                                    }) ? .DinotisDefault.primary : .clear
+                                                                )
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                            .disabled(poll.options.contains(where: { $0.votes.contains {
+                                                $0.name.contains(viewModel.meeting.localUser.name)
+                                            } }))
+                                            
+                                            Divider()
+                                            
+                                            VStack(alignment: .leading, spacing: 8) {
+                                                Text("\(LocalizableText.resultLabel):")
+                                                    .font(.robotoBold(size: 12))
+                                                    .foregroundColor(.white)
+                                                    .padding(.bottom, 2)
+                                                
+                                                ForEach(poll.options.indices, id: \.self) { option in
+                                                    HStack(spacing: 8) {
+                                                        Circle()
+                                                            .foregroundColor(.DinotisDefault.primary)
+                                                            .frame(width: 9, height: 9)
                                                         
-                                                        Text(option.text)
+                                                        Text(poll.options[option].text)
                                                             .font(.robotoRegular(size: 12))
                                                             .foregroundColor(.white)
                                                             .multilineTextAlignment(.leading)
                                                             .frame(maxWidth: .infinity, alignment: .leading)
+                                                        
+                                                        Text(poll.options[option].count > 999 ? "999+" : "\(poll.options[option].count)")
+                                                            .font(.robotoBold(size: 14))
+                                                            .foregroundColor(.white)
+                                                        
+                                                        Image.videoCallPersonPollingIcon
+                                                            .resizable()
+                                                            .scaledToFit()
+                                                            .frame(width: 18, height: 18)
                                                     }
-                                                    .padding(8)
-                                                    .padding(.vertical, 8)
-                                                    .background(
-                                                        RoundedRectangle(cornerRadius: 8)
-                                                            .foregroundColor(option.isSelected ? .DinotisDefault.primary : .clear)
-                                                    )
                                                 }
                                             }
                                         }
+                                        .padding(16)
                                         
-                                        Divider()
-                                        
-                                        VStack(alignment: .leading, spacing: 8) {
-                                            Text("\(LocalizableText.resultLabel):")
-                                                .font(.robotoBold(size: 12))
-                                                .foregroundColor(.white)
-                                                .padding(.bottom, 2)
+                                        if viewModel.isLoadingVoted[index] {
+                                            Color.black.opacity(0.5)
                                             
-                                            ForEach(poll.options, id: \.id) { option in
-                                                HStack(spacing: 8) {
-                                                    Circle()
-                                                        .foregroundColor(.DinotisDefault.primary)
-                                                        .frame(width: 9, height: 9)
-                                                    
-                                                    Text(option.text)
-                                                        .font(.robotoRegular(size: 12))
-                                                        .foregroundColor(.white)
-                                                        .multilineTextAlignment(.leading)
-                                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                                    
-                                                    Text("999+")
-                                                        .font(.robotoBold(size: 14))
-                                                        .foregroundColor(.white)
-                                                    
-                                                    Image.videoCallPersonPollingIcon
-                                                        .resizable()
-                                                        .scaledToFit()
-                                                        .frame(width: 18, height: 18)
-                                                }
-                                            }
+                                            LottieView(name: "regular-loading", loopMode: .loop)
+                                                .scaledToFit()
+                                                .frame(height: 30)
                                         }
                                     }
-                                    .padding(16)
                                     .background(Color(red: 0.21, green: 0.22, blue: 0.22))
                                     .cornerRadius(12)
                                     .padding(.horizontal)
@@ -3253,7 +3279,7 @@ fileprivate extension GroupVideoCallView {
                 
                 if viewModel.meeting.localUser.canDoParticipantHostControls(),
                    !viewModel.isCreatePoll,
-                    viewModel.dummyPollResult.isEmpty {
+                   viewModel.meeting.polls.polls.isEmpty {
                     VStack(spacing: 8) {
                         Text(LocalizableText.videoCallPollingPromotion)
                             .font(.robotoRegular(size: 12))
@@ -3286,125 +3312,136 @@ fileprivate extension GroupVideoCallView {
         @FocusState var editorFocused: Bool
         
         var body: some View {
-            VStack(spacing: 12) {
-                Text(LocalizableText.videoCallPollQuestionTitle)
-                    .font(.robotoBold(size: 14))
-                    .foregroundColor(.white)
-                    .padding(10)
-                
-                ZStack(alignment: .topLeading) {
-                    #if os(macOS)
-                    TextEditor(text: $viewModel.createPollData.question)
-                        .font(.robotoRegular(size: 12))
+            ZStack {
+                VStack(spacing: 12) {
+                    Text(LocalizableText.videoCallPollQuestionTitle)
+                        .font(.robotoBold(size: 14))
                         .foregroundColor(.white)
-                        .textFieldStyle(.plain)
-                        .frame(height: 75)
-                        .textEditorBackground(Color(red: 0.18, green: 0.19, blue: 0.2))
-                        .focused($editorFocused)
-                    #else
-                    TextEditor(text: $viewModel.createPollData.question)
-                        .font(.robotoRegular(size: 12))
-                        .foregroundColor(.white)
-                        .textFieldStyle(.plain)
-                        .frame(height: 75)
-                        .textEditorBackground(Color(red: 0.18, green: 0.19, blue: 0.2))
-                        .focused($editorFocused)
-                    #endif
+                        .padding(10)
                     
-                    if viewModel.createPollData.question.isEmpty && !editorFocused {
-                        Text(LocalizableText.videoCallPollQuestionPlaceholder)
-                            .font(.robotoRegular(size: 12))
-                            .foregroundColor(.DinotisDefault.black3)
-                            .padding(4)
-                            .padding(.top, 4)
-                            .onTapGesture {
-                                editorFocused = true
-                            }
-                    }
-                }
-                .tint(.DinotisDefault.primary)
-                .padding(12)
-                .background(
-                    RoundedRectangle(cornerRadius: 10)
-                        .foregroundColor(Color(red: 0.18, green: 0.19, blue: 0.2))
-                )
-                
-                ForEach($viewModel.createPollData.options, id:\.id) { $option in
-                    HStack(spacing: 8) {
-                        TextField(LocalizableText.videoCallMessagePlaceholder, text: $option.text)
+                    ZStack(alignment: .topLeading) {
+#if os(macOS)
+                        TextEditor(text: $viewModel.createPollData.question)
                             .font(.robotoRegular(size: 12))
                             .foregroundColor(.white)
                             .textFieldStyle(.plain)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical)
-                            .tint(.DinotisDefault.primary)
-                            .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .foregroundColor(Color(red: 0.18, green: 0.19, blue: 0.2))
-                            )
+                            .frame(height: 75)
+                            .textEditorBackground(Color(red: 0.18, green: 0.19, blue: 0.2))
+                            .focused($editorFocused)
+#else
+                        TextEditor(text: $viewModel.createPollData.question)
+                            .font(.robotoRegular(size: 12))
+                            .foregroundColor(.white)
+                            .textFieldStyle(.plain)
+                            .frame(height: 75)
+                            .textEditorBackground(Color(red: 0.18, green: 0.19, blue: 0.2))
+                            .focused($editorFocused)
+#endif
                         
-                        if viewModel.createPollData.options.last?.id == option.id,
-                           viewModel.createPollData.options.count > 2 {
-                            Button {
-                                withAnimation {
-                                    viewModel.createPollData.options.removeLast(1)
+                        if viewModel.createPollData.question.isEmpty && !editorFocused {
+                            Text(LocalizableText.videoCallPollQuestionPlaceholder)
+                                .font(.robotoRegular(size: 12))
+                                .foregroundColor(.DinotisDefault.black3)
+                                .padding(4)
+                                .padding(.top, 4)
+                                .onTapGesture {
+                                    editorFocused = true
                                 }
-                            } label: {
-                                ZStack {
-                                    Rectangle()
+                        }
+                    }
+                    .tint(.DinotisDefault.primary)
+                    .padding(12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .foregroundColor(Color(red: 0.18, green: 0.19, blue: 0.2))
+                    )
+                    
+                    ForEach($viewModel.createPollData.options, id:\.id) { $option in
+                        HStack(spacing: 8) {
+                            TextField(LocalizableText.videoCallMessagePlaceholder, text: $option.text)
+                                .font(.robotoRegular(size: 12))
+                                .foregroundColor(.white)
+                                .textFieldStyle(.plain)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical)
+                                .tint(.DinotisDefault.primary)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10)
                                         .foregroundColor(Color(red: 0.18, green: 0.19, blue: 0.2))
-                                    
-                                    Rectangle()
-                                        .foregroundColor(.white)
-                                        .frame(height: 3)
-                                        .padding(.horizontal, 7)
+                                )
+                            
+                            if viewModel.createPollData.options.last?.id == option.id,
+                               viewModel.createPollData.options.count > 2 {
+                                Button {
+                                    withAnimation {
+                                        viewModel.createPollData.options.removeLast(1)
+                                    }
+                                } label: {
+                                    ZStack {
+                                        Rectangle()
+                                            .foregroundColor(Color(red: 0.18, green: 0.19, blue: 0.2))
+                                        
+                                        Rectangle()
+                                            .foregroundColor(.white)
+                                            .frame(height: 3)
+                                            .padding(.horizontal, 7)
+                                    }
+                                    .frame(width: 32, height: 32)
+                                    .cornerRadius(4)
                                 }
-                                .frame(width: 32, height: 32)
-                                .cornerRadius(4)
                             }
                         }
                     }
-                }
-                
-                Button("+ \(LocalizableText.videoCallPollAddOption)") {
-                    withAnimation {
-                        viewModel.createPollData.options.append(.init())
+                    
+                    Button("+ \(LocalizableText.videoCallPollAddOption)") {
+                        withAnimation {
+                            viewModel.createPollData.options.append(.init())
+                        }
+                    }
+                    .font(.robotoBold(size: 12))
+                    .foregroundColor(.DinotisDefault.lightPrimary)
+                    
+                    DinotisPrimaryButton(
+                        text: LocalizableText.videoCallCreatePollTitle,
+                        type: .adaptiveScreen,
+                        height: 50,
+                        textColor: .white,
+                        bgColor: .DinotisDefault.primary,
+                        isLoading: .constant(false))
+                    {
+                        withAnimation(.spring()) {
+                            UIApplication.shared.endEditing()
+                            viewModel.isLoadingPollCreate = true
+                            viewModel.meeting.polls.create(question: viewModel.createPollData.question, options: viewModel.createPollData.options.compactMap({ $0.text }), anonymous: false, hideVotes: false)
+                        }
+                    }
+                    .disabled(viewModel.createPollData.question.isEmpty || viewModel.createPollData.options.contains(where: { $0.text.isEmpty }))
+                    
+                    DinotisSecondaryButton(
+                        text: LocalizableText.videoCallCancelPollTitle,
+                        type: .adaptiveScreen,
+                        height: 50,
+                        textColor: .white,
+                        bgColor: .clear,
+                        strokeColor: .DinotisDefault.primary)
+                    {
+                        withAnimation(.spring()) {
+                            viewModel.isCreatePoll = false
+                            viewModel.createPollData = .init()
+                        }
                     }
                 }
-                .font(.robotoBold(size: 12))
-                .foregroundColor(.DinotisDefault.lightPrimary)
+                .padding(12)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
-                DinotisPrimaryButton(
-                    text: LocalizableText.videoCallCreatePollTitle,
-                    type: .adaptiveScreen,
-                    height: 50,
-                    textColor: .white,
-                    bgColor: .DinotisDefault.primary,
-                    isLoading: .constant(false))
-                {
-                    withAnimation(.spring()) {
-                        viewModel.dummyPollResult.append(viewModel.createPollData)
-                        viewModel.isCreatePoll = false
-                        viewModel.createPollData = .init()
-                    }
-                }
-                
-                DinotisSecondaryButton(
-                    text: LocalizableText.videoCallCancelPollTitle,
-                    type: .adaptiveScreen,
-                    height: 50,
-                    textColor: .white,
-                    bgColor: .clear,
-                    strokeColor: .DinotisDefault.primary)
-                {
-                    withAnimation(.spring()) {
-                        viewModel.isCreatePoll = false
-                        viewModel.createPollData = .init()
-                    }
+                if viewModel.isLoadingPollCreate {
+                    Color.black.opacity(0.5)
+                    
+                    LottieView(name: "regular-loading", loopMode: .loop)
+                        .scaledToFit()
+                        .frame(height: 45)
                 }
             }
-            .padding(12)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color(red: 0.21, green: 0.22, blue: 0.22))
             .cornerRadius(12)
             .padding(22)
