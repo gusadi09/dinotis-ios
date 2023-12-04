@@ -291,6 +291,9 @@ final class EditTalentMeetingViewModel: ObservableObject {
                 self?.meetingForm.startAt = DateUtils.dateFormatter(success.startAt.orCurrentDate(), forFormat: .utcV2)
                 self?.meetingForm.title = success.title.orEmpty()
                 self?.meetingForm.managementId = success.managementId
+                self?.startDate = success.startAt.orCurrentDate()
+                self?.endDate = success.endAt.orCurrentDate()
+                self?.rawPrice = success.price.orEmpty()
                 self?.pricePerPeople = success.price.orEmpty()
                 self?.peopleGroup = "\(success.slots.orZero())"
                 self?.selectedWallet = success.managementId == nil ?
@@ -336,7 +339,7 @@ final class EditTalentMeetingViewModel: ObservableObject {
         self.meetingForm = AddMeetingRequest(
             title: self.meetingForm.title,
             description: self.meetingForm.description,
-            price: Int(self.pricePerPeople).orZero(),
+            price: self.meetingForm.price,
             startAt: self.meetingForm.startAt,
             endAt: self.meetingForm.endAt,
             isPrivate: self.meetingForm.isPrivate,
