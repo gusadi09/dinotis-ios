@@ -1,1 +1,2 @@
 - Memperbaiki susunan menu pada beranda creator.
+- Memperbaiki qna box text

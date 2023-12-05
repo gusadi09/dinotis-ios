@@ -174,7 +174,8 @@ struct GroupVideoCallView: View {
         .sheet(isPresented: $viewModel.isShowQuestionBox) {
             if #available(iOS 16.0, *) {
                 QuestionBoxBottomSheet(viewModel: viewModel)
-                    .presentationDetents([.height(350)])
+                    .ignoresSafeArea(.all)
+                    .presentationDetents([.height(360)])
                     .presentationDragIndicator(.hidden)
                     .dynamicTypeSize(.large)
             } else {
@@ -2351,73 +2352,107 @@ fileprivate extension GroupVideoCallView {
         
         @ObservedObject var viewModel: GroupVideoCallViewModel
         @Environment(\.dismiss) var dismiss
+        @FocusState var editorFocused: Bool
         
         var body: some View {
-            VStack(spacing: 14) {
-                HStack {
-                    Text(LocalizableText.videoCallBoxQuestionTitle)
-                        .font(.robotoBold(size: 16))
-                    
-                    Spacer()
-                    
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "xmark")
-                    }
-                }
-                .foregroundColor(.white)
-                .padding()
-                .background(Color(red: 0.1, green: 0.11, blue: 0.12))
-                
-                ZStack(alignment: .top) {
-                    VStack {
-                        MultilineTextField(LocalizableText.videoCallMessagePlaceholder, text: $viewModel.questionText)
-                            .padding(.horizontal, 14)
-                            .padding(.vertical, 8)
-                        
-                        Spacer()
-                    }
-                    .frame(maxHeight: 185)
-                    
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color(red: 0.32, green: 0.34, blue: 0.36), lineWidth: 1)
-                        .frame(maxHeight: 185)
-                }
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .padding(.horizontal)
-                
-                Button {
-                    Task {
-                        await viewModel.sendQuestion(meetingId: viewModel.userMeeting.id.orEmpty())
-                    }
-                } label: {
-                    HStack(spacing: 13) {
-                        Spacer()
-                        Text(LocalizableText.videoCallSendQuestionTitle)
+            GeometryReader { _ in
+                LazyVStack(spacing: 14) {
+                    HStack {
+                        Text(LocalizableText.videoCallBoxQuestionTitle)
                             .font(.robotoBold(size: 16))
                         
-                        Image(systemName: "paperplane.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .rotationEffect(.degrees(45))
-                            .frame(height: 18)
-                        
                         Spacer()
+                        
+                        Button {
+                            dismiss()
+                        } label: {
+                            Image(systemName: "xmark")
+                        }
                     }
                     .foregroundColor(.white)
+                    .padding()
+                    .background(Color(red: 0.1, green: 0.11, blue: 0.12))
+                    
+                    ZStack(alignment: .topLeading) {
+#if os(macOS)
+                        TextEditor(text: $viewModel.questionText)
+                            .font(.robotoRegular(size: 12))
+                            .foregroundColor(.white)
+                            .textFieldStyle(.plain)
+                            .frame(height: 190)
+                            .textEditorBackground(Color(red: 0.18, green: 0.19, blue: 0.2))
+                            .focused($editorFocused)
+#else
+                        TextEditor(text: $viewModel.questionText)
+                            .font(.robotoRegular(size: 12))
+                            .foregroundColor(.white)
+                            .textFieldStyle(.plain)
+                            .frame(height: 190)
+                            .textEditorBackground(Color(red: 0.18, green: 0.19, blue: 0.2))
+                            .focused($editorFocused)
+#endif
+                        
+                        if viewModel.questionText.isEmpty && !editorFocused {
+                            Text(LocalizableText.videoCallPollQuestionPlaceholder)
+                                .font(.robotoRegular(size: 12))
+                                .foregroundColor(.DinotisDefault.black3)
+                                .padding(4)
+                                .padding(.top, 4)
+                                .onTapGesture {
+                                    editorFocused = true
+                                }
+                        }
+                    }
+                    .tint(.DinotisDefault.primary)
+                    .padding(12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .foregroundColor(Color(red: 0.18, green: 0.19, blue: 0.2))
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.white, lineWidth: 1)
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
                     .padding(.horizontal)
-                    .padding(.vertical, 12)
-                    .background((viewModel.questionText.isEmpty || !viewModel.questionText.isStringContainWhitespaceAndText()) ? Color.dinotisGray : Color.DinotisDefault.primary)
-                    .cornerRadius(11)
-                    .disabled(viewModel.questionText.isEmpty || !viewModel.questionText.isStringContainWhitespaceAndText())
+                    
+                    Button {
+                        Task {
+                            await viewModel.sendQuestion(meetingId: viewModel.userMeeting.id.orEmpty())
+                        }
+                    } label: {
+                        HStack(spacing: 13) {
+                            Spacer()
+                            Text(LocalizableText.videoCallSendQuestionTitle)
+                                .font(.robotoBold(size: 16))
+                            
+                            Image(systemName: "paperplane.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .rotationEffect(.degrees(45))
+                                .frame(height: 18)
+                            
+                            Spacer()
+                        }
+                        .foregroundColor(.white)
+                        .padding(.horizontal)
+                        .padding(.vertical, 12)
+                        .background((viewModel.questionText.isEmpty || !viewModel.questionText.isStringContainWhitespaceAndText()) ? Color.dinotisGray.ignoresSafeArea() : Color.DinotisDefault.primary.ignoresSafeArea())
+                        .cornerRadius(11)
+                        .disabled(viewModel.questionText.isEmpty || !viewModel.questionText.isStringContainWhitespaceAndText())
+                    }
+                    .padding(.horizontal)
+                    .padding(.bottom)
+                    
+                    if #available(iOS 16.0, *) {
+                        EmptyView()
+                    } else {
+                        Spacer()
+                    }
                 }
-                .padding(.horizontal)
-                .padding(.bottom)
-                
-                Spacer()
             }
-            .background(Color(red: 0.15, green: 0.16, blue: 0.17))
+            .background(Color(red: 0.15, green: 0.16, blue: 0.17).ignoresSafeArea())
+            .ignoresSafeArea()
         }
     }
     

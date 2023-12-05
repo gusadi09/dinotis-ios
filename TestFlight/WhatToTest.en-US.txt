@@ -1,1 +1,2 @@
 - Fixing the menu order on creator home.
+- Fixing qna box text
