@@ -1,5 +1,1 @@
-- Fitur polling pada Group Video Call (Creator dan Audience).
-- Timer pada OTP sudah berjalan di background (Creator dan Audience).
-- Ringkasan harga pada Edit Jadwal sudah disesuaikan (Creator).
-- Persentase app fee dan harga pada form buat jadwal sudah disesuaikan (Creator).
-- end-to-end encryption dirubah menjadi end-to-end encrypted (Creator dan Audience).
+- Memperbaiki susunan menu pada beranda creator.
