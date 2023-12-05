@@ -747,3 +747,5 @@
 "more_polling_label" = "More Polling";
 "poll_label" = "Poll";
 "result_label" = "Result";
+
+"create_session_description_placeholder" = "Enter a short description here...";

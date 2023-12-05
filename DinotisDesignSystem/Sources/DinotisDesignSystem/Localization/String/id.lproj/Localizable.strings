@@ -748,3 +748,5 @@
 "more_polling_label" = "More Polling";
 "poll_label" = "Poll";
 "result_label" = "Hasil";
+
+"create_session_description_placeholder" = "Masukkan deskripsi singkat di sini...";

@@ -3462,5 +3462,10 @@ public enum LocalizableText {
         bundle: .module,
         comment: "result label"
     )
+    public static let createSessionDescriptionPlaceholder = NSLocalizedString(
+        "create_session_description_placeholder",
+        bundle: .module,
+        comment: "create session description placeholder"
+    )
     
 }

@@ -1,2 +1,2 @@
-- Fixing the menu order on creator home.
-- Fixing qna box text
+- [DBT-265] Add placeholder on description textfield when create a session
+- [DBT-267] Fixing the end call dialogue when leaving video call session

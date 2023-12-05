@@ -1087,7 +1087,7 @@ extension ScheduledFormView {
                         }
                     }
                     
-                    MultilineTextField(text: $viewModel.meeting.description)
+                    MultilineTextField(LocalizableText.createSessionDescriptionPlaceholder, text: $viewModel.meeting.description)
                         .foregroundColor(.black)
                         .padding(.horizontal, 10)
                         .padding(.vertical, 10)

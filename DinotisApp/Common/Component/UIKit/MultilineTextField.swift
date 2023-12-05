@@ -143,7 +143,7 @@ struct MultilineTextField: View {
 			if isShowingPlaceholder && text.isEmpty {
 				Text(placeholder)
 					.font(.robotoRegular(size: 12))
-					.foregroundColor(UIApplication.shared.windows.first?.overrideUserInterfaceStyle == .dark ? .white.opacity(0.5) : Color.black.opacity(0.5))
+					.foregroundColor(UIApplication.shared.windows.first?.overrideUserInterfaceStyle == .dark ? .white.opacity(0.25) : Color.black.opacity(0.25))
 					.padding(5)
 					.padding(.top, 2)
 			}

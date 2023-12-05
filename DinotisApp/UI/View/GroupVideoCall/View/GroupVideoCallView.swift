@@ -90,7 +90,7 @@ struct GroupVideoCallView: View {
             
             LeaveSessionAlert()
                 .environmentObject(viewModel)
-                .isHidden(!viewModel.isShowLeavePopUp, remove: !viewModel.isShowLeavePopUp)
+                .isHidden(!viewModel.isShowLeavePopUp, remove: true)
             
             Color(red: 0.33, green: 0.33, blue: 0.33).opacity(0.75)
                 .ignoresSafeArea()
@@ -3513,6 +3513,9 @@ fileprivate extension GroupVideoCallView {
                                     textColor: .white,
                                     bgColor: .DinotisDefault.primary
                                 ) {
+                                    withAnimation(.spring()) {
+                                        viewModel.isShowLeavePopUp = false
+                                    }
                                     if viewModel.meeting.recording.recordingState == .recording {
                                         viewModel.meeting.recording.stop()
                                     } else {
@@ -3534,6 +3537,9 @@ fileprivate extension GroupVideoCallView {
                                     textColor: .white,
                                     bgColor: Color(red: 0.32, green: 0.34, blue: 0.36)
                                 ) {
+                                    withAnimation(.spring()) {
+                                        viewModel.isShowLeavePopUp = false
+                                    }
                                     viewModel.leaveMeeting()
                                 }
                                 
@@ -3570,6 +3576,9 @@ fileprivate extension GroupVideoCallView {
                                     textColor: .white,
                                     bgColor: .DinotisDefault.primary
                                 ) {
+                                    withAnimation(.spring()) {
+                                        viewModel.isShowLeavePopUp = false
+                                    }
                                     viewModel.leaveMeeting()
                                 }
                             }
@@ -3607,6 +3616,9 @@ fileprivate extension GroupVideoCallView {
                                 textColor: .white,
                                 bgColor: .DinotisDefault.primary
                             ) {
+                                withAnimation(.spring()) {
+                                    viewModel.isShowLeavePopUp = false
+                                }
                                 viewModel.leaveMeeting()
                             }
                         }
