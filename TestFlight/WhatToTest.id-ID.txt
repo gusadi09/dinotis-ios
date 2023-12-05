@@ -1,2 +1,2 @@
-- Memperbaiki susunan menu pada beranda creator.
-- Memperbaiki qna box text
+- [DBT-265] Menambahkan placeholder pada description text field ketika membuat sesi
+- [DBT-267] Fixing end call dialogue ketika meninggalkan sesi video call
