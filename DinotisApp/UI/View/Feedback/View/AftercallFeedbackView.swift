@@ -15,6 +15,11 @@ struct AftercallFeedbackView: View {
     @ObservedObject var viewModel: FeedbackViewModel
     
     @Environment(\.dismiss) var dismiss
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    
+    var hasRegularSize: Bool {
+        horizontalSizeClass == .regular
+    }
     
     init(viewModel: FeedbackViewModel) {
         self.viewModel = viewModel
@@ -101,27 +106,21 @@ struct AftercallFeedbackView: View {
                                 Spacer()
                             }
                             
-                            switch viewModel.rating {
-                            case 2:
-                                ChipContainerView(chips: viewModel.chips2)
-                                    .frame(minHeight: 100, maxHeight: .infinity)
-                                
-                            case 3:
-                                ChipContainerView(chips: viewModel.chips3)
-                                    .frame(minHeight: 100, maxHeight: .infinity)
-                                
-                            case 4:
-                                ChipContainerView(chips: viewModel.chips4)
-                                    .frame(minHeight: 100, maxHeight: .infinity)
-                                
-                            case 5:
-                                ChipContainerView(chips: viewModel.chips5)
-                                    .frame(minHeight: 100, maxHeight: .infinity)
-                                
-                            default:
-                                ChipContainerView(chips: viewModel.chips0)
-                                    .frame(minHeight: 100, maxHeight: .infinity)
+                            Group {
+                                switch viewModel.rating {
+                                case 2:
+                                    ChipContainerView(chips: viewModel.chips2)
+                                case 3:
+                                    ChipContainerView(chips: viewModel.chips3)
+                                case 4:
+                                    ChipContainerView(chips: viewModel.chips4)
+                                case 5:
+                                    ChipContainerView(chips: viewModel.chips5)
+                                default:
+                                    ChipContainerView(chips: viewModel.chips0)
+                                }
                             }
+                            .frame(height: hasRegularSize ? 75 : 150)
                         }
                         
                         Divider()
@@ -141,7 +140,7 @@ struct AftercallFeedbackView: View {
                                 Spacer()
                             }
                             
-                            DinotisTextEditor("Tuliskan blabla", label: nil, text: $viewModel.feedback, errorText: .constant(nil))
+                            DinotisTextEditor(LocalizableText.yourCommentPlaceholder, label: nil, text: $viewModel.feedback, errorText: .constant(nil))
                         }
                     }
                 }

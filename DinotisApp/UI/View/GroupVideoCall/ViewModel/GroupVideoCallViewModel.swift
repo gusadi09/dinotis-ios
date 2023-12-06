@@ -849,6 +849,22 @@ final class GroupVideoCallViewModel: ObservableObject {
                 }
     }
     
+    @MainActor
+    func hideAllAlert() {
+        withAnimation {
+            isShowAlert = false
+            isError = false
+            isShowViewerModeGuide = false
+            isShowRaiseHandGuide = false
+            isShowInteractionGuide = false
+            isMeetingForceEnd = false
+            isShowNearEndAlert = false
+            isKicked = false
+            isShowRaisedToast = false
+            isShowLeavePopUp = false
+        }
+    }
+    
 }
 
 extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {

@@ -3537,9 +3537,7 @@ fileprivate extension GroupVideoCallView {
                                     textColor: .white,
                                     bgColor: Color(red: 0.32, green: 0.34, blue: 0.36)
                                 ) {
-                                    withAnimation(.spring()) {
-                                        viewModel.isShowLeavePopUp = false
-                                    }
+                                    viewModel.hideAllAlert()
                                     viewModel.leaveMeeting()
                                 }
                                 
@@ -3576,9 +3574,7 @@ fileprivate extension GroupVideoCallView {
                                     textColor: .white,
                                     bgColor: .DinotisDefault.primary
                                 ) {
-                                    withAnimation(.spring()) {
-                                        viewModel.isShowLeavePopUp = false
-                                    }
+                                    viewModel.hideAllAlert()
                                     viewModel.leaveMeeting()
                                 }
                             }
@@ -3616,9 +3612,7 @@ fileprivate extension GroupVideoCallView {
                                 textColor: .white,
                                 bgColor: .DinotisDefault.primary
                             ) {
-                                withAnimation(.spring()) {
-                                    viewModel.isShowLeavePopUp = false
-                                }
+                                viewModel.hideAllAlert()
                                 viewModel.leaveMeeting()
                             }
                         }
