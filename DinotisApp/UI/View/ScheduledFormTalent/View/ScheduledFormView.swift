@@ -26,7 +26,6 @@ struct ScheduledFormView: View {
     
     init(viewModel: ScheduledFormViewModel) {
         self.viewModel = viewModel
-        FontInjector.registerFonts()
         UISlider.appearance().maximumTrackTintColor = .white
     }
     

@@ -411,7 +411,6 @@
 "video_call_information" = "Information";
 "video_call_message_placeholder" = "Message here...";
 "video_call_poll_by_host" = "Poll Question by Host";
-"video_call_poll_by_host" = "Poll Question by Host";
 "video_call_poll_question_title" = "Poll Question";
 "video_call_poll_question_placeholder" = "What is your poll for?";
 "video_call_poll_add_option" = "Add an option";
@@ -742,3 +741,11 @@
 "total_audience_text" = "Total Audience";
 "visibilty_collaborator_text" = "Collaborator Data Visibility";
 "collaborator_text" = "Collaborators can view Audience traffic data";
+"video_call_polling_promotion" = "Engage Your Participants with a Poll!";
+
+"video_call_empty_polling_desc" = "No polls were created by Host";
+"more_polling_label" = "More Polling";
+"poll_label" = "Poll";
+"result_label" = "Result";
+
+"create_session_description_placeholder" = "Enter a short description here...";

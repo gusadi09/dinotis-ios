@@ -3437,4 +3437,35 @@ public enum LocalizableText {
         comment: ""
     )
     
+    public static let videoCallPollingPromotion = NSLocalizedString(
+        "video_call_polling_promotion",
+        bundle: .module,
+        comment: ""
+    )
+    public static let videoCallEmptyPollingDesc = NSLocalizedString(
+        "video_call_empty_polling_desc",
+        bundle: .module,
+        comment: "video call empty polling description"
+    )
+    public static let morePollingLabel = NSLocalizedString(
+        "more_polling_label",
+        bundle: .module,
+        comment: "more polling label"
+    )
+    public static let pollLabel = NSLocalizedString(
+        "poll_label",
+        bundle: .module,
+        comment: "poll label"
+    )
+    public static let resultLabel = NSLocalizedString(
+        "result_label",
+        bundle: .module,
+        comment: "result label"
+    )
+    public static let createSessionDescriptionPlaceholder = NSLocalizedString(
+        "create_session_description_placeholder",
+        bundle: .module,
+        comment: "create session description placeholder"
+    )
+    
 }

@@ -52,6 +52,7 @@ public struct DinotisSecondaryButton: View {
                             RoundedRectangle(cornerRadius: 10)
                                 .stroke(strokeColor, lineWidth: 1)
                         )
+                        .contentShape(RoundedRectangle(cornerRadius: 10))
                 }
                 .buttonStyle(.plain)
             } else {
@@ -68,6 +69,7 @@ public struct DinotisSecondaryButton: View {
                             RoundedRectangle(cornerRadius: 10)
                                 .stroke(strokeColor, lineWidth: 1)
                         )
+                        .contentShape(RoundedRectangle(cornerRadius: 10))
                 }
                 .buttonStyle(.plain)
             }
@@ -94,6 +96,7 @@ public struct DinotisSecondaryButton: View {
                         RoundedRectangle(cornerRadius: 10)
                             .stroke(strokeColor, lineWidth: 1)
                     )
+                    .contentShape(RoundedRectangle(cornerRadius: 10))
                 }
                 .buttonStyle(.plain)
             } else {
@@ -116,6 +119,7 @@ public struct DinotisSecondaryButton: View {
                         RoundedRectangle(cornerRadius: 10)
                             .stroke(strokeColor, lineWidth: 1)
                     )
+                    .contentShape(RoundedRectangle(cornerRadius: 10))
                 }
                 .buttonStyle(.plain)
             }
@@ -136,6 +140,7 @@ public struct DinotisSecondaryButton: View {
                             RoundedRectangle(cornerRadius: 10)
                                 .stroke(strokeColor, lineWidth: 1)
                         )
+                        .contentShape(RoundedRectangle(cornerRadius: 10))
                 }
                 .buttonStyle(.plain)
             } else {
@@ -152,6 +157,7 @@ public struct DinotisSecondaryButton: View {
                             RoundedRectangle(cornerRadius: 10)
                                 .stroke(strokeColor, lineWidth: 1)
                         )
+                        .contentShape(RoundedRectangle(cornerRadius: 10))
                 }
                 .buttonStyle(.plain)
             }
@@ -171,6 +177,7 @@ public struct DinotisSecondaryButton: View {
                             RoundedRectangle(cornerRadius: 10)
                                 .stroke(strokeColor, lineWidth: 1)
                         )
+                        .contentShape(RoundedRectangle(cornerRadius: 10))
                 }
                 .buttonStyle(.plain)
             } else {
@@ -188,6 +195,7 @@ public struct DinotisSecondaryButton: View {
                             RoundedRectangle(cornerRadius: 10)
                                 .stroke(strokeColor, lineWidth: 1)
                         )
+                        .contentShape(RoundedRectangle(cornerRadius: 10))
                 }
                 .buttonStyle(.plain)
             }
