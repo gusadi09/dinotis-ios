@@ -111,6 +111,7 @@ public extension Image {
     static let searchVideoIcon = Image("ic-video-search", bundle: Bundle.module)
     
     static let videoCallChatActiveIcon = Image("ic_chat_active", bundle: .module)
+    static let videoCallPersonPollingIcon = Image("ic-person-polling", bundle: .module)
     static let videoCallChatInactiveIcon = Image("ic_chat_inactive", bundle: .module)
     static let videoCallOtherMenuActiveIcon = Image("ic_grid_active", bundle: .module)
     static let videoCallOtherMenuInactiveIcon = Image("ic_grid_inactive", bundle: .module)

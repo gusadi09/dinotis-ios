@@ -330,6 +330,7 @@ extension CreatorProfileDetailView {
                     .fill(viewModel.tabNumb == 2 ? Color.DinotisDefault.primary : .DinotisDefault.lightPrimary)
                     .frame(height: 1)
             }
+            .isHidden(!viewModel.isManagementView && !(viewModel.talentData?.userAvailability?.availability ?? true), remove: true)
         }
         .animation(.easeInOut, value: viewModel.tabNumb)
         .background(Color.white)

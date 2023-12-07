@@ -308,30 +308,6 @@ struct TalentHomeView: View {
                                             )
                                             
                                             LazyVGrid(columns: columns) {
-                                                Button {
-                                                    homeVM.routeToTalentRateCardList()
-                                                } label: {
-                                                    VStack {
-                                                        Image.homeTalentRatecardIcon
-                                                            .resizable()
-                                                            .scaledToFit()
-                                                            .padding(10)
-                                                            .frame(width: 45, height: 45)
-                                                            .background(Color.secondaryViolet)
-                                                            .cornerRadius(12)
-                                                            .overlay(
-                                                                RoundedRectangle(cornerRadius: 12)
-                                                                    .stroke(Color.DinotisDefault.primary, lineWidth: 1)
-                                                                    .frame(width: 45, height: 45)
-                                                            )
-                                                        
-                                                        Text(LocaleText.rateCardMenu)
-                                                            .foregroundColor(.black)
-                                                            .font(.robotoRegular(size: 10))
-                                                            .multilineTextAlignment(.center)
-                                                    }
-                                                }
-                                                .buttonStyle(.plain)
                                                 
                                                 Button {
                                                     homeVM.routeToTalentFormSchedule()
@@ -376,6 +352,31 @@ struct TalentHomeView: View {
                                                             )
                                                         
                                                         Text(LocaleText.talentHomeBundlingMenu)
+                                                            .foregroundColor(.black)
+                                                            .font(.robotoRegular(size: 10))
+                                                            .multilineTextAlignment(.center)
+                                                    }
+                                                }
+                                                .buttonStyle(.plain)
+                                                
+                                                Button {
+                                                    homeVM.routeToTalentRateCardList()
+                                                } label: {
+                                                    VStack {
+                                                        Image.homeTalentRatecardIcon
+                                                            .resizable()
+                                                            .scaledToFit()
+                                                            .padding(10)
+                                                            .frame(width: 45, height: 45)
+                                                            .background(Color.secondaryViolet)
+                                                            .cornerRadius(12)
+                                                            .overlay(
+                                                                RoundedRectangle(cornerRadius: 12)
+                                                                    .stroke(Color.DinotisDefault.primary, lineWidth: 1)
+                                                                    .frame(width: 45, height: 45)
+                                                            )
+                                                        
+                                                        Text(LocaleText.rateCardMenu)
                                                             .foregroundColor(.black)
                                                             .font(.robotoRegular(size: 10))
                                                             .multilineTextAlignment(.center)
