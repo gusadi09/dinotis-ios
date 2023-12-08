@@ -5,7 +5,7 @@
       location = "group:DinotisDesignSystem">
    </FileRef>
    <FileRef
-      location = "group:../../../Desktop/DinotisData">
+      location = "group:DinotisData">
    </FileRef>
    <FileRef
       location = "container:DinotisApp.xcodeproj">
