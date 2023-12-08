@@ -222,6 +222,16 @@ struct GroupVideoCallView: View {
             message: LocalizableText.videoCallMeetingForceEnd,
             primaryButton: .init(text: LocalizableText.okText, action: { viewModel.routeToAfterCall() })
         )
+        .dinotisAlert(
+            isPresent: $viewModel.isDuplicate,
+            type: .videoCall,
+            title: LocalizableText.attentionText,
+            isError: true,
+            message: LocalizableText.groupVideoCallDuplicateAlert,
+            primaryButton: .init(text: LocalizableText.groupVideoCallDisconnectNow, action: {
+                viewModel.leaveMeeting()
+            })
+        )
         .overlayPreferenceValue(BoundsPreference.self) { value in
             if let preference = value.first(where: { item in
                 item.key == viewModel.currentGuide?.rawValue
