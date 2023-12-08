@@ -22,24 +22,25 @@ struct ChatBubbleView: View {
 					Text(sender)
 						.font(.robotoBold(size: 12))
                         .lineLimit(1)
-						.foregroundColor(isSender ? .white : .white)
+						.foregroundColor(isSender ? .white : .black)
 						.multilineTextAlignment(.leading)
 				}
 			}
 
 			Text(message)
 				.font(.robotoRegular(size: 12))
-				.foregroundColor(isSender ? .black : .white)
+                .lineLimit(nil)
+				.foregroundColor(isSender ? .white : .black)
 				.multilineTextAlignment(isSender ? .trailing : .leading)
             
             VStack(alignment: .trailing) {
                 Rectangle()
-                    .foregroundColor(isSender ? .secondaryViolet : .DinotisDefault.primary)
+                    .foregroundColor(isSender ? .DinotisDefault.primary : .secondaryViolet)
                 
                     .frame(maxWidth: 256, maxHeight: 0.5)
                 Text(date.toStringFormat(with: .HHmm))
                     .font(.robotoRegular(size: 10))
-                    .foregroundColor(isSender ? .black : .white)
+                    .foregroundColor(isSender ? .white : .black)
             }
 		}
         .frame(maxWidth: 256)
@@ -47,7 +48,7 @@ struct ChatBubbleView: View {
         .padding(.horizontal, 16)
 		.background(
 			RoundedCorner(radius: 20, corners: isSender ? [.bottomLeft, .topLeft, .topRight] : [.bottomRight, .topLeft, .topRight])
-				.foregroundColor(isSender ? .secondaryViolet : .DinotisDefault.primary)
+				.foregroundColor(isSender ? .DinotisDefault.primary : .secondaryViolet)
 		)
     }
 }
