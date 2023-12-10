@@ -750,3 +750,5 @@
 "result_label" = "Hasil";
 
 "create_session_description_placeholder" = "Masukkan deskripsi singkat di sini...";
+"group_video_call_duplicate_alert" = "Peserta lain mencoba untuk bergabung dalam video call ini dengan akun yang sama.";
+"group_video_call_disconnect_now" = "Keluar";
