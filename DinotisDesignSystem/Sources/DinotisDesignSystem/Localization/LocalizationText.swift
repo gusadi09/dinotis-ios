@@ -3468,4 +3468,14 @@ public enum LocalizableText {
         comment: "create session description placeholder"
     )
     
+    public static let groupVideoCallDuplicateAlert = NSLocalizedString(
+        "group_video_call_duplicate_alert",
+        bundle: .module,
+        comment: "duplicate content"
+    )
+    public static let groupVideoCallDisconnectNow = NSLocalizedString(
+        "group_video_call_disconnect_now",
+        bundle: .module,
+        comment: "disconnect now"
+    )
 }
