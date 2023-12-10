@@ -749,3 +749,5 @@
 "result_label" = "Result";
 
 "create_session_description_placeholder" = "Enter a short description here...";
+"group_video_call_duplicate_alert" = "Another participant is attempting to join this video call using the same account.";
+"group_video_call_disconnect_now" = "Disconnect Now";
