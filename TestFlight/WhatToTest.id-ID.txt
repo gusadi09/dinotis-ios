@@ -1,3 +1,4 @@
 - [DBT-265] Menambahkan placeholder pada description text field ketika membuat sesi
 - [DBT-267] Fixing end call dialogue ketika meninggalkan sesi video call
 - Memperbaiki logika kondisional dari tab exclusive video
+- Menambahkan fungsi duplicate pada group video call

@@ -98,6 +98,7 @@ final class GroupVideoCallViewModel: ObservableObject {
     @Published var isShowRaisedToast = false
     @Published var toastText = ""
     @Published var isShowLeavePopUp = false
+    @Published var isDuplicate = false
     
     var meetingInfo = DyteMeetingInfoV2(
         authToken: "",
@@ -980,6 +981,10 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
         self.pinned = meeting.participants.pinned
         self.localUserId = meeting.localUser.userId
         self.isLoadingVoted = meeting.polls.polls.compactMap({ _ in false})
+        self.meeting.participants.broadcastMessage(type: "duplicate-check", payload: [
+            "peerId" : self.meeting.localUser.id,
+            "userId" : self.meeting.localUser.userId
+        ])
     }
     
     func onMeetingRoomJoinFailed(exception: KotlinException) {
@@ -1158,6 +1163,7 @@ extension GroupVideoCallViewModel: DyteSelfEventsListener {
     
     func onRoomMessage(type: String, payload: [String : Any]) {
         
+        self.isDuplicate = type.contains("duplicate-check") && !String(describing: payload["peerId"]).contains(self.meeting.localUser.id) && String(describing: payload["userId"]).contains(self.meeting.localUser.userId)
     }
     
     func onStageStatusUpdated(stageStatus: StageStatus) {
