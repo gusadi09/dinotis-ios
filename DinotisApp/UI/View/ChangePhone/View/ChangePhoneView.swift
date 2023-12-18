@@ -125,6 +125,9 @@ struct ChangePhoneView: View {
                             if newValue.hasPrefix("0") {
                                 viewModel.phone = String(newValue.dropFirst(1))
                             }
+                            
+                            let numericCharacters = newValue.filter { "0"..."9" ~= $0 }
+                            viewModel.phone = String(numericCharacters)
                         }
                     }
                 }

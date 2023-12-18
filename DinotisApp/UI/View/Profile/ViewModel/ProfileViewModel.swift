@@ -130,9 +130,27 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 		(self.data?.profilePhoto).orEmpty()
 	}
 	
-	func userProfession() -> [ProfessionData] {
-		(self.data?.professions) ?? []
+	func userProfessionString() -> String {
+        ((self.data?.professions) ?? []).compactMap {
+            $0.profession?.name
+        }.joined(separator: ", ")
 	}
+    
+    func managementsString() -> String {
+        ((self.data?.managements) ?? []).compactMap {
+            $0.management?.user?.name
+        }.joined(separator: ", ")
+    }
+    
+    func managements() -> [String] {
+        ((self.data?.managements) ?? []).compactMap {
+            $0.management?.user?.name
+        }
+    }
+    
+    func userProfession() -> [ProfessionData] {
+        (self.data?.professions) ?? []
+    }
 
 	func userBio() -> String {
 		(self.data?.profileDescription).orEmpty()
@@ -161,6 +179,12 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 			self?.route = .previewTalent(viewModel: viewModel)
 		}
 	}
+    
+    func routeToCreatorAnalytics() {
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .creatorAnalytics
+        }
+    }
     
     func handleDefaultError(error: Error) {
         DispatchQueue.main.async { [weak self] in
