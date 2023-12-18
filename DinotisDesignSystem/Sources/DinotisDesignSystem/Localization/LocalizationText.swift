@@ -3478,4 +3478,15 @@ public enum LocalizableText {
         bundle: .module,
         comment: "disconnect now"
     )
+    
+    public static let profileCreatorMyAccountTitle = NSLocalizedString(
+        "profile_creator_title",
+        bundle: .module,
+        comment: "My Account"
+    )
+    public static let profileCreatorAnalytics = NSLocalizedString(
+        "profile_creator_analytics",
+        bundle: .module,
+        comment: "creator analytics"
+    )
 }

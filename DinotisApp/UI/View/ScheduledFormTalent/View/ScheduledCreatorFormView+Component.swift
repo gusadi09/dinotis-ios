@@ -1703,7 +1703,7 @@ extension ScheduledFormView {
                     HStack {
                         Spacer()
                         
-                        DatePicker("", selection: $viewModel.changedStartDate, in: Date()..., displayedComponents: .hourAndMinute)
+                        DatePicker("", selection: $viewModel.changedStartDate, in: viewModel.startDate.orCurrentDate()..., displayedComponents: .hourAndMinute)
                             .datePickerStyle(WheelDatePickerStyle())
                             .labelsHidden()
                         
@@ -1718,9 +1718,11 @@ extension ScheduledFormView {
                         
                         if viewModel.meeting.endAt.isEmpty || viewModel.endDate.orCurrentDate() < viewModel.changedStartDate {
                             viewModel.endDate = viewModel.changedStartDate.addingTimeInterval(3600)
+                            viewModel.meeting.endAt = DateUtils.dateFormatter(viewModel.endDate.orCurrentDate(), forFormat: .utcV2)
                         }
                         viewModel.showsTimePicker = false
-                    }, label: {
+                    },
+                           label: {
                         HStack {
                             Spacer()
                             

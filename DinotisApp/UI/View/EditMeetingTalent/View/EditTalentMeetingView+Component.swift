@@ -1044,7 +1044,7 @@ extension EditTalentMeetingView {
                     HStack {
                         Spacer()
                         
-                        DatePicker("", selection: $viewModel.changedStartDate, in: Date()..., displayedComponents: .hourAndMinute)
+                        DatePicker("", selection: $viewModel.changedStartDate, in: viewModel.startDate.orCurrentDate()..., displayedComponents: .hourAndMinute)
                             .datePickerStyle(WheelDatePickerStyle())
                             .labelsHidden()
                         
@@ -1059,6 +1059,7 @@ extension EditTalentMeetingView {
                         
                         if viewModel.meetingForm.endAt.isEmpty || viewModel.endDate.orCurrentDate() < viewModel.changedStartDate {
                             viewModel.endDate = viewModel.changedStartDate.addingTimeInterval(3600)
+                            viewModel.meetingForm.endAt = DateUtils.dateFormatter(viewModel.endDate.orCurrentDate(), forFormat: .utcV2)
                         }
                         viewModel.showsTimePicker = false
                     }, label: {

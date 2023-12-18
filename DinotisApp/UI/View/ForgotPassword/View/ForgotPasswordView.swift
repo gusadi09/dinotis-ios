@@ -117,6 +117,14 @@ struct ForgotPasswordView: View {
                 
                 DinotisLoadingView(.fullscreen, hide: !viewModel.isLoading)
             }
+            .onChange(of: viewModel.phone.phone) { newValue in
+                if newValue.hasPrefix("0") {
+                    viewModel.phone.phone = String(newValue.dropFirst(1))
+                }
+                
+                let numericCharacters = newValue.filter { "0"..."9" ~= $0 }
+                viewModel.phone.phone = String(numericCharacters)
+            }
             .sheet(isPresented: $viewModel.isShowingCountryPicker, content: {
                 CountryPicker(country: $viewModel.countrySelected)
                     .dynamicTypeSize(.large)

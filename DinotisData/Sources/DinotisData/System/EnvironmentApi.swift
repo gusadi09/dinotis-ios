@@ -59,6 +59,17 @@ public enum EnvironmentApi: String {
 		}
 	}
 
+    public var cookiesDomain: String {
+        switch self {
+        case .production:
+            return "app.dinotis.com"
+        case .development:
+            return "dev.app.dinotis.com"
+        case .staging:
+            return "stag.app.dinotis.com"
+        }
+    }
+    
 	public var firebaseRealtimeURL: String {
 		switch self {
 		case .production:

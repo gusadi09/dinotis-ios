@@ -57,6 +57,7 @@
 		EC25CF34280DABC7000E3D9A /* OTPType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC25CF33280DABC7000E3D9A /* OTPType.swift */; };
 		EC25CF3A280DAE59000E3D9A /* ResetPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC25CF39280DAE59000E3D9A /* ResetPasswordView.swift */; };
 		EC25CF3C280DAE66000E3D9A /* ResetPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC25CF3B280DAE66000E3D9A /* ResetPasswordViewModel.swift */; };
+		EC27BBC42B2F5C8B00EFB988 /* CreatorAnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC27BBC32B2F5C8B00EFB988 /* CreatorAnalyticsView.swift */; };
 		EC28759727D1CB290093E9C9 /* PaymentMethodsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC28759627D1CB290093E9C9 /* PaymentMethodsViewModel.swift */; };
 		EC28759A27D1CB430093E9C9 /* DetailPaymentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC28759927D1CB430093E9C9 /* DetailPaymentViewModel.swift */; };
 		EC28759E27D1CB600093E9C9 /* UserInvoiceBookingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC28759D27D1CB600093E9C9 /* UserInvoiceBookingViewModel.swift */; };
@@ -421,6 +422,7 @@
 		EC25CF33280DABC7000E3D9A /* OTPType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPType.swift; sourceTree = "<group>"; };
 		EC25CF39280DAE59000E3D9A /* ResetPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordView.swift; sourceTree = "<group>"; };
 		EC25CF3B280DAE66000E3D9A /* ResetPasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewModel.swift; sourceTree = "<group>"; };
+		EC27BBC32B2F5C8B00EFB988 /* CreatorAnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatorAnalyticsView.swift; sourceTree = "<group>"; };
 		EC28759627D1CB290093E9C9 /* PaymentMethodsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodsViewModel.swift; sourceTree = "<group>"; };
 		EC28759927D1CB430093E9C9 /* DetailPaymentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPaymentViewModel.swift; sourceTree = "<group>"; };
 		EC28759D27D1CB600093E9C9 /* UserInvoiceBookingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInvoiceBookingViewModel.swift; sourceTree = "<group>"; };
@@ -1153,6 +1155,22 @@
 			isa = PBXGroup;
 			children = (
 				EC25CF39280DAE59000E3D9A /* ResetPasswordView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		EC27BBC12B2F5C2500EFB988 /* CreatorAnalytics */ = {
+			isa = PBXGroup;
+			children = (
+				EC27BBC22B2F5C5600EFB988 /* View */,
+			);
+			path = CreatorAnalytics;
+			sourceTree = "<group>";
+		};
+		EC27BBC22B2F5C5600EFB988 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				EC27BBC32B2F5C8B00EFB988 /* CreatorAnalyticsView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2206,6 +2224,7 @@
 		ECBA142E26B79149004D452C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				EC27BBC12B2F5C2500EFB988 /* CreatorAnalytics */,
 				4BEACAF82AF24C5D008E165C /* DetailVideo */,
 				4B65C0372AEF8806000FEF4B /* SessionRecordingList */,
 				4BEACAF12AEFADFB008E165C /* CreatorStudio */,
@@ -3283,6 +3302,7 @@
 				ECAAA29D280B050B00AAC6CA /* PromotionBannerView.swift in Sources */,
 				ECBCA2942860756800EB1656 /* CoinHistoryViewModel.swift in Sources */,
 				ECB964AA26B943FD00B0390B /* ChangePhoneView.swift in Sources */,
+				EC27BBC42B2F5C8B00EFB988 /* CreatorAnalyticsView.swift in Sources */,
 				EC4E500727FC0B76009D66FF /* LottieView.swift in Sources */,
 				ECD51FCB28A125F0000B1F6C /* SyncObjectConnecting.swift in Sources */,
 				ECD51FAA28A0C25A000B1F6C /* RemoteParticipantManager.swift in Sources */,
@@ -3598,7 +3618,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.7.2;
+				MARKETING_VERSION = 1.7.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -3674,7 +3694,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.7.2;
+				MARKETING_VERSION = 1.7.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp.DinotisNotificationServiceExtension;
@@ -3782,7 +3802,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.7.2;
+				MARKETING_VERSION = 1.7.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp;
 				PRODUCT_NAME = DinotisStag;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3860,7 +3880,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.7.2;
+				MARKETING_VERSION = 1.7.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -3968,7 +3988,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.7.2;
+				MARKETING_VERSION = 1.7.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp;
 				PRODUCT_NAME = DinotisDev;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4065,7 +4085,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.7.2;
+				MARKETING_VERSION = 1.7.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp;
 				PRODUCT_NAME = Dinotis;
 				PROVISIONING_PROFILE_SPECIFIER = "";
