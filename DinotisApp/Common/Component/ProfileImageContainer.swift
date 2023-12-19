@@ -8,15 +8,25 @@
 import SwiftUI
 import DinotisData
 
-struct ProfileImageContainer: View {
+struct ProfileImageContainer<S: Shape>: View {
 	@Binding var profilePhoto: String?
 	@Binding var name: String?
-	@State var width: Double
-	@State var height: Double
-	
+	var width: Double
+	var height: Double
+    
+    let shape: S
 	var isChatBox: Bool = false
 	
 	private let config = Configuration.shared
+    
+    init(profilePhoto: Binding<String?>, name: Binding<String?>, width: Double, height: Double, shape: S = Circle(), isChatBox: Bool = false) {
+        self._profilePhoto = profilePhoto
+        self._name = name
+        self.width = width
+        self.height = height
+        self.shape = shape
+        self.isChatBox = isChatBox
+    }
 	
 	var body: some View {
         if isChatBox {
@@ -28,7 +38,7 @@ struct ProfileImageContainer: View {
 				width: width,
 				height: height
 			)
-			.clipShape(Circle())
+			.clipShape(shape)
 		} else {
 			if profilePhoto?.prefix(5) != "https" {
 				ImageLoader(
@@ -40,14 +50,14 @@ struct ProfileImageContainer: View {
 					width: width,
 					height: height
 				)
-				.clipShape(Circle())
+				.clipShape(shape)
 			} else if name.orEmpty().isEmpty && profilePhoto.orEmpty().isEmpty {
 				ImageLoader(
 					url: "https://www.kindpng.com/picc/m/105-1055656_account-user-profile-avatar-avatar-user-profile-icon.png",
 					width: width,
 					height: height
 				)
-				.clipShape(Circle())
+				.clipShape(shape)
 			} else {
 				ImageLoader(
 					url: (
@@ -57,7 +67,7 @@ struct ProfileImageContainer: View {
 					width: width,
 					height: height
 				)
-				.clipShape(Circle())
+				.clipShape(shape)
 				
 			}
 		}
@@ -66,6 +76,6 @@ struct ProfileImageContainer: View {
 
 struct ProfileImageContainer_Previews: PreviewProvider {
 	static var previews: some View {
-		ProfileImageContainer(profilePhoto: .constant("2c57a024108105a8b9fb487921c810c4905.png"), name: .constant("aa"), width: 55, height: 55)
+        ProfileImageContainer(profilePhoto: .constant("2c57a024108105a8b9fb487921c810c4905.png"), name: .constant("aa"), width: 55, height: 55, shape: Circle())
 	}
 }

@@ -73,4 +73,5 @@ enum HomeRouting {
     case sessionRecordingList(viewModel: SessionRecordingListViewModel)
     case creatorStudio(viewModel: CreatorStudioViewModel)
     case detailVideo(viewModel: DetailVideoViewModel)
+    case creatorAnalytics
 }

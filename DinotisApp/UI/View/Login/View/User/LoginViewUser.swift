@@ -49,6 +49,9 @@ struct LoginViewUser: View {
                             if newValue.hasPrefix("0") {
                                 loginVM.phone.phone = String(newValue.dropFirst(1))
                             }
+                            
+                            let numericCharacters = newValue.filter { "0"..."9" ~= $0 }
+                            loginVM.phone.phone = String(numericCharacters)
                         }
 
 
