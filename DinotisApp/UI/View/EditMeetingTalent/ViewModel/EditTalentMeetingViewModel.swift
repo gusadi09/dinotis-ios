@@ -292,6 +292,8 @@ final class EditTalentMeetingViewModel: ObservableObject {
                 self?.meetingForm.title = success.title.orEmpty()
                 self?.meetingForm.managementId = success.managementId
                 self?.startDate = success.startAt.orCurrentDate()
+                self?.changedStartDate = success.startAt.orCurrentDate()
+                self?.changedEndDate = success.endAt.orCurrentDate()
                 self?.endDate = success.endAt.orCurrentDate()
                 self?.rawPrice = success.price.orEmpty()
                 self?.pricePerPeople = success.price.orEmpty()

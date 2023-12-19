@@ -43,8 +43,6 @@ struct TalentProfileView: View {
     
     @Environment(\.dismiss) var dismiss
     
-    @State var colorTab = Color.clear
-    
     @State var contentOffset = CGFloat.zero
     
     @Environment(\.viewController) private var viewControllerHolder: ViewControllerHolder
@@ -68,10 +66,6 @@ struct TalentProfileView: View {
                 }
             
             VStack(spacing: 0) {
-                colorTab
-                    .edgesIgnoringSafeArea(.all)
-                    .frame(height: 1)
-                
                 ZStack {
                     HStack {
                         Button(action: {
@@ -89,121 +83,134 @@ struct TalentProfileView: View {
                     
                     HStack {
                         Spacer()
-                        Text(LocaleText.myAccountTitle)
+                        Text(LocalizableText.profileCreatorMyAccountTitle)
                             .font(.robotoBold(size: 14))
                             .foregroundColor(.black)
                         
                         Spacer()
                     }
                 }
-                .padding(.top, 5)
-                .padding(.bottom)
-                .background(colorTab)
+                .padding(.top, 3)
+                .padding(.bottom, 6)
+                .background(Color.clear)
                 
-                ScrollViews(axes: .vertical, showsIndicators: false) { value in
-                    if value.y < -2 {
-                        colorTab = Color.white
-                    } else {
-                        colorTab = Color.clear
-                    }
-                } content: {
+                ScrollView(.vertical, showsIndicators: false) {
                     VStack {
                         VStack(alignment: .center, spacing: 10) {
-                            HStack {
-                                Spacer()
-                                ProfileImageContainer(
-                                    profilePhoto: $viewModel.userPhotos,
-                                    name: $viewModel.names,
-                                    width: 80,
-                                    height: 80
-                                )
-                                .padding(.top, 15)
-                                
-                                Spacer()
-                            }
-                            
-                            HStack {
-                                Spacer()
-                                
-                                Text(viewModel.nameOfUser())
-                                    .font(.robotoMedium(size: 14))
-                                    .minimumScaleFactor(0.01)
-                                    .lineLimit(1)
-                                    .foregroundColor(.black)
-                                
-                                Image.Dinotis.accountVerifiedIcon
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: 16)
-                                    .isHidden(
-                                        !viewModel.isUserVerified(),
-                                        remove: !viewModel.isUserVerified()
+                            VStack(alignment: .center, spacing:  8) {
+                                HStack {
+                                    Spacer()
+                                    ProfileImageContainer(
+                                        profilePhoto: $viewModel.userPhotos,
+                                        name: $viewModel.names,
+                                        width: 80,
+                                        height: 80,
+                                        shape: RoundedRectangle(cornerRadius: 12)
                                     )
-                                
-                                Spacer()
-                            }
-                            
-                            VStack(spacing: 5) {
-                                ForEach(viewModel.userProfession(), id: \.professionId) { item in
-                                    HStack {
-                                        Spacer()
-                                        
-                                        Text((item.profession?.name).orEmpty())
-                                            .font(.robotoRegular(size: 12))
-                                            .foregroundColor(.black)
-                                        
-                                        Spacer()
-                                    }
-                                }
-                            }
-                            .padding(.bottom, 5)
-                            
-                            HStack(spacing: 10) {
-                                HStack(spacing: 15) {
-                                    Image.Dinotis.linkedIcon
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(height: 26)
+                                    .padding(.top, 32)
                                     
-                                    Text(viewModel.userLink())
-                                        .font(.robotoRegular(size: 12))
-                                        .foregroundColor(.black)
                                     Spacer()
                                 }
-                                .padding(15)
-                                .background(Color.backgroundProfile)
-                                .cornerRadius(12)
                                 
-                                Spacer()
-                                
-                                Button(action: {
-                                    viewModel.copyURL()
+                                HStack {
+                                    Spacer()
                                     
-                                }, label: {
-                                    VStack {
-                                        Image.Dinotis.copyIcon
+                                    Text(viewModel.nameOfUser())
+                                        .font(.robotoMedium(size: 14))
+                                        .minimumScaleFactor(0.01)
+                                        .lineLimit(1)
+                                        .foregroundColor(.black)
+                                    
+                                    Image.Dinotis.accountVerifiedIcon
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 16)
+                                        .isHidden(
+                                            !viewModel.isUserVerified(),
+                                            remove: !viewModel.isUserVerified()
+                                        )
+                                    
+                                    Spacer()
+                                }
+                                
+                                HStack {
+                                    Spacer()
+                                    
+                                    Text("\(Image.talentProfileManagementIcon) \(viewModel.userProfessionString())")
+                                        .font(.robotoRegular(size: 12))
+                                        .foregroundColor(.black)
+                                        .multilineTextAlignment(.center)
+                                        .lineLimit(3)
+                                    
+                                    Spacer()
+                                }
+                                
+                                HStack {
+                                    Spacer()
+                                    
+                                    (
+                                        Text(LocalizableText.managementName)
+                                        .font(.robotoRegular(size: 12))
+                                        .foregroundColor(.DinotisDefault.black1)
+                                    +
+                                    Text(" \(viewModel.managementsString())")
+                                        .font(.robotoBold(size: 12))
+                                        .foregroundColor(.DinotisDefault.primary)
+                                    )
+                                        .multilineTextAlignment(.center)
+                                        .lineLimit(3)
+                                    
+                                    Spacer()
+                                }
+                                .isHidden(viewModel.managements().isEmpty, remove: true)
+                                
+                                HStack(spacing: 10) {
+                                    HStack(spacing: 15) {
+                                        Image.Dinotis.linkedIcon
                                             .resizable()
                                             .scaledToFit()
-                                            .frame(height: 20)
+                                            .frame(height: 26)
                                         
-                                        Text(LocaleText.copyText)
+                                        Text(viewModel.userLink())
                                             .font(.robotoRegular(size: 12))
                                             .foregroundColor(.black)
+                                        
+                                        Spacer()
                                     }
-                                })
+                                    .padding(15)
+                                    .background(Color.DinotisDefault.lightPrimary)
+                                    .cornerRadius(12)
+                                    
+                                    Button(action: {
+                                        viewModel.copyURL()
+                                        
+                                    }, label: {
+                                        VStack {
+                                            Image.Dinotis.copyIcon
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(height: 20)
+                                            
+                                            Text(LocaleText.copyText)
+                                                .font(.robotoRegular(size: 12))
+                                                .foregroundColor(.black)
+                                        }
+                                    })
+                                }
+                                
+                                HStack {
+                                    Spacer()
+                                    Text(viewModel.userBio())
+                                        .font(.robotoRegular(size: 12))
+                                        .foregroundColor(.black)
+                                        .multilineTextAlignment(.center)
+                                    Spacer()
+                                }
+                                .padding(20)
+                                .background(Color.backgroundProfile)
+                                .cornerRadius(12)
+                                .isHidden(true, remove: true)
                             }
-                            
-                            HStack {
-                                Spacer()
-                                Text(viewModel.userBio())
-                                    .font(.robotoRegular(size: 12))
-                                    .foregroundColor(.black)
-                                    .multilineTextAlignment(.center)
-                                Spacer()
-                            }
-                            .padding(20)
-                            .background(Color.backgroundProfile)
-                            .cornerRadius(12)
                             
                             HStack {
                                 Text(LocaleText.accountSettingText)
@@ -272,6 +279,50 @@ struct TalentProfileView: View {
                                     Capsule()
                                         .frame(height: 1)
                                         .foregroundColor(Color(.systemGray6))
+                                    
+                                    Button(action: {
+                                        viewModel.routeToCreatorAnalytics()
+                                    }, label: {
+                                        HStack {
+                                            Image.profileCreatorAnalyticsIcon
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(height: 34)
+                                                .padding(.trailing, 5)
+                                            
+                                            Text(LocalizableText.profileCreatorAnalytics)
+                                                .font(.robotoMedium(size: 12))
+                                                .foregroundColor(.black)
+                                            
+                                            Spacer()
+                                            
+                                            Image(systemName: "chevron.right")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .font(.system(size: 12, weight: .semibold))
+                                                .frame(height: 12)
+                                                .foregroundColor(.black)
+                                        }
+                                    })
+                                    .padding(.vertical, 10)
+                                    .padding(.horizontal, 15)
+                                    .clipShape(Rectangle())
+                                    
+                                    Capsule()
+                                        .frame(height: 1)
+                                        .foregroundColor(Color(.systemGray6))
+                                    
+                                    NavigationLink(
+                                        unwrapping: $viewModel.route,
+                                        case: /HomeRouting.creatorAnalytics,
+                                        destination: { viewModel in
+                                            CreatorAnalyticsView()
+                                        },
+                                        onNavigate: {_ in },
+                                        label: {
+                                            EmptyView()
+                                        }
+                                    )
                                     
                                     Button(action: {
                                         viewModel.routeToPreviewProfile()
@@ -538,11 +589,11 @@ struct TalentProfileView: View {
                         }
                         .padding()
                         .background(Color.white)
-                        .cornerRadius(16)
-                        .shadow(color: Color.dinotisShadow.opacity(0.2), radius: 15, x: 0.0, y: 0.0)
+                        .cornerRadius(12)
+                        .shadow(color: Color.dinotisShadow.opacity(0.1), radius: 5, x: 0.0, y: 0.0)
                         .padding()
                         .padding(.bottom)
-                        .padding(.top, 10)
+                        .padding(.top, 3)
                         
                     }
                 }

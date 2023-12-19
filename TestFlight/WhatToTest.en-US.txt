@@ -1,4 +1,2 @@
-- [DBT-265] Add placeholder on description textfield when create a session
-- [DBT-267] Fixing the end call dialogue when leaving video call session
-- Fixing exclusive video tab conditional logic
-- Adding duplicate function on group video call
+- [DBT-277] Fixing phone field limitation
+- Refactored Creator My Account view
