@@ -263,7 +263,7 @@
 "profile_choosen_creator" = "Kreator Pilihanmu";
 "choosen_creator_empty" = "Kamu belum menambahkan kreator pilihan";
 "profession_management" = "Manajemen";
-"management_name" = "Dikelola Oleh ";
+"management_name" = "Dikelola oleh ";
 "search_placeholder" = "Cari sesi, kreator, atau management di sini...";
 "search_recommendation_title" = "Rekomendasi pencarian";
 "search_related_creator_title" = "Kreator Terkait";
@@ -755,3 +755,5 @@
 
 "profile_creator_title" = "Akun Saya";
 "profile_creator_analytics" = "Analisis Kreator";
+
+"management_plus_other" = "+ %lld lainnya";
