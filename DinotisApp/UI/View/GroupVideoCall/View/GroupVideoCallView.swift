@@ -220,7 +220,13 @@ struct GroupVideoCallView: View {
             title: LocalizableText.attentionText,
             isError: false,
             message: LocalizableText.videoCallMeetingForceEnd,
-            primaryButton: .init(text: LocalizableText.okText, action: { viewModel.routeToAfterCall() })
+            primaryButton: .init(text: LocalizableText.okText, action: {
+                if viewModel.isJoined {
+                    viewModel.leaveMeeting()
+                } else {
+                    viewModel.routeToAfterCall()
+                }
+            })
         )
         .dinotisAlert(
             isPresent: $viewModel.isDuplicate,
@@ -566,12 +572,11 @@ fileprivate extension GroupVideoCallView {
                     .tag(1)
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
-                
                 .onTapGesture {
                     withAnimation {
                         viewModel.isShowingToolbar.toggle()
                     }
-                }
+                } 
             }
             .overlay {
                 VStack {

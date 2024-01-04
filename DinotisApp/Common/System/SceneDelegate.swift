@@ -7,7 +7,6 @@
 
 import UIKit
 import SwiftUI
-import TwilioVideo
 import DinotisData
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -153,7 +152,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         interfaceOrientation previousInterfaceOrientation: UIInterfaceOrientation,
         traitCollection previousTraitCollection: UITraitCollection
     ) {
-        // So the camera handles orientation changes correctly
-        UserInterfaceTracker.sceneInterfaceOrientationDidChange(windowScene)
+        
     }
 }
