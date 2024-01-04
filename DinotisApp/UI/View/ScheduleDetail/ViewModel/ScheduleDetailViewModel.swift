@@ -970,17 +970,6 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
             self?.route = .dyteGroupVideoCall(viewModel: viewModel)
         }
     }
-    
-    func routeToTwilioLiveStream(meeting: UserMeetingData) {
-        let viewModel = TwilioLiveStreamViewModel(
-            backToHome: self.backToHome,
-            meeting: meeting
-        )
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.route = .twilioLiveStream(viewModel: viewModel)
-        }
-    }
 
   
     func routeToTalentProfile(username: String?) {
@@ -1141,13 +1130,9 @@ final class ScheduleDetailViewModel: NSObject, ObservableObject, SKProductsReque
                 if detailMeet.isPrivate ?? false {
                     self?.routeToVideoCall(meeting: converted)
                 } else if !(detailMeet.isPrivate ?? false) {
-                    if detailMeet.dyteMeetingId == nil {
-                        self?.routeToTwilioLiveStream(meeting: converted)
-                    } else {
-                        self?.routeToGroupCall(
-                            meeting: converted
-                        )
-                    }
+                    self?.routeToGroupCall(
+                        meeting: converted
+                    )
                 }
             }
         case .failure(let failure):
