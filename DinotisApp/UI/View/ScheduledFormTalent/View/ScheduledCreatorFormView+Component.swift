@@ -1704,7 +1704,7 @@ extension ScheduledFormView {
                     HStack {
                         Spacer()
                         
-                        DatePicker("", selection: $viewModel.changedStartDate, in: viewModel.startDate.orCurrentDate()..., displayedComponents: .hourAndMinute)
+                        DatePicker("", selection: $viewModel.changedStartDate, in: Date()..., displayedComponents: .hourAndMinute)
                             .datePickerStyle(WheelDatePickerStyle())
                             .labelsHidden()
                         

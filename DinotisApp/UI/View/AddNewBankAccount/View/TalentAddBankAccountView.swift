@@ -209,7 +209,7 @@ struct TalentAddBankAccountView: View {
 
                 ScrollView(.vertical, showsIndicators: false, content: {
                     ForEach(viewModel.bankList.filter({ val in
-                        viewModel.searchBank.isEmpty ? true : (val.name.orEmpty()).contains(viewModel.searchBank)
+                        viewModel.searchBank.isEmpty ? true : (val.name.orEmpty().lowercased()).contains(viewModel.searchBank.lowercased())
                     }), id: \.id) { items in
                         VStack {
                             HStack {

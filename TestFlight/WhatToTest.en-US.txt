@@ -1,2 +1,2 @@
-- [DBT-277] Fixing phone field limitation
-- Refactored Creator My Account view
+- Migration of Private Video call from Twilio to be Dyte
+- [DBT-284] Fixing Bank Search Case Sensitive

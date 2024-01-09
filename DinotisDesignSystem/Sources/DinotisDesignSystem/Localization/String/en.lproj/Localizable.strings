@@ -263,7 +263,7 @@
 "profile_choosen_creator" = "Your Choosen Creator";
 "choosen_creator_empty" = "You didn't add choosen creator";
 "profession_management" = "Management";
-"management_name" = "Managed By ";
+"management_name" = "Managed by ";
 "search_placeholder" = "Find some sessions, creators or management here...";
 "search_recommendation_title" = "Search recommendations";
 "search_related_creator_title" = "Related Creators";
@@ -754,3 +754,5 @@
 
 "profile_creator_title" = "My Account";
 "profile_creator_analytics" = "Creator Analytics";
+
+"management_plus_other" = "+ %lld others";

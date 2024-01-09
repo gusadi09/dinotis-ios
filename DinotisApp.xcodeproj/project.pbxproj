@@ -63,11 +63,6 @@
 		EC28759E27D1CB600093E9C9 /* UserInvoiceBookingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC28759D27D1CB600093E9C9 /* UserInvoiceBookingViewModel.swift */; };
 		EC28CD5727A110480023A745 /* PaymentInstruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC28CD5627A110480023A745 /* PaymentInstruction.swift */; };
 		EC28CD5927A113460023A745 /* TopBarInstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC28CD5827A113460023A745 /* TopBarInstructionView.swift */; };
-		EC2A511628C7099800C717B9 /* TwilioGroupVideoCallView+Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2A511028C7099800C717B9 /* TwilioGroupVideoCallView+Component.swift */; };
-		EC2A511728C7099800C717B9 /* PresentationVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2A511228C7099800C717B9 /* PresentationVideoView.swift */; };
-		EC2A511828C7099800C717B9 /* PresentationStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2A511328C7099800C717B9 /* PresentationStatusView.swift */; };
-		EC2A511928C7099800C717B9 /* TwilioGroupVideoCallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2A511428C7099800C717B9 /* TwilioGroupVideoCallView.swift */; };
-		EC2A511A28C7099800C717B9 /* ProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2A511528C7099800C717B9 /* ProgressHUD.swift */; };
 		EC2AFDD926BAAE49005260FD /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2AFDD826BAAE49005260FD /* NotificationView.swift */; };
 		EC2C296127C7187F00F1A69C /* ChangePhoneViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2C296027C7187F00F1A69C /* ChangePhoneViewModel.swift */; };
 		EC2C296827C74DA100F1A69C /* ChangePhoneVerifyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2C296727C74DA100F1A69C /* ChangePhoneVerifyViewModel.swift */; };
@@ -96,7 +91,6 @@
 		EC50A05A26E6273100F45C2F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC50A05926E6273100F45C2F /* ContentView.swift */; };
 		EC57FC4A26CAB883006EAAA5 /* TalentSearchCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC57FC4926CAB883006EAAA5 /* TalentSearchCard.swift */; };
 		EC57FC4F26CAC823006EAAA5 /* TalentSearchVerticalCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC57FC4E26CAC823006EAAA5 /* TalentSearchVerticalCardView.swift */; };
-		EC5B59BE28CB64AC009D6B2B /* PrivateSpeakerVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5B59BD28CB64AC009D6B2B /* PrivateSpeakerVideoView.swift */; };
 		EC5D281D27FEE56600A740E1 /* LiveStreamCondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5D281C27FEE56600A740E1 /* LiveStreamCondition.swift */; };
 		EC625604272ADF6D00FA209B /* EditTalentMeetingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC625603272ADF6D00FA209B /* EditTalentMeetingView.swift */; };
 		EC62576027B79F010079AA10 /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = EC62575F27B79F010079AA10 /* SwiftUINavigation */; };
@@ -132,7 +126,6 @@
 		EC6A96F327CF17D800282253 /* AfterCallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6A96F227CF17D700282253 /* AfterCallView.swift */; };
 		EC6D0E5F298306BF0016C45D /* TabViewContainerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6D0E5C298306BF0016C45D /* TabViewContainerViewModel.swift */; };
 		EC6D0E60298306BF0016C45D /* TabViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6D0E5E298306BF0016C45D /* TabViewContainer.swift */; };
-		EC6D5B0128B36ADD00BB794F /* SyncRoomDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6D5B0028B36ADD00BB794F /* SyncRoomDocument.swift */; };
 		EC6D5B0328B4A5B500BB794F /* TwilioModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6D5B0228B4A5B500BB794F /* TwilioModels.swift */; };
 		EC6DBB5A272BC1A50034E803 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EC6DBB5C272BC1A50034E803 /* Localizable.strings */; };
 		EC722261294EFFA700C05A1B /* WaterfallGrid in Frameworks */ = {isa = PBXBuildFile; productRef = EC722260294EFFA700C05A1B /* WaterfallGrid */; };
@@ -185,6 +178,7 @@
 		ECA0A386271148BC0000739E /* Color.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ECA0A385271148BC0000739E /* Color.xcassets */; };
 		ECA51E6027D09A880096E22D /* SearchTalentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA51E5F27D09A880096E22D /* SearchTalentView.swift */; };
 		ECA51E6227D09A9F0096E22D /* SearchTalentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA51E6127D09A9F0096E22D /* SearchTalentViewModel.swift */; };
+		ECA7885D2B46DA810016D68B /* ProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA7885C2B46DA810016D68B /* ProgressHUD.swift */; };
 		ECA7F7DD270DA83900CFB3AD /* SDWebImageSVGCoder in Frameworks */ = {isa = PBXBuildFile; productRef = ECA7F7DC270DA83900CFB3AD /* SDWebImageSVGCoder */; };
 		ECAAA29D280B050B00AAC6CA /* PromotionBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECAAA29C280B050B00AAC6CA /* PromotionBannerView.swift */; };
 		ECAAA2A4280C28CC00AAC6CA /* TalentPhotoProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECAAA2A3280C28CC00AAC6CA /* TalentPhotoProfile.swift */; };
@@ -213,7 +207,6 @@
 		ECBA13F226B78F78004D452C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ECBA13F126B78F78004D452C /* Preview Assets.xcassets */; };
 		ECBA13F526B78F78004D452C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ECBA13F326B78F78004D452C /* LaunchScreen.storyboard */; };
 		ECBA9F3526D63662008CCCDB /* TalentProfileDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBA9F3426D63662008CCCDB /* TalentProfileDetailView.swift */; };
-		ECBB02DA2A7C1058001DEA6B /* PollingVideoCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBB02D92A7C1058001DEA6B /* PollingVideoCall.swift */; };
 		ECBCA28C285DBECF00EB1656 /* NSDecimalNumber+toString.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBCA28B285DBECE00EB1656 /* NSDecimalNumber+toString.swift */; };
 		ECBCA2912860755700EB1656 /* CoinHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBCA2902860755700EB1656 /* CoinHistoryView.swift */; };
 		ECBCA2942860756800EB1656 /* CoinHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBCA2932860756800EB1656 /* CoinHistoryViewModel.swift */; };
@@ -221,7 +214,6 @@
 		ECBE153F28D17DC400EE92A4 /* DinotisList.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBE153E28D17DC300EE92A4 /* DinotisList.swift */; };
 		ECBE2B652729265D002A45D8 /* WithdrawBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBE2B642729265D002A45D8 /* WithdrawBank.swift */; };
 		ECBFE676270FF9D10075D01F /* PrivateVideoCallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBFE675270FF9D10075D01F /* PrivateVideoCallView.swift */; };
-		ECBFE67C270FF9F80075D01F /* PrivateVideoCall+VideoCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBFE679270FF9F80075D01F /* PrivateVideoCall+VideoCall.swift */; };
 		ECBFE67D270FF9F80075D01F /* View+Draggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBFE67A270FF9F80075D01F /* View+Draggable.swift */; };
 		ECBFE682271026750075D01F /* AgoraMeeting.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBFE681271026750075D01F /* AgoraMeeting.swift */; };
 		ECBFE68927102A560075D01F /* String+Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBFE68827102A560075D01F /* String+Random.swift */; };
@@ -242,25 +234,11 @@
 		ECCEFEAC277E9DD100E9B0AD /* RxMoya in Frameworks */ = {isa = PBXBuildFile; productRef = ECCEFEAB277E9DD100E9B0AD /* RxMoya */; };
 		ECD453B62A272A3000338D05 /* OutdatedVersionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD453B52A272A3000338D05 /* OutdatedVersionView.swift */; };
 		ECD4FC8729C4B93B00FBBC01 /* dinotis-white-lottie-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = ECD4FC8629C4B93A00FBBC01 /* dinotis-white-lottie-loading.json */; };
-		ECD51FAA28A0C25A000B1F6C /* RemoteParticipantManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD51FA528A0C25A000B1F6C /* RemoteParticipantManager.swift */; };
-		ECD51FAB28A0C25A000B1F6C /* TrackName.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD51FA628A0C25A000B1F6C /* TrackName.swift */; };
-		ECD51FAC28A0C25A000B1F6C /* LocalParticipantManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD51FA728A0C25A000B1F6C /* LocalParticipantManager.swift */; };
-		ECD51FAD28A0C25A000B1F6C /* RoomManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD51FA828A0C25A000B1F6C /* RoomManager.swift */; };
-		ECD51FAE28A0C25A000B1F6C /* RoomMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD51FA928A0C25A000B1F6C /* RoomMessage.swift */; };
-		ECD51FB128A0C262000B1F6C /* PlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD51FB028A0C262000B1F6C /* PlayerManager.swift */; };
-		ECD51FB828A0C3EA000B1F6C /* LiveVideoError.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD51FB728A0C3EA000B1F6C /* LiveVideoError.swift */; };
-		ECD51FCA28A125F0000B1F6C /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD51FC728A125F0000B1F6C /* SyncManager.swift */; };
-		ECD51FCB28A125F0000B1F6C /* SyncObjectConnecting.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD51FC828A125F0000B1F6C /* SyncObjectConnecting.swift */; };
-		ECD51FCC28A125F0000B1F6C /* SyncUserDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD51FC928A125F0000B1F6C /* SyncUserDocument.swift */; };
-		ECD51FCE28A12633000B1F6C /* StreamViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD51FCD28A12633000B1F6C /* StreamViewModel.swift */; };
 		ECD51FD328A20CA0000B1F6C /* TwilioDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD51FD228A20CA0000B1F6C /* TwilioDataRepository.swift */; };
 		ECD51FD528A20CAD000B1F6C /* TwilioDataDefaultRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD51FD428A20CAD000B1F6C /* TwilioDataDefaultRepository.swift */; };
 		ECD51FD728A20CBC000B1F6C /* TwilioRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD51FD628A20CBC000B1F6C /* TwilioRemoteDataSource.swift */; };
 		ECD51FD928A20CC7000B1F6C /* TwilioDefaultRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD51FD828A20CC7000B1F6C /* TwilioDefaultRemoteDataSource.swift */; };
 		ECD51FDC28A2165F000B1F6C /* TwilioDataTargetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD51FDB28A2165F000B1F6C /* TwilioDataTargetType.swift */; };
-		ECD51FDE28A22632000B1F6C /* SpeakerVideoViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD51FDD28A22632000B1F6C /* SpeakerVideoViewModelFactory.swift */; };
-		ECD51FE028A226C6000B1F6C /* DisplayNameFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD51FDF28A226C6000B1F6C /* DisplayNameFactory.swift */; };
-		ECD51FED28A40EE4000B1F6C /* ParticipantsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD51FEC28A40EE4000B1F6C /* ParticipantsViewModel.swift */; };
 		ECD6C1FF2701B37500A09AD8 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD6C1FE2701B37500A09AD8 /* ImagePicker.swift */; };
 		ECD6C2012701B3B800A09AD8 /* Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD6C2002701B3B800A09AD8 /* Upload.swift */; };
 		ECD6C20A2701F37300A09AD8 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = ECD6C2092701F37300A09AD8 /* SDWebImageSwiftUI */; };
@@ -292,35 +270,8 @@
 		ECF582BF27244951006C0BE7 /* ScrollViewModification.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF582BE27244951006C0BE7 /* ScrollViewModification.swift */; };
 		ECF7096728C1E7AD0093E020 /* CountryPicker in Frameworks */ = {isa = PBXBuildFile; productRef = ECF7096628C1E7AD0093E020 /* CountryPicker */; };
 		ECF7096928C1E7D90093E020 /* CountryPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF7096828C1E7D90093E020 /* CountryPickerView.swift */; };
-		F61E53DF28CB49B6006594B4 /* PrivateVideoSpeakerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61E53DE28CB49B6006594B4 /* PrivateVideoSpeakerViewModel.swift */; };
-		F61E53E328CB5010006594B4 /* PrivateSpeakerVideoViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61E53E228CB5010006594B4 /* PrivateSpeakerVideoViewModelFactory.swift */; };
-		F61E53E528CB50F4006594B4 /* PrivateSpeakerVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61E53E428CB50F4006594B4 /* PrivateSpeakerVideoViewModel.swift */; };
-		F63A0965289BB7A0008C7815 /* TwilioLiveStreamViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63A0964289BB7A0008C7815 /* TwilioLiveStreamViewModel.swift */; };
-		F63A0968289BBCEB008C7815 /* TwilioVideo in Frameworks */ = {isa = PBXBuildFile; productRef = F63A0967289BBCEB008C7815 /* TwilioVideo */; };
-		F63A096B289BBD79008C7815 /* TwilioSyncClient in Frameworks */ = {isa = PBXBuildFile; productRef = F63A096A289BBD79008C7815 /* TwilioSyncClient */; };
-		F63A096E289BBDCC008C7815 /* TwilioLivePlayer in Frameworks */ = {isa = PBXBuildFile; productRef = F63A096D289BBDCC008C7815 /* TwilioLivePlayer */; };
 		F63A0973289BC42D008C7815 /* StreamConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63A0972289BC42D008C7815 /* StreamConfig.swift */; };
-		F63A0979289BD4C1008C7815 /* PresentationLayoutViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63A0978289BD4C1008C7815 /* PresentationLayoutViewModel.swift */; };
-		F63A097B289BD53A008C7815 /* PresentationLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63A097A289BD53A008C7815 /* PresentationLayoutView.swift */; };
-		F63A097D289BD917008C7815 /* SwiftUIVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63A097C289BD916008C7815 /* SwiftUIVideoView.swift */; };
-		F63A0982289BDBB5008C7815 /* SpeakerVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63A0981289BDBB5008C7815 /* SpeakerVideoView.swift */; };
-		F63A0984289BDBF2008C7815 /* SpeakerVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63A0983289BDBF2008C7815 /* SpeakerVideoViewModel.swift */; };
-		F63A0988289BDEF5008C7815 /* HostControlsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63A0987289BDEF5008C7815 /* HostControlsManager.swift */; };
-		F63A098D289BED1C008C7815 /* SpeakerGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63A098C289BED1C008C7815 /* SpeakerGridView.swift */; };
-		F63A098F289BED2F008C7815 /* SpeakerGridViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63A098E289BED2F008C7815 /* SpeakerGridViewModel.swift */; };
-		F63A0992289C04B4008C7815 /* SpeakerSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63A0991289C04B3008C7815 /* SpeakerSettingsManager.swift */; };
-		F63A0997289C1226008C7815 /* StreamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63A0996289C1226008C7815 /* StreamManager.swift */; };
-		F63A099A289C142A008C7815 /* SyncUserMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63A0999289C142A008C7815 /* SyncUserMap.swift */; };
-		F63A099D289CBA00008C7815 /* ChatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63A099C289CBA00008C7815 /* ChatManager.swift */; };
 		F63A09A3289CBE6A008C7815 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63A09A2289CBE6A008C7815 /* ChatMessage.swift */; };
-		F63A09A5289CEC6F008C7815 /* SwiftUIPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63A09A4289CEC6F008C7815 /* SwiftUIPlayerView.swift */; };
-		F665C44028C9C93500D669A8 /* PrivateRoomManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F665C43F28C9C93500D669A8 /* PrivateRoomManager.swift */; };
-		F665C44228C9CD2800D669A8 /* PrivateRemoteParticipantManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F665C44128C9CD2800D669A8 /* PrivateRemoteParticipantManager.swift */; };
-		F665C44428C9CEA800D669A8 /* PrivateLocalParticipantManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F665C44328C9CEA800D669A8 /* PrivateLocalParticipantManager.swift */; };
-		F665C44628C9D37400D669A8 /* PrivateRoomMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F665C44528C9D37400D669A8 /* PrivateRoomMessage.swift */; };
-		F665C44928C9D96700D669A8 /* PrivateStreamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F665C44828C9D96700D669A8 /* PrivateStreamManager.swift */; };
-		F665C44B28C9DDFB00D669A8 /* PrivateStreamViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F665C44A28C9DDFB00D669A8 /* PrivateStreamViewModel.swift */; };
-		F665C44E28C9E1E900D669A8 /* PrivateSpeakerSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F665C44D28C9E1E900D669A8 /* PrivateSpeakerSettingsManager.swift */; };
 		F67334B42908EBE5006C1ADF /* BundlingMiniCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67334B32908EBE4006C1ADF /* BundlingMiniCardView.swift */; };
 		F67334BA2908EC26006C1ADF /* TalentCreateBundlingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67334B72908EC26006C1ADF /* TalentCreateBundlingViewModel.swift */; };
 		F67334BB2908EC26006C1ADF /* TalentCreateBundlingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67334B92908EC26006C1ADF /* TalentCreateBundlingView.swift */; };
@@ -428,11 +379,6 @@
 		EC28759D27D1CB600093E9C9 /* UserInvoiceBookingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInvoiceBookingViewModel.swift; sourceTree = "<group>"; };
 		EC28CD5627A110480023A745 /* PaymentInstruction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentInstruction.swift; sourceTree = "<group>"; };
 		EC28CD5827A113460023A745 /* TopBarInstructionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBarInstructionView.swift; sourceTree = "<group>"; };
-		EC2A511028C7099800C717B9 /* TwilioGroupVideoCallView+Component.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TwilioGroupVideoCallView+Component.swift"; sourceTree = "<group>"; };
-		EC2A511228C7099800C717B9 /* PresentationVideoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresentationVideoView.swift; sourceTree = "<group>"; };
-		EC2A511328C7099800C717B9 /* PresentationStatusView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresentationStatusView.swift; sourceTree = "<group>"; };
-		EC2A511428C7099800C717B9 /* TwilioGroupVideoCallView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwilioGroupVideoCallView.swift; sourceTree = "<group>"; };
-		EC2A511528C7099800C717B9 /* ProgressHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressHUD.swift; sourceTree = "<group>"; };
 		EC2AFDD826BAAE49005260FD /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 		EC2C296027C7187F00F1A69C /* ChangePhoneViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePhoneViewModel.swift; sourceTree = "<group>"; };
 		EC2C296727C74DA100F1A69C /* ChangePhoneVerifyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePhoneVerifyViewModel.swift; sourceTree = "<group>"; };
@@ -458,7 +404,6 @@
 		EC50A05926E6273100F45C2F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		EC57FC4926CAB883006EAAA5 /* TalentSearchCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalentSearchCard.swift; sourceTree = "<group>"; };
 		EC57FC4E26CAC823006EAAA5 /* TalentSearchVerticalCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalentSearchVerticalCardView.swift; sourceTree = "<group>"; };
-		EC5B59BD28CB64AC009D6B2B /* PrivateSpeakerVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateSpeakerVideoView.swift; sourceTree = "<group>"; };
 		EC5D281C27FEE56600A740E1 /* LiveStreamCondition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveStreamCondition.swift; sourceTree = "<group>"; };
 		EC5DF309285CD36500885D67 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		EC625603272ADF6D00FA209B /* EditTalentMeetingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTalentMeetingView.swift; sourceTree = "<group>"; };
@@ -493,7 +438,6 @@
 		EC6A96F227CF17D700282253 /* AfterCallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfterCallView.swift; sourceTree = "<group>"; };
 		EC6D0E5C298306BF0016C45D /* TabViewContainerViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabViewContainerViewModel.swift; sourceTree = "<group>"; };
 		EC6D0E5E298306BF0016C45D /* TabViewContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabViewContainer.swift; sourceTree = "<group>"; };
-		EC6D5B0028B36ADD00BB794F /* SyncRoomDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncRoomDocument.swift; sourceTree = "<group>"; };
 		EC6D5B0228B4A5B500BB794F /* TwilioModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwilioModels.swift; sourceTree = "<group>"; };
 		EC6DBB5B272BC1A50034E803 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EC70AC57272BC23300FCF812 /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -540,6 +484,7 @@
 		ECA0A385271148BC0000739E /* Color.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Color.xcassets; sourceTree = "<group>"; };
 		ECA51E5F27D09A880096E22D /* SearchTalentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTalentView.swift; sourceTree = "<group>"; };
 		ECA51E6127D09A9F0096E22D /* SearchTalentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTalentViewModel.swift; sourceTree = "<group>"; };
+		ECA7885C2B46DA810016D68B /* ProgressHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressHUD.swift; sourceTree = "<group>"; };
 		ECAAA29C280B050B00AAC6CA /* PromotionBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromotionBannerView.swift; sourceTree = "<group>"; };
 		ECAAA2A3280C28CC00AAC6CA /* TalentPhotoProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalentPhotoProfile.swift; sourceTree = "<group>"; };
 		ECAAA2A5280C63BC00AAC6CA /* HomePrivateFeatureCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePrivateFeatureCard.swift; sourceTree = "<group>"; };
@@ -567,7 +512,6 @@
 		ECBA13F426B78F78004D452C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ECBA13F626B78F78004D452C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ECBA9F3426D63662008CCCDB /* TalentProfileDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalentProfileDetailView.swift; sourceTree = "<group>"; };
-		ECBB02D92A7C1058001DEA6B /* PollingVideoCall.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PollingVideoCall.swift; sourceTree = "<group>"; };
 		ECBCA28B285DBECE00EB1656 /* NSDecimalNumber+toString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDecimalNumber+toString.swift"; sourceTree = "<group>"; };
 		ECBCA2902860755700EB1656 /* CoinHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinHistoryView.swift; sourceTree = "<group>"; };
 		ECBCA2932860756800EB1656 /* CoinHistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinHistoryViewModel.swift; sourceTree = "<group>"; };
@@ -575,7 +519,6 @@
 		ECBE153E28D17DC300EE92A4 /* DinotisList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DinotisList.swift; sourceTree = "<group>"; };
 		ECBE2B642729265D002A45D8 /* WithdrawBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawBank.swift; sourceTree = "<group>"; };
 		ECBFE675270FF9D10075D01F /* PrivateVideoCallView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrivateVideoCallView.swift; sourceTree = "<group>"; };
-		ECBFE679270FF9F80075D01F /* PrivateVideoCall+VideoCall.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PrivateVideoCall+VideoCall.swift"; sourceTree = "<group>"; };
 		ECBFE67A270FF9F80075D01F /* View+Draggable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+Draggable.swift"; sourceTree = "<group>"; };
 		ECBFE681271026750075D01F /* AgoraMeeting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraMeeting.swift; sourceTree = "<group>"; };
 		ECBFE68827102A560075D01F /* String+Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Random.swift"; sourceTree = "<group>"; };
@@ -588,25 +531,11 @@
 		ECC9C38727C7DBA500495749 /* UserHomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHomeViewModel.swift; sourceTree = "<group>"; };
 		ECD453B52A272A3000338D05 /* OutdatedVersionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutdatedVersionView.swift; sourceTree = "<group>"; };
 		ECD4FC8629C4B93A00FBBC01 /* dinotis-white-lottie-loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "dinotis-white-lottie-loading.json"; sourceTree = "<group>"; };
-		ECD51FA528A0C25A000B1F6C /* RemoteParticipantManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteParticipantManager.swift; sourceTree = "<group>"; };
-		ECD51FA628A0C25A000B1F6C /* TrackName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackName.swift; sourceTree = "<group>"; };
-		ECD51FA728A0C25A000B1F6C /* LocalParticipantManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalParticipantManager.swift; sourceTree = "<group>"; };
-		ECD51FA828A0C25A000B1F6C /* RoomManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoomManager.swift; sourceTree = "<group>"; };
-		ECD51FA928A0C25A000B1F6C /* RoomMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoomMessage.swift; sourceTree = "<group>"; };
-		ECD51FB028A0C262000B1F6C /* PlayerManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerManager.swift; sourceTree = "<group>"; };
-		ECD51FB728A0C3EA000B1F6C /* LiveVideoError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveVideoError.swift; sourceTree = "<group>"; };
-		ECD51FC728A125F0000B1F6C /* SyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
-		ECD51FC828A125F0000B1F6C /* SyncObjectConnecting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncObjectConnecting.swift; sourceTree = "<group>"; };
-		ECD51FC928A125F0000B1F6C /* SyncUserDocument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncUserDocument.swift; sourceTree = "<group>"; };
-		ECD51FCD28A12633000B1F6C /* StreamViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamViewModel.swift; sourceTree = "<group>"; };
 		ECD51FD228A20CA0000B1F6C /* TwilioDataRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwilioDataRepository.swift; sourceTree = "<group>"; };
 		ECD51FD428A20CAD000B1F6C /* TwilioDataDefaultRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwilioDataDefaultRepository.swift; sourceTree = "<group>"; };
 		ECD51FD628A20CBC000B1F6C /* TwilioRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwilioRemoteDataSource.swift; sourceTree = "<group>"; };
 		ECD51FD828A20CC7000B1F6C /* TwilioDefaultRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwilioDefaultRemoteDataSource.swift; sourceTree = "<group>"; };
 		ECD51FDB28A2165F000B1F6C /* TwilioDataTargetType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwilioDataTargetType.swift; sourceTree = "<group>"; };
-		ECD51FDD28A22632000B1F6C /* SpeakerVideoViewModelFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeakerVideoViewModelFactory.swift; sourceTree = "<group>"; };
-		ECD51FDF28A226C6000B1F6C /* DisplayNameFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayNameFactory.swift; sourceTree = "<group>"; };
-		ECD51FEC28A40EE4000B1F6C /* ParticipantsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticipantsViewModel.swift; sourceTree = "<group>"; };
 		ECD6C1FE2701B37500A09AD8 /* ImagePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		ECD6C2002701B3B800A09AD8 /* Upload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upload.swift; sourceTree = "<group>"; };
 		ECD96FFB28D4231300D0DC29 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
@@ -636,32 +565,8 @@
 		ECED4DD729F9297C00E79663 /* SelectedCollabCreatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCollabCreatorView.swift; sourceTree = "<group>"; };
 		ECF582BE27244951006C0BE7 /* ScrollViewModification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewModification.swift; sourceTree = "<group>"; };
 		ECF7096828C1E7D90093E020 /* CountryPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryPickerView.swift; sourceTree = "<group>"; };
-		F61E53DE28CB49B6006594B4 /* PrivateVideoSpeakerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateVideoSpeakerViewModel.swift; sourceTree = "<group>"; };
-		F61E53E228CB5010006594B4 /* PrivateSpeakerVideoViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateSpeakerVideoViewModelFactory.swift; sourceTree = "<group>"; };
-		F61E53E428CB50F4006594B4 /* PrivateSpeakerVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateSpeakerVideoViewModel.swift; sourceTree = "<group>"; };
-		F63A0964289BB7A0008C7815 /* TwilioLiveStreamViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwilioLiveStreamViewModel.swift; sourceTree = "<group>"; };
 		F63A0972289BC42D008C7815 /* StreamConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamConfig.swift; sourceTree = "<group>"; };
-		F63A0978289BD4C1008C7815 /* PresentationLayoutViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationLayoutViewModel.swift; sourceTree = "<group>"; };
-		F63A097A289BD53A008C7815 /* PresentationLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationLayoutView.swift; sourceTree = "<group>"; };
-		F63A097C289BD916008C7815 /* SwiftUIVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIVideoView.swift; sourceTree = "<group>"; };
-		F63A0981289BDBB5008C7815 /* SpeakerVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerVideoView.swift; sourceTree = "<group>"; };
-		F63A0983289BDBF2008C7815 /* SpeakerVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerVideoViewModel.swift; sourceTree = "<group>"; };
-		F63A0987289BDEF5008C7815 /* HostControlsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostControlsManager.swift; sourceTree = "<group>"; };
-		F63A098C289BED1C008C7815 /* SpeakerGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerGridView.swift; sourceTree = "<group>"; };
-		F63A098E289BED2F008C7815 /* SpeakerGridViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerGridViewModel.swift; sourceTree = "<group>"; };
-		F63A0991289C04B3008C7815 /* SpeakerSettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerSettingsManager.swift; sourceTree = "<group>"; };
-		F63A0996289C1226008C7815 /* StreamManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamManager.swift; sourceTree = "<group>"; };
-		F63A0999289C142A008C7815 /* SyncUserMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncUserMap.swift; sourceTree = "<group>"; };
-		F63A099C289CBA00008C7815 /* ChatManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatManager.swift; sourceTree = "<group>"; };
 		F63A09A2289CBE6A008C7815 /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
-		F63A09A4289CEC6F008C7815 /* SwiftUIPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIPlayerView.swift; sourceTree = "<group>"; };
-		F665C43F28C9C93500D669A8 /* PrivateRoomManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateRoomManager.swift; sourceTree = "<group>"; };
-		F665C44128C9CD2800D669A8 /* PrivateRemoteParticipantManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateRemoteParticipantManager.swift; sourceTree = "<group>"; };
-		F665C44328C9CEA800D669A8 /* PrivateLocalParticipantManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateLocalParticipantManager.swift; sourceTree = "<group>"; };
-		F665C44528C9D37400D669A8 /* PrivateRoomMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateRoomMessage.swift; sourceTree = "<group>"; };
-		F665C44828C9D96700D669A8 /* PrivateStreamManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateStreamManager.swift; sourceTree = "<group>"; };
-		F665C44A28C9DDFB00D669A8 /* PrivateStreamViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateStreamViewModel.swift; sourceTree = "<group>"; };
-		F665C44D28C9E1E900D669A8 /* PrivateSpeakerSettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateSpeakerSettingsManager.swift; sourceTree = "<group>"; };
 		F67334B32908EBE4006C1ADF /* BundlingMiniCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BundlingMiniCardView.swift; sourceTree = "<group>"; };
 		F67334B72908EC26006C1ADF /* TalentCreateBundlingViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TalentCreateBundlingViewModel.swift; sourceTree = "<group>"; };
 		F67334B92908EC26006C1ADF /* TalentCreateBundlingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TalentCreateBundlingView.swift; sourceTree = "<group>"; };
@@ -729,13 +634,10 @@
 				EC67E2A82936FBC2002BEC4A /* DinotisDesignSystem in Frameworks */,
 				ECCEFEA6277E9DD100E9B0AD /* CombineMoya in Frameworks */,
 				ECCEFEA8277E9DD100E9B0AD /* Moya in Frameworks */,
-				F63A0968289BBCEB008C7815 /* TwilioVideo in Frameworks */,
-				F63A096B289BBD79008C7815 /* TwilioSyncClient in Frameworks */,
 				ECF7096728C1E7AD0093E020 /* CountryPicker in Frameworks */,
 				EC7E53062AF3516700D7AA50 /* netfox in Frameworks */,
 				EC38FEEF287BD8A00007CFC6 /* OneSignal in Frameworks */,
 				ECB0A26A28FED3210050EC71 /* FirebaseDatabase in Frameworks */,
-				F63A096E289BBDCC008C7815 /* TwilioLivePlayer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -980,9 +882,9 @@
 		EC01F1EC26C028C300CA878F /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				ECA7885C2B46DA810016D68B /* ProgressHUD.swift */,
 				ECED4DD629F9296800E79663 /* SelectedCollabCreator */,
 				ECED4DD129F8FF9300E79663 /* CreatorPicker */,
-				F63A0974289BD477008C7815 /* Twilio */,
 				EC0279F027C5E40A00B8C392 /* Shape */,
 				EC01F1ED26C028CB00CA878F /* UIKit */,
 				EC04ED4D26C9258600E0D473 /* Card */,
@@ -1214,27 +1116,6 @@
 				EC89C9A226E24FF0008CBD7A /* TalentWithdrawView.swift */,
 			);
 			path = View;
-			sourceTree = "<group>";
-		};
-		EC2A510F28C7099800C717B9 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				EC2A511028C7099800C717B9 /* TwilioGroupVideoCallView+Component.swift */,
-				EC2A511428C7099800C717B9 /* TwilioGroupVideoCallView.swift */,
-				EC2A511128C7099800C717B9 /* PresentationLayout */,
-				EC2A511528C7099800C717B9 /* ProgressHUD.swift */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		EC2A511128C7099800C717B9 /* PresentationLayout */ = {
-			isa = PBXGroup;
-			children = (
-				ECBB02D92A7C1058001DEA6B /* PollingVideoCall.swift */,
-				EC2A511228C7099800C717B9 /* PresentationVideoView.swift */,
-				EC2A511328C7099800C717B9 /* PresentationStatusView.swift */,
-			);
-			path = PresentationLayout;
 			sourceTree = "<group>";
 		};
 		EC2AFDD726BAAE35005260FD /* NotificationView */ = {
@@ -2094,14 +1975,6 @@
 			path = Firebase;
 			sourceTree = "<group>";
 		};
-		ECB32BF627F6DC3F00D08A64 /* PrivateVideoCall */ = {
-			isa = PBXGroup;
-			children = (
-				ECBFE679270FF9F80075D01F /* PrivateVideoCall+VideoCall.swift */,
-			);
-			path = PrivateVideoCall;
-			sourceTree = "<group>";
-		};
 		ECB76C3F26D4BD660072E237 /* Talent */ = {
 			isa = PBXGroup;
 			children = (
@@ -2251,7 +2124,6 @@
 				F67334BC2908ED62006C1ADF /* BundlingForm */,
 				F67334B52908EC26006C1ADF /* TalentCreateBundling */,
 				F61E53E028CB4FE2006594B4 /* TwilioPrivateVideoCall */,
-				F63A095F289BB742008C7815 /* TwilioGroupVideoCall */,
 				ECDD760526C8077000C50956 /* Home */,
 				ECBCA28D2860753900EB1656 /* CoinHistory */,
 				EC9C4E2A2813FCEB00837469 /* PreviewTalent */,
@@ -2341,7 +2213,6 @@
 				EC91B40926CEA73000C5358C /* OnChangeExt.swift */,
 				EC1C144B26D893EB00EC66E0 /* ViewExtension.swift */,
 				ECBFE67A270FF9F80075D01F /* View+Draggable.swift */,
-				ECB32BF627F6DC3F00D08A64 /* PrivateVideoCall */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -2424,26 +2295,6 @@
 				ECD453B52A272A3000338D05 /* OutdatedVersionView.swift */,
 			);
 			path = View;
-			sourceTree = "<group>";
-		};
-		ECD51FA428A0C25A000B1F6C /* Room */ = {
-			isa = PBXGroup;
-			children = (
-				ECD51FA528A0C25A000B1F6C /* RemoteParticipantManager.swift */,
-				ECD51FA628A0C25A000B1F6C /* TrackName.swift */,
-				ECD51FA728A0C25A000B1F6C /* LocalParticipantManager.swift */,
-				ECD51FA828A0C25A000B1F6C /* RoomManager.swift */,
-				ECD51FA928A0C25A000B1F6C /* RoomMessage.swift */,
-			);
-			path = Room;
-			sourceTree = "<group>";
-		};
-		ECD51FAF28A0C262000B1F6C /* Player */ = {
-			isa = PBXGroup;
-			children = (
-				ECD51FB028A0C262000B1F6C /* PlayerManager.swift */,
-			);
-			path = Player;
 			sourceTree = "<group>";
 		};
 		ECD51FCF28A20C7A000B1F6C /* TwilioData */ = {
@@ -2559,22 +2410,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		F61E53DB28CB4957006594B4 /* PrivateVideoSpeaker */ = {
-			isa = PBXGroup;
-			children = (
-				F61E53DD28CB4990006594B4 /* ViewModel */,
-			);
-			path = PrivateVideoSpeaker;
-			sourceTree = "<group>";
-		};
-		F61E53DD28CB4990006594B4 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				F61E53DE28CB49B6006594B4 /* PrivateVideoSpeakerViewModel.swift */,
-			);
-			path = ViewModel;
-			sourceTree = "<group>";
-		};
 		F61E53E028CB4FE2006594B4 /* TwilioPrivateVideoCall */ = {
 			isa = PBXGroup;
 			children = (
@@ -2588,92 +2423,6 @@
 			isa = PBXGroup;
 			children = (
 				EC6A96EB27CF151600282253 /* PrivateVideoCallViewModel.swift */,
-				F61E53E228CB5010006594B4 /* PrivateSpeakerVideoViewModelFactory.swift */,
-			);
-			path = ViewModel;
-			sourceTree = "<group>";
-		};
-		F63A095F289BB742008C7815 /* TwilioGroupVideoCall */ = {
-			isa = PBXGroup;
-			children = (
-				EC2A510F28C7099800C717B9 /* View */,
-				F63A0961289BB763008C7815 /* ViewModel */,
-			);
-			path = TwilioGroupVideoCall;
-			sourceTree = "<group>";
-		};
-		F63A0961289BB763008C7815 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				ECD51FEC28A40EE4000B1F6C /* ParticipantsViewModel.swift */,
-				ECD51FDF28A226C6000B1F6C /* DisplayNameFactory.swift */,
-				F63A0964289BB7A0008C7815 /* TwilioLiveStreamViewModel.swift */,
-				ECD51FDD28A22632000B1F6C /* SpeakerVideoViewModelFactory.swift */,
-			);
-			path = ViewModel;
-			sourceTree = "<group>";
-		};
-		F63A0974289BD477008C7815 /* Twilio */ = {
-			isa = PBXGroup;
-			children = (
-				F61E53DB28CB4957006594B4 /* PrivateVideoSpeaker */,
-				F63A0989289BECD6008C7815 /* SpeakerGrid */,
-				F63A097E289BDB84008C7815 /* SpeakerVideo */,
-				F63A0975289BD488008C7815 /* PresentationLayout */,
-				F63A097C289BD916008C7815 /* SwiftUIVideoView.swift */,
-				F63A09A4289CEC6F008C7815 /* SwiftUIPlayerView.swift */,
-			);
-			path = Twilio;
-			sourceTree = "<group>";
-		};
-		F63A0975289BD488008C7815 /* PresentationLayout */ = {
-			isa = PBXGroup;
-			children = (
-				F63A0977289BD49F008C7815 /* ViewModel */,
-				F63A0976289BD49A008C7815 /* View */,
-			);
-			path = PresentationLayout;
-			sourceTree = "<group>";
-		};
-		F63A0976289BD49A008C7815 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				F63A097A289BD53A008C7815 /* PresentationLayoutView.swift */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		F63A0977289BD49F008C7815 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				F63A0978289BD4C1008C7815 /* PresentationLayoutViewModel.swift */,
-			);
-			path = ViewModel;
-			sourceTree = "<group>";
-		};
-		F63A097E289BDB84008C7815 /* SpeakerVideo */ = {
-			isa = PBXGroup;
-			children = (
-				F63A0980289BDB93008C7815 /* ViewModel */,
-				F63A097F289BDB8F008C7815 /* View */,
-			);
-			path = SpeakerVideo;
-			sourceTree = "<group>";
-		};
-		F63A097F289BDB8F008C7815 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				F63A0981289BDBB5008C7815 /* SpeakerVideoView.swift */,
-				EC5B59BD28CB64AC009D6B2B /* PrivateSpeakerVideoView.swift */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		F63A0980289BDB93008C7815 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				F63A0983289BDBF2008C7815 /* SpeakerVideoViewModel.swift */,
-				F61E53E428CB50F4006594B4 /* PrivateSpeakerVideoViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -2682,81 +2431,8 @@
 			isa = PBXGroup;
 			children = (
 				EC4B891529248CFF0074732A /* ChatCustomerManager */,
-				F665C43C28C9C72700D669A8 /* PrivateCallManager */,
-				F665C43D28C9C83000D669A8 /* GroupCallManager */,
 			);
 			path = TwilioManagers;
-			sourceTree = "<group>";
-		};
-		F63A0986289BDED8008C7815 /* HostControls */ = {
-			isa = PBXGroup;
-			children = (
-				F63A0987289BDEF5008C7815 /* HostControlsManager.swift */,
-			);
-			path = HostControls;
-			sourceTree = "<group>";
-		};
-		F63A0989289BECD6008C7815 /* SpeakerGrid */ = {
-			isa = PBXGroup;
-			children = (
-				F63A098B289BECE9008C7815 /* ViewModel */,
-				F63A098A289BECE3008C7815 /* View */,
-			);
-			path = SpeakerGrid;
-			sourceTree = "<group>";
-		};
-		F63A098A289BECE3008C7815 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				F63A098C289BED1C008C7815 /* SpeakerGridView.swift */,
-			);
-			name = View;
-			path = "../New Group/View";
-			sourceTree = "<group>";
-		};
-		F63A098B289BECE9008C7815 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				F63A098E289BED2F008C7815 /* SpeakerGridViewModel.swift */,
-			);
-			path = ViewModel;
-			sourceTree = "<group>";
-		};
-		F63A0990289C0498008C7815 /* SpeakerSettings */ = {
-			isa = PBXGroup;
-			children = (
-				F63A0991289C04B3008C7815 /* SpeakerSettingsManager.swift */,
-			);
-			path = SpeakerSettings;
-			sourceTree = "<group>";
-		};
-		F63A0995289C1212008C7815 /* Stream */ = {
-			isa = PBXGroup;
-			children = (
-				F63A0996289C1226008C7815 /* StreamManager.swift */,
-				ECD51FCD28A12633000B1F6C /* StreamViewModel.swift */,
-			);
-			path = Stream;
-			sourceTree = "<group>";
-		};
-		F63A0998289C1417008C7815 /* Sync */ = {
-			isa = PBXGroup;
-			children = (
-				ECD51FC728A125F0000B1F6C /* SyncManager.swift */,
-				ECD51FC828A125F0000B1F6C /* SyncObjectConnecting.swift */,
-				ECD51FC928A125F0000B1F6C /* SyncUserDocument.swift */,
-				F63A0999289C142A008C7815 /* SyncUserMap.swift */,
-				EC6D5B0028B36ADD00BB794F /* SyncRoomDocument.swift */,
-			);
-			path = Sync;
-			sourceTree = "<group>";
-		};
-		F63A099B289CB9E9008C7815 /* Chat */ = {
-			isa = PBXGroup;
-			children = (
-				F63A099C289CBA00008C7815 /* ChatManager.swift */,
-			);
-			path = Chat;
 			sourceTree = "<group>";
 		};
 		F63A09A1289CBE52008C7815 /* Twilio */ = {
@@ -2766,59 +2442,6 @@
 				EC6D5B0228B4A5B500BB794F /* TwilioModels.swift */,
 			);
 			path = Twilio;
-			sourceTree = "<group>";
-		};
-		F665C43C28C9C72700D669A8 /* PrivateCallManager */ = {
-			isa = PBXGroup;
-			children = (
-				F665C44C28C9E1CF00D669A8 /* PrivateSpeakerSettings */,
-				F665C44728C9D94B00D669A8 /* PrivateStream */,
-				F665C43E28C9C89500D669A8 /* PrivateRoom */,
-			);
-			path = PrivateCallManager;
-			sourceTree = "<group>";
-		};
-		F665C43D28C9C83000D669A8 /* GroupCallManager */ = {
-			isa = PBXGroup;
-			children = (
-				ECD51FB728A0C3EA000B1F6C /* LiveVideoError.swift */,
-				ECD51FAF28A0C262000B1F6C /* Player */,
-				ECD51FA428A0C25A000B1F6C /* Room */,
-				F63A099B289CB9E9008C7815 /* Chat */,
-				F63A0998289C1417008C7815 /* Sync */,
-				F63A0995289C1212008C7815 /* Stream */,
-				F63A0990289C0498008C7815 /* SpeakerSettings */,
-				F63A0986289BDED8008C7815 /* HostControls */,
-			);
-			path = GroupCallManager;
-			sourceTree = "<group>";
-		};
-		F665C43E28C9C89500D669A8 /* PrivateRoom */ = {
-			isa = PBXGroup;
-			children = (
-				F665C43F28C9C93500D669A8 /* PrivateRoomManager.swift */,
-				F665C44128C9CD2800D669A8 /* PrivateRemoteParticipantManager.swift */,
-				F665C44328C9CEA800D669A8 /* PrivateLocalParticipantManager.swift */,
-				F665C44528C9D37400D669A8 /* PrivateRoomMessage.swift */,
-			);
-			path = PrivateRoom;
-			sourceTree = "<group>";
-		};
-		F665C44728C9D94B00D669A8 /* PrivateStream */ = {
-			isa = PBXGroup;
-			children = (
-				F665C44828C9D96700D669A8 /* PrivateStreamManager.swift */,
-				F665C44A28C9DDFB00D669A8 /* PrivateStreamViewModel.swift */,
-			);
-			path = PrivateStream;
-			sourceTree = "<group>";
-		};
-		F665C44C28C9E1CF00D669A8 /* PrivateSpeakerSettings */ = {
-			isa = PBXGroup;
-			children = (
-				F665C44D28C9E1E900D669A8 /* PrivateSpeakerSettingsManager.swift */,
-			);
-			path = PrivateSpeakerSettings;
 			sourceTree = "<group>";
 		};
 		F67334B52908EC26006C1ADF /* TalentCreateBundling */ = {
@@ -3103,9 +2726,6 @@
 				EC1256712849299400A82DB7 /* QGrid */,
 				EC38FEEE287BD8A00007CFC6 /* OneSignal */,
 				EC38FEF0287BD8A00007CFC6 /* OneSignalExtension */,
-				F63A0967289BBCEB008C7815 /* TwilioVideo */,
-				F63A096A289BBD79008C7815 /* TwilioSyncClient */,
-				F63A096D289BBDCC008C7815 /* TwilioLivePlayer */,
 				ECF7096628C1E7AD0093E020 /* CountryPicker */,
 				ECB0A26928FED3210050EC71 /* FirebaseDatabase */,
 				ECB0A26B28FED3210050EC71 /* FirebaseDatabaseSwift */,
@@ -3162,9 +2782,6 @@
 				EC4E500027FC0B34009D66FF /* XCRemoteSwiftPackageReference "lottie-ios" */,
 				EC1256702849299300A82DB7 /* XCRemoteSwiftPackageReference "QGrid" */,
 				EC38FEED287BD8A00007CFC6 /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */,
-				F63A0966289BBCEB008C7815 /* XCRemoteSwiftPackageReference "twilio-video-ios" */,
-				F63A0969289BBD79008C7815 /* XCRemoteSwiftPackageReference "twilio-sync-ios" */,
-				F63A096C289BBDCC008C7815 /* XCRemoteSwiftPackageReference "twilio-live-player-ios" */,
 				ECF7096528C1E7AD0093E020 /* XCRemoteSwiftPackageReference "CountryPicker" */,
 				ECB0A26828FED3210050EC71 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				EC72225F294EFFA600C05A1B /* XCRemoteSwiftPackageReference "WaterfallGrid" */,
@@ -3250,7 +2867,6 @@
 				EC62578427B7E16F0079AA10 /* Color+Default.swift in Sources */,
 				EC625604272ADF6D00FA209B /* EditTalentMeetingView.swift in Sources */,
 				EC99AD6D26C147620060F221 /* TalentProfileView.swift in Sources */,
-				EC6D5B0128B36ADD00BB794F /* SyncRoomDocument.swift in Sources */,
 				EC6D0E60298306BF0016C45D /* TabViewContainer.swift in Sources */,
 				ECDAE3A126B7FF3D00419194 /* FontManager.swift in Sources */,
 				4B03ED3D2ACC17C4004DD0FA /* InboxView.swift in Sources */,
@@ -3259,13 +2875,10 @@
 				EC4E4FE727FB4D75009D66FF /* Message.swift in Sources */,
 				ECB7B8AB2AE11CA400AC18A1 /* ScheduledCreatorFormView+Component.swift in Sources */,
 				F67334DE2908EE41006C1ADF /* CreateTalentRateCardForm.swift in Sources */,
-				F665C44428C9CEA800D669A8 /* PrivateLocalParticipantManager.swift in Sources */,
 				EC2C67FB26C582BE008F094D /* MultilineTextField.swift in Sources */,
 				4BFE4E002ACD4CFF00E14890 /* DiscussionListViewModel.swift in Sources */,
 				F67334D62908EE30006C1ADF /* TalentCardListViewModel.swift in Sources */,
 				EC9C4E34281426AD00837469 /* RequestSchedule.swift in Sources */,
-				F63A09A5289CEC6F008C7815 /* SwiftUIPlayerView.swift in Sources */,
-				ECD51FCC28A125F0000B1F6C /* SyncUserDocument.swift in Sources */,
 				4BBC06C22AEA5DFF00299354 /* CreatorAvailabilityView.swift in Sources */,
 				EC62576E27B7A38B0079AA10 /* String+isValidEmail.swift in Sources */,
 				EC6A96E127CDDAF900282253 /* ScheduleListViewModel.swift in Sources */,
@@ -3276,95 +2889,76 @@
 				F686669E28A4D6620067345C /* Question.swift in Sources */,
 				EC91B3DE26CE296200C5358C /* FormScheduleTalentCardView.swift in Sources */,
 				EC25CF2E280D7725000E3D9A /* ChangesPasswordViewModel.swift in Sources */,
-				F63A0988289BDEF5008C7815 /* HostControlsManager.swift in Sources */,
 				EC4C4E0A27DC463D00582AC4 /* Sequence+Uniqued.swift in Sources */,
 				EC28CD5727A110480023A745 /* PaymentInstruction.swift in Sources */,
 				EC25CF3C280DAE66000E3D9A /* ResetPasswordViewModel.swift in Sources */,
 				EC91B40A26CEA73000C5358C /* OnChangeExt.swift in Sources */,
 				4B02E3E22B19F5640079882F /* View+textEditorBackground.swift in Sources */,
 				ECBCA2A5286192DD00EB1656 /* CoinHistoryCard.swift in Sources */,
-				ECD51FCA28A125F0000B1F6C /* SyncManager.swift in Sources */,
 				4BEACAF72AEFB3E6008E165C /* CreatorStudioView.swift in Sources */,
-				F665C44E28C9E1E900D669A8 /* PrivateSpeakerSettingsManager.swift in Sources */,
 				EC0FE33127152953006CABA8 /* TalentMeeting.swift in Sources */,
 				F67334FA2908F0B2006C1ADF /* RateCardServiceBookingView.swift in Sources */,
 				EC62577627B7E1240079AA10 /* OptionalDouble+OrZero.swift in Sources */,
 				EC6A96C227C9D3F000282253 /* ScheduledFormViewModel.swift in Sources */,
-				ECD51FDE28A22632000B1F6C /* SpeakerVideoViewModelFactory.swift in Sources */,
 				EC9984B02714A2C200AABBCF /* Participant.swift in Sources */,
 				ECBE153F28D17DC400EE92A4 /* DinotisList.swift in Sources */,
 				ECD6C1FF2701B37500A09AD8 /* ImagePicker.swift in Sources */,
 				EC6A96DA27CD39C700282253 /* TalentQuery.swift in Sources */,
 				EC2C296827C74DA100F1A69C /* ChangePhoneVerifyViewModel.swift in Sources */,
 				ECC0ECB926F1901E00FA9F85 /* LoginViewModel.swift in Sources */,
-				F665C44928C9D96700D669A8 /* PrivateStreamManager.swift in Sources */,
 				ECD6C2012701B3B800A09AD8 /* Upload.swift in Sources */,
 				ECAAA29D280B050B00AAC6CA /* PromotionBannerView.swift in Sources */,
 				ECBCA2942860756800EB1656 /* CoinHistoryViewModel.swift in Sources */,
 				ECB964AA26B943FD00B0390B /* ChangePhoneView.swift in Sources */,
 				EC27BBC42B2F5C8B00EFB988 /* CreatorAnalyticsView.swift in Sources */,
 				EC4E500727FC0B76009D66FF /* LottieView.swift in Sources */,
-				ECD51FCB28A125F0000B1F6C /* SyncObjectConnecting.swift in Sources */,
-				ECD51FAA28A0C25A000B1F6C /* RemoteParticipantManager.swift in Sources */,
 				EC7B1EA827BCE52400471219 /* TalentHomeViewModel.swift in Sources */,
 				EC3B97802A41B4FF006D7B1B /* GroupVideoCallView.swift in Sources */,
 				EC6A0A08270D6BB300316D1C /* PaymentMethod.swift in Sources */,
 				ECB0A27728FF02250050EC71 /* RoomDocumentRealtimeResponse.swift in Sources */,
 				EC99AD7526C1476B0060F221 /* UserProfileView.swift in Sources */,
 				F63A0973289BC42D008C7815 /* StreamConfig.swift in Sources */,
-				F63A0997289C1226008C7815 /* StreamManager.swift in Sources */,
 				ECB964A426B93FEB00B0390B /* ForgotPasswordView.swift in Sources */,
 				EC6A759129196CDF0030BC41 /* TalentTransactionDetailViewModel.swift in Sources */,
 				EC6A96CB27CB98A900282253 /* Categories.swift in Sources */,
-				F665C44628C9D37400D669A8 /* PrivateRoomMessage.swift in Sources */,
 				ECF7096928C1E7D90093E020 /* CountryPickerView.swift in Sources */,
 				ECBA13E626B78F77004D452C /* AppDelegate.swift in Sources */,
 				F67335022908F190006C1ADF /* TalentScheduleCardView.swift in Sources */,
 				EC50A05626E5B57B00F45C2F /* PaymentMethodView.swift in Sources */,
 				EC91B3FC26CE55E600C5358C /* ScheduledFormView.swift in Sources */,
-				F61E53DF28CB49B6006594B4 /* PrivateVideoSpeakerViewModel.swift in Sources */,
 				EC9D9EBB26CF7BA6003A441C /* TalentDetailScheduleCardView.swift in Sources */,
-				EC2A511728C7099800C717B9 /* PresentationVideoView.swift in Sources */,
 				4BEACAFE2AF25A82008E165C /* DetailVideoView.swift in Sources */,
 				EC72227C2954401100C05A1B /* NotificationViewModel.swift in Sources */,
 				EC789C6527C40BF7005872E2 /* OtpVerificationViewModel.swift in Sources */,
 				F67335042908F190006C1ADF /* RequestCardView.swift in Sources */,
 				F67334DD2908EE41006C1ADF /* CreateTalentRateCardFormViewModel.swift in Sources */,
 				ECB95D3626BA522100AC0784 /* ChangePasswordView.swift in Sources */,
-				F63A099A289C142A008C7815 /* SyncUserMap.swift in Sources */,
 				EC6A96F127CF17C000282253 /* AfterCallViewModel.swift in Sources */,
 				EC86AD4226C62D1300EB5B78 /* UserEditProfile.swift in Sources */,
+				ECA7885D2B46DA810016D68B /* ProgressHUD.swift in Sources */,
 				4BFAD32F2AFA0A6600E07ABD /* CreatorProfileDetailView.swift in Sources */,
 				F67334CF2908EE0C006C1ADF /* BundlingDetailViewModel.swift in Sources */,
 				EC6A96E527CDDDDE00282253 /* TalentProfileDetailViewModel.swift in Sources */,
-				F63A098D289BED1C008C7815 /* SpeakerGridView.swift in Sources */,
 				EC7B1EA427BCD3AF00471219 /* LocaleText.swift in Sources */,
 				EC9C4E302813FD1000837469 /* PreviewTalentView.swift in Sources */,
 				4B03ED3F2ACC18D3004DD0FA /* InboxViewModel.swift in Sources */,
 				ECAAA2A4280C28CC00AAC6CA /* TalentPhotoProfile.swift in Sources */,
-				F63A0992289C04B4008C7815 /* SpeakerSettingsManager.swift in Sources */,
-				F63A097B289BD53A008C7815 /* PresentationLayoutView.swift in Sources */,
 				ECC0ECB326F18EE300FA9F85 /* Login.swift in Sources */,
 				F67335012908F190006C1ADF /* ChatBubbleView.swift in Sources */,
 				EC89C9A326E24FF0008CBD7A /* TalentWithdrawView.swift in Sources */,
 				EC6A758B291957650030BC41 /* TalentAddBankAccountViewModel.swift in Sources */,
 				ECB0A26F28FEF23C0050EC71 /* SpeakersRealtimeResponse.swift in Sources */,
 				EC11CB76270F09CF003A622A /* UserBookings.swift in Sources */,
-				F665C44228C9CD2800D669A8 /* PrivateRemoteParticipantManager.swift in Sources */,
 				ECA51E6227D09A9F0096E22D /* SearchTalentViewModel.swift in Sources */,
 				EC722265295014E000C05A1B /* FollowedCreatorViewModel.swift in Sources */,
 				4BFE4E092AD0264600E14890 /* ReviewListView.swift in Sources */,
-				ECD51FAB28A0C25A000B1F6C /* TrackName.swift in Sources */,
 				ECBFE68927102A560075D01F /* String+Random.swift in Sources */,
 				F67334BB2908EC26006C1ADF /* TalentCreateBundlingView.swift in Sources */,
 				ECBFE682271026750075D01F /* AgoraMeeting.swift in Sources */,
-				ECD51FE028A226C6000B1F6C /* DisplayNameFactory.swift in Sources */,
 				EC2C67CA26C50AA8008F094D /* TalentEditProfile.swift in Sources */,
-				ECD51FED28A40EE4000B1F6C /* ParticipantsViewModel.swift in Sources */,
 				EC62578327B7E16F0079AA10 /* UIApplication+EndEditing.swift in Sources */,
 				EC9C4E322813FDE900837469 /* PreviewTalentView+Component.swift in Sources */,
 				EC9C4E2E2813FD0600837469 /* PreviewTalentViewModel.swift in Sources */,
-				ECD51FAD28A0C25A000B1F6C /* RoomManager.swift in Sources */,
 				4BBC06CB2AEBA52200299354 /* SetUpVideoView.swift in Sources */,
 				EC62578A27B9F9E00079AA10 /* DinotisTargetType.swift in Sources */,
 				EC0279F227C5E40B00B8C392 /* RoundedCorner.swift in Sources */,
@@ -3376,13 +2970,10 @@
 				ECD51FD328A20CA0000B1F6C /* TwilioDataRepository.swift in Sources */,
 				ECC110BF26E9BBD3007FF617 /* TalentTransactionWithdrawView.swift in Sources */,
 				EC28CD5927A113460023A745 /* TopBarInstructionView.swift in Sources */,
-				ECBB02DA2A7C1058001DEA6B /* PollingVideoCall.swift in Sources */,
-				F61E53E328CB5010006594B4 /* PrivateSpeakerVideoViewModelFactory.swift in Sources */,
 				EC789C7527C4E81E005872E2 /* BiodataViewModel.swift in Sources */,
 				ECB0A27528FF01DA0050EC71 /* UserDocumentRealtimeResponse.swift in Sources */,
 				F67334F72908F0B2006C1ADF /* TalentEditRateCardScheduleViewModel.swift in Sources */,
 				EC01F1E326BFD7C600CA878F /* UserBiodataView.swift in Sources */,
-				F63A099D289CBA00008C7815 /* ChatManager.swift in Sources */,
 				4BEACAF42AEFAE16008E165C /* CreatorStudioViewModel.swift in Sources */,
 				F67334C92908EE02006C1ADF /* BundlingView.swift in Sources */,
 				EC6A96EC27CF151600282253 /* PrivateVideoCallViewModel.swift in Sources */,
@@ -3392,10 +2983,8 @@
 				EC9C4E1F2812574500837469 /* PaymentMethodView+Component.swift in Sources */,
 				4B65C03D2AEF8A02000FEF4B /* SessionRecordingListView.swift in Sources */,
 				4BBC06C02AEA5DC000299354 /* CreatorAvailabilityViewModel.swift in Sources */,
-				ECD51FB128A0C262000B1F6C /* PlayerManager.swift in Sources */,
 				EC6D5B0328B4A5B500BB794F /* TwilioModels.swift in Sources */,
 				EC1F0C72291CC70300B49B2A /* CreateRateCardModel.swift in Sources */,
-				F63A0979289BD4C1008C7815 /* PresentationLayoutViewModel.swift in Sources */,
 				ECD96FFC28D4231300D0DC29 /* ImageLoader.swift in Sources */,
 				EC62576F27B7A38B0079AA10 /* String+toURL.swift in Sources */,
 				ECBCA2912860755700EB1656 /* CoinHistoryView.swift in Sources */,
@@ -3404,17 +2993,13 @@
 				ECF582BF27244951006C0BE7 /* ScrollViewModification.swift in Sources */,
 				F67334F82908F0B2006C1ADF /* TalentEditRateCardScheduleView.swift in Sources */,
 				4BBC06C72AEBA4F900299354 /* SetUpVideoViewModel.swift in Sources */,
-				F63A097D289BD917008C7815 /* SwiftUIVideoView.swift in Sources */,
 				EC7B1E9A27BCB0D400471219 /* String+toCurrency.swift in Sources */,
 				EC88F42B272D8CBE0051749F /* TrendingTalent.swift in Sources */,
-				ECD51FB828A0C3EA000B1F6C /* LiveVideoError.swift in Sources */,
-				ECBFE67C270FF9F80075D01F /* PrivateVideoCall+VideoCall.swift in Sources */,
 				EC6A96F327CF17D800282253 /* AfterCallView.swift in Sources */,
 				EC9C4E362814284C00837469 /* RequestScheduleType.swift in Sources */,
 				F67335052908F190006C1ADF /* RateHorizontalCardView.swift in Sources */,
 				EC9C7F8626D7D46000026F0E /* TalentWalletView.swift in Sources */,
 				EC7222722950B7B000C05A1B /* Friendship.swift in Sources */,
-				F61E53E528CB50F4006594B4 /* PrivateSpeakerVideoViewModel.swift in Sources */,
 				ECB0A27128FF01190050EC71 /* RaisedHandRealtimeResponse.swift in Sources */,
 				ECC0ECC426F1D2C800FA9F85 /* Users.swift in Sources */,
 				EC2C296A27C74DC500F1A69C /* ChangePhoneVerifyView.swift in Sources */,
@@ -3424,7 +3009,6 @@
 				F67335032908F190006C1ADF /* BundlingScheduleCardView.swift in Sources */,
 				ECD51FD528A20CAD000B1F6C /* TwilioDataDefaultRepository.swift in Sources */,
 				ECB9649B26B9084C00B0390B /* OtpVerificationView.swift in Sources */,
-				ECD51FCE28A12633000B1F6C /* StreamViewModel.swift in Sources */,
 				EC62576327B7A23C0079AA10 /* Moya+defaultProvider.swift in Sources */,
 				ECBA13E826B78F77004D452C /* SceneDelegate.swift in Sources */,
 				EC04ED3C26C8D83E00E0D473 /* UserHomeView.swift in Sources */,
@@ -3433,20 +3017,16 @@
 				EC7B1EAA27BCE65A00471219 /* VerifiedCondition.swift in Sources */,
 				ECBA13ED26B78F77004D452C /* DinotisApp.xcdatamodeld in Sources */,
 				F67334D72908EE30006C1ADF /* TalentCardListView.swift in Sources */,
-				F63A0984289BDBF2008C7815 /* SpeakerVideoViewModel.swift in Sources */,
 				EC62578227B7E16F0079AA10 /* Image+Dinotis.swift in Sources */,
 				EC1C145226DD07EA00EC66E0 /* TalentTransactionCard.swift in Sources */,
 				EC30D10926BE879200570F48 /* LoginViewUser.swift in Sources */,
 				EC25CF34280DABC7000E3D9A /* OTPType.swift in Sources */,
 				EC25CF32280D77AB000E3D9A /* ForgotPasswordViewModel.swift in Sources */,
 				ECC110C126E9BBE1007FF617 /* TalentTransactionFeeView.swift in Sources */,
-				F63A098F289BED2F008C7815 /* SpeakerGridViewModel.swift in Sources */,
 				EC246D38270581D00084846F /* ProfileImageContainer.swift in Sources */,
 				F67334F92908F0B2006C1ADF /* RateCardServiceBookingFormViewModel.swift in Sources */,
-				EC5B59BE28CB64AC009D6B2B /* PrivateSpeakerVideoView.swift in Sources */,
 				EC5D281D27FEE56600A740E1 /* LiveStreamCondition.swift in Sources */,
 				ECD51FD928A20CC7000B1F6C /* TwilioDefaultRemoteDataSource.swift in Sources */,
-				EC2A511A28C7099800C717B9 /* ProgressHUD.swift in Sources */,
 				EC62577B27B7E13C0079AA10 /* Encodable+toJSON.swift in Sources */,
 				ECA51E6027D09A880096E22D /* SearchTalentView.swift in Sources */,
 				F67334B42908EBE5006C1ADF /* BundlingMiniCardView.swift in Sources */,
@@ -3464,16 +3044,13 @@
 				EC1C145026D8B4EF00EC66E0 /* TopBarView.swift in Sources */,
 				ECD453B62A272A3000338D05 /* OutdatedVersionView.swift in Sources */,
 				EC6A7594291976070030BC41 /* TalentWithdrawalViewModel.swift in Sources */,
-				F665C44028C9C93500D669A8 /* PrivateRoomManager.swift in Sources */,
 				F63A09A3289CBE6A008C7815 /* ChatMessage.swift in Sources */,
 				F67334C12908ED62006C1ADF /* BundlingFormViewModel.swift in Sources */,
 				ECBFE676270FF9D10075D01F /* PrivateVideoCallView.swift in Sources */,
 				EC96E32C2940D5AA00347091 /* OnboardingView.swift in Sources */,
 				EC47636A2833E03C009EE2FB /* HTMLViewer.swift in Sources */,
 				ECAAA2A6280C63BC00AAC6CA /* HomePrivateFeatureCard.swift in Sources */,
-				EC2A511928C7099800C717B9 /* TwilioGroupVideoCallView.swift in Sources */,
 				EC789C6F27C4C455005872E2 /* Int+NumberString.swift in Sources */,
-				EC2A511828C7099800C717B9 /* PresentationStatusView.swift in Sources */,
 				EC62578127B7E16F0079AA10 /* Font+Default.swift in Sources */,
 				ECB76C4226D4BD780072E237 /* UserScheduleDetail.swift in Sources */,
 				ECBA13EA26B78F77004D452C /* UserTypeView.swift in Sources */,
@@ -3488,7 +3065,6 @@
 				EC2AFDD926BAAE49005260FD /* NotificationView.swift in Sources */,
 				EC25CF3A280DAE59000E3D9A /* ResetPasswordView.swift in Sources */,
 				ECBFE67D270FF9F80075D01F /* View+Draggable.swift in Sources */,
-				ECD51FAE28A0C25A000B1F6C /* RoomMessage.swift in Sources */,
 				EC4B891729248D270074732A /* CustomerChatManager.swift in Sources */,
 				4B65C03B2AEF8868000FEF4B /* SessionRecordingListViewModel.swift in Sources */,
 				4BFE4E022ACD4D2A00E14890 /* DiscussionListView.swift in Sources */,
@@ -3496,16 +3072,11 @@
 				ECED4DD529F8FFC900E79663 /* CreatorPickerView.swift in Sources */,
 				F67335062908F190006C1ADF /* UserBundlingScheduleCardView.swift in Sources */,
 				EC2C296127C7187F00F1A69C /* ChangePhoneViewModel.swift in Sources */,
-				F665C44B28C9DDFB00D669A8 /* PrivateStreamViewModel.swift in Sources */,
 				ECDD760926C8078900C50956 /* TalentHomeView.swift in Sources */,
 				ECC9C38827C7DBA500495749 /* UserHomeViewModel.swift in Sources */,
 				EC62576527B7A24C0079AA10 /* Moya+Request.swift in Sources */,
-				EC2A511628C7099800C717B9 /* TwilioGroupVideoCallView+Component.swift in Sources */,
-				F63A0965289BB7A0008C7815 /* TwilioLiveStreamViewModel.swift in Sources */,
 				EC6D0E5F298306BF0016C45D /* TabViewContainerViewModel.swift in Sources */,
 				EC0279F527C61D7900B8C392 /* ProfileViewModel.swift in Sources */,
-				F63A0982289BDBB5008C7815 /* SpeakerVideoView.swift in Sources */,
-				ECD51FAC28A0C25A000B1F6C /* LocalParticipantManager.swift in Sources */,
 				0A0664CF280F0669009EC7C0 /* TalentProfileDetailView+Component.swift in Sources */,
 				37B4DBCF2A8A963B00D3EAA1 /* AfterFeedback.swift in Sources */,
 				EC904ABE2AEA303600A09189 /* EditTalentMeetingView+Component.swift in Sources */,
@@ -3618,7 +3189,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.7.3;
+				MARKETING_VERSION = 1.7.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -3694,7 +3265,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.7.3;
+				MARKETING_VERSION = 1.7.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp.DinotisNotificationServiceExtension;
@@ -3802,7 +3373,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.7.3;
+				MARKETING_VERSION = 1.7.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp;
 				PRODUCT_NAME = DinotisStag;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3880,7 +3451,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.7.3;
+				MARKETING_VERSION = 1.7.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -3988,7 +3559,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.7.3;
+				MARKETING_VERSION = 1.7.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp;
 				PRODUCT_NAME = DinotisDev;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4085,7 +3656,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.7.3;
+				MARKETING_VERSION = 1.7.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dinotis.DinotisApp;
 				PRODUCT_NAME = Dinotis;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4185,7 +3756,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/dyte-in/DyteMobileCoreiOS.git";
 			requirement = {
-				kind = upToNextMinorVersion;
+				kind = upToNextMajorVersion;
 				minimumVersion = 1.25.0;
 			};
 		};
@@ -4288,30 +3859,6 @@
 		ECF7096528C1E7AD0093E020 /* XCRemoteSwiftPackageReference "CountryPicker" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/mobven/CountryPicker.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
-		F63A0966289BBCEB008C7815 /* XCRemoteSwiftPackageReference "twilio-video-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/twilio/twilio-video-ios";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.0;
-			};
-		};
-		F63A0969289BBD79008C7815 /* XCRemoteSwiftPackageReference "twilio-sync-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/twilio/twilio-sync-ios";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
-		F63A096C289BBDCC008C7815 /* XCRemoteSwiftPackageReference "twilio-live-player-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/twilio/twilio-live-player-ios";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.0.0;
@@ -4467,21 +4014,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = ECF7096528C1E7AD0093E020 /* XCRemoteSwiftPackageReference "CountryPicker" */;
 			productName = CountryPicker;
-		};
-		F63A0967289BBCEB008C7815 /* TwilioVideo */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F63A0966289BBCEB008C7815 /* XCRemoteSwiftPackageReference "twilio-video-ios" */;
-			productName = TwilioVideo;
-		};
-		F63A096A289BBD79008C7815 /* TwilioSyncClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F63A0969289BBD79008C7815 /* XCRemoteSwiftPackageReference "twilio-sync-ios" */;
-			productName = TwilioSyncClient;
-		};
-		F63A096D289BBDCC008C7815 /* TwilioLivePlayer */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F63A096C289BBDCC008C7815 /* XCRemoteSwiftPackageReference "twilio-live-player-ios" */;
-			productName = TwilioLivePlayer;
 		};
 /* End XCSwiftPackageProductDependency section */
 

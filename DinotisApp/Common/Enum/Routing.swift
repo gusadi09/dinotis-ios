@@ -43,7 +43,6 @@ enum HomeRouting {
 	case paymentMethod(viewModel: PaymentMethodsViewModel)
 	case detailPayment(viewModel: DetailPaymentViewModel)
 	case bookingInvoice(viewModel: InvoicesBookingViewModel)
-    case twilioLiveStream(viewModel: TwilioLiveStreamViewModel)
 	case changePassword(viewModel: ChangesPasswordViewModel)
 	case previewTalent(viewModel: PreviewTalentViewModel)
 	case coinHistory(viewModel: CoinHistoryViewModel)

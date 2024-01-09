@@ -55,34 +55,38 @@ extension CreatorProfileDetailView {
                     
                     HStack(spacing: 4) {
                         Image.talentProfilePerson2Icon
+                            .renderingMode(.template)
                             .resizable()
                             .scaledToFit()
                             .frame(width: 16)
                         
                         Text("\((viewModel.talentData?.management?.managementTalents ?? []).count) \(LocalizableText.creatorTitle)")
-                            .font(.robotoMedium(size: 12))
+                            .font(.robotoBold(size: 12))
                             .minimumScaleFactor(0.9)
-                            .foregroundColor(.DinotisDefault.black2)
                     }
+                    .foregroundColor(.DinotisDefault.primary)
                     .isHidden(!viewModel.isManagementView, remove: true)
                     
-                    if let data = viewModel.talentData?.managements?.prefix(3), !data.isEmpty {
+                    if let data = viewModel.talentData?.managements,
+                       !viewModel.isManagementView
+                    {
                         Button {
                             viewModel.isShowManagements = true
                         } label: {
                             (
                                 Text(LocalizableText.managementName)
-                                    .foregroundColor(.DinotisDefault.black2)
+                                    .foregroundColor(.DinotisDefault.black3)
+                                    .font(.robotoRegular(size: 12))
                                 +
                                 (
-                                    Text(" \(data.compactMap({ $0.management?.user?.name}).joined(separator: ", ")) ")
-                                        .foregroundColor(.DinotisDefault.secondary)
+                                    Text("\((data.first?.management?.user?.name).orEmpty()) ")
+                                        .foregroundColor(.DinotisDefault.primary)
                                     +
-                                    Text(LocalizableText.searchSeeAllLabel)
-                                        .foregroundColor(.DinotisDefault.black2)
+                                    Text(data.count > 1 ? LocalizableText.managementPlusOther(data.count-1) : "")
+                                        .foregroundColor(.DinotisDefault.black3)
                                 )
+                                .font(.robotoBold(size: 12))
                             )
-                            .font(.robotoBold(size: 12))
                         }
                     }
                 }
@@ -1766,47 +1770,52 @@ extension CreatorProfileDetailView {
         @StateObject var viewModel: TalentProfileDetailViewModel
         
         var body: some View {
-            VStack(alignment: .leading) {
-                Text(LocalizableText.listManagementLabel)
-                    .font(.robotoBold(size: 16))
-                    .foregroundColor(.DinotisDefault.black1)
-                    .padding(.top, 6)
+            VStack(alignment: .leading, spacing: 18) {
+                HStack {
+                    Text(LocalizableText.listManagementLabel)
+                        .font(.robotoBold(size: 16))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                    Button {
+                        viewModel.isShowManagements = false
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 20, weight: .medium))
+                    }
+                }
+                .foregroundColor(.DinotisDefault.black1)
+                .padding(.top, 6)
                 
                 ScrollView(showsIndicators: false) {
-                    VStack(spacing: 12) {
+                    VStack(spacing: 18) {
                         if let data = viewModel.talentData?.managements {
                             ForEach(data, id: \.id) { item in
-                                HStack(spacing: 12) {
-                                    // FIXME: Add management photo url
-                                    DinotisImageLoader(
-                                        urlString: (item.management?.user?.profilePhoto).orEmpty(),
-                                        width: 40,
-                                        height: 40
-                                    )
-                                    .cornerRadius(8)
-                                    
-                                    // FIXME: Add management name
-                                    Text((item.management?.user?.name).orEmpty())
-                                        .font(.robotoMedium(size: 14))
-                                        .foregroundColor(.DinotisDefault.black2)
-                                        .multilineTextAlignment(.leading)
-                                    
-                                    Spacer()
-                                    
-                                    Button {
-                                        // FIXME: Add management username
-                                        viewModel.isShowManagements = false
-                                        DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
-                                            viewModel.routeToManagement(username: (item.management?.user?.username).orEmpty())
-                                        }
-                                    } label: {
-                                        Text(LocalizableText.seeText)
-                                            .font(.robotoBold(size: 10))
+                                Button {
+                                    viewModel.isShowManagements = false
+                                    DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
+                                        viewModel.routeToManagement(username: (item.management?.user?.username).orEmpty())
+                                    }
+                                } label: {
+                                    HStack(spacing: 12) {
+                                        DinotisImageLoader(urlString: (item.management?.user?.profilePhoto).orEmpty())
+                                            .scaledToFill()
+                                            .frame(width: 48, height: 48)
+                                            .clipShape(RoundedRectangle(cornerRadius: 9))
+                                        
+                                        Text((item.management?.user?.name).orEmpty())
+                                            .font(.robotoMedium(size: 14))
+                                            .foregroundColor(.DinotisDefault.black2)
+                                            .multilineTextAlignment(.leading)
+                                        
+                                        Spacer()
+                                        
+                                        Image(systemName: "chevron.right")
+                                            .font(.system(size: 12, weight: .bold))
                                             .foregroundColor(.white)
-                                            .padding(.horizontal)
-                                            .padding(.vertical, 10)
+                                            .padding(12)
+                                            .frame(width: 36, height: 36)
                                             .background(Color.DinotisDefault.primary)
-                                            .cornerRadius(8)
+                                            .clipShape(Circle())
                                     }
                                 }
                             }
@@ -1814,7 +1823,7 @@ extension CreatorProfileDetailView {
                     }
                 }
             }
-            .padding()
+            .padding([.horizontal, .top])
         }
     }
     
