@@ -1305,6 +1305,7 @@ extension ScheduledFormView {
                                 .onChange(of: viewModel.selectedSession) { val in
                                     viewModel.meeting.isPrivate = val.contains(LocaleText.privateCallLabel)
                                     viewModel.peopleGroup = "1"
+                                    viewModel.pricePerPeople = ""
                                     viewModel.isChangedCostManagement = false
                                     viewModel.percentageString = "0"
                                     viewModel.percentageRaw = 0.0

@@ -27,7 +27,7 @@ struct TalentHomeView: View {
                     title: homeVM.alertContentTitle(),
                     isError: homeVM.alertType == .error || homeVM.alertType == .refreshFailed,
                     message: homeVM.alertContent(),
-                    primaryButton: .init(text: homeVM.alertButtonText(), action: { 
+                    primaryButton: .init(text: homeVM.alertButtonText(), action: {
                         homeVM.alertAction()
                     }),
                     secondaryButton: homeVM.alertType != .deleteSelector ? nil : .init(text: LocaleText.noText, action: {})
@@ -63,7 +63,7 @@ struct TalentHomeView: View {
         var viewController: UIViewController? {
             self.viewControllerHolder.value
         }
-
+        
         private var columns: [GridItem] {
             [GridItem](
                 repeating: GridItem(.flexible(), spacing: 24, alignment: .top),
@@ -488,7 +488,6 @@ struct TalentHomeView: View {
                                     }
                                 }
                                 
-                                
                             }
                             .frame(height: !homeVM.closestSessions.isEmpty ? 570 : 340)
                             
@@ -693,7 +692,7 @@ struct TalentHomeView: View {
                                     .dynamicTypeSize(.large)
                             } else {
                                 AcceptedSheet(viewModel: homeVM, isOnSheet: false)
-                                .padding(.horizontal)
+                                    .padding(.horizontal)
                                     .dynamicTypeSize(.large)
                             }
                         case .declined:
