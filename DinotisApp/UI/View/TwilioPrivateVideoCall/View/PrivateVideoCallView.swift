@@ -8,6 +8,7 @@
 
 import DinotisData
 import DinotisDesignSystem
+import DyteiOSCore
 import SwiftUI
 import SwiftUINavigation
 import Lottie
@@ -30,14 +31,7 @@ struct PrivateVideoCallView : View {
 	
 	@Environment(\.dismiss) var dismiss
 	
-	@Binding var randomId: UInt
-	@Binding var meetingId: String
-	
 	@ObservedObject var viewModel: PrivateVideoCallViewModel
-	@EnvironmentObject var streamViewModel: PrivateStreamViewModel
-	@EnvironmentObject var streamManager: PrivateStreamManager
-	@EnvironmentObject var speakerSettingsManager: PrivateSpeakerSettingsManager
-	@EnvironmentObject var speakerGridViewModel: PrivateVideoSpeakerViewModel
 	
 	var body: some View {
 		ZStack {
@@ -70,11 +64,9 @@ struct PrivateVideoCallView : View {
 				ZStack {
 
 					if viewModel.isSwitchCanvas {
-                        PrivateSpeakerVideoView(speaker: $speakerGridViewModel.localSpeaker, isCamEnabled: $speakerGridViewModel.camAvailable, photoUrl: $viewModel.userPhotoUrl, isMainView: true, isLocal: true)
-							.rotationEffect(.degrees(0))
-							.rotation3DEffect(.degrees(StateObservable.shared.cameraPositionUsed == .back ? 180 : 0), axis: (0, 1, 0))
+                        LocalFullVideoContainerView(viewModel: viewModel, isMainScreen: true)
 					} else {
-                        if speakerGridViewModel.remoteSpeakers.identity.isEmpty {
+                        if viewModel.participants.filter({ $0.userId != viewModel.dyteMeeting.localUser.userId }).isEmpty && viewModel.screenShareUser.isEmpty {
                             ZStack {
                                 ProgressHUDFlat(
                                     title: LocaleText.waitingOtherToJoin
@@ -82,47 +74,49 @@ struct PrivateVideoCallView : View {
                                 .padding()
                             }
                         } else {
-                            if speakerGridViewModel.remoteSpeakers.presentationTrack != nil {
-                                PresentationVideoView(videoTrack: $speakerGridViewModel.remoteSpeakers.presentationTrack)
+                            if viewModel.screenShareId != nil {
+                                if let video = viewModel.screenShareId?.getScreenShareVideoView() {
+                                    UIVideoView(videoView: video, width: .infinity, height: .infinity)
+                                        .background(
+                                            Color.black
+                                        )
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                                }
                             } else {
-                                PrivateSpeakerVideoView(speaker: $speakerGridViewModel.remoteSpeakers, isCamEnabled: $speakerGridViewModel.remoteCamAvailable, photoUrl: $viewModel.participantPhotoUrl, isMainView: true, isLocal: false)
+                                RemoteFullVideoContainerView(viewModel: viewModel, isMainScreen: true)
                             }
                         }
                     }
                 }
 				.edgesIgnoringSafeArea(.all)
+                .isHidden(!viewModel.isJoined, remove: !viewModel.isJoined)
 
 				VStack {
 					HStack {
 						GeometryReader { geo in
 						ZStack {
-							Group {
-								if viewModel.isSwitchCanvas {
-                                    PrivateSpeakerVideoView(speaker: $speakerGridViewModel.remoteSpeakers, isCamEnabled: $speakerGridViewModel.remoteCamAvailable, photoUrl: $viewModel.participantPhotoUrl, isMainView: false, isLocal: false)
-								} else {
-                                    PrivateSpeakerVideoView(speaker: $speakerGridViewModel.localSpeaker, isCamEnabled: $speakerGridViewModel.camAvailable, photoUrl: $viewModel.userPhotoUrl, isMainView: false, isLocal: true)
-										.rotationEffect(.degrees(0))
-										.rotation3DEffect(.degrees(StateObservable.shared.cameraPositionUsed == .back ? 180 : 0), axis: (0, 1, 0))
-								}
-							}
-								.onTapGesture {
-                                    if !speakerGridViewModel.remoteSpeakers.identity.isEmpty && speakerGridViewModel.remoteSpeakers.presentationTrack == nil {
-										viewModel.isSwitchCanvas.toggle()
-									}
-								}
-						}
+                            Group {
+                                if viewModel.isSwitchCanvas {
+                                    RemoteFullVideoContainerView(viewModel: viewModel, isMainScreen: false)
+                                } else {
+                                    LocalFullVideoContainerView(viewModel: viewModel, isMainScreen: false)
+                                }
+                            }
+                            .onTapGesture {
+                                if !viewModel.participants.filter({ $0.userId != viewModel.dyteMeeting.localUser.userId }).isEmpty && viewModel.screenShareUser.isEmpty {
+                                    viewModel.isSwitchCanvas.toggle()
+                                }
+                            }
+                        }
                         .frame(
                             width: isPotrait ? (viewModel.isShowUtilities ? geo.size.width/3.5 : geo.size.width/4) : (viewModel.isShowUtilities ? geo.size.width/5.5 : geo.size.width/6.5),
                             height: isPotrait ? (viewModel.isShowUtilities ? geo.size.height/3.5 : geo.size.height/5) : (viewModel.isShowUtilities ? geo.size.width/4.5 : geo.size.width/5.5))
 						.cornerRadius(10)
                         .shadow(
-                            color: speakerGridViewModel.remoteSpeakers.identity.isEmpty ?
-                                .gray.opacity(speakerGridViewModel.remoteSpeakers.presentationTrack != nil ? 0 : 0.3) :
-                                (
-                                    speakerGridViewModel.remoteCamAvailable ?
-                                    .black.opacity(speakerGridViewModel.remoteSpeakers.presentationTrack != nil ? 0 : 0.2) :
-                                        .gray.opacity(speakerGridViewModel.remoteSpeakers.presentationTrack != nil ? 0 : 0.3)
-                                ),
+                            color: viewModel.participants.filter({ $0.userId != viewModel.dyteMeeting.localUser.userId }).isEmpty ?
+                                .gray.opacity(!viewModel.screenShareUser.isEmpty ? 0 : 0.3) :
+                                    .black.opacity(!viewModel.screenShareUser.isEmpty ? 0 : 0.2),
                             radius: 10, 
                             x: 0,
                             y: 0
@@ -132,6 +126,7 @@ struct PrivateVideoCallView : View {
 						}
 					}
 					.padding()
+                    .isHidden(!viewModel.isJoined, remove: !viewModel.isJoined)
 					
 					HStack(spacing: 8) {
 						
@@ -147,107 +142,106 @@ struct PrivateVideoCallView : View {
 					.padding(8)
 					.background(
 						RoundedRectangle(cornerRadius: 7)
-							.foregroundColor(.black.opacity(0.2))
+							.foregroundColor(.black.opacity(0.8))
 					)
 					.overlay(
 						RoundedRectangle(cornerRadius: 7)
 							.stroke(Color.DinotisDefault.primary, lineWidth: 1)
 					)
+                    .isHidden(!viewModel.isJoined, remove: !viewModel.isJoined)
 					
 					Spacer()
 					
 					HStack(spacing: 10) {
-						Button(action: switchCamera) {
-							HStack {
-								Image(systemName: "arrow.triangle.2.circlepath.camera.fill")
-									.resizable()
-									.frame(width: 25, height: 20)
-									.foregroundColor(.white)
-							}
-							.frame(width: 50, height: 50)
-							.background(Color.white.opacity(0.2))
-                            .clipShape(Circle())
+                        if viewModel.isJoined {
+                            Button(action: viewModel.switchCamera) {
+                                HStack {
+                                    Image(systemName: "arrow.triangle.2.circlepath.camera.fill")
+                                        .resizable()
+                                        .frame(width: 25, height: 20)
+                                        .foregroundColor(.white)
+                                }
+                                .frame(width: 50, height: 50)
+                                .background(Color.white.opacity(0.2))
+                                .clipShape(Circle())
+                            }
+                            
+                            Button(action: viewModel.toggleCamera) {
+                                HStack {
+                                    Image(systemName: self.viewModel.isCameraOn ? "video.fill" : "video.slash.fill")
+                                        .resizable()
+                                        .frame(width: 25, height: self.viewModel.isCameraOn ? 15 : 20)
+                                        .foregroundColor(.white)
+                                }
+                                .frame(width: 50, height: 50)
+                                .background(self.viewModel.isCameraOn ? Color.white.opacity(0.2) : .red)
+                                .clipShape(Circle())
+                            }
+                            
+                            Button(action: viewModel.toggleMicrophone) {
+                                HStack {
+                                    Image(systemName: !viewModel.isAudioOn ? "mic.slash.fill" : "mic.fill")
+                                        .resizable()
+                                        .frame(width: !viewModel.isAudioOn ? 16 : 14, height: 23)
+                                        .foregroundColor(.white)
+                                }
+                                .frame(width: 50, height: 50)
+                                .background(!viewModel.isAudioOn ? .red : Color.white.opacity(0.2))
+                                .clipShape(Circle())
+                            }
+                            
+                            if stateObservable.userType == 2 {
+                                Button(action: {
+                                    withAnimation(.spring()) {
+                                        viewModel.showingBottomSheet.toggle()
+                                        viewModel.screenShotMethod()
+                                    }
+                                }) {
+                                    HStack {
+                                        Image(systemName: "ellipsis")
+                                            .resizable()
+                                            .frame(width: 20, height: 5)
+                                            .foregroundColor(.white)
+                                    }
+                                    .frame(width: 50, height: 50)
+                                    .background(Color.white.opacity(0.2))
+                                    .clipShape(Circle())
+                                }
+                            }
+                            
+                            if stateObservable.userType == 2 {
+                                Button(action: {
+                                    viewModel.isShowEnd.toggle()
+                                }, label: {
+                                    HStack {
+                                        Image(systemName: "phone.down.fill")
+                                            .resizable()
+                                            .frame(width: 30, height: 10)
+                                            .foregroundColor(.white)
+                                    }
+                                    .padding()
+                                    .padding(.vertical, 5)
+                                    .background(Color.red)
+                                    .clipShape(Circle())
+                                })
+                            } else {
+                                Button(action: {
+                                    viewModel.isShowEnd.toggle()
+                                }, label: {
+                                    HStack {
+                                        Image(systemName: "phone.down.fill")
+                                            .resizable()
+                                            .frame(width: 35, height: 15)
+                                            .foregroundColor(.white)
+                                    }
+                                    .padding()
+                                    .padding(.vertical, 4)
+                                    .padding(.horizontal, 10)
+                                    .background(Color.red)
+                                    .clipShape(Capsule())
+                                })
+                            }
                         }
-                        .onChange(of: viewModel.isSwitchCam) { newValue in
-                            streamManager.roomManager?.localParticipant.position = newValue ? .front : .back
-                        }
-
-						Button(action: toogleLocalCamera) {
-							HStack {
-								Image(systemName: self.speakerSettingsManager.isCameraOn ? "video.fill" : "video.slash.fill")
-									.resizable()
-									.frame(width: 25, height: self.speakerSettingsManager.isCameraOn ? 15 : 20)
-									.foregroundColor(.white)
-							}
-							.frame(width: 50, height: 50)
-							.background(self.speakerSettingsManager.isCameraOn ? Color.white.opacity(0.2) : .red)
-							.clipShape(Circle())
-						}
-
-						Button(action: toggleLocalAudio) {
-							HStack {
-								Image(systemName: !speakerSettingsManager.isMicOn ? "mic.slash.fill" : "mic.fill")
-									.resizable()
-									.frame(width: !speakerSettingsManager.isMicOn ? 16 : 14, height: 23)
-									.foregroundColor(.white)
-							}
-							.frame(width: 50, height: 50)
-							.background(!speakerSettingsManager.isMicOn ? .red : Color.white.opacity(0.2))
-							.clipShape(Circle())
-						}
-
-						if stateObservable.userType == 2 {
-							Button(action: {
-								withAnimation(.spring()) {
-									viewModel.showingBottomSheet.toggle()
-									viewModel.screenShotMethod()
-								}
-							}) {
-								HStack {
-									Image(systemName: "ellipsis")
-										.resizable()
-										.frame(width: 20, height: 5)
-										.foregroundColor(.white)
-								}
-								.frame(width: 50, height: 50)
-								.background(Color.white.opacity(0.2))
-								.clipShape(Circle())
-							}
-						}
-						
-						if stateObservable.userType == 2 {
-							Button(action: {
-								viewModel.isShowEnd.toggle()
-							}, label: {
-								HStack {
-									Image(systemName: "phone.down.fill")
-										.resizable()
-										.frame(width: 30, height: 10)
-										.foregroundColor(.white)
-								}
-								.padding()
-								.padding(.vertical, 5)
-								.background(Color.red)
-								.clipShape(Circle())
-							})
-						} else {
-							Button(action: {
-								viewModel.isShowEnd.toggle()
-							}, label: {
-								HStack {
-									Image(systemName: "phone.down.fill")
-										.resizable()
-										.frame(width: 35, height: 15)
-										.foregroundColor(.white)
-								}
-								.padding()
-								.padding(.vertical, 4)
-								.padding(.horizontal, 10)
-								.background(Color.red)
-								.clipShape(Capsule())
-							})
-						}
-						
 					}
 					.padding()
                     .isHidden(!viewModel.isShowUtilities, remove: !viewModel.isShowUtilities)
@@ -288,7 +282,7 @@ struct PrivateVideoCallView : View {
 						}
 						.onChange(of: viewModel.isMeetingForceEnd) { val in
 							if val {
-								viewModel.endMeetingForce(streamManager: streamManager)
+								viewModel.endMeetingForce()
 							}
 						}
 					
@@ -494,7 +488,7 @@ struct PrivateVideoCallView : View {
 					.opacity(viewModel.showingRepostModal ? 1 : 0)
 				}
         
-        DinotisLoadingView(.fullscreen, hide: streamManager.state != .connecting && !viewModel.isLoading)
+                DinotisLoadingView(.fullscreen, hide: !viewModel.isConnecting && !viewModel.isLoading)
 
 				if viewModel.isSuccessSend || viewModel.isErrorSend {
 					ZStack {
@@ -574,56 +568,64 @@ struct PrivateVideoCallView : View {
 			}
 			
 		}
-    .onChange(of: streamViewModel.alertIdentifier, perform: { _ in
-      streamViewModel.showAlertContent {
-        dismiss()
-      } routeToAfterCall: {
-        viewModel.routeToAfterCall()
-      }
-    })
-    .dinotisAlert(
-      isPresent: $streamViewModel.isShowAlert,
-      type: .videoCall,
-      title: streamViewModel.alert.title,
-      isError: streamViewModel.alert.isError,
-      message: streamViewModel.alert.message,
-      primaryButton: streamViewModel.alert.primaryButton,
-      secondaryButton: streamViewModel.alert.secondaryButton
-    )
-    .dinotisAlert(
-      isPresent: $viewModel.isShowEnd,
-      type: .videoCall,
-      title: LocaleText.attention,
-      isError: false,
-      message: LocaleText.sureEndCallSubtitle,
-      primaryButton: .init(
-        text: LocaleText.yesDeleteText,
-        action: {
-          self.viewModel.deleteStream {
-            self.streamManager.disconnect()
-            self.viewModel.routeToAfterCall()
-          }
+        .dinotisAlert(
+            isPresent: $viewModel.isShowAlert,
+            type: .videoCall,
+            title: viewModel.alert.title,
+            isError: false,
+            message: viewModel.alert.message,
+            primaryButton: viewModel.alert.primaryButton,
+            secondaryButton: viewModel.alert.secondaryButton
+        )
+        .dinotisAlert(
+            isPresent: $viewModel.isMeetingForceEnd,
+            type: .videoCall,
+            title: LocalizableText.attentionText,
+            isError: false,
+            message: LocalizableText.videoCallMeetingForceEnd,
+            primaryButton: .init(text: LocalizableText.okText, action: {
+                if viewModel.isJoined {
+                    viewModel.leaveMeeting()
+                } else {
+                    viewModel.routeToAfterCall()
+                }
+            })
+        )
+        .dinotisAlert(
+            isPresent: $viewModel.isDuplicate,
+            type: .videoCall,
+            title: LocalizableText.attentionText,
+            isError: true,
+            message: LocalizableText.groupVideoCallDuplicateAlert,
+            primaryButton: .init(text: LocalizableText.groupVideoCallDisconnectNow, action: {
+                viewModel.leaveMeeting()
+            })
+        )
+        .dinotisAlert(
+            isPresent: $viewModel.isShowEnd,
+            type: .videoCall,
+            title: LocaleText.attention,
+            isError: false,
+            message: LocaleText.sureEndCallSubtitle,
+            primaryButton: .init(
+                text: LocaleText.yesDeleteText,
+                action: {
+                    if viewModel.isJoined {
+                        viewModel.leaveMeeting()
+                    } else {
+                        viewModel.routeToAfterCall()
+                    }
+                }
+            ),
+            secondaryButton: .init(
+                text: LocalizableText.cancelLabel,
+                action: {}
+            )
+        )
+        .onAppear {
+            viewModel.onAppear()
         }
-      ),
-      secondaryButton: .init(
-        text: LocalizableText.cancelLabel,
-        action: {}
-      )
-    )
-		.onAppear {
-            Task {
-                viewModel.futureDate = viewModel.meeting.endAt.orCurrentDate()
-                self.viewModel.getRealTime()
-                await self.viewModel.getUsers()
-                
-                await self.viewModel.getReason()
-                self.streamManager.connect(meetingId: viewModel.meeting.id.orEmpty())
-                
-                UIApplication.shared.isIdleTimerDisabled = true
-                AppDelegate.orientationLock = .all
-            }
-		}
-		.onDisappear(perform: {
+        .onDisappear(perform: {
 			UIApplication.shared.isIdleTimerDisabled = false
             AppDelegate.orientationLock = .portrait
 		})
@@ -632,11 +634,128 @@ struct PrivateVideoCallView : View {
 	}
 }
 
+extension PrivateVideoCallView {
+    struct LocalFullVideoContainerView: View {
+        
+        @ObservedObject var viewModel: PrivateVideoCallViewModel
+        let isMainScreen: Bool
+        
+        var body: some View {
+            ZStack(alignment: .topTrailing) {
+                if viewModel.dyteMeeting.localUser.videoEnabled {
+                    if let video = viewModel.dyteMeeting.localUser.getVideoView() {
+                        UIVideoView(videoView: video, width: .infinity, height: .infinity)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .rotationEffect(.degrees(0))
+                            .rotation3DEffect(.degrees(viewModel.position == .rear ? 180 : 0), axis: (0, 1, 0))
+                    }
+                    
+                } else {
+                    if viewModel.dyteMeeting.localUser.picture == nil {
+                        RoundedRectangle(cornerRadius: 10)
+                            .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
+                            .overlay(
+                                Text(viewModel.createInitial(viewModel.dyteMeeting.localUser.name))
+                                    .font(.robotoRegular(size: 20))
+                                    .foregroundColor(.white)
+                                    .background(
+                                        Circle()
+                                            .frame(width: isMainScreen ? 120 : 60, height: isMainScreen ? 120 : 60)
+                                            .foregroundColor(.DinotisDefault.primary)
+                                    )
+                            )
+                    } else {
+                        RoundedRectangle(cornerRadius: 10)
+                            .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
+                            .overlay(
+                                ImageLoader(url: viewModel.dyteMeeting.localUser.picture.orEmpty(), width: isMainScreen ? 120 : 60, height: isMainScreen ? 120 : 60)
+                                    .frame(width: isMainScreen ? 120 : 60, height: isMainScreen ? 120 : 60)
+                                    .clipShape(Circle())
+                            )
+                    }
+                }
+                
+                if !viewModel.dyteMeeting.localUser.audioEnabled {
+                    HStack(spacing: 0) {
+                        Image.videoCallMicOffStrokeIcon
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 12)
+                    }
+                    .padding(5)
+                    .background(
+                        Capsule()
+                            .foregroundColor(.gray.opacity(0.5))
+                    )
+                    .padding(10)
+                }
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+        }
+    }
+    
+    struct RemoteFullVideoContainerView: View {
+        
+        @ObservedObject var viewModel: PrivateVideoCallViewModel
+        let isMainScreen: Bool
+        
+        var body: some View {
+            ZStack(alignment: .topTrailing) {
+                if (viewModel.participants.filter({ $0.userId != viewModel.dyteMeeting.localUser.userId }).first?.videoEnabled).orFalse() {
+                    if let video = viewModel.participants.filter({ $0.userId != viewModel.dyteMeeting.localUser.userId }).first?.getVideoView() {
+                        UIVideoView(videoView: video, width: .infinity, height: .infinity)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    }
+                    
+                } else {
+                    if viewModel.participants.filter({ $0.userId != viewModel.dyteMeeting.localUser.userId }).first?.picture == nil {
+                        RoundedRectangle(cornerRadius: 10)
+                            .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
+                            .overlay(
+                                Text(viewModel.createInitial((viewModel.participants.filter({ $0.userId != viewModel.dyteMeeting.localUser.userId }).first?.name).orEmpty()))
+                                    .font(.robotoRegular(size: 20))
+                                    .foregroundColor(.white)
+                                    .background(
+                                        Circle()
+                                            .frame(width: isMainScreen ? 120 : 60, height: isMainScreen ? 120 : 60)
+                                            .foregroundColor(.DinotisDefault.primary)
+                                    )
+                            )
+                    } else {
+                        RoundedRectangle(cornerRadius: 10)
+                            .foregroundColor(Color(red: 0.1, green: 0.11, blue: 0.12))
+                            .overlay(
+                                ImageLoader(url: (viewModel.participants.filter({ $0.userId != viewModel.dyteMeeting.localUser.userId }).first?.picture).orEmpty(), width: isMainScreen ? 120 : 60, height: isMainScreen ? 120 : 60)
+                                    .frame(width: isMainScreen ? 120 : 60, height: isMainScreen ? 120 : 60)
+                                    .clipShape(Circle())
+                            )
+                    }
+                }
+                
+                if !(viewModel.participants.filter({ $0.userId != viewModel.dyteMeeting.localUser.userId }).first?.audioEnabled).orFalse() {
+                    HStack(spacing: 0) {
+                        Image.videoCallMicOffStrokeIcon
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: isMainScreen ? 24 : 12)
+                    }
+                    .padding(5)
+                    .background(
+                        Capsule()
+                            .foregroundColor(.gray.opacity(0.5))
+                    )
+                    .padding(.top, isMainScreen ? 40 : 10)
+                    .padding(.trailing)
+                }
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+        }
+    }
+}
+
 struct PrivateVideoCallView_Previews : PreviewProvider {
 	static var previews: some View {
 		PrivateVideoCallView(
-			randomId: .constant(0),
-			meetingId: .constant(""),
 			viewModel: PrivateVideoCallViewModel(
 				meeting: UserMeetingData(
 					id: "",

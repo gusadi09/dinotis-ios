@@ -457,8 +457,9 @@ struct CreatorProfileDetailView: View {
         .sheet(isPresented: $viewModel.isShowManagements) {
             if #available(iOS 16.0, *) {
                 ManagementBottomSheet(viewModel: viewModel)
-                    .presentationDetents([.fraction(0.4), .fraction(0.6), .large])
+                    .presentationDetents([.medium, .fraction(0.99)])
                     .dynamicTypeSize(.large)
+                    .presentationDragIndicator(.hidden)
             } else {
                 ManagementBottomSheet(viewModel: viewModel)
                     .dynamicTypeSize(.large)

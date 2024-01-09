@@ -869,6 +869,10 @@ final class GroupVideoCallViewModel: ObservableObject {
 }
 
 extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
+    func onActiveTabUpdate(id: String, tabType: ActiveTabType) {
+        
+    }
+    
     func onConnectedToMeetingRoom() {
         self.isConnecting = false
     }
@@ -985,6 +989,12 @@ extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {
             "peerId" : self.meeting.localUser.id,
             "userId" : self.meeting.localUser.userId
         ])
+        
+        if meeting.localUser.stageStatus == .offStage {
+            madeToSpeaker()
+        } else {
+            forceAudioWhenMutedBySystem()
+        }
     }
     
     func onMeetingRoomJoinFailed(exception: KotlinException) {
@@ -1178,7 +1188,7 @@ extension GroupVideoCallViewModel: DyteSelfEventsListener {
     
     func onAudioUpdate(audioEnabled: Bool) {
         isAudioOn = audioEnabled
-        
+       
         if audioEnabled {
             forceAudioWhenMutedBySystem()
         } else {
@@ -1250,6 +1260,14 @@ extension GroupVideoCallViewModel: DyteChatEventsListener {
 }
 
 extension GroupVideoCallViewModel: DyteRecordingEventsListener {
+    func onMeetingRecordingPauseError(e: KotlinException) {
+        
+    }
+    
+    func onMeetingRecordingResumeError(e: KotlinException) {
+        
+    }
+    
     func onMeetingRecordingEnded() {
         
     }

@@ -6,8 +6,6 @@ import SwiftUI
 import DinotisDesignSystem
 
 struct ProgressHUD: View {
-    @EnvironmentObject var streamManager: StreamManager
-    
 	var title: String?
     var description = ""
 	var geo: GeometryProxy
@@ -33,20 +31,6 @@ struct ProgressHUD: View {
                     .foregroundColor(.white)
                     .font(.robotoRegular(size: 10))
                     .multilineTextAlignment(.center)
-                
-                if streamManager.state == .connecting {
-                    Button {
-                        withAnimation(.spring()) {
-                            closeLive()
-                        }
-                    } label: {
-                        Image.Dinotis.closeGroupCallIcon
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 45)
-                    }
-                    .padding(.top, 20)
-                }
 			}
 			.padding()
 		}

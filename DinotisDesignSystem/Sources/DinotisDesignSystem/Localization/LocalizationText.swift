@@ -3489,4 +3489,12 @@ public enum LocalizableText {
         bundle: .module,
         comment: "creator analytics"
     )
+    public static func managementPlusOther(_ value: Int) -> String {
+        String(format: NSLocalizedString(
+            "management_plus_other",
+            bundle: .module,
+            comment: "usage to tell other managements included"),
+               value
+        )
+    }
 }

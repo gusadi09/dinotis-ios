@@ -1,2 +1,2 @@
-- [DBT-277] Memperbaiki limitasi input pada phone field
-- Refactored Creator My Account view
+- Migrasi Private Video call dari Twilio menjadi Dyte
+- [DBT-284] Memperbaiki Pencarian Bank Case Sensitive
