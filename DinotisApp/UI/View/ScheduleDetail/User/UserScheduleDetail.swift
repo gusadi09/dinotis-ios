@@ -16,19 +16,6 @@ import QGrid
 import StoreKit
 
 struct UserScheduleDetail: View {
-    @StateObject private var streamViewModel = StreamViewModel()
-    @StateObject private var participantsViewModel = ParticipantsViewModel()
-    @StateObject private var streamManager = StreamManager()
-    @StateObject private var speakerSettingsManager = SpeakerSettingsManager()
-    @StateObject private var hostControlsManager = HostControlsManager()
-    @StateObject private var speakerGridViewModel = SpeakerGridViewModel()
-    @StateObject private var presentationLayoutViewModel = PresentationLayoutViewModel()
-    @StateObject private var chatManager = ChatManager()
-    
-    @StateObject private var privateStreamViewModel = PrivateStreamViewModel()
-    @StateObject private var privateStreamManager = PrivateStreamManager()
-    @StateObject private var privateSpeakerSettingsManager = PrivateSpeakerSettingsManager()
-    @StateObject private var privateSpeakerViewModel = PrivateVideoSpeakerViewModel()
     
     @Environment(\.dismiss) var dismiss
     
@@ -86,39 +73,12 @@ struct UserScheduleDetail: View {
                             EmptyView()
                         }
                     )
-
-                    NavigationLink(
-                        unwrapping: $viewModel.route,
-                        case: /HomeRouting.twilioLiveStream,
-                        destination: {viewModel in
-                            TwilioGroupVideoCallView(
-                                viewModel: viewModel.wrappedValue,
-                                meetingId: .constant(meetId), speaker: SpeakerVideoViewModel()
-                            )
-                            .environmentObject(streamViewModel)
-                            .environmentObject(participantsViewModel)
-                            .environmentObject(streamManager)
-                            .environmentObject(speakerGridViewModel)
-                            .environmentObject(presentationLayoutViewModel)
-                            .environmentObject(speakerSettingsManager)
-                            .environmentObject(hostControlsManager)
-                            .environmentObject(chatManager)
-                        },
-                        onNavigate: {_ in},
-                        label: {
-                            EmptyView()
-                        }
-                    )
                     
                     NavigationLink(
                         unwrapping: $viewModel.route,
                         case: /HomeRouting.videoCall,
                         destination: {viewModel in
-                            PrivateVideoCallView(randomId: $viewModel.randomId, meetingId: .constant(meetId), viewModel: viewModel.wrappedValue)
-                                .environmentObject(privateStreamViewModel)
-                                .environmentObject(privateStreamManager)
-                                .environmentObject(privateSpeakerViewModel)
-                                .environmentObject(privateSpeakerSettingsManager)
+                            PrivateVideoCallView(viewModel: viewModel.wrappedValue)
                         },
                         onNavigate: {_ in},
                         label: {
@@ -192,46 +152,6 @@ struct UserScheduleDetail: View {
                     .onChange(of: viewModel.successDetail) { _ in
                         
                         guard let meet = viewModel.dataBooking?.meeting else {return}
-                        
-                        if meet.isPrivate ?? false {
-                            privateStreamManager.meetingId = meet.id.orEmpty()
-                            
-                            let localParticipant = PrivateLocalParticipantManager()
-                            let roomManager = PrivateRoomManager()
-                            
-                            roomManager.configure(localParticipant: localParticipant)
-                            
-                            let speakerVideoViewModelFactory = PrivateSpeakerVideoViewModelFactory()
-                            let speakersMap = SyncUsersMap()
-                            
-                            privateStreamManager.configure(roomManager: roomManager)
-                            privateStreamViewModel.configure(streamManager: privateStreamManager, speakerSettingsManager: privateSpeakerSettingsManager, meetingId: meet.id.orEmpty())
-                            privateSpeakerSettingsManager.configure(roomManager: roomManager)
-                            privateSpeakerViewModel.configure(roomManager: roomManager, speakersMap: speakersMap, speakerVideoViewModelFactory: speakerVideoViewModelFactory)
-                            
-                        } else {
-                            
-                            streamManager.meetingId = meet.id.orEmpty()
-                            
-                            let localParticipant = LocalParticipantManager()
-                            let roomManager = RoomManager()
-                            roomManager.configure(localParticipant: localParticipant)
-                            let roomDocument = SyncRoomDocument()
-                            let userDocument = SyncUserDocument()
-                            let speakersMap = SyncUsersMap()
-                            let raisedHandsMap = SyncUsersMap()
-                            let viewersMap = SyncUsersMap()
-                            let speakerVideoViewModelFactory = SpeakerVideoViewModelFactory()
-                            let syncManager = SyncManager(speakersMap: speakersMap, viewersMap: viewersMap, raisedHandsMap: raisedHandsMap, userDocument: userDocument, roomDocument: roomDocument)
-                            participantsViewModel.configure(streamManager: streamManager, roomManager: roomManager, speakersMap: speakersMap, viewersMap: viewersMap, raisedHandsMap: raisedHandsMap)
-                            streamManager.configure(roomManager: roomManager, playerManager: PlayerManager(), syncManager: syncManager, chatManager: chatManager)
-                            streamViewModel.configure(streamManager: streamManager, speakerSettingsManager: speakerSettingsManager, userDocument: userDocument, meetingId: meet.id.orEmpty(), roomDocument: roomDocument)
-                            speakerSettingsManager.configure(roomManager: roomManager)
-                            hostControlsManager.configure(roomManager: roomManager)
-                            speakerVideoViewModelFactory.configure(meetingId: meet.id.orEmpty(), speakersMap: speakersMap)
-                            speakerGridViewModel.configure(roomManager: roomManager, speakersMap: speakersMap, speakerVideoViewModelFactory: speakerVideoViewModelFactory)
-                            presentationLayoutViewModel.configure(roomManager: roomManager, speakersMap: speakersMap, speakerVideoViewModelFactory: speakerVideoViewModelFactory)
-                        }
                         
                     }
                     
@@ -406,11 +326,7 @@ struct UserScheduleDetail: View {
                                     viewModel.startPresented.toggle()
                                     
                                     if !(meet.isPrivate ?? false) {
-                                        if meet.dyteMeetingId == nil {
-                                            self.viewModel.routeToTwilioLiveStream(meeting: meet)
-                                        } else {
                                             self.viewModel.routeToGroupCall(meeting: meet)
-                                        }
                                     } else {
                                         self.viewModel.routeToVideoCall(meeting: meet)
                                     }
@@ -483,11 +399,7 @@ struct UserScheduleDetail: View {
                                     viewModel.startPresented.toggle()
                                     
                                     if !(meet.isPrivate ?? false) {
-                                        if meet.dyteMeetingId == nil {
-                                            self.viewModel.routeToTwilioLiveStream(meeting: meet)
-                                        } else {
-                                            self.viewModel.routeToGroupCall(meeting: meet)
-                                        }
+                                        self.viewModel.routeToGroupCall(meeting: meet)
                                     } else {
                                         self.viewModel.routeToVideoCall(meeting: meet)
                                     }

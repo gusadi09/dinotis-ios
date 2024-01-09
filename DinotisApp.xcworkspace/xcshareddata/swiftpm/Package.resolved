@@ -42,7 +42,7 @@
       "location" : "https://github.com/twilio/conversations-ios.git",
       "state" : {
         "branch" : "master",
-        "revision" : "950841709e49043c023b94f54cd7e3106ecf3bf5"
+        "revision" : "92b8a814fd57fb11dabb0d9c3d2e11b90687c28a"
       }
     },
     {
@@ -68,8 +68,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/dyte-in/DyteMobileCoreiOS.git",
       "state" : {
-        "revision" : "4e0a5536b580604df6530d042ba35bebf8f66e4c",
-        "version" : "1.25.4"
+        "revision" : "a0907acb88e516d23bf857e674415216ef76e2bb",
+        "version" : "1.26.1"
       }
     },
     {
@@ -230,8 +230,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SDWebImage/SDWebImage.git",
       "state" : {
-        "revision" : "1b9a2e902cbde5fdf362faa0f4fd76ea74d74305",
-        "version" : "5.18.5"
+        "revision" : "e278c13e46e8d20c895c221e922c6ac6b72aaca9",
+        "version" : "5.18.7"
       }
     },
     {
@@ -248,8 +248,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SDWebImage/SDWebImageSwiftUI.git",
       "state" : {
-        "revision" : "5f025e54a03d3d33dff24d7a19331f446f00ed9d",
-        "version" : "2.2.4"
+        "revision" : "261b6cec35686d2dc192b809ab50742b4502a73b",
+        "version" : "2.2.6"
       }
     },
     {
@@ -316,39 +316,12 @@
       }
     },
     {
-      "identity" : "twilio-live-player-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/twilio/twilio-live-player-ios",
-      "state" : {
-        "revision" : "97dff98041229cfe90c9d2e5b930c836279a9a48",
-        "version" : "1.1.0"
-      }
-    },
-    {
-      "identity" : "twilio-sync-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/twilio/twilio-sync-ios",
-      "state" : {
-        "branch" : "master",
-        "revision" : "2ac158283044d85cc3ef3fdfb86513132216801f"
-      }
-    },
-    {
-      "identity" : "twilio-video-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/twilio/twilio-video-ios",
-      "state" : {
-        "revision" : "ce0415a404af8e24bd6a3243712c3833d512385e",
-        "version" : "5.7.1"
-      }
-    },
-    {
       "identity" : "twilsock-ios",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/twilio/twilsock-ios",
       "state" : {
-        "revision" : "2ac16a8533b128ea47aa2d6a70bf753d31705252",
-        "version" : "2.0.2"
+        "revision" : "b643e5bbe4131615cb9b950ba549091f0e366441",
+        "version" : "2.0.4"
       }
     },
     {
