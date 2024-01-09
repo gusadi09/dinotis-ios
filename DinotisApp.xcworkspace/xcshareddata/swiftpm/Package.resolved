@@ -68,8 +68,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/dyte-in/DyteMobileCoreiOS.git",
       "state" : {
-        "revision" : "a0907acb88e516d23bf857e674415216ef76e2bb",
-        "version" : "1.26.1"
+        "revision" : "3dd2983b228cb98a1294262fcfc5af0c4eafa029",
+        "version" : "1.29.1"
       }
     },
     {
@@ -230,8 +230,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SDWebImage/SDWebImage.git",
       "state" : {
-        "revision" : "e278c13e46e8d20c895c221e922c6ac6b72aaca9",
-        "version" : "5.18.7"
+        "revision" : "1b9a2e902cbde5fdf362faa0f4fd76ea74d74305",
+        "version" : "5.18.5"
       }
     },
     {
@@ -248,8 +248,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SDWebImage/SDWebImageSwiftUI.git",
       "state" : {
-        "revision" : "261b6cec35686d2dc192b809ab50742b4502a73b",
-        "version" : "2.2.6"
+        "revision" : "5f025e54a03d3d33dff24d7a19331f446f00ed9d",
+        "version" : "2.2.4"
       }
     },
     {
