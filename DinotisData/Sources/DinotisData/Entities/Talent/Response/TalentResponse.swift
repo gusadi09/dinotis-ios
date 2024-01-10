@@ -93,7 +93,8 @@ public struct TalentWithProfessionData: Codable, Hashable {
 	public let profilePhoto: String?
 	public let profileDescription: String?
 	public let emailVerifiedAt: Date?
-	public let isVerified: Bool?
+    public let isVerified: Bool?
+	public let isFollowed: Bool?
     public let stringProfessions: [String]?
 	public let professions: [ProfessionData]?
 	public let rating: String?
@@ -108,6 +109,7 @@ public struct TalentWithProfessionData: Codable, Hashable {
 		profileDescription: String?,
 		emailVerifiedAt: Date?,
 		isVerified: Bool?,
+        isFollowed: Bool?,
         stringProfessions: [String]?,
 		professions: [ProfessionData]?,
 		rating: String?,
@@ -121,6 +123,7 @@ public struct TalentWithProfessionData: Codable, Hashable {
 		self.profileDescription = profileDescription
 		self.emailVerifiedAt = emailVerifiedAt
 		self.isVerified = isVerified
+        self.isFollowed = isFollowed
 		self.professions = professions
 		self.rating = rating
 		self.meetingCount = meetingCount
