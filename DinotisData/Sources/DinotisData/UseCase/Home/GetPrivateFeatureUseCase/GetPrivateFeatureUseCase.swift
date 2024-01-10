@@ -8,5 +8,5 @@
 import Foundation
 
 public protocol GetPrivateFeatureUseCase {
-    func execute() async -> Result<FeatureMeetingResponse, Error>
+    func execute(with request: FollowingContentRequest) async -> Result<DataResponse<UserMeetingData>, Error>
 }

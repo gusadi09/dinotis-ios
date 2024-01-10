@@ -14,6 +14,7 @@ public struct RateCardResponse: Codable, Hashable {
 	public let price: String?
 	public let duration: Int?
 	public let isPrivate: Bool?
+    public let user: UserResponse?
 
 	public static func == (lhs: RateCardResponse, rhs: RateCardResponse) -> Bool {
 		lhs.id == rhs.id
@@ -23,13 +24,14 @@ public struct RateCardResponse: Codable, Hashable {
 		hasher.combine(id.orEmpty())
 	}
 
-	public init(id: String?, title: String?, description: String?, price: String?, duration: Int?, isPrivate: Bool?) {
+    public init(id: String?, title: String?, description: String?, price: String?, duration: Int?, isPrivate: Bool?, user: UserResponse? = nil) {
 		self.id = id
 		self.title = title
 		self.description = description
 		self.price = price
 		self.duration = duration
 		self.isPrivate = isPrivate
+        self.user = user
 	}
 }
 

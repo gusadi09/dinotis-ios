@@ -68,6 +68,7 @@ extension CreatorProfileDetailView {
                     .isHidden(!viewModel.isManagementView, remove: true)
                     
                     if let data = viewModel.talentData?.managements,
+                       !data.isEmpty,
                        !viewModel.isManagementView
                     {
                         Button {
@@ -1047,91 +1048,103 @@ extension CreatorProfileDetailView {
             .padding(.horizontal)
             .padding(.vertical, 8)
             
-            if viewModel.rateCardList.unique().isEmpty {
-                Image.talentProfileNoServiceImage
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 136)
-                
-                VStack(spacing: 4) {
-                    Text(LocalizableText.sessionEmptyTitle)
-                        .font(.robotoBold(size: 14))
-                        .foregroundColor(.DinotisDefault.black1)
-                    
-                    (
-                        Text(LocalizableText.sessionEmptyDesc(name: (viewModel.talentData?.name).orEmpty()))
-                            .foregroundColor(.DinotisDefault.black2)
-                        +
-                        Text(LocalizableText.requestRatecardLabel)
-                            .foregroundColor(.DinotisDefault.secondary)
-                    )
-                    .font(.robotoRegular(size: 12))
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal)
-                }
-                .padding(.horizontal)
-                
-                DinotisPrimaryButton(
-                    text: LocalizableText.requestSession,
-                    type: .adaptiveScreen,
-                    height: 44,
-                    textColor: .white,
-                    bgColor: .DinotisDefault.primary
-                ) {
-                    viewModel.isLockPrivate = true
-                    viewModel.isShowBundlingSheet = false
-                    viewModel.requestSessionType = .privateType
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
-                        self.viewModel.showingRequest.toggle()
+            if viewModel.isLoading {
+                LazyVStack(spacing: 10) {
+                    ForEach(0...4, id: \.self) { _ in
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(Color.gray.opacity(0.5))
+                            .frame(height: 60)
+                            .shimmering()
                     }
                 }
-                .frame(maxHeight: .infinity, alignment: .bottom)
-                .padding([.horizontal, .bottom])
+                .padding()
             } else {
-                ScrollView {
-                    LazyVStack(spacing: 8) {
-                        ForEach(viewModel.rateCardList.unique(), id: \.id) { item in
-                            RateHorizontalCardView(
-                                item: item,
-                                isTalent: false,
-                                onTapDelete: {},
-                                onTapEdit: {}
-                            )
-                            .onTapGesture(perform: {
-                                viewModel.routeToRateCardForm(
-                                    rateCardId: item.id.orEmpty(),
-                                    title: item.title.orEmpty(),
-                                    description: item.description.orEmpty(),
-                                    price: item.price.orEmpty(),
-                                    duration: item.duration.orZero(),
-                                    isPrivate: item.isPrivate ?? false
+                if viewModel.rateCardList.unique().isEmpty {
+                    Image.talentProfileNoServiceImage
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 136)
+                    
+                    VStack(spacing: 4) {
+                        Text(LocalizableText.sessionEmptyTitle)
+                            .font(.robotoBold(size: 14))
+                            .foregroundColor(.DinotisDefault.black1)
+                        
+                        (
+                            Text(LocalizableText.sessionEmptyDesc(name: (viewModel.talentData?.name).orEmpty()))
+                                .foregroundColor(.DinotisDefault.black2)
+                            +
+                            Text(LocalizableText.requestRatecardLabel)
+                                .foregroundColor(.DinotisDefault.secondary)
+                        )
+                        .font(.robotoRegular(size: 12))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                    }
+                    .padding(.horizontal)
+                    
+                    DinotisPrimaryButton(
+                        text: LocalizableText.requestSession,
+                        type: .adaptiveScreen,
+                        height: 44,
+                        textColor: .white,
+                        bgColor: .DinotisDefault.primary
+                    ) {
+                        viewModel.isLockPrivate = true
+                        viewModel.isShowBundlingSheet = false
+                        viewModel.requestSessionType = .privateType
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                            self.viewModel.showingRequest.toggle()
+                        }
+                    }
+                    .frame(maxHeight: .infinity, alignment: .bottom)
+                    .padding([.horizontal, .bottom])
+                } else {
+                    ScrollView {
+                        LazyVStack(spacing: 8) {
+                            ForEach(viewModel.rateCardList.unique(), id: \.id) { item in
+                                RateHorizontalCardView(
+                                    item: item,
+                                    isTalent: false,
+                                    onTapDelete: {},
+                                    onTapEdit: {}
                                 )
-                            })
-                            .onAppear {
-                                Task {
-                                    if (viewModel.rateCardList.unique().last?.id).orEmpty() == item.id.orEmpty() && viewModel.nextCursorRateCard != nil {
-                                        viewModel.query.skip = viewModel.query.take
-                                        viewModel.query.take += 15
-                                        await viewModel.getRateCardList(by: (viewModel.talentData?.id).orEmpty(), isMore: true)
+                                .onTapGesture(perform: {
+                                    viewModel.routeToRateCardForm(
+                                        rateCardId: item.id.orEmpty(),
+                                        title: item.title.orEmpty(),
+                                        description: item.description.orEmpty(),
+                                        price: item.price.orEmpty(),
+                                        duration: item.duration.orZero(),
+                                        isPrivate: item.isPrivate ?? false
+                                    )
+                                })
+                                .onAppear {
+                                    Task {
+                                        if (viewModel.rateCardList.unique().last?.id).orEmpty() == item.id.orEmpty() && viewModel.nextCursorRateCard != nil {
+                                            viewModel.query.skip = viewModel.query.take
+                                            viewModel.query.take += 15
+                                            await viewModel.getRateCardList(by: (viewModel.talentData?.id).orEmpty(), isMore: true)
+                                        }
                                     }
                                 }
                             }
-                        }
-                        
-                        if viewModel.isLoadingMoreRateCard {
-                            HStack {
-                                Spacer()
-                                
-                                ProgressView()
-                                    .progressViewStyle(.circular)
-                                
-                                Spacer()
+                            
+                            if viewModel.isLoadingMoreRateCard {
+                                HStack {
+                                    Spacer()
+                                    
+                                    ProgressView()
+                                        .progressViewStyle(.circular)
+                                    
+                                    Spacer()
+                                }
+                                .padding()
                             }
-                            .padding()
                         }
+                        .padding()
                     }
-                    .padding()
                 }
             }
         }

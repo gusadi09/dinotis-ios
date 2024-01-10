@@ -12,16 +12,35 @@ public enum HomeTargetType {
 	case getFirstBanner
 	case getSecondBanner
 	case getDynamicHome
-	case getPrivateCallFeature
-	case getGroupCallFeature
+	case getPrivateCallFeature(FollowingContentRequest)
+	case getGroupCallFeature(FollowingContentRequest)
 	case getAnnouncementBanner
 	case getLatestNotice
 	case getOriginalSection
+    case getRateCardList(HomeContentRequest)
+    case getAllSession(HomeContentRequest)
+    case getCreatorList(HomeContentRequest)
+    case getVideoList(FollowingContentRequest)
 }
 
 extension HomeTargetType: DinotisTargetType, AccessTokenAuthorizable {
 	var parameters: [String : Any] {
-		return [:]
+        switch self {
+        case .getRateCardList(let request):
+            return request.toJSON()
+        case .getAllSession(let request):
+            return request.toJSON()
+        case .getCreatorList(let request):
+            return request.toJSON()
+        case .getVideoList(let request):
+            return request.toJSON()
+        case .getPrivateCallFeature(let request):
+            return request.toJSON()
+        case .getGroupCallFeature(let request):
+            return request.toJSON()
+        default:
+            return [:]
+        }
 	}
 	
     public var authorizationType: AuthorizationType? {
@@ -29,7 +48,7 @@ extension HomeTargetType: DinotisTargetType, AccessTokenAuthorizable {
 	}
 	
 	var parameterEncoding: Moya.ParameterEncoding {
-		return URLEncoding.default
+        return URLEncoding.default
 	}
 	
     public var task: Task {
@@ -54,6 +73,14 @@ extension HomeTargetType: DinotisTargetType, AccessTokenAuthorizable {
 			return "/landing-page-list"
 		case .getGroupCallFeature:
 			return "/home/feature/group"
+        case .getRateCardList:
+            return "/home/feature/rate-card"
+        case .getAllSession:
+            return "/home/feature/all"
+        case .getCreatorList:
+            return "/talents"
+        case .getVideoList:
+            return "/home/feature/videos"
 		}
 	}
 	
@@ -181,8 +208,8 @@ extension HomeTargetType: DinotisTargetType, AccessTokenAuthorizable {
 			)
 
 			return response.toJSONData()
-		case .getGroupCallFeature:
-			return Data()
+		default:
+            return Data()
 		}
 	}
 	
