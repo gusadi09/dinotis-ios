@@ -2541,10 +2541,10 @@ fileprivate extension GroupVideoCallView {
                 
                 List {
                     if viewModel.meeting.localUser.canDoParticipantHostControls() {
-                        if !viewModel.meeting.stage.accessRequests.isEmpty {
+                        if !viewModel.filterAccessRequest().isEmpty {
                             Section(
                                 header: HStack {
-                                    Text("\(LocalizableText.videoCallJoinStageRequest) (\(viewModel.meeting.stage.accessRequests.count))")
+                                    Text("\(LocalizableText.videoCallJoinStageRequest) (\(viewModel.filterAccessRequest().count))")
                                         .font(.robotoBold(size: 16))
                                         .foregroundColor(.white)
                                     
@@ -2565,7 +2565,7 @@ fileprivate extension GroupVideoCallView {
                                     .buttonStyle(.plain)
                                 }
                             ) {
-                                ForEach(viewModel.meeting.stage.accessRequests, id: \.id) { participant in
+                                ForEach(viewModel.filterAccessRequest(), id: \.id) { participant in
                                     HStack(spacing: 16) {
                                         if participant.picture == nil {
                                             Circle()
@@ -2613,10 +2613,10 @@ fileprivate extension GroupVideoCallView {
                             .listRowSeparator(.hidden)
                         }
                         
-                        if !viewModel.meeting.participants.waitlisted.isEmpty {
+                        if !viewModel.filterWaitlisted().isEmpty {
                             Section(
                                 header: HStack {
-                                    Text("\(LocalizableText.titleWaitingRoom) (\(viewModel.meeting.participants.waitlisted.count))")
+                                    Text("\(LocalizableText.titleWaitingRoom) (\(viewModel.filterWaitlisted().count))")
                                         .font(.robotoBold(size: 16))
                                         .foregroundColor(.white)
                                     
@@ -2638,7 +2638,7 @@ fileprivate extension GroupVideoCallView {
                                     .buttonStyle(.plain)
                                 }
                             ) {
-                                ForEach(viewModel.meeting.participants.waitlisted, id: \.id) { participant in
+                                ForEach(viewModel.filterWaitlisted(), id: \.id) { participant in
                                     HStack(spacing: 16) {
                                         if participant.picture == nil {
                                             Circle()
@@ -2687,17 +2687,17 @@ fileprivate extension GroupVideoCallView {
                         }
                     }
                     
-                    if !viewModel.meeting.participants.active.isEmpty {
+                    if !viewModel.filterActive().isEmpty {
                         Section(
                             header: HStack {
-                                Text("\(LocalizableText.speakerTitle) (\(viewModel.meeting.participants.active.count))")
+                                Text("\(LocalizableText.speakerTitle) (\(viewModel.filterActive().count))")
                                     .font(.robotoBold(size: 16))
                                     .foregroundColor(.white)
                                 
                                 Spacer()
                             }
                         ) {
-                            ForEach(viewModel.meeting.participants.active, id: \.id) { participant in
+                            ForEach(viewModel.filterActive(), id: \.id) { participant in
                                 HStack(spacing: 16) {
                                     if participant.picture == nil {
                                         Circle()
@@ -2824,17 +2824,17 @@ fileprivate extension GroupVideoCallView {
                     }
                     
                     
-                    if !viewModel.meeting.stage.viewers.isEmpty {
+                    if !viewModel.filterViewer().isEmpty {
                         Section(
                             header: HStack {
-                                Text("\(LocalizableText.viewerTitle) (\(viewModel.meeting.stage.viewers.count))")
+                                Text("\(LocalizableText.viewerTitle) (\(viewModel.filterViewer().count))")
                                     .font(.robotoBold(size: 16))
                                     .foregroundColor(.white)
                                 
                                 Spacer()
                             }
                         ) {
-                            ForEach(viewModel.meeting.stage.viewers, id: \.id) { participant in
+                            ForEach(viewModel.filterViewer(), id: \.id) { participant in
                                 HStack(spacing: 16) {
                                     if participant.picture == nil {
                                         Circle()
