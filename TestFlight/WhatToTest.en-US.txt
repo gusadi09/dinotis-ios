@@ -1,2 +1,3 @@
+- [DBT-294] Fixing searching participant feature on group video call
 - Migration of Private Video call from Twilio to be Dyte
 - [DBT-284] Fixing Bank Search Case Sensitive
