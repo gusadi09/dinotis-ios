@@ -1,3 +1,4 @@
 - [DBT-294] Memperbaiki fitur searching participant pada group video call
+- [DBT-290] Memperbaiki force close saat membuka attachments
 - Migrasi Private Video call dari Twilio menjadi Dyte
 - [DBT-284] Memperbaiki Pencarian Bank Case Sensitive

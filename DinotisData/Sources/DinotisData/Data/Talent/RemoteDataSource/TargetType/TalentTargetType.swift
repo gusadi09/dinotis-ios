@@ -20,25 +20,16 @@ extension TalentTargetType: DinotisTargetType, AccessTokenAuthorizable {
     var parameters: [String : Any] {
         switch self {
         case .getCrowdedTalent(let query):
-            return [
-                "profession": query.profession == 0 || query.profession == nil ? "" : query.profession.orZero(),
-                "profession_category": query.professionCategory == 0 || query.professionCategory == nil ? "" : query.professionCategory.orZero()
-            ]
+            return query.toJSON()
         case .getRecommendationTalent:
             return [:]
         case .getSearchedTalent(let query):
-            return [
-                "query": query.query,
-                "skip": query.skip == 0 ? "" : query.skip,
-                "take": query.take == 0 ? "" : query.take,
-                "profession": query.profession == 0 || query.profession == nil ? "" : query.profession.orZero(),
-                "profession_category": query.professionCategory == 0 || query.professionCategory == nil ? "" : query.professionCategory.orZero()
-            ]
+            return query.toJSON()
         case .getTalentDetail:
             return [:]
-				case .sendRequestSchedule(_, let body):
-					return body.toJSON()
-				}
+        case .sendRequestSchedule(_, let body):
+            return body.toJSON()
+        }
     }
     
     public var authorizationType: AuthorizationType? {

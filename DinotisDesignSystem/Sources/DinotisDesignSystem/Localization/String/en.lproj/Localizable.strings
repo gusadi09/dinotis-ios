@@ -756,3 +756,17 @@
 "profile_creator_analytics" = "Creator Analytics";
 
 "management_plus_other" = "+ %lld others";
+
+"for_you_label" = "For you";
+"start_from_label" = "Start From";
+
+"home_private_call_title" = "Hey, sneak a peek at this **Private Call** that you can **exclusively join!**";
+"home_new_creator_title" = "Here are\nthe **new creators** who just joined!";
+"home_recent_session_title" = "The session that was just created";
+"home_followed_creator_title" = "Creators you follow";
+"home_empty_followed_creator_desc" = "You haven't followed any creators on DINOTIS yet.";
+"home_find_creator_label" = "Discover Your Favorite Creators";
+"home_popular_creator_title" = "Popular creators";
+"home_empty_private_session_desc" = "No private video call sessions yet";
+"home_empty_group_session_desc" = "No group video call sessions yet";
+"home_empty_uploaded_video_desc" = "No uploaded videos yet";

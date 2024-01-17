@@ -17,6 +17,8 @@ struct SearchTalentView: View {
 	
 	@EnvironmentObject var viewModel: SearchTalentViewModel
     @Binding var tabValue: TabRoute
+    
+    @FocusState var focused: Bool
 	
 	var body: some View {
 		GeometryReader { geo in
@@ -70,6 +72,8 @@ struct SearchTalentView: View {
                                 LocalizableText.searchPlaceholder,
                                 text: $viewModel.searchText
                             )
+                            .focused($focused)
+                            .tint(.DinotisDefault.primary)
 							.autocorrectionDisabled(true)
                             .padding(.horizontal)
                             .padding(.bottom)
@@ -160,6 +164,11 @@ struct SearchTalentView: View {
 				}
 			}
 		}
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                self.focused = true
+            }
+        }
         .onChange(of: viewModel.searchText, perform: { _ in
             viewModel.debounceText()
         })

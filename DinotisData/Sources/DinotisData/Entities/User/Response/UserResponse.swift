@@ -25,6 +25,7 @@ public struct UserResponse: Codable, Hashable {
 	public let isPasswordFilled: Bool?
 	public let isVerified: Bool?
 	public let isVisible: Bool?
+    public let isFollowed: Bool?
 	public let lastLoginAt: Date?
 	public let name: String?
     public let username: String?
@@ -54,6 +55,7 @@ public struct UserResponse: Codable, Hashable {
 		emailVerifiedAt: Date?,
 		id: String?,
 		isActive: Bool?,
+        isFollowed: Bool?,
 		isPasswordFilled: Bool?,
 		isVerified: Bool?,
 		isVisible: Bool?,
@@ -84,6 +86,7 @@ public struct UserResponse: Codable, Hashable {
 		self.email = email
 		self.emailVerifiedAt = emailVerifiedAt
 		self.id = id
+        self.isFollowed = isFollowed
 		self.isActive = isActive
 		self.isPasswordFilled = isPasswordFilled
 		self.isVerified = isVerified
@@ -133,7 +136,8 @@ public extension UserResponse {
 			email: "test@test.com",
 			emailVerifiedAt: Date(),
 			id: "Test",
-			isActive: true,
+            isActive: true,
+			isFollowed: true,
 			isPasswordFilled: true,
 			isVerified: true,
 			isVisible: true,
@@ -204,6 +208,7 @@ public extension UserResponse {
 			emailVerifiedAt: Date(),
 			id: "Test",
 			isActive: true,
+            isFollowed: true,
 			isPasswordFilled: true,
 			isVerified: true,
 			isVisible: true,
