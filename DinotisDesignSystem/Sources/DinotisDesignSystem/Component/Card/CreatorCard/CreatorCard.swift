@@ -51,7 +51,7 @@ public struct CreatorCard<BottomView: View>: View {
                 DinotisImageLoader(urlString: data.photo)
                     .scaledToFill()
                     .frame(width: size, height: size)
-                    .cornerRadius(8)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
                     .overlay(
                         ZStack(alignment: .bottomLeading) {
                             LinearGradient(colors: [.clear, .black.opacity(0.8)], startPoint: .top, endPoint: .bottom)

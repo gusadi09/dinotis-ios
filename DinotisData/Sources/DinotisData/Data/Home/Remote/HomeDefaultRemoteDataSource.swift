@@ -29,8 +29,8 @@ public final class HomeDefaultRemoteDataSource: HomeRemoteDataSource {
         try await self.provider.request(.getDynamicHome, model: DynamicHomeResponse.self)
 	}
 	
-    public func getPrivateCallFeature() async throws -> FeatureMeetingResponse {
-        try await self.provider.request(.getPrivateCallFeature, model: FeatureMeetingResponse.self)
+    public func getPrivateCallFeature(with request: FollowingContentRequest) async throws -> DataResponse<UserMeetingData> {
+        try await self.provider.request(.getPrivateCallFeature(request), model: DataResponse<UserMeetingData>.self)
 	}
 
     public func getAnnouncementBanner() async throws -> AnnouncementResponse {
@@ -45,7 +45,23 @@ public final class HomeDefaultRemoteDataSource: HomeRemoteDataSource {
         try await self.provider.request(.getOriginalSection, model: OriginalSectionResponse.self)
 	}
 
-    public func getGroupCallFeature() async throws -> FeatureMeetingResponse {
-        try await self.provider.request(.getGroupCallFeature, model: FeatureMeetingResponse.self)
+    public func getGroupCallFeature(with request: FollowingContentRequest) async throws -> DataResponse<UserMeetingData> {
+        try await self.provider.request(.getGroupCallFeature(request), model: DataResponse<UserMeetingData>.self)
 	}
+    
+    public func getRateCardList(with request: HomeContentRequest) async throws -> DataResponse<RateCardResponse> {
+        try await self.provider.request(.getRateCardList(request), model: DataResponse<RateCardResponse>.self)
+    }
+    
+    public func getAllSession(with request: HomeContentRequest) async throws -> DataResponse<MeetingDetailResponse> {
+        try await self.provider.request(.getAllSession(request), model: DataResponse<MeetingDetailResponse>.self)
+    }
+    
+    public func getCreatorList(with request: HomeContentRequest) async throws -> DataResponse<TalentWithProfessionData> {
+        try await self.provider.request(.getCreatorList(request), model: DataResponse<TalentWithProfessionData>.self)
+    }
+    
+    public func getVideoList(with request: FollowingContentRequest) async throws -> DataResponse<MineVideoData> {
+        try await self.provider.request(.getVideoList(request), model: DataResponse<MineVideoData>.self)
+    }
 }

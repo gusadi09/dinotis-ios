@@ -23,4 +23,20 @@ public extension View {
                 }
             }
     }
+    
+    @ViewBuilder
+    func offsetH(_ id: String, offset: @escaping (CGFloat) -> ()) -> some View {
+        self
+            .overlay {
+                GeometryReader { proxy in
+                    let minX = proxy.frame(in: .named(id)).minX
+                    
+                    Color.clear
+                        .preference(key: OffsetPreference.self, value: minX)
+                        .onPreferenceChange(OffsetPreference.self) { value in
+                            offset(value)
+                        }
+                }
+            }
+    }
 }

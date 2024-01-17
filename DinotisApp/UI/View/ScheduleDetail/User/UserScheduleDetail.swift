@@ -1971,6 +1971,10 @@ private extension UserScheduleDetail {
                                     viewModel.isShowAttachments = false
                                     viewModel.attachmentURL = item.url.orEmpty()
                                     
+                                    if let url = item.url, !url.contains("https") || !url.contains("http") {
+                                        viewModel.attachmentURL = "https://\(url)"
+                                    }
+                                    
                                     DispatchQueue.main.asyncAfter(deadline: .now()+0.2) {
                                         viewModel.isShowWebView = true
                                     }

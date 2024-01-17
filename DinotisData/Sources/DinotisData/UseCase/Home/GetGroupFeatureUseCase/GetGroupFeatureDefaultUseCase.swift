@@ -21,9 +21,9 @@ public struct GetGroupFeatureDefaultUseCase: GetGroupFeatureUseCase {
         self.authRepository = authRepository
     }
 
-    public func execute() async -> Result<FeatureMeetingResponse, Error> {
+    public func execute(with request: FollowingContentRequest) async -> Result<DataResponse<UserMeetingData>, Error> {
         do {
-            let data = try await repository.provideGetGroupCallFeature()
+            let data = try await repository.provideGetGroupCallFeature(with: request)
 
             return .success(data)
         } catch (let error as ErrorResponse) {
@@ -34,7 +34,7 @@ public struct GetGroupFeatureDefaultUseCase: GetGroupFeatureUseCase {
                 case .success(let token):
                     await state.setToken(token: token)
 
-                    let data = await execute()
+                    let data = await execute(with: request)
                     return data
                 case .failure(let error):
                     if let err = error as? ErrorResponse {

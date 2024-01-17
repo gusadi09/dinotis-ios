@@ -43,4 +43,9 @@ public extension Image {
     
     static let feedbackSuccessImage = Image("img-success-feedback", bundle: .module)
     static let feedbackSmileImage = Image("smile-feedback-illustration", bundle: .module)
+    
+    static let homeLineGradientPurpleImage = Image("img-home-line-gradient-purple", bundle: .module)
+    static let homeLineGradientOrangeImage = Image("img-home-line-gradient-orange", bundle: .module)
+    static let homeEyes3dImage = Image("img-home-eyes-3d", bundle: .module)
+    static let homeBasketball3dImage = Image("img-home-basketball-3d", bundle: .module)
 }
