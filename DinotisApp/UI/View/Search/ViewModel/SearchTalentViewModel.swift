@@ -52,8 +52,8 @@ final class SearchTalentViewModel: NSObject, ObservableObject, SKProductsRequest
 	@Published var success = false
 	@Published var error: String?
   
-  @Published var isShowAlert = false
-  @Published var alert = AlertAttribute()
+    @Published var isShowAlert = false
+    @Published var alert = AlertAttribute()
 	
 	@Published var isRefreshFailed = false
 	

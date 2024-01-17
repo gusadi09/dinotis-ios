@@ -36,7 +36,7 @@ struct UserHomeView: View {
                 
                 ZStack(alignment: .center) {
                     
-                    Color.homeBgColor.ignoresSafeArea()
+                    Color.DinotisDefault.baseBackground.ignoresSafeArea()
                     
                     VStack(spacing: 0) {
                         
@@ -48,9 +48,18 @@ struct UserHomeView: View {
                                 }
                             }
                         
-                        ScrolledContent(geo: geo)
-                            .environmentObject(homeVM)
-                        
+                        TabView(selection: $homeVM.currentMainTab,
+                                content:  {
+                            ForYouContent(tabValue: $tabValue, geo: geo)
+                                .environmentObject(homeVM)
+                                .tag(AudienceHomeTab.forYou)
+                            
+                            FollowingContent(geo: geo)
+                                .environmentObject(homeVM)
+                                .tag(AudienceHomeTab.following)
+                        })
+                        .tabViewStyle(.page(indexDisplayMode: .never))
+                        .ignoresSafeArea()
                     }
                     
                     if !homeVM.announceData.isEmpty {
@@ -93,7 +102,7 @@ struct UserHomeView: View {
             .navigationBarTitle(Text(""))
             .navigationBarHidden(true)
             .onAppear {
-                if homeVM.homeContent.isEmpty {
+                if homeVM.sessionContent.isEmpty {
                     homeVM.onScreenAppear(geo: geo)
                 }
                 
@@ -108,6 +117,95 @@ struct UserHomeView: View {
                 }
             }
         }
+        .sheet(
+            isPresented: $homeVM.isShowSessionDetail,
+            content: {
+                if #available(iOS 16.0, *) {
+                    SessionDetailView(viewModel: homeVM)
+                        .presentationDetents([.fraction(0.8), .large])
+                        .dynamicTypeSize(.large)
+                } else {
+                    SessionDetailView(viewModel: homeVM)
+                        .dynamicTypeSize(.large)
+                }
+            }
+        )
+        .sheet(
+            isPresented: $homeVM.isShowPaymentOption,
+            content: {
+                if #available(iOS 16.0, *) {
+                    PaymentTypeOption(viewModel: homeVM)
+                    .presentationDetents([.fraction(homeVM.sessionCard.isPrivate.orFalse() ? 0.44 : 0.33)])
+                    .dynamicTypeSize(.large)
+                } else {
+                    PaymentTypeOption(viewModel: homeVM)
+                        .dynamicTypeSize(.large)
+                }
+            }
+        )
+        .sheet(
+            isPresented: $homeVM.isShowCoinPayment,
+            onDismiss: {
+                homeVM.resetStateCode()
+            },
+            content: {
+                if #available(iOS 16.0, *) {
+                    CoinPaymentSheetView(viewModel: homeVM)
+                        .presentationDetents([.fraction(0.85), .large])
+                        .dynamicTypeSize(.large)
+                } else {
+                    CoinPaymentSheetView(viewModel: homeVM)
+                        .dynamicTypeSize(.large)
+                }
+            }
+        )
+        .sheet(
+            isPresented: $homeVM.isShowAddCoin,
+            content: {
+                if #available(iOS 16.0, *) {
+                    AddCoinSheetView(viewModel: homeVM)
+                        .presentationDetents([.fraction(0.67), .large])
+                        .dynamicTypeSize(.large)
+                } else {
+                    AddCoinSheetView(viewModel: homeVM)
+                        .dynamicTypeSize(.large)
+                }
+            }
+        )
+        .sheet(isPresented: $homeVM.isShowCollabList, content: {
+            if #available(iOS 16.0, *) {
+              SelectedCollabCreatorView(
+                isEdit: false,
+                isAudience: true,
+                arrUsername: .constant((homeVM.sessionCard.meetingCollaborations ?? []).compactMap({
+                  $0.username
+              })),
+                arrTalent: .constant(homeVM.sessionCard.meetingCollaborations ?? [])) {
+                    homeVM.isShowCollabList = false
+                } visitProfile: { item in
+                    homeVM.isShowSessionDetail = false
+                    homeVM.username = item
+                    homeVM.routeToTalentProfile()
+                }
+                .presentationDetents([.medium, .large])
+                .dynamicTypeSize(.large)
+            } else {
+              SelectedCollabCreatorView(
+                isEdit: false,
+                isAudience: true,
+                arrUsername: .constant((homeVM.sessionCard.meetingCollaborations ?? []).compactMap({
+                  $0.username
+              })),
+                arrTalent: .constant(homeVM.sessionCard.meetingCollaborations ?? [])) {
+                    homeVM.isShowCollabList = false
+                } visitProfile: { item in
+                    homeVM.isShowSessionDetail = false
+                    homeVM.username = item
+                    homeVM.routeToTalentProfile()
+                }
+                .dynamicTypeSize(.large)
+            }
+        })
     }
 }
 

@@ -280,6 +280,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
     init(
         backToHome: @escaping (() -> Void),
         username: String,
+        showingRequest: Bool = false,
         getTalentDetailUseCase: GetDetailTalentUseCase = GetDetailTalentDefaultUseCase(),
         sendScheduleRequestUseCase: SendRequestedScheduleUseCase = SendRequestedScheduleDefaultUseCase(),
         getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
@@ -319,6 +320,7 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         self.getVideoListUseCase = getVideoListUseCase
         self.subscribeUseCase = subscribeUseCase
         self.unsubscribeUseCase = unsubscribeUseCase
+        self.isShowBundlingSheet = showingRequest
     }
     
     func subscribeURL() -> String {
@@ -1206,15 +1208,15 @@ final class TalentProfileDetailViewModel: NSObject, ObservableObject, SKProducts
         switch result {
         case .success(let success):
             DispatchQueue.main.async { [weak self] in
-                if isMore {
-                    self?.isLoadingMoreRateCard = false
-                } else {
-                    self?.isLoading = false
-                }
-                
                 withAnimation {
                     self?.rateCardList += success.data ?? []
                     self?.nextCursorRateCard = success.nextCursor
+                    
+                    if isMore {
+                        self?.isLoadingMoreRateCard = false
+                    } else {
+                        self?.isLoading = false
+                    }
                 }
             }
         case .failure(let failure):
