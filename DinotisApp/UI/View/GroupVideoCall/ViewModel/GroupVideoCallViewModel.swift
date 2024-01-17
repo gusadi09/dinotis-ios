@@ -866,6 +866,45 @@ final class GroupVideoCallViewModel: ObservableObject {
         }
     }
     
+    func filterAccessRequest() -> [DyteJoinedMeetingParticipant] {
+        meeting.stage.accessRequests.filter {
+            if searchText.isEmpty {
+                return true
+            } else {
+                return $0.name.lowercased().contains(searchText.lowercased())
+            }
+        }
+    }
+    
+    func filterWaitlisted() -> [DyteWaitlistedParticipant] {
+        meeting.participants.waitlisted.filter {
+            if searchText.isEmpty {
+                return true
+            } else {
+                return $0.name.lowercased().contains(searchText.lowercased())
+            }
+        }
+    }
+    
+    func filterActive() -> [DyteJoinedMeetingParticipant] {
+        meeting.participants.active.filter {
+            if searchText.isEmpty {
+                return true
+            } else {
+                return $0.name.lowercased().contains(searchText.lowercased())
+            }
+        }
+    }
+    
+    func filterViewer() -> [DyteJoinedMeetingParticipant] {
+        meeting.stage.viewers.filter {
+            if searchText.isEmpty {
+                return true
+            } else {
+                return $0.name.lowercased().contains(searchText.lowercased())
+            }
+        }
+    }
 }
 
 extension GroupVideoCallViewModel: DyteMeetingRoomEventsListener {

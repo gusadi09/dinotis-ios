@@ -44,4 +44,5 @@ public enum DateFormatType: String {
 	case negotiationBubbleChat = "HH:mm - dd MMMM yyyy"
 	case EEEEddMMMyyyHHmm = "EEEE, dd MMM yyyy HH:mm"
     case ddMMM = "dd MMM"
+    case ddMMM_yyyy = "dd MMM, yyyy"
 }

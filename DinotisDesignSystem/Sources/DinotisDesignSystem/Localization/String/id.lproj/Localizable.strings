@@ -757,3 +757,17 @@
 "profile_creator_analytics" = "Analisis Kreator";
 
 "management_plus_other" = "+ %lld lainnya";
+
+"for_you_label" = "Untuk kamu";
+"start_from_label" = "Mulai Dari";
+
+"home_private_call_title" = "Yuk, intip **Private Call** yang bisa kamu **ikuti secara ekslusif!**";
+"home_new_creator_title" = "Ini dia\n**kreator yang baru** aja bergabung!";
+"home_recent_session_title" = "Sesi yang baru aja dibuat";
+"home_followed_creator_title" = "Kreator yang kamu follow";
+"home_empty_followed_creator_desc" = "Kamu belum mengikuti satupun Kreator yang ada di DINOTIS";
+"home_find_creator_label" = "Temukan Kreator Pilihanmu";
+"home_popular_creator_title" = "Kreator yang lagi popular";
+"home_empty_private_session_desc" = "Belum ada sesi private video call";
+"home_empty_group_session_desc" = "Belum ada sesi group video call";
+"home_empty_uploaded_video_desc" = "Belum ada video yang diupload";

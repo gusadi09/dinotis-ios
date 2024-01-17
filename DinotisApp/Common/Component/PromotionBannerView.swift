@@ -38,7 +38,7 @@ struct BannerImage: View {
 				.playbackRate(2.0)
 				.placeholder {RoundedRectangle(cornerRadius: 12).foregroundColor(Color(.systemGray3))}
 				.indicator(.activity)
-				.frame(width: abs(geo.size.width-40), height: abs(geo.size.width/2.2))
+				.frame(width: abs(geo.size.width-32), height: abs(geo.size.width/2.2))
 				.clipShape(RoundedRectangle(cornerRadius: 12))
 				.padding()
 		}
@@ -154,7 +154,7 @@ struct PageControl: UIViewRepresentable {
 		let control = UIPageControl()
 		control.numberOfPages = numberOfPages
 		control.pageIndicatorTintColor = UIColor.systemGray5
-		control.currentPageIndicatorTintColor = UIColor(named: "btn-stroke-1")
+		control.currentPageIndicatorTintColor = UIColor(red: 0.63, green: 0.26, blue: 1, alpha: 1)
 		control.addTarget(
 			context.coordinator,
 			action: #selector(Coordinator.updateCurrentPage(sender:)),
@@ -193,7 +193,7 @@ struct PageControlPromotion: UIViewRepresentable {
         let control = UIPageControl()
         control.numberOfPages = numberOfPages
         control.pageIndicatorTintColor = UIColor.systemGray5
-        control.currentPageIndicatorTintColor = UIColor(named: "btn-stroke-1")
+        control.currentPageIndicatorTintColor = UIColor(red: 0.63, green: 0.26, blue: 1, alpha: 1)
         control.addTarget(
             context.coordinator,
             action: #selector(Coordinator.updateCurrentPage(sender:)),

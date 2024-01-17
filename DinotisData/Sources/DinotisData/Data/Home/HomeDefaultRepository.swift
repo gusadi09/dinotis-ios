@@ -28,8 +28,8 @@ public final class HomeDefaultRepository: HomeRepository {
         try await self.remoteDataSource.getDynamicHome()
 	}
 	
-    public func provideGetPrivateCallFeature() async throws -> FeatureMeetingResponse {
-        try await self.remoteDataSource.getPrivateCallFeature()
+    public func provideGetPrivateCallFeature(with request: FollowingContentRequest) async throws -> DataResponse<UserMeetingData> {
+        try await self.remoteDataSource.getPrivateCallFeature(with: request)
 	}
 
     public func provideGetAnnouncementBanner() async throws -> AnnouncementResponse {
@@ -44,7 +44,23 @@ public final class HomeDefaultRepository: HomeRepository {
         try await self.remoteDataSource.getOriginalSection()
 	}
 
-    public func provideGetGroupCallFeature() async throws -> FeatureMeetingResponse {
-        try await self.remoteDataSource.getGroupCallFeature()
+    public func provideGetGroupCallFeature(with request: FollowingContentRequest) async throws -> DataResponse<UserMeetingData> {
+        try await self.remoteDataSource.getGroupCallFeature(with: request)
 	}
+    
+    public func provideGetRateCardList(with request: HomeContentRequest) async throws -> DataResponse<RateCardResponse> {
+        try await self.remoteDataSource.getRateCardList(with: request)
+    }
+    
+    public func provideGetAllSession(with request: HomeContentRequest) async throws -> DataResponse<MeetingDetailResponse> {
+        try await self.remoteDataSource.getAllSession(with: request)
+    }
+    
+    public func provideGetCreatorList(with request: HomeContentRequest) async throws -> DataResponse<TalentWithProfessionData> {
+        try await self.remoteDataSource.getCreatorList(with: request)
+    }
+    
+    public func provideGetVideoList(with request: FollowingContentRequest) async throws -> DataResponse<MineVideoData> {
+        try await self.remoteDataSource.getVideoList(with: request)
+    }
 }

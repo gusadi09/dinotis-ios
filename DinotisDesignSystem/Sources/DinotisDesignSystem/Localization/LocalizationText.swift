@@ -3497,4 +3497,79 @@ public enum LocalizableText {
                value
         )
     }
+    
+    public static let forYouLabel = NSLocalizedString(
+        "for_you_label",
+        bundle: .module,
+        comment: "for you label"
+    )
+    public static let startFromLabel = NSLocalizedString(
+        "start_from_label",
+        bundle: .module,
+        comment: "start form label"
+    )
+    public static let homeRecentSessionTitle = NSLocalizedString(
+        "home_recent_session_title",
+        bundle: .module,
+        comment: "home recent session title"
+    )
+    public static let homeFollowedCreatorTitle = NSLocalizedString(
+        "home_followed_creator_title",
+        bundle: .module,
+        comment: "home followed creator title"
+    )
+    public static let homeEmptyFollowedCreatorDesc = NSLocalizedString(
+        "home_empty_followed_creator_desc",
+        bundle: .module,
+        comment: "home empty followed creator description"
+    )
+    public static let homeFindCreatorLabel = NSLocalizedString(
+        "home_find_creator_label",
+        bundle: .module,
+        comment: "home find creator button label"
+    )
+    public static let homePopularCreatorTitle = NSLocalizedString(
+        "home_popular_creator_title",
+        bundle: .module,
+        comment: "home popular creator title"
+    )
+    public static let homeEmptyPrivateSessionDesc = NSLocalizedString(
+        "home_empty_private_session_desc",
+        bundle: .module,
+        comment: "home empty private session description"
+    )
+    public static let homeEmptyGroupSessionDesc = NSLocalizedString(
+        "home_empty_group_session_desc",
+        bundle: .module,
+        comment: "home empty group session description"
+    )
+    public static let homeEmptyUploadedVideoDesc = NSLocalizedString(
+        "home_empty_uploaded_video_desc",
+        bundle: .module,
+        comment: "home empty uploaded video description"
+    )
+    
+    public static var homePrivateCallTitle: AttributedString {
+        do {
+            return try AttributedString(markdown: NSLocalizedString(
+                "home_private_call_title",
+                bundle: .module,
+                comment: "home private call title"
+            ))
+        } catch {
+            return AttributedString()
+        }
+    }
+    public static var homeNewCreatorTitle: AttributedString {
+        do {
+            return try AttributedString(markdown: NSLocalizedString(
+                "home_new_creator_title",
+                bundle: .module,
+                comment: "home new creator title"
+            ))
+        } catch {
+            return AttributedString()
+        }
+    }
+    
 }
