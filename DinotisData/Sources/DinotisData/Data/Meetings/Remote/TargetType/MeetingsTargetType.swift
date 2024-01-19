@@ -35,7 +35,23 @@ extension MeetingsTargetType: DinotisTargetType, AccessTokenAuthorizable {
                 "lang": (Locale.current.languageCode) ?? "id"
             ]
         case .addMeeting(let body):
-            return body.toJSON()
+            let param: [String : Any] = [
+                "title" : body.title,
+                "description" : body.description,
+                "price" : body.price,
+                "startAt" : body.startAt,
+                "endAt" : body.endAt,
+                "isPrivate" : body.isPrivate,
+                "slots" : body.slots,
+                "managementId" : (body.managementId == nil ? nil : "\(body.managementId.orZero())") as Any,
+                "urls" : body.urls,
+                "collaborations" : body.collaborations as Any,
+                "userFeePercentage" : body.userFeePercentage as Any,
+                "talentFeePercentage" : body.talentFeePercentage as Any,
+                "archiveRecording" : body.archiveRecording,
+                "collaboratorAudienceVisibility" : body.collaboratorAudienceVisibility as Any
+            ]
+            return param
         case .talentMeeting(let params):
             if params.isAvailable.isEmpty && !params.isEnded.isEmpty {
                 return [
@@ -132,7 +148,24 @@ extension MeetingsTargetType: DinotisTargetType, AccessTokenAuthorizable {
         case .endMeeting(_):
             return [:]
         case .editMeeting(_, let body):
-            return body.toJSON()
+            let param: [String : Any] = [
+                "title" : body.title,
+                "description" : body.description,
+                "price" : body.price,
+                "startAt" : body.startAt,
+                "endAt" : body.endAt,
+                "isPrivate" : body.isPrivate,
+                "slots" : body.slots,
+                "managementId" : (body.managementId == nil ? nil : "\(body.managementId.orZero())") as Any,
+                "urls" : body.urls,
+                "collaborations" : body.collaborations as Any,
+                "userFeePercentage" : body.userFeePercentage as Any,
+                "talentFeePercentage" : body.talentFeePercentage as Any,
+                "archiveRecording" : body.archiveRecording,
+                "collaboratorAudienceVisibility" : body.collaboratorAudienceVisibility as Any
+            ]
+            
+            return param
         case .deleteMeeting(_):
             return [:]
         case .checkMeetingEnd(_):

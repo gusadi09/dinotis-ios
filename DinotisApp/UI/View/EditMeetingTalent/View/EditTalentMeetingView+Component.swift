@@ -1008,7 +1008,9 @@ extension EditTalentMeetingView {
                     
                     Button(action: {
                         viewModel.startDate = viewModel.changedStartDate
+                        viewModel.endDate = viewModel.changedStartDate.addingTimeInterval(3600)
                         viewModel.meetingForm.startAt = DateUtils.dateFormatter(viewModel.changedStartDate, forFormat: .utcV2)
+                        viewModel.meetingForm.endAt = DateUtils.dateFormatter(viewModel.changedStartDate.addingTimeInterval(3600), forFormat: .utcV2)
                         viewModel.showsDatePicker = false
                     }, label: {
                         HStack {
