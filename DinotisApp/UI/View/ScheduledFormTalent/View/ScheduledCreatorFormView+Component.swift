@@ -1668,7 +1668,9 @@ extension ScheduledFormView {
                     
                     Button(action: {
                         viewModel.startDate = viewModel.changedStartDate
+                        viewModel.endDate = viewModel.changedStartDate.addingTimeInterval(3600)
                         viewModel.meeting.startAt = DateUtils.dateFormatter(viewModel.changedStartDate, forFormat: .utcV2)
+                        viewModel.meeting.endAt = DateUtils.dateFormatter(viewModel.changedStartDate.addingTimeInterval(3600), forFormat: .utcV2)
                         viewModel.showsDatePicker = false
                     }, label: {
                         HStack {
