@@ -71,6 +71,7 @@ public struct DinotisTextEditor: View {
                         }
                 }
 			}
+            .tint(.DinotisDefault.primary)
 			.padding(5)
 			.background(
 				RoundedRectangle(cornerRadius: 8)
@@ -78,7 +79,7 @@ public struct DinotisTextEditor: View {
 			)
 			.overlay(
 				RoundedRectangle(cornerRadius: 8)
-					.stroke(stroke, lineWidth: 1)
+                    .stroke(focused ? Color.DinotisDefault.primary : stroke, lineWidth: 1)
 			)
 
 			if let error = errorText {

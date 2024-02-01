@@ -94,6 +94,7 @@ final class UserHomeViewModel: NSObject, ObservableObject {
 	@Published var statusCode = 0
     
     @Published var route: HomeRouting?
+    @Published var primaryRoute: PrimaryRouting?
     
     @Published var username: String?
     @Published var showingPasswordAlert = false
@@ -117,6 +118,8 @@ final class UserHomeViewModel: NSObject, ObservableObject {
     @Published var isLoadingExtraFee = false
     @Published var isLoadingFollowingSession = false
     @Published var isLoadMoreFollowingSession = false
+    
+    @Published var isSwitchingAccount = false
     
     @Published var userData: UserResponse?
     
@@ -494,6 +497,23 @@ final class UserHomeViewModel: NSObject, ObservableObject {
             self.onGetAllSession()
             self.onGetRecentCreatorList()
             self.onGetPopularCreatorList()
+        }
+    }
+    
+    func switchAcount() {
+        let viewModel = TalentHomeViewModel(isFromUserType: true)
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.isSwitchingAccount = true
+            self?.stateObservable.userType = 2
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+0.1) { [weak self] in
+            self?.primaryRoute = .homeTalent(viewModel: viewModel)
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+3) { [weak self] in
+            self?.isSwitchingAccount = false
         }
     }
     

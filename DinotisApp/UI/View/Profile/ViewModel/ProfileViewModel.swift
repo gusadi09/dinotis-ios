@@ -444,6 +444,14 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 	func onDisappear() {
 		SKPaymentQueue.default().remove(self)
 	}
+    
+    func routeToCreatorRoom() {
+        let viewModel = CreatorRoomViewModel(profesionSelect: self.userProfession(), backToHome: { self.route = nil })
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .creatorRoom(viewModel: viewModel)
+        }
+    }
 
 	func routeToCoinHistory() {
 		let viewModel = CoinHistoryViewModel(backToHome: { self.route = nil })

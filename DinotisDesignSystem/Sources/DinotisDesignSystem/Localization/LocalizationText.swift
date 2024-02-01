@@ -3572,4 +3572,129 @@ public enum LocalizableText {
         }
     }
     
+    public static func profileDinotisLinkWithCounter(with value: Int) -> String {
+        String(
+            format: NSLocalizedString(
+                "profile_dinotis_link_with_counter",
+                bundle: .module,
+                comment: "dinotis link with counter in profile view"
+            ),
+            value
+        )
+    }
+    
+    public static func aboutMeWithCounter(with value: Int) -> String {
+        String(
+            format: NSLocalizedString(
+                "about_me_with_counter",
+                bundle: .module,
+                comment: "about me label with counter"
+            ),
+            value
+        )
+    }
+    
+    public static func galleryWithCounter(with value: Int) -> String {
+        String(
+            format: NSLocalizedString(
+                "gallery_with_counter",
+                bundle: .module,
+                comment: "gallery label with counter"
+            ),
+            value
+        )
+    }
+    
+    public static func professionyWithCounter(with value: Int) -> String {
+        String(
+            format: NSLocalizedString(
+                "profession_with_counter",
+                bundle: .module,
+                comment: "profession label with counter"
+            ),
+            value
+        )
+    }
+    
+    public static let personalLabel = NSLocalizedString(
+        "personal_label",
+        bundle: .module,
+        comment: "personal label"
+    )
+    public static let creatorRoomLabel = NSLocalizedString(
+        "creator_room_label",
+        bundle: .module,
+        comment: "creator room label"
+    )
+    public static let activateCreatorModeTitle = NSLocalizedString(
+        "activate_creator_mode_title",
+        bundle: .module,
+        comment: "activate creator mode title"
+    )
+    public static let activateCreatorModeDesc = NSLocalizedString(
+        "activate_creator_mode_desc",
+        bundle: .module,
+        comment: "activate creator mode description"
+    )
+    public static let completeProfileTitle = NSLocalizedString(
+        "complete_profile_title",
+        bundle: .module,
+        comment: "complete profile title"
+    )
+    public static let completeProfileDesc = NSLocalizedString(
+        "complete_profile_desc",
+        bundle: .module,
+        comment: "complete profile description"
+    )
+    public static let completeNowLabel = NSLocalizedString(
+        "complete_now_label",
+        bundle: .module,
+        comment: "complete now label"
+    )
+    public static let mainProfileLabel = NSLocalizedString(
+        "main_profile_label",
+        bundle: .module,
+        comment: "main profile label"
+    )
+    public static let contactInformationLabel = NSLocalizedString(
+        "contact_information_label",
+        bundle: .module,
+        comment: "contact information label"
+    )
+    public static let phoneNumberLabel = NSLocalizedString(
+        "no_handphone_label",
+        bundle: .module,
+        comment: "no handphone label"
+    )
+    public static let previewProfileLabel = NSLocalizedString(
+        "preview_profile_label",
+        bundle: .module,
+        comment: "preview profile label"
+    )
+    public static let profileImageLimitationDesc = NSLocalizedString(
+        "profile_image_limitation_desc",
+        bundle: .module,
+        comment: "profile image limitation description"
+    )
+    public static let welcomeToCreatorModeTitle = NSLocalizedString(
+        "welcome_to_creator_mode_title",
+        bundle: .module,
+        comment: "welcome to creator mode title"
+    )
+    public static let welcomeToPersonalModeTitle = NSLocalizedString(
+        "welcome_to_personal_mode_title",
+        bundle: .module,
+        comment: "welcome to personal mode title"
+    )
+    public static let newLabel = NSLocalizedString(
+        "new_label",
+        bundle: .module,
+        comment: "new label"
+    )
+    public static let addPhotoLabel = NSLocalizedString(
+        "add_photo_label",
+        bundle: .module,
+        comment: "add photo label"
+    )
+    
 }

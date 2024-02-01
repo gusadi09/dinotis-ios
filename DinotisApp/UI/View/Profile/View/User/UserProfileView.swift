@@ -38,6 +38,19 @@ struct UserProfileView: View {
 			VStack(spacing: 0) {
 				HeaderView(title: "", headerColor: .DinotisDefault.baseBackground, textColor: .DinotisDefault.baseBackground)
 					.frame(height: 15)
+                
+                NavigationLink(
+                    unwrapping: $viewModel.route,
+                    case: /HomeRouting.creatorRoom,
+                    destination: { viewModel in
+                        CreatorRoomView()
+                            .environmentObject(viewModel.wrappedValue)
+                    },
+                    onNavigate: {_ in },
+                    label: {
+                        EmptyView()
+                    }
+                )
 
 				NavigationLink(
 					unwrapping: $viewModel.route,
@@ -211,6 +224,48 @@ struct UserProfileView: View {
                                         .foregroundColor(.black)
                                     
                                     Spacer()
+                                    
+                                    Image(systemName: "chevron.right")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .font(.system(size: 12, weight: .semibold))
+                                        .frame(height: 12)
+                                        .foregroundColor(.black)
+                                }
+                                .contentShape(Rectangle())
+                            })
+                            .padding(.vertical, 10)
+                            
+                            Divider()
+                        }
+                        
+                        VStack {
+                            Button(action: {
+                                viewModel.routeToCreatorRoom()
+                            }, label: {
+                                HStack {
+                                    Image.profileGreenPreferencesIcon
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 34)
+                                        .padding(.trailing, 5)
+                                    
+                                    Text(LocalizableText.creatorRoomLabel)
+                                        .font(.robotoRegular(size: 14))
+                                        .foregroundColor(.black)
+                                    
+                                    Spacer()
+                                    
+                                    Text(LocalizableText.newLabel)
+                                        .font(.robotoBold(size: 12))
+                                        .foregroundColor(.DinotisDefault.primary)
+                                        .padding(.vertical, 2)
+                                        .padding(.horizontal, 8)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 3)
+                                                .fill(Color.DinotisDefault.lightPrimary)
+                                        )
+                                        .padding(.trailing, 8)
                                     
                                     Image(systemName: "chevron.right")
                                         .resizable()

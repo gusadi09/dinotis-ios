@@ -58,6 +58,8 @@ public extension Image {
     static let profileLogoutIcon = Image("ic-logout-profile", bundle: Bundle.module)
     static let profileGreenPreferencesIcon = Image("ic-green-preferences-profile", bundle: Bundle.module)
     static let profileCreatorAnalyticsIcon = Image("creator-analytics-menu", bundle: Bundle.module)
+    static let profileLinkIcon = Image("ic-link-profile", bundle: Bundle.module)
+    static let profileAddPhotoIcon = Image("ic-add-photo-profile", bundle: Bundle.module)
     
     static let paymentBCAIcon = Image("ic-bca-payment", bundle: Bundle.module)
     static let paymentBNIIcon = Image("ic-bni-payment", bundle: Bundle.module)

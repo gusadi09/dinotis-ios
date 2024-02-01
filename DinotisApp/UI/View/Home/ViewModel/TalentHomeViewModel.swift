@@ -63,6 +63,8 @@ final class TalentHomeViewModel: ObservableObject {
     @Published var isLoadingMoreEnded = false
     @Published var isLoadingMoreCancelled = false
     
+    @Published var isSwitchingAccount = false
+    
     @Published var scheduledRequest = MeetingsStatusPageRequest(take: 8, skip: 0, status: "scheduled", sort: "desc")
     @Published var pendingRequest = MeetingsStatusPageRequest(take: 8, skip: 0, status: "pending", sort: "desc")
     @Published var endedRequest = MeetingsStatusPageRequest(take: 8, skip: 0, status: "ended", sort: "desc")
@@ -148,6 +150,7 @@ final class TalentHomeViewModel: ObservableObject {
     @Published var showingPasswordAlert = false
     
     @Published var route: HomeRouting?
+    @Published var primaryRoute: PrimaryRouting?
     
     @Published var isError: Bool = false
     @Published var error: String?
@@ -183,7 +186,7 @@ final class TalentHomeViewModel: ObservableObject {
     @Published var translation: CGSize = .zero
     @Published var offsetY: CGFloat = 550
     var sheetHeight: CGFloat {
-        !closestSessions.isEmpty ? 562 : 320
+        !closestSessions.isEmpty ? 562 : 388
     }
     
     @Published var closestSessions = [MeetingDetailResponse]()
@@ -262,6 +265,29 @@ final class TalentHomeViewModel: ObservableObject {
             }
         case .failure(let failure):
             handleDefaultError(error: failure)
+        }
+    }
+    
+    func switchAcount() {
+        let viewModel = TabViewContainerViewModel(
+            isFromUserType: true,
+            userHomeVM: UserHomeViewModel(),
+            profileVM: ProfileViewModel(backToHome: {}),
+            searchVM: SearchTalentViewModel(backToHome: {}),
+            scheduleVM: ScheduleListViewModel(backToHome: {}, currentUserId: user.id)
+        )
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.isSwitchingAccount = true
+            self?.stateObservable.userType = 3
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+0.1) { [weak self] in
+            self?.primaryRoute = .tabContainer(viewModel: viewModel)
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+3) { [weak self] in
+            self?.isSwitchingAccount = false
         }
     }
     

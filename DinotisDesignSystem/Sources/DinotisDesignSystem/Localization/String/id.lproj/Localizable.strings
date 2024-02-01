@@ -33,16 +33,16 @@
 "description_creator_login" = "Mulai ngobrol dengan Audiens";
 
 "title_login" = "Masuk Akun";
-"description_login" = "Silahkan masukan nomor handphone & kata sandi akun anda yang telah terdaftar untuk masuk ke aplikasi";
+"description_login" = "Silahkan masukan nomor handphone & kata sandi akun kamu yang telah terdaftar untuk masuk ke aplikasi";
 "hint_phone" = "Masukan nomor handphone";
-"alert_phone_unregister" = "*Nomor telepon yang anda masukkan belum terdaftar";
-"alert_phone_wrong" = "*Nomor telepon yang anda masukkan tidak valid";
-"alert_phone_already_register" = "*Nomor telepon yang anda masukkan sudah terdaftar";
+"alert_phone_unregister" = "*Nomor telepon yang kamu masukkan belum terdaftar";
+"alert_phone_wrong" = "*Nomor telepon yang kamu masukkan tidak valid";
+"alert_phone_already_register" = "*Nomor telepon yang kamu masukkan sudah terdaftar";
 "hint_password" = "Masukan Kata Sandi";
-"alert_password_wrong" = "*Kata sandi yang anda masukkan salah";
+"alert_password_wrong" = "*Kata sandi yang kamu masukkan salah";
 "link_forgot" = "Lupa kata sandi?";
 "label_login_terms_higlighted" = "Persyaratan Layanan";
-"label_login_terms_first_part" = "Ketika masuk, Anda menyetujui ";
+"label_login_terms_first_part" = "Ketika masuk, Kamu menyetujui ";
 "label_login_terms_second_part" = " Dinotis & mengakui bahwa Pemberitahuan Privasi kami berlaku.";
 "link_register_here" = "Belum punya akun? ";
 "link_register_here_highlighted" = "Daftar di sini";
@@ -51,7 +51,7 @@
 "title_register_audience" = "Daftar Akun";
 "description_register" = "Masukan nomor handphone yang valid untuk mendapatkan kode OTP";
 "label_register_terms_highlighted" = "Persyaratan Layanan";
-"label_register_terms_first_part" = "Ketika daftar, Anda menyetujui ";
+"label_register_terms_first_part" = "Ketika daftar, Kamu menyetujui ";
 "label_register_terms_second_part" = " Dinotis & mengakui bahwa Pemberitahuan Privasi kami berlaku.";
 "link_login_here" = "Sudah punya akun? ";
 "link_login_here_highlighted" = "Masuk di sini";
@@ -60,7 +60,7 @@
 "title_register_creator" = "Daftar Kreator";
 "description_register_creator" = "Masukan nomor handphone dan kode undangan yang telah diterima sebelumnya";
 "hint_invitation_code" = "Masukan Kode Undangan";
-"alert_invitation_code_invalid" = "*Kode undangan yang anda masukan tidak valid";
+"alert_invitation_code_invalid" = "*Kode undangan yang kamu masukan tidak valid";
 "link_request_invitation_code" = "Belum memiliki kode undangan?";
 "label_join_now" = "Gabung Sekarang";
 
@@ -88,7 +88,7 @@
 "hint_form_password" = "Masukan Kata Sandi…";
 "label_form_repassword" = "Ulangi Kata Sandi";
 "hint_form_repassword" = "Ulangi Kata Sandi…";
-"alert_form_repassword_not_match" = "*Kata sandi yang anda masukan tidak cocok";
+"alert_form_repassword_not_match" = "*Kata sandi yang kamu masukan tidak cocok";
 "label_form_username" = "Username";
 "hint_form_username" = "Masukan Username";
 "alert_form_username_taken" = "*Username telah digunakan oleh kreator lain";
@@ -105,7 +105,7 @@
 "title_forgot_password" = "Lupa Kata Sandi";
 "description_forgot_password" = "Masukan nomor handphone yang valid, OTP akan dikirim untuk mengatur ulang kata sandimu";
 "title_change_password" = "Ubah Kata Sandi";
-"description_change_password" = "Masukan kata sandi baru untuk merubah kata sandi lama anda";
+"description_change_password" = "Masukan kata sandi baru untuk merubah kata sandi lama kamu";
 "hint_new_password" = "Masukan Kata Sandi Baru";
 "hint_new_repassword" = "Ulangi Kata Sandi Baru";
 "alert_new_repassword_not_match" = "*Kata sandi yang kamu masukan tidak cocok";
@@ -401,7 +401,7 @@
 "collaborator_speaker_title" = "Nanti kamu akan ngobrol sama";
 
 "outdated_version_update_text" = "Perbarui Sekarang";
-"outdated_version_subtitle_content" = "Pastikan bahwa Anda telah menginstal versi terbaru aplikasi kami untuk meningkatkan pengalaman anda saat menggunakan layanan kami.";
+"outdated_version_subtitle_content" = "Pastikan bahwa Kamu telah menginstal versi terbaru aplikasi kami untuk meningkatkan pengalaman kamu saat menggunakan layanan kami.";
 "outdated_version_title_content" = "Yuk! Update Aplikasi Dinotis Kamu";
 
 "video_call_more_menu" = "Menu Lainnya";
@@ -443,7 +443,7 @@
 "video_call_primary_button_alert_kick_participant" = "Tidak";
 "video_call_secondary_button_alert_kick_participant" = "Ya";
 "video_call_waiting_room_title" = "Ruang Tunggu";
-"video_call_waiting_room_desc" = "Anda berada di ruang tunggu, host akan segera mengizinkan Anda masuk.";
+"video_call_waiting_room_desc" = "Kamu berada di ruang tunggu, host akan segera mengizinkan Kamu masuk.";
 "video-call-put-to-speaker" = "Pindahkan ke speaker";
 "video_call_qna_empty" = "Ayo ajak peserta untuk menanyakan sesuatu";
 "video_call_qna_answered_empty" = "Belum ada pertanyaan yang terjawab";
@@ -476,7 +476,7 @@
 "video_call_raise_hand" = "Angkat Tangan";
 "video_call_viewer_mode" = "Mode Viewer";
 "vide_call_rate_us" = "Nilai Kami";
-"video_call_rate_text" = "Bagaimana pengalaman Anda dengan DINOTIS sejauh ini?";
+"video_call_rate_text" = "Bagaimana pengalaman Kamu dengan DINOTIS sejauh ini?";
 "video_call_send_feedback" = "Kirim";
 "video_call_raised_toast" = "Kamu telah meminta menjadi mode speaker. Biarkan terangkat🙌";
 "video_call_unraised_toast" = "Kamu telah menurunkan tanganmu😊";
@@ -487,10 +487,10 @@
 "video_call_leave_popup_subtitle" = "Selama sesi belum berakhir, kamu dapat bergabung kembali pada sesi ini";
 "video_call_end_session_button" = "Selesaikan Sesi";
 
-"video_call_kicked_alert_title" = "Anda telah dikeluarkan oleh Host dari sesi ini";
-"video_call_move_to_viewer_alert_title" = "Anda telah dipindahkan menjadi Viewer oleh Host";
+"video_call_kicked_alert_title" = "Kamu telah dikeluarkan oleh Host dari sesi ini";
+"video_call_move_to_viewer_alert_title" = "Kamu telah dipindahkan menjadi Viewer oleh Host";
 "video_call_viewer_mode_label" = "Mode Viewer";
-"video_call_viewer_mode_guide" = "Saat ini anda berada di **mode viewer**, ingin berinteraksi bersama host? 📷 🎤";
+"video_call_viewer_mode_guide" = "Saat ini kamu berada di **mode viewer**, ingin berinteraksi bersama host? 📷 🎤";
 "video_call_raise_hand_guide" = "Ketuk Raise Hand untuk bergabung dan berinteraksi dalam sesi🌟";
 "video_call_interaction_guide" = "Ayo rasakan pengalaman interaktif yang seru! 🎤🌟";
 
@@ -540,7 +540,7 @@
 "tipping_not_enough_balance" = "Saldo kamu tidak cukup, silakan top up coin terlebih dahulu";
 "tipping_your_current_coin" = "Koin kamu saat ini,";
 "tipping_success_desc" = "Kamu telah memberikan ulasan untuk kreator ini!";
-"review_success_with_tip_desc" = "Terima kasih atas gift anda! Setiap gift yang anda berikan merupakan kontribusi untuk membantu komunitas kami menjadi lebih baik.";
+"review_success_with_tip_desc" = "Terima kasih atas gift kamu! Setiap gift yang kamu berikan merupakan kontribusi untuk membantu komunitas kami menjadi lebih baik.";
 
 "edit_profile_name_empty_error" = "Mohon isi nama kamu, kolom ini tidak boleh kosong";
 "edit_profile_username_empty_error" = "Mohon isi username kamu, kolom ini tidak boleh kosong";
@@ -642,11 +642,11 @@
 "archive_choose_video" = "Pilih Video";
 "archive_choose_audience" = "Pilih Audiens";
 "archive_video_title" = "Arsip Video";
-"archive_video_desc" = "Anda dapat mengarsipkan video sesi ini untuk diunduh atau diunggah nanti.";
+"archive_video_desc" = "Kamu dapat mengarsipkan video sesi ini untuk diunduh atau diunggah nanti.";
 "go_to_archive_label" = "Menuju Arsip";
 "go_to_upload_label" = "Menuju Unggah";
-"archive_public_desc" = "Semua Audiens dapat menyaksikan konten anda";
-"archive_subscriber_desc" = "Hanya Subscriber yang dapat menyaksikan konten anda";
+"archive_public_desc" = "Semua Audiens dapat menyaksikan konten kamu";
+"archive_subscriber_desc" = "Hanya Subscriber yang dapat menyaksikan konten kamu";
 "public_label" = "Publik";
 "subscriber_label" = "Subscriber";
 "archive_label" = "Arsip";
@@ -691,7 +691,7 @@
 "subscribe_alert_desc" = "Untuk mengakses video ini, kamu harus subscribe terlebih dahulu ya..";
 "request_private_label" = "Request Private";
 "request_ratecard_label" = "Request Ratecard";
-"request_private_desc" = "Dengan 'Request Private,' nikmati panggilan pribadi eksklusif bersama kreator favorit Anda.";
+"request_private_desc" = "Dengan 'Request Private,' nikmati panggilan pribadi eksklusif bersama kreator favorit Kamu.";
 "overview_label" = "Overview";
 "public_session_label" = "Sesi Publik";
 "exclusive_video_label" = "Video Eksklusif";
@@ -742,7 +742,7 @@
 "total_audience_text" = "Jumlah Audiens";
 "visibilty_collaborator_text" = "Visibilitas Data Kolaborator";
 "collaborator_text" = "Kolaborator dapat melihat data lalu lintas Audiens";
-"video_call_polling_promotion" = "Tingkatkan partisipasi Peserta Anda dengan Poling!";
+"video_call_polling_promotion" = "Tingkatkan partisipasi Peserta Kamu dengan Poling!";
 
 "video_call_empty_polling_desc" = "Belum ada polling yang dibuat oleh Host";
 "more_polling_label" = "More Polling";
@@ -771,3 +771,24 @@
 "home_empty_private_session_desc" = "Belum ada sesi private video call";
 "home_empty_group_session_desc" = "Belum ada sesi group video call";
 "home_empty_uploaded_video_desc" = "Belum ada video yang diupload";
+
+"personal_label" = "Personal";
+"creator_room_label" = "Ruang Kreator";
+"activate_creator_mode_title" = "Aktifkan mode kreator";
+"activate_creator_mode_desc" = "Buat dan atur sesi-mu sendiri sebagai Kreator";
+"complete_profile_title" = "Yah, profil Kreator kamu belum lengkap 🙁";
+"complete_profile_desc" = "Lengkapi profil kamu biar makin kredibel";
+"complete_now_label" = "Lengkapi sekarang";
+"main_profile_label" = "Profil Utama";
+"profile_dinotis_link_with_counter" = "Link Dinotis / Username(%lld/32)";
+"contact_information_label" = "Informasi Kontak";
+"no_handphone_label" = "No. Handphone";
+"preview_profile_label" = "Preview Profile";
+"about_me_with_counter" = "Tentang Saya (%lld/256)";
+"gallery_with_counter" = "Galeri (%lld/6)";
+"profile_image_limitation_desc" = "*Format jpg/png, max 1MB/gambar";
+"welcome_to_creator_mode_title" = "Selamat Datang di Mode Kreator";
+"welcome_to_personal_mode_title" = "Selamat Datang di Mode Personal";
+"new_label" = "Baru";
+"profession_with_counter" = "Profesi (%lld/2)";
+"add_photo_label" = "Tambah Foto";
