@@ -110,6 +110,40 @@ extension UserHomeView {
                     EmptyView()
                 }
             )
+            
+            NavigationLink(
+                unwrapping: $homeVM.route,
+                case: /HomeRouting.inbox,
+                destination: { viewModel in
+                    InboxView()
+                        .environmentObject(viewModel.wrappedValue)
+                },
+                onNavigate: { _ in },
+                label: {
+                    EmptyView()
+                }
+            )
+
+            NavigationLink(
+                unwrapping: $homeVM.route,
+                case: /HomeRouting.notification) { viewModel in
+                    NotificationView(viewModel: viewModel.wrappedValue)
+                } onNavigate: { _ in
+
+                } label: {
+                    EmptyView()
+                }
+            
+            NavigationLink(
+                unwrapping: $homeVM.primaryRoute,
+                case: /PrimaryRouting.homeTalent) { viewModel in
+                    TalentHomeView()
+                        .environmentObject(viewModel.wrappedValue)
+                } onNavigate: { _ in
+
+                } label: {
+                    EmptyView()
+                }
 		}
 	}
 
@@ -122,33 +156,38 @@ extension UserHomeView {
 			VStack(spacing: 0) {
 
                 HStack(spacing: 5) {
-                    Image.logoWithText
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 35)
-                    
-                    NavigationLink(
-                        unwrapping: $homeVM.route,
-                        case: /HomeRouting.inbox,
-                        destination: { viewModel in
-                            InboxView()
-                                .environmentObject(viewModel.wrappedValue)
-                        },
-                        onNavigate: { _ in },
-                        label: {
-                            EmptyView()
+                    Button {
+                        homeVM.switchAcount()
+                    } label: {
+                        HStack(spacing: 8) {
+                            HStack(spacing: 4) {
+                                Image(systemName: "chevron.left")
+                                    .resizable()
+                                    .scaledToFit()
+                                
+                                Image(systemName: "chevron.right")
+                                    .resizable()
+                                    .scaledToFit()
+                            }
+                            .foregroundColor(.white)
+                            .padding(6)
+                            .frame(width: 29, height: 29)
+                            .background(
+                                Circle()
+                                    .fill(Color.DinotisDefault.primary)
+                            )
+                            
+                            Text(LocalizableText.personalLabel)
+                                .font(.robotoBold(size: 14))
+                                .foregroundColor(.DinotisDefault.primary)
                         }
-                    )
-
-					NavigationLink(
-						unwrapping: $homeVM.route,
-						case: /HomeRouting.notification) { viewModel in
-							NotificationView(viewModel: viewModel.wrappedValue)
-						} onNavigate: { _ in
-
-						} label: {
-							EmptyView()
-						}
+                        .padding(6)
+                        .padding(.trailing, 6)
+                        .background(
+                            Capsule()
+                                .fill(Color.DinotisDefault.lightPrimary)
+                        )
+                    }
 
 					Spacer()
 
@@ -2132,3 +2171,8 @@ extension UserHomeView {
         }
     }
 }
+
+#Preview(body: {
+    UserHomeView(tabValue: .constant(TabRoute.explore))
+        .environmentObject(UserHomeViewModel())
+})

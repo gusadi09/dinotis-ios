@@ -10,6 +10,8 @@ import SwiftUI
 public extension Image {
     static let generalDinotisImage = Image("img-dinotis-general", bundle: Bundle.module)
     static let generalEmptyImage = Image("img-empty-general", bundle: Bundle.module)
+    static let generalPersonalImage = Image("img-personal", bundle: Bundle.module)
+    static let generalCreatorImage = Image("img-creator", bundle: Bundle.module)
     
     static let onboardingSlide1Image = Image("img-slide1-onboarding", bundle: Bundle.module)
     static let onboardingSlide2Image = Image("img-slide2-onboarding", bundle: Bundle.module)

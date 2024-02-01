@@ -16,6 +16,8 @@
 		4B65C03B2AEF8868000FEF4B /* SessionRecordingListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B65C03A2AEF8868000FEF4B /* SessionRecordingListViewModel.swift */; };
 		4B65C03D2AEF8A02000FEF4B /* SessionRecordingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B65C03C2AEF8A02000FEF4B /* SessionRecordingListView.swift */; };
 		4BA7D6152AC1756500B5177E /* session-close-to-end.json in Resources */ = {isa = PBXBuildFile; fileRef = 4BA7D6142AC1756500B5177E /* session-close-to-end.json */; };
+		4BB26DF02B623E4C007622C4 /* CreatorRoomViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB26DEF2B623E4C007622C4 /* CreatorRoomViewModel.swift */; };
+		4BB26DF32B623F9A007622C4 /* CreatorRoomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB26DF22B623F9A007622C4 /* CreatorRoomView.swift */; };
 		4BBC06C02AEA5DC000299354 /* CreatorAvailabilityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBC06BF2AEA5DC000299354 /* CreatorAvailabilityViewModel.swift */; };
 		4BBC06C22AEA5DFF00299354 /* CreatorAvailabilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBC06C12AEA5DFF00299354 /* CreatorAvailabilityView.swift */; };
 		4BBC06C72AEBA4F900299354 /* SetUpVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBC06C62AEBA4F900299354 /* SetUpVideoViewModel.swift */; };
@@ -334,6 +336,8 @@
 		4B65C03A2AEF8868000FEF4B /* SessionRecordingListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionRecordingListViewModel.swift; sourceTree = "<group>"; };
 		4B65C03C2AEF8A02000FEF4B /* SessionRecordingListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionRecordingListView.swift; sourceTree = "<group>"; };
 		4BA7D6142AC1756500B5177E /* session-close-to-end.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "session-close-to-end.json"; sourceTree = "<group>"; };
+		4BB26DEF2B623E4C007622C4 /* CreatorRoomViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatorRoomViewModel.swift; sourceTree = "<group>"; };
+		4BB26DF22B623F9A007622C4 /* CreatorRoomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatorRoomView.swift; sourceTree = "<group>"; };
 		4BBC06BF2AEA5DC000299354 /* CreatorAvailabilityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatorAvailabilityViewModel.swift; sourceTree = "<group>"; };
 		4BBC06C12AEA5DFF00299354 /* CreatorAvailabilityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatorAvailabilityView.swift; sourceTree = "<group>"; };
 		4BBC06C62AEBA4F900299354 /* SetUpVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUpVideoViewModel.swift; sourceTree = "<group>"; };
@@ -708,6 +712,31 @@
 			isa = PBXGroup;
 			children = (
 				4B65C03C2AEF8A02000FEF4B /* SessionRecordingListView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		4BB26DED2B623D0D007622C4 /* CreatorRoom */ = {
+			isa = PBXGroup;
+			children = (
+				4BB26DF12B623F87007622C4 /* View */,
+				4BB26DEE2B623E3F007622C4 /* ViewModel */,
+			);
+			path = CreatorRoom;
+			sourceTree = "<group>";
+		};
+		4BB26DEE2B623E3F007622C4 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				4BB26DEF2B623E4C007622C4 /* CreatorRoomViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		4BB26DF12B623F87007622C4 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4BB26DF22B623F9A007622C4 /* CreatorRoomView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2097,6 +2126,7 @@
 		ECBA142E26B79149004D452C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				4BB26DED2B623D0D007622C4 /* CreatorRoom */,
 				EC27BBC12B2F5C2500EFB988 /* CreatorAnalytics */,
 				4BEACAF82AF24C5D008E165C /* DetailVideo */,
 				4B65C0372AEF8806000FEF4B /* SessionRecordingList */,
@@ -2882,6 +2912,7 @@
 				4BBC06C22AEA5DFF00299354 /* CreatorAvailabilityView.swift in Sources */,
 				EC62576E27B7A38B0079AA10 /* String+isValidEmail.swift in Sources */,
 				EC6A96E127CDDAF900282253 /* ScheduleListViewModel.swift in Sources */,
+				4BB26DF02B623E4C007622C4 /* CreatorRoomViewModel.swift in Sources */,
 				EC9C4E3D281694EA00837469 /* AnnouncementView.swift in Sources */,
 				EC0D4C222A8C706A0028B87C /* AftercallFeedbackView.swift in Sources */,
 				EC3B977D2A41B4F1006D7B1B /* GroupVideoCallViewModel.swift in Sources */,
@@ -2914,6 +2945,7 @@
 				EC4E500727FC0B76009D66FF /* LottieView.swift in Sources */,
 				EC7B1EA827BCE52400471219 /* TalentHomeViewModel.swift in Sources */,
 				EC3B97802A41B4FF006D7B1B /* GroupVideoCallView.swift in Sources */,
+				4BB26DF32B623F9A007622C4 /* CreatorRoomView.swift in Sources */,
 				EC6A0A08270D6BB300316D1C /* PaymentMethod.swift in Sources */,
 				ECB0A27728FF02250050EC71 /* RoomDocumentRealtimeResponse.swift in Sources */,
 				EC99AD7526C1476B0060F221 /* UserProfileView.swift in Sources */,

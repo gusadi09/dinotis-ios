@@ -47,270 +47,308 @@ struct TalentEditProfile: View {
 
                     VStack(spacing: 0) {
                         
-                        TitleHeader(proxy: proxy)
+                        HeaderView(
+                            type: .textHeader,
+                            title: LocalizableText.editProfileLabel,
+                            headerColor: .clear,
+                            textColor: .DinotisDefault.black1,
+                            leadingButton:  {
+                                Button {
+                                    dismiss()
+                                } label: {
+                                    Image.generalBackIcon
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 20, height: 20)
+                                        .padding(12)
+                                        .background(
+                                            Circle()
+                                                .fill(.white)
+                                                .shadow(color: .black.opacity(0.03), radius: 5)
+                                        )
+                                }
+                            }
+                        )
                         
                         ScrollView(.vertical, showsIndicators: false, content: {
                             VStack {
                                 
-                                VStack(spacing: 20) {
+                                VStack(spacing: 24) {
                                     
                                     ProfilePicture(viewModel: viewModel)
                                     
-                                    HighlightSection(geo: proxy, viewModel: viewModel)
-                                    
-                                    VStack {
-                                        HStack {
-                                            Text(LocaleText.nameText)
-                                                .font(.robotoRegular(size: 12))
-                                                .foregroundColor(.black)
-                                            Spacer()
-                                        }
+                                    VStack(alignment: .leading, spacing: 16) {
+                                        Text(LocalizableText.mainProfileLabel)
+                                            .font(.robotoBold(size: 18))
+                                            .foregroundColor(.DinotisDefault.black1)
                                         
-                                        TextField(LocaleText.nameHint, text: $viewModel.names)
-                                            .font(.robotoRegular(size: 12))
+                                        VStack(alignment: .leading, spacing: 8) {
+                                            Text(LocaleText.nameText)
+                                                .font(.robotoMedium(size: 12))
+                                                .foregroundColor(.DinotisDefault.black1)
+                                            
+                                            DinotisTextField(
+                                                LocaleText.nameHint,
+                                                label: nil,
+                                                text: $viewModel.names,
+                                                errorText: .constant(nil)
+                                            )
                                             .autocapitalization(.words)
                                             .disableAutocorrection(true)
-                                            .foregroundColor(.black)
-                                            .accentColor(.black)
-                                            .padding()
-                                            .overlay(
-                                                RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
-                                            )
-                                        
-                                        if viewModel.names.isEmpty {
-                                            HStack {
-                                                Image.Dinotis.exclamationCircleIcon
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .frame(height: 10)
-                                                    .foregroundColor(.red)
-                                                Text(LocalizableText.editProfileNameEmptyError)
-                                                    .font(.robotoRegular(size: 10))
-                                                    .foregroundColor(.red)
-                                                    .multilineTextAlignment(.leading)
-                                                
-                                                Spacer()
+                                            
+                                            if viewModel.names.isEmpty {
+                                                HStack {
+                                                    Image.Dinotis.exclamationCircleIcon
+                                                        .resizable()
+                                                        .scaledToFit()
+                                                        .frame(height: 10)
+                                                        .foregroundColor(.red)
+                                                    Text(LocalizableText.editProfileNameEmptyError)
+                                                        .font(.robotoRegular(size: 10))
+                                                        .foregroundColor(.red)
+                                                        .multilineTextAlignment(.leading)
+                                                    
+                                                    Spacer()
+                                                }
                                             }
                                         }
-                                    }
-                                    
-                                    VStack {
-                                        HStack {
-                                            Text(LocaleText.linkUrlTitle)
-                                                .font(.robotoRegular(size: 12))
-                                                .foregroundColor(.black)
+                                        
+                                        VStack(alignment: .leading, spacing: 8) {
+                                            Text(LocalizableText.professionyWithCounter(with: profesionSelect.count))
+                                                .font(.robotoMedium(size: 12))
+                                                .foregroundColor(.DinotisDefault.black1)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
                                             
-                                            Spacer()
+                                            HStack {
+                                                HStack {
+                                                    ChipsContentView(viewModel: viewModel, profesionSelect: $profesionSelect, geo: proxy)
+                                                        .frame(width: proxy.size.width/2, alignment: .leading)
+                                                        .fixedSize(horizontal: true, vertical: false)
+                                                    
+                                                    if profesionSelect.isEmpty {
+                                                        Rectangle()
+                                                            .fill(Color.clear)
+                                                            .frame(height: 45)
+                                                    }
+   
+                                                    Spacer()
+                                                    
+                                                    Rectangle()
+                                                        .fill(Color.DinotisDefault.lightPrimary)
+                                                        .frame(width: 1)
+                                                        .padding(.vertical, 8)
+                                                    
+                                                    Image(systemName: "chevron.down.circle.fill")
+                                                        .resizable()
+                                                        .scaledToFit()
+                                                        .frame(height: 24)
+                                                        .foregroundColor(.DinotisDefault.primary)
+                                                        .padding(.trailing)
+                                                }
+                                                .background(Color.white)
+                                            }
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 6).stroke(Color(red: 0.792, green: 0.8, blue: 0.812), lineWidth: 1)
+                                            )
+                                            .onTapGesture(perform: {
+                                                withAnimation(.spring()) {
+                                                    viewModel.showDropDown.toggle()
+                                                }
+                                                
+                                            })
+                                            
+                                            if profesionSelect.isEmpty {
+                                                HStack {
+                                                    Image.Dinotis.exclamationCircleIcon
+                                                        .resizable()
+                                                        .scaledToFit()
+                                                        .frame(height: 10)
+                                                        .foregroundColor(.red)
+                                                    Text(LocalizableText.editProfileProfessionEmptyError)
+                                                        .font(.robotoRegular(size: 10))
+                                                        .foregroundColor(.red)
+                                                        .multilineTextAlignment(.leading)
+                                                    
+                                                    Spacer()
+                                                }
+                                            }
                                         }
                                         
-                                        HStack(spacing: 5) {
-                                            Text(viewModel.constUrl)
+                                        VStack(alignment: .leading, spacing: 8) {
+                                            Text(LocalizableText.profileDinotisLinkWithCounter(with: viewModel.username.count))
                                                 .font(.robotoMedium(size: 12))
-                                                .foregroundColor(.black)
-                                                .fixedSize(horizontal: true, vertical: false)
+                                                .foregroundColor(.DinotisDefault.black1)
                                             
-                                            TextField(LocaleText.usernameHint, text: $viewModel.username)
-                                                .font(.robotoRegular(size: 12))
+                                            HStack(spacing: 8) {
+                                                Image.profileLinkIcon
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .frame(width: 26, height: 26)
+                                                
+                                                Text(viewModel.constUrl)
+                                                    .font(.robotoRegular(size: 12))
+                                                    .foregroundColor(.DinotisDefault.black1)
+                                                
+                                                DinotisTextField(
+                                                    LocaleText.usernameHint,
+                                                    label: nil,
+                                                    text: $viewModel.username,
+                                                    errorText: .constant(nil), trailingButton:  {
+                                                        if viewModel.isUsernameAvail && !viewModel.isLoadingUserName {
+                                                            Image.Dinotis.verifiedCorrectIcon
+                                                                .resizable()
+                                                                .scaledToFit()
+                                                                .frame(height: 18)
+                                                        } else if !viewModel.isUsernameAvail && !viewModel.username.isEmpty && !viewModel.isLoadingUserName {
+                                                            if viewModel.username == viewModel.userData?.username {
+                                                                EmptyView()
+                                                            } else {
+                                                                Image(systemName: "xmark")
+                                                                    .resizable()
+                                                                    .font(Font.system(size: 8, weight: .semibold))
+                                                                    .scaledToFit()
+                                                                    .frame(height: 8)
+                                                                    .padding(3)
+                                                                    .foregroundColor(Color.white)
+                                                                    .background(Color.red)
+                                                                    .clipShape(Circle())
+                                                            }
+                                                        } else if viewModel.usernameInvalid && !viewModel.isLoadingUserName {
+                                                            Image(systemName: "xmark")
+                                                                .resizable()
+                                                                .font(Font.system(size: 8, weight: .semibold))
+                                                                .scaledToFit()
+                                                                .frame(height: 8)
+                                                                .padding(3)
+                                                                .foregroundColor(Color.white)
+                                                                .background(Color.red)
+                                                                .clipShape(Circle())
+                                                        } else if viewModel.isLoadingUserName {
+                                                            ProgressView()
+                                                                .progressViewStyle(.circular)
+                                                        }
+                                                    })
                                                 .disableAutocorrection(true)
                                                 .autocapitalization(.none)
-                                                .foregroundColor(.black)
-                                                .accentColor(.black)
                                                 .valueChanged(value: viewModel.username) { _ in
                                                     viewModel.startCheckAvail()
                                                 }
+                                            }
                                             
-                                            Spacer()
-                                            
-                                            if viewModel.isUsernameAvail && !viewModel.isLoadingUserName {
-                                                Image.Dinotis.verifiedCorrectIcon
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .frame(height: 18)
-                                            } else if !viewModel.isUsernameAvail && !viewModel.username.isEmpty && !viewModel.isLoadingUserName {
-                                                if viewModel.username == viewModel.userData?.username {
-                                                    EmptyView()
-                                                } else {
-                                                    Image(systemName: "xmark")
+                                            if viewModel.username.isEmpty {
+                                                HStack {
+                                                    Image.Dinotis.exclamationCircleIcon
                                                         .resizable()
-                                                        .font(Font.system(size: 8, weight: .semibold))
                                                         .scaledToFit()
-                                                        .frame(height: 8)
-                                                        .padding(3)
-                                                        .foregroundColor(Color.white)
-                                                        .background(Color.red)
-                                                        .clipShape(Circle())
+                                                        .frame(height: 10)
+                                                        .foregroundColor(.red)
+                                                    Text(LocalizableText.editProfileUsernameEmptyError)
+                                                        .font(.robotoRegular(size: 10))
+                                                        .foregroundColor(.red)
+                                                        .multilineTextAlignment(.leading)
+                                                    
+                                                    Spacer()
                                                 }
-                                            } else if viewModel.usernameInvalid && !viewModel.isLoadingUserName {
-                                                Image(systemName: "xmark")
-                                                    .resizable()
-                                                    .font(Font.system(size: 8, weight: .semibold))
-                                                    .scaledToFit()
-                                                    .frame(height: 8)
-                                                    .padding(3)
-                                                    .foregroundColor(Color.white)
-                                                    .background(Color.red)
-                                                    .clipShape(Circle())
-                                            } else if viewModel.isLoadingUserName {
-                                                ProgressView()
-                                                    .progressViewStyle(.circular)
-                                            }
-                                        }
-                                        .padding()
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
-                                        )
-                                        
-                                        if viewModel.username.isEmpty {
-                                            HStack {
-                                                Image.Dinotis.exclamationCircleIcon
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .frame(height: 10)
-                                                    .foregroundColor(.red)
-                                                Text(LocalizableText.editProfileUsernameEmptyError)
-                                                    .font(.robotoRegular(size: 10))
-                                                    .foregroundColor(.red)
-                                                    .multilineTextAlignment(.leading)
-                                                
-                                                Spacer()
                                             }
                                         }
                                     }
                                     
-                                    VStack(spacing: 8) {
-                                        HStack {
-                                            Text(LocaleText.phoneText)
-                                                .font(.robotoRegular(size: 12))
-                                                .foregroundColor(.black)
-                                            Spacer()
-                                        }
+                                    VStack(alignment: .leading, spacing: 16) {
+                                        Text(LocalizableText.contactInformationLabel)
+                                            .font(.robotoBold(size: 18))
+                                            .foregroundColor(.DinotisDefault.black1)
                                         
-                                        HStack {
-                                            Text(viewModel.phone)
-                                                .font(.robotoRegular(size: 12))
-                                                .foregroundColor(.black)
-                                                .accentColor(.black)
-                                                .padding()
+                                        VStack(alignment: .leading, spacing: 8) {
+                                            Text(LocalizableText.phoneNumberLabel)
+                                                .font(.robotoMedium(size: 12))
+                                                .foregroundColor(.DinotisDefault.black1)
                                             
-                                            Spacer()
-                                            
-                                            Button(action: {
-                                                viewModel.routeToChangePhone()
-                                            }, label: {
-                                                Text(LocaleText.changeText)
-                                                    .font(.robotoMedium(size: 10))
-                                                    .foregroundColor(.DinotisDefault.primary)
-                                                    .padding(.horizontal)
-                                                    .frame(height: 35)
-                                                    .background(Color.secondaryViolet)
-                                                    .cornerRadius(8)
-                                                    .padding(.trailing, 5)
-                                            })
-                                            
-                                        }
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
-                                        )
-                                    }
-                                    
-                                    VStack {
-                                        HStack {
-                                            Text(LocaleText.bioTitle)
-                                                .font(.robotoRegular(size: 12))
-                                                .foregroundColor(.black)
-                                            Spacer()
-                                        }
-                                        
-                                        MultilineTextField(text: $viewModel.bio)
-                                            .foregroundColor(.black)
-                                            .accentColor(.black)
-                                            .padding(.horizontal, 10)
-                                            .padding(.vertical, 10)
-                                            .overlay(
-                                                RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
+                                            DinotisTextField(
+                                                viewModel.phone,
+                                                disabled: true, 
+                                                label: nil,
+                                                text: $viewModel.phone,
+                                                errorText: .constant(nil),
+                                                trailingButton: {
+                                                    DinotisPrimaryButton(
+                                                        text: LocalizableText.changeLabel,
+                                                        type: .mini,
+                                                        textColor: .white,
+                                                        bgColor: .DinotisDefault.primary
+                                                    ) {
+                                                        viewModel.routeToChangePhone()
+                                                    }
+                                                }
                                             )
-                                        
-                                        if viewModel.bio.isEmpty {
-                                            HStack {
-                                                Image.Dinotis.exclamationCircleIcon
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .frame(height: 10)
-                                                    .foregroundColor(.red)
-                                                Text(LocalizableText.editProfileBioEmptyError)
-                                                    .font(.robotoRegular(size: 10))
-                                                    .foregroundColor(.red)
-                                                    .multilineTextAlignment(.leading)
-                                                
-                                                Spacer()
-                                            }
                                         }
                                     }
                                     
-                                    VStack {
+                                    VStack(alignment: .leading, spacing: 16) {
                                         HStack {
-                                            Text(LocaleText.professionTitle)
-                                                .font(.robotoRegular(size: 12))
-                                                .foregroundColor(.black)
-                                            Spacer()
-                                        }
-                                        
-                                        HStack {
-                                            HStack {
-                                                ChipsContentView(viewModel: viewModel, profesionSelect: $profesionSelect, geo: proxy)
-                                                    .foregroundColor(profesionSelect.isEmpty ? Color(.lightGray) : .black)
-                                                    .frame(width: proxy.size.width/2, alignment: .leading)
-                                                    .fixedSize(horizontal: true, vertical: false)
-                                                
-                                                if profesionSelect.isEmpty {
-                                                    Rectangle()
-                                                        .frame(height: 45)
-                                                        .foregroundColor(.clear)
-                                                }
-                                                
-                                                Spacer()
-                                                
-                                                Image.Dinotis.chevronBottomIcon
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .frame(height: 24)
-                                                    .padding(.horizontal)
-                                            }
-                                            .background(Color.white)
-                                        }
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 6).stroke(Color(.lightGray).opacity(0.3), lineWidth: 1.0)
-                                        )
-                                        .clipShape(RoundedRectangle(cornerRadius: 6))
-                                        .onTapGesture(perform: {
-                                            withAnimation(.spring()) {
-                                                viewModel.showDropDown.toggle()
-                                            }
+                                            Text(LocalizableText.overviewLabel)
+                                                .font(.robotoBold(size: 18))
+                                                .foregroundColor(.DinotisDefault.black1)
                                             
-                                        })
-                                        
-                                        if profesionSelect.isEmpty {
-                                            HStack {
-                                                Image.Dinotis.exclamationCircleIcon
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .frame(height: 10)
-                                                    .foregroundColor(.red)
-                                                Text(LocalizableText.editProfileProfessionEmptyError)
-                                                    .font(.robotoRegular(size: 10))
-                                                    .foregroundColor(.red)
-                                                    .multilineTextAlignment(.leading)
+                                            Spacer()
+                                            
+                                            Button {
                                                 
-                                                Spacer()
+                                            } label: {
+                                                HStack(spacing: 8) {
+                                                    Text(LocalizableText.previewProfileLabel)
+                                                        .font(.robotoBold(size: 12))
+                                                    
+                                                    Image(systemName: "arrow.right.circle.fill")
+                                                        .resizable()
+                                                        .scaledToFit()
+                                                        .frame(width: 16, height: 16)
+                                                }
+                                                .foregroundColor(.white)
+                                                .padding(8)
+                                                .background(
+                                                    RoundedRectangle(cornerRadius: 8)
+                                                        .fill(Color.DinotisDefault.primary)
+                                                )
                                             }
                                         }
+                                        
+                                        VStack(alignment: .leading, spacing: 8) {
+                                            Text(LocalizableText.aboutMeWithCounter(with: viewModel.bio.count))
+                                                .font(.robotoMedium(size: 12))
+                                                .foregroundColor(.DinotisDefault.black1)
+                                            
+                                            DinotisTextEditor(
+                                                LocalizableText.hintFormBio,
+                                                label: nil,
+                                                text: $viewModel.bio,
+                                                errorText: .constant(nil)
+                                            )
+                                            
+                                            if viewModel.bio.isEmpty {
+                                                HStack {
+                                                    Image.Dinotis.exclamationCircleIcon
+                                                        .resizable()
+                                                        .scaledToFit()
+                                                        .frame(height: 10)
+                                                        .foregroundColor(.red)
+                                                    Text(LocalizableText.editProfileBioEmptyError)
+                                                        .font(.robotoRegular(size: 10))
+                                                        .foregroundColor(.red)
+                                                        .multilineTextAlignment(.leading)
+                                                    
+                                                    Spacer()
+                                                }
+                                            }
+                                        }
+                                        
+                                        HighlightSection(geo: proxy, viewModel: viewModel)
                                     }
                                 }
                                 .padding(20)
                                 .padding(.top)
                                 .background(Color(.white))
                                 .cornerRadius(16)
-                                .shadow(color: Color.dinotisShadow.opacity(0.1), radius: 10, x: 0.0, y: 0.0)
+                                .shadow(color: Color.dinotisShadow.opacity(0.03), radius: 10)
                                 .padding(.horizontal)
                                 .padding(.bottom, 10)
                                 .padding(.top)

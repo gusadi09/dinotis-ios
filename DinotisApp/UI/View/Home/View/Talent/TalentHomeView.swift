@@ -120,35 +120,38 @@ struct TalentHomeView: View {
                         VStack {
                             VStack(spacing: 0) {
                                 HStack {
-                                    Button(action: {
-                                        homeVM.routeToProfile()
-                                    }, label: {
-                                        HStack(spacing: 15) {
-                                            ProfileImageContainer(
-                                                profilePhoto: $homeVM.photoProfile,
-                                                name: $homeVM.nameOfUser,
-                                                width: 48,
-                                                height: 48
-                                            )
-                                            .overlay(
-                                                Circle()
-                                                    .stroke(Color.white, lineWidth: 2)
-                                            )
-                                            .shadow(color: Color(red: 0.22, green: 0.29, blue: 0.41).opacity(0.06), radius: 20, x: 0, y: 0)
+                                    Button {
+                                        homeVM.switchAcount()
+                                    } label: {
+                                        HStack(spacing: 8) {
+                                            Text(LocalizableText.creatorTitle)
+                                                .font(.robotoBold(size: 14))
+                                                .foregroundColor(.white)
                                             
-                                            VStack(alignment: .leading, spacing: 0) {
-                                                Text(LocaleText.helloText)
-                                                    .font(.robotoRegular(size: 12))
-                                                    .foregroundColor(.black)
-                                                    .padding(.bottom, 6)
+                                            HStack(spacing: 4) {
+                                                Image(systemName: "chevron.left")
+                                                    .resizable()
+                                                    .scaledToFit()
                                                 
-                                                Text((homeVM.userData?.name).orEmpty())
-                                                    .font(.robotoBold(size: 14))
-                                                    .foregroundColor(.black)
+                                                Image(systemName: "chevron.right")
+                                                    .resizable()
+                                                    .scaledToFit()
                                             }
+                                            .foregroundColor(.DinotisDefault.primary)
+                                            .padding(6)
+                                            .frame(width: 29, height: 29)
+                                            .background(
+                                                Circle()
+                                                    .fill(Color.white)
+                                            )
                                         }
-                                        
-                                    })
+                                        .padding(6)
+                                        .padding(.leading, 6)
+                                        .background(
+                                            Capsule()
+                                                .fill(Color.DinotisDefault.primary)
+                                        )
+                                    }
                                     
                                     NavigationLink(
                                         unwrapping: $homeVM.route,
@@ -237,7 +240,8 @@ struct TalentHomeView: View {
                                         }
                                     }
                                 }
-                                .padding()
+                                .padding(.vertical)
+                                .padding(.horizontal, 15)
                                 .padding(.top, 10)
                                 
                                 DinotisList {
@@ -256,6 +260,42 @@ struct TalentHomeView: View {
                                         }
                                     }
                                 } content: {
+                                    Section {
+                                        Button(action: {
+                                            homeVM.routeToProfile()
+                                        }, label: {
+                                            HStack(spacing: 15) {
+                                                ProfileImageContainer(
+                                                    profilePhoto: $homeVM.photoProfile,
+                                                    name: $homeVM.nameOfUser,
+                                                    width: 48,
+                                                    height: 48
+                                                )
+                                                .overlay(
+                                                    Circle()
+                                                        .stroke(Color.white, lineWidth: 2)
+                                                )
+                                                .shadow(color: Color(red: 0.22, green: 0.29, blue: 0.41).opacity(0.06), radius: 20, x: 0, y: 0)
+                                                
+                                                VStack(alignment: .leading, spacing: 0) {
+                                                    Text(LocaleText.helloText)
+                                                        .font(.robotoRegular(size: 12))
+                                                        .foregroundColor(.black)
+                                                        .padding(.bottom, 6)
+                                                    
+                                                    Text((homeVM.userData?.name).orEmpty())
+                                                        .font(.robotoBold(size: 14))
+                                                        .foregroundColor(.black)
+                                                }
+                                            }
+                                            
+                                        })
+                                        .buttonStyle(.plain)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    }
+                                    .listRowBackground(Color.clear)
+                                    .listRowInsets(EdgeInsets(top: 6, leading: 15, bottom: 8, trailing: 15))
+                                    
                                     Section {
                                         VStack(spacing: 12) {
                                             HStack(spacing: 15) {
@@ -489,7 +529,7 @@ struct TalentHomeView: View {
                                 }
                                 
                             }
-                            .frame(height: !homeVM.closestSessions.isEmpty ? 570 : 340)
+//                            .frame(height: !homeVM.closestSessions.isEmpty ? 570 : 340)
                             
                             Spacer()
                         }
@@ -549,6 +589,19 @@ struct TalentHomeView: View {
                         case: /HomeRouting.creatorStudio,
                         destination: { viewModel in
                             CreatorStudioView()
+                                .environmentObject(viewModel.wrappedValue)
+                        },
+                        onNavigate: { _ in },
+                        label: {
+                            EmptyView()
+                        }
+                    )
+                    
+                    NavigationLink(
+                        unwrapping: $homeVM.primaryRoute,
+                        case: /PrimaryRouting.tabContainer,
+                        destination: { viewModel in
+                            TabViewContainer()
                                 .environmentObject(viewModel.wrappedValue)
                         },
                         onNavigate: { _ in },
@@ -719,14 +772,17 @@ struct TalentHomeView: View {
                 }
                 
                 withAnimation {
-                    homeVM.offsetY = !homeVM.closestSessions.isEmpty ? 562 : 344
+                    homeVM.offsetY = homeVM.sheetHeight
                 }
             }
             .onChange(of: homeVM.closestSessions.isEmpty) { newValue in
                 withAnimation {
-                    homeVM.offsetY = !homeVM.closestSessions.isEmpty ? 562 : 344
+                    homeVM.offsetY = homeVM.sheetHeight
                 }
             }
+            .fullScreenCover(isPresented: $homeVM.isSwitchingAccount, content: {
+                SwitchAccountAnimation(toCreator: false)
+            })
         }
     }
 }

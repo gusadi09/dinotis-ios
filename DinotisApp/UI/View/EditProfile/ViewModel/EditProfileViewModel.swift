@@ -55,7 +55,11 @@ final class EditProfileViewModel: ObservableObject {
     @Published var userPhoto: String?
     @Published var phone = ""
     
-    @Published var userHighlightsImage =  [UIImage(), UIImage(), UIImage()]
+    @Published var draggedImage: UIImage?
+    @Published var userHighlightsImage: [UIImage] = Array(repeating: UIImage(), count: 6)
+    var userHighlightImageCount: Int {
+        userHighlightsImage.filter({ $0 != UIImage() }).count
+    }
     
     @Published var userHighlights : [String]?
     @Published var userHighlight : String?
@@ -67,7 +71,7 @@ final class EditProfileViewModel: ObservableObject {
     @Published var bio = ""
     
     @Published var isShowPhotoLibrary = false
-    @Published var isShowPhotoLibraryHG = [false, false, false]
+    @Published var isShowPhotoLibraryHG: [Bool] = Array(repeating: false, count: 6)
     @Published var image = UIImage()
     
     @Published var isSuccessUpdate = false
@@ -270,6 +274,14 @@ final class EditProfileViewModel: ObservableObject {
                 ),
                 secondaryButton: nil
             )
+        }
+    }
+    
+    @MainActor
+    func deleteHighlightImage(at index: Int) {
+        withAnimation {
+            userHighlightsImage.remove(at: index)
+            userHighlightsImage.append(UIImage())
         }
     }
     
@@ -568,17 +580,9 @@ final class EditProfileViewModel: ObservableObject {
                         }
                     }
                     
-                    if tempHG.count < 3 {
-                        if tempHG.count == 1 {
-                            tempHG.append(UIImage())
-                            tempHG.append(UIImage())
-                        } else if tempHG.count == 2 {
-                            tempHG.append(UIImage())
-                        }
-                        
-                        self.userHighlightsImage = tempHG
-                    } else {
-                        self.userHighlightsImage = tempHG
+                    self.userHighlightsImage = tempHG
+                    for _ in 1...6-userHighlightsImage.count {
+                        self.userHighlightsImage.append(UIImage())
                     }
                 }
         case .failure(let failure):

@@ -206,6 +206,9 @@ struct UserHomeView: View {
                 .dynamicTypeSize(.large)
             }
         })
+        .fullScreenCover(isPresented: $homeVM.isSwitchingAccount, content: {
+            SwitchAccountAnimation(toCreator: true)
+        })
     }
 }
 

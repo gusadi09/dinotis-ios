@@ -770,3 +770,24 @@
 "home_empty_private_session_desc" = "No private video call sessions yet";
 "home_empty_group_session_desc" = "No group video call sessions yet";
 "home_empty_uploaded_video_desc" = "No uploaded videos yet";
+
+"personal_label" = "Personal";
+"creator_room_label" = "Creator Room";
+"activate_creator_mode_title" = "Activate Creator Mode";
+"activate_creator_mode_desc" = "Create and organize your own session as a Creator";
+"complete_profile_title" = "Your profile is incomplete 🙁";
+"complete_profile_desc" = "Complete your profile to make it more credible";
+"complete_now_label" = "Complete Now";
+"main_profile_label" = "Main Profile";
+"profile_dinotis_link_with_counter" = "Dinotis Link / Username (%lld/32)";
+"contact_information_label" = "Contact Information";
+"no_handphone_label" = "Phone Number";
+"preview_profile_label" = "Preview Profile";
+"about_me_with_counter" = "About Me (%lld/256)";
+"gallery_with_counter" = "Gallery (%lld/6)";
+"profile_image_limitation_desc" = "*Format jpg/png, max 1MB/image";
+"welcome_to_creator_mode_title" = "Welcome to Creator Mode";
+"welcome_to_personal_mode_title" = "Welcome to Personal Mode";
+"new_label" = "New";
+"profession_with_counter" = "Profession (%lld/2)";
+"add_photo_label" = "Add Photo";
