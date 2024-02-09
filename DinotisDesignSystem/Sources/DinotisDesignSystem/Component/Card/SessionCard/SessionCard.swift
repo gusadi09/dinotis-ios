@@ -135,6 +135,8 @@ public struct SessionCard: View {
 					.lineLimit(2)
 					.foregroundColor(data.color == nil ? .DinotisDefault.black1 : .white)
 					.padding(.bottom, data.type == .session ? 0 : 15)
+                
+                Spacer()
 
 				if data.type == .session {
                     HStack(spacing: 0) {
@@ -204,7 +206,7 @@ public struct SessionCard: View {
                             .padding(.horizontal, data.participantsImgUrl.isEmpty ? 0 : 6)
                     }
 				}
-
+                
 				HStack(spacing: 5) {
 					Button {
                         if data.collaborationCount <= 0 {

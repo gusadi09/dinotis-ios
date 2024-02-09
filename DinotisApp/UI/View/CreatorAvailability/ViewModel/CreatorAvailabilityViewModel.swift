@@ -15,6 +15,8 @@ final class CreatorAvailabilityViewModel: ObservableObject {
     private let getUserUseCase: GetUserUseCase
     private var stateObservable = StateObservable.shared
     
+    @Published var isCreatorModeActive = false
+    @Published var isShowCompleteProfileSheet = false
     @Published var route: HomeRouting?
     
     @Published var isShowSubscriptionSheet = false

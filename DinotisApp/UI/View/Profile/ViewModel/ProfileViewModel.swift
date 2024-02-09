@@ -10,6 +10,7 @@ import Combine
 import SwiftUI
 import OneSignal
 import DinotisData
+import DinotisDesignSystem
 import StoreKit
 
 final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDelegate, SKPaymentTransactionObserver {
@@ -70,6 +71,19 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 	@Published var isLoadingTrx = false
 
 	@Published var statusCode = 0
+    
+    @Published var showDinotisVerifiedSheet = false
+    
+    @Published var pointerItems = [
+        PointerModel(title: "A verified badge", definition: "Get recognized as an authentic individual with the power to make a meaningful impact."),
+        PointerModel(title: "Create unlimited sessions", definition: "Create group/private video calls as much as you like"),
+        PointerModel(title: "More enhanced settings", definition: "Set an unlimited number of audiences for your sessions, configure your management fee, and even attach files to enhance your session.")
+    ]
+    
+    @Published var isLoadingVerified = false
+    
+    @Published var attachedLinks = [LinkModel(link: "")]
+    @Published var isAgreed = false
 
 	init(
 		backToHome: @escaping (() -> Void),
@@ -137,9 +151,7 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 	}
     
     func managementsString() -> String {
-        ((self.data?.managements) ?? []).compactMap {
-            $0.management?.user?.name
-        }.joined(separator: ", ")
+        "\((self.data?.managements?.first?.management?.user?.name).orEmpty())"
     }
     
     func managements() -> [String] {
@@ -480,4 +492,16 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 
 extension SKProduct: Identifiable {
 
+}
+
+extension ProfileViewModel {
+    struct PointerModel {
+        let title: String
+        let definition: String
+    }
+    
+    struct LinkModel {
+        let id = UUID()
+        var link: String
+    }
 }

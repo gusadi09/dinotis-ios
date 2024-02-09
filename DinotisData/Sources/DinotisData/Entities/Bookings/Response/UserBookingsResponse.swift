@@ -121,7 +121,7 @@ public extension UserBookingsResponse {
 	}
 }
 
-public struct UserBookingData: Codable {
+public struct UserBookingData: Codable, Identifiable {
 	public let id: String?
 	public let bookedAt: Date?
 	public let invoiceId: String?
