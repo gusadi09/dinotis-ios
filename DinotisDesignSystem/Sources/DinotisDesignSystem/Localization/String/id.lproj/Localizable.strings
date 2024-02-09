@@ -772,6 +772,9 @@
 "home_empty_group_session_desc" = "Belum ada sesi group video call";
 "home_empty_uploaded_video_desc" = "Belum ada video yang diupload";
 
+"setting_creator_space" = "Ruang Kreator";
+"setting_new_label" = "Baru";
+"setting_dinotis_verified" = "Dinotis Verified";
 "personal_label" = "Personal";
 "creator_room_label" = "Ruang Kreator";
 "activate_creator_mode_title" = "Aktifkan mode kreator";

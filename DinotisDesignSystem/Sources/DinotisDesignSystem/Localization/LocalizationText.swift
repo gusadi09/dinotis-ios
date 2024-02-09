@@ -3572,6 +3572,21 @@ public enum LocalizableText {
         }
     }
     
+    public static let settingCreatorSpace = NSLocalizedString(
+        "setting_creator_space",
+        bundle: .module,
+        comment: "creator space"
+    )
+    public static let settingNewLabel = NSLocalizedString(
+        "setting_new_label",
+        bundle: .module,
+        comment: "new"
+    )
+    public static let settingDinotisVerified = NSLocalizedString(
+        "setting_dinotis_verified",
+        bundle: .module,
+        comment: "dinotis verified"
+    )
     public static func profileDinotisLinkWithCounter(with value: Int) -> String {
         String(
             format: NSLocalizedString(

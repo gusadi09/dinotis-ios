@@ -15,6 +15,7 @@ public extension Color {
 		public static let black1 = Color("Black1", bundle: Bundle.module)
 		public static let black2 = Color("Black2", bundle: Bundle.module)
 		public static let black3 = Color("Black3", bundle: Bundle.module)
+        public static let black5 = Color("Black5", bundle: Bundle.module)
 		public static let brightPrimary = Color("BrightPrimary", bundle: Bundle.module)
 		public static let lightPrimary = Color("LightPrimary", bundle: Bundle.module)
 		public static let lightPrimaryActive = Color("LightPrimaryActive", bundle: Bundle.module)

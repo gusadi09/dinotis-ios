@@ -771,6 +771,9 @@
 "home_empty_group_session_desc" = "No group video call sessions yet";
 "home_empty_uploaded_video_desc" = "No uploaded videos yet";
 
+"setting_creator_space" = "Creator Space";
+"setting_new_label" = "New";
+"setting_dinotis_verified" = "Dinotis Verified";
 "personal_label" = "Personal";
 "creator_room_label" = "Creator Room";
 "activate_creator_mode_title" = "Activate Creator Mode";

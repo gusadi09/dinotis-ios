@@ -45,6 +45,34 @@ struct CreatorAvailabilityView: View {
                 
                 ScrollView {
                     VStack {
+                        HStack(spacing: 24) {
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text(LocalizableText.activateCreatorModeTitle)
+                                    .font(.robotoBold(size: 16))
+                                    .foregroundColor(.DinotisDefault.black1)
+                                
+                                Text(LocalizableText.activateCreatorModeDesc)
+                                    .font(.robotoRegular(size: 12))
+                                    .foregroundColor(.DinotisDefault.black3)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            Toggle("", isOn: $viewModel.isCreatorModeActive)
+                                .labelsHidden()
+                                .tint(Color.DinotisDefault.green)
+                                .onChange(of: viewModel.isCreatorModeActive) { newValue in
+                                    viewModel.isShowCompleteProfileSheet = newValue == true ? newValue : viewModel.isShowCompleteProfileSheet
+                                }
+                        }
+                        .padding(16)
+                        .background(.white)
+                        .cornerRadius(12)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .inset(by: 0.5)
+                                .stroke(Color.DinotisDefault.grayDinotis, lineWidth: 1)
+                        )
+                        
                         Button {
                             viewModel.isShowSubscriptionSheet = true
                         } label: {

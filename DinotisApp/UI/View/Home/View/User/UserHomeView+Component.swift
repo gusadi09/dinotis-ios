@@ -587,23 +587,25 @@ extension UserHomeView {
                         }
                     } header: {
                         VStack(alignment: .leading, spacing: 16) {
-                            HStack {
-                                Text(LocalizableText.detailVideoUpcomingSessionDesc)
-                                    .font(.robotoBold(size: 16))
-                                    .foregroundColor(.DinotisDefault.black2)
-                                
-                                Spacer()
-                                
-                                Button {
-                                    tabValue = .search
-                                } label: {
-                                    Text(LocalizableText.searchSeeAllLabel)
-                                        .font(.robotoBold(size: 12))
-                                        .foregroundColor(.DinotisDefault.primary)
+                            if !homeVM.sessionContent.isEmpty {
+                                HStack {
+                                    Text(LocalizableText.detailVideoUpcomingSessionDesc)
+                                        .font(.robotoBold(size: 16))
+                                        .foregroundColor(.DinotisDefault.black2)
+                                    
+                                    Spacer()
+                                    
+                                    Button {
+                                        tabValue = .search
+                                    } label: {
+                                        Text(LocalizableText.searchSeeAllLabel)
+                                            .font(.robotoBold(size: 12))
+                                            .foregroundColor(.DinotisDefault.primary)
+                                    }
+                                    .buttonStyle(.plain)
                                 }
-                                .buttonStyle(.plain)
+                                .padding(.horizontal)
                             }
-                            .padding(.horizontal)
                             
                             HStack(spacing: 8) {
                                 Button {
@@ -662,6 +664,7 @@ extension UserHomeView {
                     .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.clear)
+                    .isHidden(!homeVM.isLoadingGroupFeature && !homeVM.isLoadingPrivateFeature && homeVM.groupScheduleContent.isEmpty && homeVM.privateScheduleContent.isEmpty, remove: true)
                     
                     Group {
                         if homeVM.isLoadingRateCard {
