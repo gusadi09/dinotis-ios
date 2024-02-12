@@ -795,3 +795,8 @@
 "new_label" = "Baru";
 "profession_with_counter" = "Profesi (%lld/2)";
 "add_photo_label" = "Tambah Foto";
+
+"just_joined_label" = "Baru bergabung";
+"nearest_session_label" = "Sesi terdekat";
+"all_session_label" = "Semua Sesi";
+"find_creators_label" = "Temukan Kreator";

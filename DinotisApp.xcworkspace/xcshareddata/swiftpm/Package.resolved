@@ -68,8 +68,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/dyte-in/DyteMobileCoreiOS.git",
       "state" : {
-        "revision" : "f7b59b3674fcdd8816b9fa9ac657541bc932c4a9",
-        "version" : "1.30.0"
+        "revision" : "780da266ad3711eeb38496881117b4588e5488eb",
+        "version" : "1.31.4"
       }
     },
     {

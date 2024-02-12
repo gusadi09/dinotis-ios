@@ -794,3 +794,8 @@
 "new_label" = "New";
 "profession_with_counter" = "Profession (%lld/2)";
 "add_photo_label" = "Add Photo";
+
+"just_joined_label" = "Just joined";
+"nearest_session_label" = "Nearest sessions";
+"all_session_label" = "All Sessions";
+"find_creators_label" = "Find Creators";

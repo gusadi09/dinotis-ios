@@ -541,6 +541,14 @@ final class UserHomeViewModel: NSObject, ObservableObject {
         }
     }
     
+    func routeToHomeList(_ type: HomeListType, tab: HomeListViewModel.TabFilter) {
+        let viewModel = HomeListViewModel(type: type, tab: tab, backToHome: { self.route = nil })
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .homeList(viewModel: viewModel)
+        }
+    }
+    
     func routeToTalentProfile(showingRequest: Bool = false) {
         let viewModel = TalentProfileDetailViewModel(backToHome: {self.route = nil}, username: self.username.orEmpty(), showingRequest: showingRequest)
         
