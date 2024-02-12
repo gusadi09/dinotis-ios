@@ -9,6 +9,8 @@ import SwiftUI
 
 public struct CreatorCardWithFollowButton: View {
     
+    private let width: CGFloat
+    private let height: CGFloat
     private let imageURL: String
     private let name: String
     private let isVerified: Bool
@@ -18,6 +20,8 @@ public struct CreatorCardWithFollowButton: View {
     private let followAction: () -> Void
     
     public init(
+        width: CGFloat = 154,
+        height: CGFloat = 242,
         imageURL: String,
         name: String,
         isVerified: Bool,
@@ -33,11 +37,14 @@ public struct CreatorCardWithFollowButton: View {
         self._isFollowed = isFollowed
         self._isLoading = isLoading
         self.followAction = followAction
+        self.width = width
+        self.height = height
     }
     
     public var body: some View {
         VStack(spacing: 0) {
             DinotisImageLoader(urlString: imageURL)
+                .frame(height: width)
             
             VStack(alignment: .leading, spacing: 6) {
                 VStack(alignment: .leading, spacing: 3) {
@@ -83,7 +90,7 @@ public struct CreatorCardWithFollowButton: View {
             .padding(.vertical, 10)
             .padding(.horizontal, 7)
         }
-        .frame(width: 154, height: 242)
+        .frame(width: width, height: height)
         .background(.white)
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .shadow(color: Color(red: 0.22, green: 0.29, blue: 0.41).opacity(0.11), radius: 8.4)

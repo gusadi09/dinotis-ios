@@ -18,6 +18,8 @@
 		4BA7D6152AC1756500B5177E /* session-close-to-end.json in Resources */ = {isa = PBXBuildFile; fileRef = 4BA7D6142AC1756500B5177E /* session-close-to-end.json */; };
 		4BB26DF02B623E4C007622C4 /* CreatorRoomViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB26DEF2B623E4C007622C4 /* CreatorRoomViewModel.swift */; };
 		4BB26DF32B623F9A007622C4 /* CreatorRoomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB26DF22B623F9A007622C4 /* CreatorRoomView.swift */; };
+		4BBB41732B738B0800479109 /* HomeListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBB41722B738B0800479109 /* HomeListViewModel.swift */; };
+		4BBB41752B739E1600479109 /* HomeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBB41742B739E1600479109 /* HomeListView.swift */; };
 		4BBC06C02AEA5DC000299354 /* CreatorAvailabilityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBC06BF2AEA5DC000299354 /* CreatorAvailabilityViewModel.swift */; };
 		4BBC06C22AEA5DFF00299354 /* CreatorAvailabilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBC06C12AEA5DFF00299354 /* CreatorAvailabilityView.swift */; };
 		4BBC06C72AEBA4F900299354 /* SetUpVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBC06C62AEBA4F900299354 /* SetUpVideoViewModel.swift */; };
@@ -338,6 +340,8 @@
 		4BA7D6142AC1756500B5177E /* session-close-to-end.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "session-close-to-end.json"; sourceTree = "<group>"; };
 		4BB26DEF2B623E4C007622C4 /* CreatorRoomViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatorRoomViewModel.swift; sourceTree = "<group>"; };
 		4BB26DF22B623F9A007622C4 /* CreatorRoomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatorRoomView.swift; sourceTree = "<group>"; };
+		4BBB41722B738B0800479109 /* HomeListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeListViewModel.swift; sourceTree = "<group>"; };
+		4BBB41742B739E1600479109 /* HomeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeListView.swift; sourceTree = "<group>"; };
 		4BBC06BF2AEA5DC000299354 /* CreatorAvailabilityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatorAvailabilityViewModel.swift; sourceTree = "<group>"; };
 		4BBC06C12AEA5DFF00299354 /* CreatorAvailabilityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatorAvailabilityView.swift; sourceTree = "<group>"; };
 		4BBC06C62AEBA4F900299354 /* SetUpVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUpVideoViewModel.swift; sourceTree = "<group>"; };
@@ -737,6 +741,31 @@
 			isa = PBXGroup;
 			children = (
 				4BB26DF22B623F9A007622C4 /* CreatorRoomView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		4BBB416F2B738AED00479109 /* HomeList */ = {
+			isa = PBXGroup;
+			children = (
+				4BBB41712B738AFB00479109 /* View */,
+				4BBB41702B738AF300479109 /* ViewModel */,
+			);
+			path = HomeList;
+			sourceTree = "<group>";
+		};
+		4BBB41702B738AF300479109 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				4BBB41722B738B0800479109 /* HomeListViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		4BBB41712B738AFB00479109 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4BBB41742B739E1600479109 /* HomeListView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2126,6 +2155,7 @@
 		ECBA142E26B79149004D452C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				4BBB416F2B738AED00479109 /* HomeList */,
 				4BB26DED2B623D0D007622C4 /* CreatorRoom */,
 				EC27BBC12B2F5C2500EFB988 /* CreatorAnalytics */,
 				4BEACAF82AF24C5D008E165C /* DetailVideo */,
@@ -3045,6 +3075,7 @@
 				ECBA13E826B78F77004D452C /* SceneDelegate.swift in Sources */,
 				EC04ED3C26C8D83E00E0D473 /* UserHomeView.swift in Sources */,
 				ECD51FDC28A2165F000B1F6C /* TwilioDataTargetType.swift in Sources */,
+				4BBB41732B738B0800479109 /* HomeListViewModel.swift in Sources */,
 				EC50A05826E5B58E00F45C2F /* DetailPaymentView.swift in Sources */,
 				EC7B1EAA27BCE65A00471219 /* VerifiedCondition.swift in Sources */,
 				ECBA13ED26B78F77004D452C /* DinotisApp.xcdatamodeld in Sources */,
@@ -3079,6 +3110,7 @@
 				F63A09A3289CBE6A008C7815 /* ChatMessage.swift in Sources */,
 				F67334C12908ED62006C1ADF /* BundlingFormViewModel.swift in Sources */,
 				ECBFE676270FF9D10075D01F /* PrivateVideoCallView.swift in Sources */,
+				4BBB41752B739E1600479109 /* HomeListView.swift in Sources */,
 				EC96E32C2940D5AA00347091 /* OnboardingView.swift in Sources */,
 				EC47636A2833E03C009EE2FB /* HTMLViewer.swift in Sources */,
 				ECAAA2A6280C63BC00AAC6CA /* HomePrivateFeatureCard.swift in Sources */,

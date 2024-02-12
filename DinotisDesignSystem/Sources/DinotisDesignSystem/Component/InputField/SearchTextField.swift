@@ -13,14 +13,18 @@ public struct SearchTextField: View {
     let placeholder: String
     let onSubmit: () -> Void
     
+    @FocusState private var focused: Bool
+    
     public init(
         _ placeholder: String,
         text: Binding<String>,
+        focused: FocusState<Bool> = .init(),
         onSubmit: @escaping () -> Void = {}
     ) {
         self.placeholder = placeholder
         self._text = text
         self.onSubmit = onSubmit
+        self._focused = focused
     }
     
     public var body: some View {
@@ -35,6 +39,8 @@ public struct SearchTextField: View {
             TextField(placeholder, text: $text, onCommit: onSubmit)
                 .font(.robotoRegular(size: 12))
                 .textFieldStyle(.plain)
+                .focused($focused)
+                .tint(.DinotisDefault.primary)
                 .foregroundColor(.black)
                 .padding([.trailing, .vertical])
             
@@ -59,7 +65,7 @@ public struct SearchTextField: View {
         )
         .overlay(
             RoundedRectangle(cornerRadius: 8)
-                .stroke(Color(red: 0.792, green: 0.8, blue: 0.812), lineWidth: 1)
+                .stroke(focused ? Color.DinotisDefault.primary : Color(red: 0.792, green: 0.8, blue: 0.812), lineWidth: 1)
         )
 
 	}

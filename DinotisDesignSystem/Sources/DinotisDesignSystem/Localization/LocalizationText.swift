@@ -3711,5 +3711,25 @@ public enum LocalizableText {
         bundle: .module,
         comment: "add photo label"
     )
+    public static let justJoinedLabel = NSLocalizedString(
+        "just_joined_label",
+        bundle: .module,
+        comment: "just joined label"
+    )
+    public static let nearestSessionLabel = NSLocalizedString(
+        "nearest_session_label",
+        bundle: .module,
+        comment: "nearest session label"
+    )
+    public static let allSessionLabel = NSLocalizedString(
+        "all_session_label",
+        bundle: .module,
+        comment: "all session label"
+    )
+    public static let findCreatorsLabel = NSLocalizedString(
+        "find_creators_label",
+        bundle: .module,
+        comment: "find creators label"
+    )
     
 }

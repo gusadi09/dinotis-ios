@@ -8,11 +8,13 @@
 import Foundation
 
 public struct HomeContentRequest: Codable {
+    public var query: String?
     public var skip: Int
     public var take: Int
     public var sort: GeneralSorting
     
-    public init(skip: Int = 0, take: Int = 10, sort: GeneralSorting = .newest) {
+    public init(query: String? = nil, skip: Int = 0, take: Int = 10, sort: GeneralSorting = .newest) {
+        self.query = query
         self.skip = skip
         self.take = take
         self.sort = sort
@@ -20,12 +22,14 @@ public struct HomeContentRequest: Codable {
 }
 
 public struct FollowingContentRequest: Codable {
+    public var query: String?
     public var skip: Int
     public var take: Int
     public var sort: GeneralSorting
     public var followed: Bool
     
-    public init(skip: Int = 0, take: Int = 10, sort: GeneralSorting = .newest, followed: Bool = false) {
+    public init(query: String? = nil, skip: Int = 0, take: Int = 10, sort: GeneralSorting = .newest, followed: Bool = false) {
+        self.query = query
         self.skip = skip
         self.take = take
         self.sort = sort

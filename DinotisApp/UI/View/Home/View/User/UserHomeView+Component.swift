@@ -144,6 +144,16 @@ extension UserHomeView {
                 } label: {
                     EmptyView()
                 }
+            
+            NavigationLink(
+                unwrapping: $homeVM.route,
+                case: /HomeRouting.homeList) { viewModel in
+                    HomeListView(viewModel: viewModel.wrappedValue, tabValue: $tabValue)
+                } onNavigate: { _ in
+
+                } label: {
+                    EmptyView()
+                }
 		}
 	}
 
@@ -596,7 +606,7 @@ extension UserHomeView {
                                     Spacer()
                                     
                                     Button {
-                                        tabValue = .search
+                                        homeVM.routeToHomeList(.session, tab: homeVM.sessionTab == .groupSession ? .groupCall : .privateCall)
                                     } label: {
                                         Text(LocalizableText.searchSeeAllLabel)
                                             .font(.robotoBold(size: 12))
@@ -768,7 +778,7 @@ extension UserHomeView {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 
                             Button {
-                                tabValue = .search
+                                homeVM.routeToHomeList(.session, tab: .nearest)
                             } label: {
                                 Text(LocalizableText.searchSeeAllLabel)
                                     .font(.robotoBold(size: 12))
@@ -924,7 +934,7 @@ extension UserHomeView {
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                 
                                 Button {
-                                    tabValue = .search
+                                    homeVM.routeToHomeList(.creator, tab: .popular)
                                 } label: {
                                     Text(LocalizableText.searchSeeAllLabel)
                                         .font(.robotoBold(size: 12))
@@ -2171,6 +2181,9 @@ extension UserHomeView {
             }
             .padding()
             .padding(.vertical)
+            .onDisappear {
+                viewModel.myProducts = []
+            }
         }
     }
 }
