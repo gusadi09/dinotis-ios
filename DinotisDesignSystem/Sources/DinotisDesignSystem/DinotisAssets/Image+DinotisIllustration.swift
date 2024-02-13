@@ -50,4 +50,9 @@ public extension Image {
     static let homeLineGradientOrangeImage = Image("img-home-line-gradient-orange", bundle: .module)
     static let homeEyes3dImage = Image("img-home-eyes-3d", bundle: .module)
     static let homeBasketball3dImage = Image("img-home-basketball-3d", bundle: .module)
+    
+    static let profileWaitingVerificationImage = Image("waiting-verification", bundle: .module)
+    static let profileSuccessVerifiedImage = Image("success-verified", bundle: .module)
+    
+    static let backgroundAuthenticationImage = Image("bg-auth", bundle: .module)
 }

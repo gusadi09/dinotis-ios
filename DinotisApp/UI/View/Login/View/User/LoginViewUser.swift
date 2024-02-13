@@ -20,11 +20,18 @@ struct LoginViewUser: View {
 			ZStack(alignment: .top) {
 				Color.DinotisDefault.baseBackground
 					.edgesIgnoringSafeArea(.all)
+                
+                Image.backgroundAuthenticationImage
+                    .resizable()
+                    .edgesIgnoringSafeArea([.top, .horizontal])
 
 				VStack(spacing: 0) {
 					HeaderView(
-						type: .imageHeader(Image.generalDinotisImage, 25),
-						title: "") {
+                        type: .textHeader,
+                        title: loginVM.isRegister ? LocalizableText.authNewRegisterTitle : LocalizableText.authNewLoginTitle,
+                        headerColor: .clear,
+                        textColor: .white
+                    ) {
 							DinotisElipsisButton(
 								icon: .generalBackIcon,
 								iconColor: .DinotisDefault.black1,
@@ -36,15 +43,9 @@ struct LoginViewUser: View {
 								}
 							)
 						} trailingButton: {
-							Button {
-								loginVM.openWhatsApp()
-							} label: {
-								Image.generalQuestionIcon
-									.resizable()
-									.scaledToFit()
-									.frame(height: 25)
-							}
+                            
 						}
+                        .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 0)
                         .onChange(of: loginVM.phone.phone) { newValue in
                             if newValue.hasPrefix("0") {
                                 loginVM.phone.phone = String(newValue.dropFirst(1))
@@ -58,16 +59,13 @@ struct LoginViewUser: View {
 					ScrollView(showsIndicators: false) {
 						VStack {
 							VStack(spacing: 8) {
-								Text(loginVM.loginTitleText())
-									.font(.robotoBold(size: 28))
-									.foregroundColor(.DinotisDefault.black1)
-
-								Text(loginVM.loginDescriptionText())
-									.font(.robotoRegular(size: 12))
-									.foregroundColor(.DinotisDefault.black2)
+                                Image.logoWithText
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 195)
 							}
 							.multilineTextAlignment(.center)
-							.padding(.bottom)
+                            .padding(.vertical, 50)
 
 							VStack {
 								PhoneNumberTextField(
@@ -122,60 +120,35 @@ struct LoginViewUser: View {
 												loginVM.routeToForgot()
 											}
 									}
-									.padding(.top)
-								}
-
-								if loginVM.stateObservable.userType == 2 && loginVM.isRegister {
-									DinotisTextField(
-										LocalizableText.hintInvitationCode,
-										label: nil,
-										text: $loginVM.invitationCode,
-										errorText: $loginVM.invitationError
-									)
-									.autocapitalization(.allCharacters)
-									.autocorrectionDisabled(true)
-
-									HStack {
-										Spacer()
-
-										DinotisUnderlineButton(
-											text: LocalizableText.linkRequestInvitation,
-											textColor: .DinotisDefault.primary,
-											fontSize: 12) {
-												loginVM.isShowRequestInvitation.toggle()
-											}
-									}
-									.padding(.top)
+									.padding(.top, 10)
 								}
 							}
 							.padding(.bottom, 20)
 
-							VStack(spacing: 10) {
-								(
-									Text(LocalizableText.labelLoginTermsFirstPart)
-										.foregroundColor(.DinotisDefault.black3)
-									+
-									Text(" \(LocalizableText.labelLoginTermsHighlighted) ")
-										.foregroundColor(.DinotisDefault.primary)
-									+
-									Text(LocalizableText.labelLoginTermsSecondPart)
-										.foregroundColor(.DinotisDefault.black3)
-								)
-								.font(.robotoMedium(size: 10))
-								.multilineTextAlignment(.center)
-								.onTapGesture {
-									loginVM.isShowTerms.toggle()
-								}
+							VStack(spacing: 15) {
 
+                                DinotisPrimaryButton(
+                                    text: loginVM.loginButtonText(),
+                                    type: .adaptiveScreen,
+                                    textColor: .DinotisDefault.white,
+                                    bgColor: .DinotisDefault.primary
+                                ) {
+                                    Task {
+                                        await loginVM.registerButtonAction()
+                                    }
+                                }
+                                .disabled(loginVM.isButtonDisable())
+                                
 								HStack {
 									Text(loginVM.firstBottomLineText())
-										.font(.robotoRegular(size: 12))
+										.font(.robotoMedium(size: 14))
+                                        .fontWeight(.semibold)
 										.foregroundColor(.DinotisDefault.black2)
 
 									DinotisUnderlineButton(
 										text: loginVM.secondBottomLine(),
 										textColor: .DinotisDefault.primary,
-										fontSize: 12) {
+										fontSize: 14) {
 											withAnimation {
 												loginVM.isRegister.toggle()
 												loginVM.phone.phone = ""
@@ -228,20 +201,46 @@ struct LoginViewUser: View {
 						}
 
 					}
-					.padding()
+                    .padding(.horizontal)
+                    
+                    (
+                        Text(LocalizableText.labelLoginTermsFirstPart)
+                            .foregroundColor(.DinotisDefault.black3)
+                            .font(.robotoRegular(size: 12))
+                        +
+                        Text(" \(LocalizableText.labelLoginTermsHighlighted) ")
+                            .foregroundColor(.DinotisDefault.darkPrimary)
+                            .font(.robotoMedium(size: 12))
+                        +
+                        Text(LocalizableText.labelLoginTermsSecondPart)
+                            .foregroundColor(.DinotisDefault.black3)
+                            .font(.robotoRegular(size: 12))
+                    )
+                    .multilineTextAlignment(.center)
+                    .onTapGesture {
+                        loginVM.isShowTerms.toggle()
+                    }
+                    .padding()
+                    
+                    Divider()
+                    
+                    HStack {
+                        Button {
+                            loginVM.openWhatsApp()
+                        } label: {
+                            Image.generalMessageTextIcon
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 18)
+                            
+                            Text(LocalizableText.needHelpQuestion)
+                                .font(.robotoMedium(size: 12))
+                                .fontWeight(.semibold)
+                                .foregroundStyle(Color.DinotisDefault.primary)
+                        }
 
-					DinotisPrimaryButton(
-						text: loginVM.loginButtonText(),
-						type: .adaptiveScreen,
-						textColor: loginVM.isButtonDisable() ? .DinotisDefault.lightPrimaryActive : .DinotisDefault.white,
-						bgColor: loginVM.isButtonDisable() ? .DinotisDefault.lightPrimary : .DinotisDefault.primary
-					) {
-						Task {
-							await loginVM.registerButtonAction()
-						}
-					}
-					.disabled(loginVM.isButtonDisable())
-					.padding()
+                    }
+                    .padding([.top, .horizontal])
 				}
                 
                 DinotisLoadingView(.fullscreen, hide: !loginVM.isLoading)
@@ -249,14 +248,10 @@ struct LoginViewUser: View {
 			.sheet(isPresented: $loginVM.isShowingCountryPicker){
 				if #available(iOS 16.0, *) {
 					CountryPicker(country: $loginVM.countrySelected)
-						.padding()
-						.padding(.vertical)
 						.presentationDetents([.fraction(0.8), .large])
                         .dynamicTypeSize(.large)
 				} else {
 					CountryPicker(country: $loginVM.countrySelected)
-						.padding()
-						.padding(.vertical)
                         .dynamicTypeSize(.large)
 				}
 

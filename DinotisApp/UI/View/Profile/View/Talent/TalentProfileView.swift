@@ -15,6 +15,7 @@ import SwiftUITrackableScrollView
 struct NavigationUtil {
     static func popToRootView() {
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            StateObservable.shared.isShowGateway = false
             findNavigationController(viewController: windowScene.windows.filter { $0.isKeyWindow }.first?.rootViewController)?
                 .popToRootViewController(animated: true)
         }
@@ -929,13 +930,18 @@ struct TalentProfileView: View {
         )
         .sheet(
             isPresented: $viewModel.showDinotisVerifiedSheet,
+            onDismiss: {
+                viewModel.verifRoute = nil
+                viewModel.attachedLinks = [ProfileViewModel.LinkModel(link: "")]
+            },
             content: {
                 if #available(iOS 16.0, *) {
                     RequestVerifiedLandingView()
                         .environmentObject(viewModel)
                         .presentationDetents([.height(700)])
                 } else {
-                    
+                    RequestVerifiedLandingView()
+                        .environmentObject(viewModel)
                 }
             }
         )
@@ -950,6 +956,249 @@ struct TalentProfileView: View {
 }
 
 extension TalentProfileView {
+    
+    struct LandingView: View {
+        @EnvironmentObject var viewModel: ProfileViewModel
+        
+        var body: some View {
+            VStack {
+                ScrollView {
+                    VStack {
+                        Text("Engage trust with Dinotis Verified")
+                            .font(.robotoBold(size: 18))
+                            .foregroundStyle(Color.DinotisDefault.black1)
+                            .multilineTextAlignment(.center)
+                        
+                        ZStack(alignment: .bottom) {
+                            ProfileImageContainer(
+                                profilePhoto: $viewModel.userPhotos,
+                                name: $viewModel.names,
+                                width: 92,
+                                height: 92,
+                                shape: RoundedRectangle(cornerRadius: 22)
+                            )
+                            
+                            Image.generalDinotisCircularIcon
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 28, height: 28)
+                                .offset(CGSize(width: 0, height: 15))
+                        }
+                        .padding(.top, 20)
+                        
+                        HStack {
+                            
+                            Text(viewModel.nameOfUser())
+                                .font(.robotoBold(size: 18))
+                                .minimumScaleFactor(0.01)
+                                .lineLimit(1)
+                                .foregroundColor(.black)
+                            
+                            Image.newUserVerifiedIcon
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 16)
+                                .isHidden(
+                                    !viewModel.isUserVerified(),
+                                    remove: !viewModel.isUserVerified()
+                                )
+                        }
+                        .padding(.top, 16)
+                        
+                        HStack {
+                            Text("\(Image.talentProfileManagementIcon) \(viewModel.userProfessionString())")
+                                .font(.robotoRegular(size: 12))
+                                .foregroundColor(.black)
+                                .multilineTextAlignment(.center)
+                                .lineLimit(2)
+                        }
+                        .padding(.horizontal)
+                        
+                        Text(LocalizableText.tabCreator)
+                            .font(.robotoMedium(size: 12))
+                            .fontWeight(.semibold)
+                            .foregroundStyle(Color.DinotisDefault.primary)
+                            .padding(.horizontal, 11)
+                            .padding(.vertical, 5)
+                            .background(
+                                Capsule()
+                                    .foregroundStyle(Color.DinotisDefault.lightPrimary)
+                            )
+                        
+                        VStack(spacing: 10) {
+                            ForEach(viewModel.pointerItems, id: \.title) { item in
+                                HStack(alignment: .top, spacing: 8) {
+                                    Image.profileVerifiedPointerIcon
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 20)
+                                    
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        HStack {
+                                            Text(item.title)
+                                                .font(.robotoMedium(size: 14))
+                                                .fontWeight(.semibold)
+                                                .foregroundStyle(Color.DinotisDefault.black2)
+                                                .multilineTextAlignment(.leading)
+                                            
+                                            Spacer()
+                                        }
+                                        
+                                        Text(item.definition)
+                                            .font(.robotoRegular(size: 12))
+                                            .foregroundStyle(Color.DinotisDefault.black1)
+                                            .multilineTextAlignment(.leading)
+                                    }
+                                }
+                            }
+                        }
+                        .padding(.top, 26)
+                        .padding(.bottom, 20)
+                        
+                        
+                    }
+                }
+                
+                NavigationLink {
+                    switch viewModel.data?.verificationStatus {
+                    case .notVerified:
+                        RequestVerifiedForm()
+                            .environmentObject(viewModel)
+                    case .waiting:
+                        WaitingView()
+                    case .verified:
+                        VerifiedView()
+                    case .failed:
+                        FailedView()
+                    case nil:
+                        RequestVerifiedForm()
+                            .environmentObject(viewModel)
+                    }
+                } label: {
+                    HStack {
+                        Spacer()
+                        
+                        Text(LocalizableText.nextLabel)
+                            .font(.robotoBold(size: 14))
+                            .foregroundColor(.white)
+                        
+                        Spacer()
+                    }
+                    .padding(.horizontal)
+                    .frame(height: 44)
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .foregroundColor(.DinotisDefault.primary)
+                    )
+                }
+            }
+        }
+    }
+    
+    struct WaitingView: View {
+        var body: some View {
+            VStack {
+                Text("Pengajuan verifikasi berhasil terkirim")
+                    .font(.robotoBold(size: 18))
+                    .foregroundStyle(Color.DinotisDefault.black1)
+                    .multilineTextAlignment(.center)
+                
+                Spacer()
+                
+                Image.profileWaitingVerificationImage
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 291)
+                
+                Spacer()
+                
+                Text("We'll review into your account within 2 days.  If your account aligns with our requirements, you'll get the badge right away. Thanks for your patience!")
+                    .font(.robotoRegular(size: 12))
+                    .foregroundStyle(Color.DinotisDefault.black3)
+                    .multilineTextAlignment(.center)
+            }
+            .padding(.horizontal)
+            .padding(.top, 26)
+            .padding(.bottom, 35)
+            .navigationBarTitle(Text(""))
+            .navigationBarHidden(true)
+        }
+    }
+    
+    struct VerifiedView: View {
+        var body: some View {
+            VStack(alignment: .center) {
+                Text("Akun kamu telah terverifikasi")
+                    .font(.robotoBold(size: 18))
+                    .foregroundStyle(Color.DinotisDefault.black1)
+                    .multilineTextAlignment(.center)
+                
+                Spacer()
+                
+                Image.profileSuccessVerifiedImage
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 290)
+                
+                Spacer()
+                
+                Text("Sekarang kamu bisa akses semua fitur terbaik di Dinotis. Klik di sini untuk mulai buat sesi!")
+                    .font(.robotoRegular(size: 12))
+                    .foregroundStyle(Color.DinotisDefault.black3)
+                    .multilineTextAlignment(.center)
+            }
+            .padding(.horizontal)
+            .padding(.top, 26)
+            .padding(.bottom, 35)
+            .navigationBarTitle(Text(""))
+            .navigationBarHidden(true)
+        }
+    }
+    
+    struct FailedView: View {
+        
+        @Environment(\.dismiss) var dismiss
+        
+        var body: some View {
+            VStack(alignment: .center) {
+                Text("Pengajuan verifikasi gagal")
+                    .font(.robotoBold(size: 18))
+                    .foregroundStyle(Color.DinotisDefault.black1)
+                    .multilineTextAlignment(.center)
+                
+                Spacer()
+                
+                Image.profileSuccessVerifiedImage
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 290)
+                
+                Spacer()
+                
+                DinotisPrimaryButton(
+                    text: "Verify again",
+                    type: .adaptiveScreen,
+                    height: 45,
+                    textColor: .white,
+                    bgColor: .DinotisDefault.primary,
+                    isLoading: .constant(false)
+                ) {
+                    dismiss()
+                }
+                
+                Text("Kamu dapat mengajukan verifikasi kembali pada (\(Date().toStringFormat(with: .slashddMMyyyy)).")
+                    .font(.robotoRegular(size: 12))
+                    .foregroundStyle(Color.DinotisDefault.black3)
+                    .multilineTextAlignment(.center)
+            }
+            .padding(.horizontal)
+            .padding(.top, 26)
+            .padding(.bottom, 35)
+            .navigationBarTitle(Text(""))
+            .navigationBarHidden(true)
+        }
+    }
+    
     struct RequestVerifiedLandingView: View {
         
         @EnvironmentObject var viewModel: ProfileViewModel
@@ -978,124 +1227,10 @@ extension TalentProfileView {
                 .padding([.top, .horizontal], 16)
                 
                 NavigationView {
-                    VStack {
-                        ScrollView {
-                            VStack {
-                                Text("Engage trust with Dinotis Verified")
-                                    .font(.robotoBold(size: 18))
-                                    .foregroundStyle(Color.DinotisDefault.black1)
-                                    .multilineTextAlignment(.center)
-                                
-                                ZStack(alignment: .bottom) {
-                                    ProfileImageContainer(
-                                        profilePhoto: $viewModel.userPhotos,
-                                        name: $viewModel.names,
-                                        width: 92,
-                                        height: 92,
-                                        shape: RoundedRectangle(cornerRadius: 22)
-                                    )
-                                    
-                                    Image.generalDinotisCircularIcon
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 28, height: 28)
-                                        .offset(CGSize(width: 0, height: 15))
-                                }
-                                .padding(.top, 20)
-                                
-                                HStack {
-                                    
-                                    Text(viewModel.nameOfUser())
-                                        .font(.robotoBold(size: 18))
-                                        .minimumScaleFactor(0.01)
-                                        .lineLimit(1)
-                                        .foregroundColor(.black)
-                                    
-                                    Image.newUserVerifiedIcon
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(height: 16)
-                                        .isHidden(
-                                            !viewModel.isUserVerified(),
-                                            remove: !viewModel.isUserVerified()
-                                        )
-                                }
-                                .padding(.top, 16)
-                                
-                                HStack {
-                                    Text("\(Image.talentProfileManagementIcon) \(viewModel.userProfessionString())")
-                                        .font(.robotoRegular(size: 12))
-                                        .foregroundColor(.black)
-                                        .multilineTextAlignment(.center)
-                                        .lineLimit(2)
-                                }
-                                .padding(.horizontal)
-                                
-                                Text(LocalizableText.tabCreator)
-                                    .font(.robotoMedium(size: 12))
-                                    .fontWeight(.semibold)
-                                    .foregroundStyle(Color.DinotisDefault.primary)
-                                    .padding(.horizontal, 11)
-                                    .padding(.vertical, 5)
-                                    .background(
-                                        Capsule()
-                                            .foregroundStyle(Color.DinotisDefault.lightPrimary)
-                                    )
-                                
-                                VStack(spacing: 10) {
-                                    ForEach(viewModel.pointerItems, id: \.title) { item in
-                                        HStack(alignment: .top, spacing: 8) {
-                                            Image.profileVerifiedPointerIcon
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(height: 20)
-                                            
-                                            VStack(alignment: .leading, spacing: 4) {
-                                                HStack {
-                                                    Text(item.title)
-                                                        .font(.robotoMedium(size: 14))
-                                                        .fontWeight(.semibold)
-                                                        .foregroundStyle(Color.DinotisDefault.black2)
-                                                        .multilineTextAlignment(.leading)
-                                                    
-                                                    Spacer()
-                                                }
-                                                
-                                                Text(item.definition)
-                                                    .font(.robotoRegular(size: 12))
-                                                    .foregroundStyle(Color.DinotisDefault.black1)
-                                                    .multilineTextAlignment(.leading)
-                                            }
-                                        }
-                                    }
-                                }
-                                .padding(.top, 26)
-                                .padding(.bottom, 20)
-                                
-                                
-                            }
-                        }
+                    Group {
+                        LandingView()
+                            .environmentObject(viewModel)
                         
-                        NavigationLink {
-                            RequestVerifiedForm()
-                                .environmentObject(viewModel)
-                        } label: {
-                            HStack {
-                                Spacer()
-                                
-                                Text(LocalizableText.nextLabel)
-                                    .font(.robotoBold(size: 14))
-                                    .foregroundColor(.white)
-                                
-                                Spacer()
-                            }
-                            .padding(.horizontal)
-                            .frame(height: 44)
-                            .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .foregroundColor(.DinotisDefault.primary)
-                            )
-                        }
                     }
                     .padding()
                     .navigationBarTitle(Text(""))
@@ -1133,6 +1268,9 @@ extension TalentProfileView {
                                     .shadow(color: .black.opacity(0.1), radius: 5)
                             )
                     }
+                    .disabled(
+                        viewModel.isLoadingVerified
+                    )
                 } trailingButton: {
                     
                 }
@@ -1209,7 +1347,7 @@ extension TalentProfileView {
                                     shape: RoundedRectangle(cornerRadius: 12)
                                 )
                                 
-                                VStack {
+                                VStack(alignment: .leading) {
                                     HStack(alignment: .center) {
                                         Text(LocalizableText.editProfileTitle)
                                             .font(.robotoMedium(size: 14))
@@ -1217,10 +1355,10 @@ extension TalentProfileView {
                                             .foregroundStyle(Color.DinotisDefault.black2)
                                             .multilineTextAlignment(.leading)
                                         
-                                        ProgressView(value: 0.8, total: 1.0)
+                                        ProgressView(value: (viewModel.data?.profilePercentage).orZero(), total: 100.0)
                                             .tint(Color.DinotisDefault.primary)
                                         
-                                        Text("80%")
+                                        Text("\(Int((viewModel.data?.profilePercentage).orZero()))%")
                                             .font(.robotoMedium(size: 12))
                                             .foregroundStyle(Color.DinotisDefault.primary)
                                             .multilineTextAlignment(.leading)
@@ -1247,6 +1385,9 @@ extension TalentProfileView {
                                     .stroke(Color.DinotisDefault.black5, lineWidth: 1)
                             )
                         }
+                        .disabled(
+                            viewModel.isLoadingVerified
+                        )
                         
                         Divider()
                             .padding(.vertical, 20)
@@ -1280,6 +1421,9 @@ extension TalentProfileView {
                                 text: $item.link,
                                 errorText: .constant(nil)
                             )
+                            .disabled(
+                                viewModel.isLoadingVerified
+                            )
                         }
                         
                         DinotisPrimaryButton(
@@ -1292,7 +1436,7 @@ extension TalentProfileView {
                         ) {
                             viewModel.attachedLinks.append(ProfileViewModel.LinkModel(link: ""))
                         }
-                        .disabled(viewModel.attachedLinks.last?.link.isEmpty ?? true)
+                        .disabled(viewModel.attachedLinks.last?.link.isEmpty ?? true || viewModel.isLoadingVerified)
                     }
                     .padding(.vertical, 20)
                     .padding(.horizontal)
@@ -1307,6 +1451,9 @@ extension TalentProfileView {
                         .scaledToFit()
                         .frame(width: 24)
                     }
+                    .disabled(
+                        viewModel.isLoadingVerified
+                    )
 
                     (
                         Text("Pastikan anda telah menyetujui ")
@@ -1337,10 +1484,30 @@ extension TalentProfileView {
                     bgColor: .DinotisDefault.primary,
                     isLoading: $viewModel.isLoadingVerified
                 ) {
-                    viewModel.isLoadingVerified.toggle()
+                    Task {
+                        await viewModel.sendVerif()
+                    }
                 }
+                .disabled(
+                    !viewModel.isAgreed ||
+                    (viewModel.attachedLinks.first?.link.isEmpty ?? true) ||
+                    ((viewModel.data?.profilePercentage).orZero() < 100) ||
+                    viewModel.isLoadingVerified
+                )
                 .tint(.white)
                 .padding(.horizontal)
+                
+                NavigationLink(
+                    unwrapping: $viewModel.verifRoute,
+                    case: /HomeRouting.waitingVerif,
+                    destination: { viewModel in
+                        WaitingView()
+                    },
+                    onNavigate: {_ in },
+                    label: {
+                        EmptyView()
+                    }
+                )
             }
             .navigationBarTitle(Text(""))
             .navigationBarHidden(true)

@@ -788,13 +788,15 @@
 "no_handphone_label" = "No. Handphone";
 "preview_profile_label" = "Preview Profile";
 "about_me_with_counter" = "Tentang Saya (%lld/256)";
-"gallery_with_counter" = "Galeri (%lld/6)";
+"gallery_with_counter" = "Galeri (%lld/3)";
 "profile_image_limitation_desc" = "*Format jpg/png, max 1MB/gambar";
 "welcome_to_creator_mode_title" = "Selamat Datang di Mode Kreator";
 "welcome_to_personal_mode_title" = "Selamat Datang di Mode Personal";
 "new_label" = "Baru";
 "profession_with_counter" = "Profesi (%lld/2)";
 "add_photo_label" = "Tambah Foto";
+"authentication_new_register_title" = "Daftar Akun";
+"authentication_new_login_title" = "Masuk Akun";
 
 "just_joined_label" = "Baru bergabung";
 "nearest_session_label" = "Sesi terdekat";

@@ -787,13 +787,15 @@
 "no_handphone_label" = "Phone Number";
 "preview_profile_label" = "Preview Profile";
 "about_me_with_counter" = "About Me (%lld/256)";
-"gallery_with_counter" = "Gallery (%lld/6)";
+"gallery_with_counter" = "Gallery (%lld/3)";
 "profile_image_limitation_desc" = "*Format jpg/png, max 1MB/image";
 "welcome_to_creator_mode_title" = "Welcome to Creator Mode";
 "welcome_to_personal_mode_title" = "Welcome to Personal Mode";
 "new_label" = "New";
 "profession_with_counter" = "Profession (%lld/2)";
 "add_photo_label" = "Add Photo";
+"authentication_new_register_title" = "Register Account";
+"authentication_new_login_title" = "Login Account";
 
 "just_joined_label" = "Just joined";
 "nearest_session_label" = "Nearest sessions";

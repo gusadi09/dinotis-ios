@@ -38,6 +38,18 @@ final class PreviewTalentViewModel: ObservableObject {
 	@Published var success: Bool = false
 
 	@Published var isLoading = false
+    
+    var professionText: String {
+        var profession = ""
+        
+        let data = userData?.professions?.compactMap({
+            $0.profession?.name
+        })
+        
+        profession = (data?.joined(separator: ", ")).orEmpty()
+        
+        return profession
+    }
 
 	init(
 		getUserUseCase: GetUserUseCase = GetUserDefaultUseCase()

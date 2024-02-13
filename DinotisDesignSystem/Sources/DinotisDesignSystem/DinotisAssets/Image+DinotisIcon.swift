@@ -200,4 +200,5 @@ public extension Image {
     static let profileVerifiedPointerIcon = Image("ic-pointer", bundle: .module)
     static let profileChecmarkFalseIcon = Image("ic-checkbox-false", bundle: .module)
     static let profileChecmarkTrueIcon = Image("ic-checkbox-true", bundle: .module)
+    static let generalMessageTextIcon = Image("ic-message-bubble", bundle: .module)
 }

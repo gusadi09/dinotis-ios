@@ -40,6 +40,18 @@ struct TalentEditProfile: View {
 						EmptyView()
 					}
 				)
+                
+                NavigationLink(
+                    unwrapping: $viewModel.route,
+                    case: /HomeRouting.previewTalent,
+                    destination: { viewModel in
+                        PreviewTalentView(viewModel: viewModel.wrappedValue)
+                    },
+                    onNavigate: {_ in },
+                    label: {
+                        EmptyView()
+                    }
+                )
 
 				ZStack(alignment: .top) {
                     Color.DinotisDefault.baseBackground
@@ -114,7 +126,7 @@ struct TalentEditProfile: View {
                                         }
                                         
                                         VStack(alignment: .leading, spacing: 8) {
-                                            Text(LocalizableText.professionyWithCounter(with: profesionSelect.count))
+                                            Text(LocalizableText.labelFormProfession)
                                                 .font(.robotoMedium(size: 12))
                                                 .foregroundColor(.DinotisDefault.black1)
                                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -146,16 +158,18 @@ struct TalentEditProfile: View {
                                                         .padding(.trailing)
                                                 }
                                                 .background(Color.white)
+                                                .onTapGesture(perform: {
+                                                    UIApplication.shared.endEditing()
+                                                    withAnimation(.spring()) {
+                                                        viewModel.showDropDown.toggle()
+                                                    }
+                                                    
+                                                })
                                             }
                                             .overlay(
                                                 RoundedRectangle(cornerRadius: 6).stroke(Color(red: 0.792, green: 0.8, blue: 0.812), lineWidth: 1)
                                             )
-                                            .onTapGesture(perform: {
-                                                withAnimation(.spring()) {
-                                                    viewModel.showDropDown.toggle()
-                                                }
-                                                
-                                            })
+                                            .contentShape(Rectangle())
                                             
                                             if profesionSelect.isEmpty {
                                                 HStack {
@@ -232,6 +246,7 @@ struct TalentEditProfile: View {
                                                 .autocapitalization(.none)
                                                 .valueChanged(value: viewModel.username) { _ in
                                                     viewModel.startCheckAvail()
+                                                    viewModel.limitUsernameText()
                                                 }
                                             }
                                             
@@ -292,7 +307,7 @@ struct TalentEditProfile: View {
                                             Spacer()
                                             
                                             Button {
-                                                
+                                                viewModel.routeToPreviewProfile()
                                             } label: {
                                                 HStack(spacing: 8) {
                                                     Text(LocalizableText.previewProfileLabel)
@@ -323,6 +338,9 @@ struct TalentEditProfile: View {
                                                 text: $viewModel.bio,
                                                 errorText: .constant(nil)
                                             )
+                                            .onChange(of: viewModel.bio) { _ in
+                                                viewModel.limitBioText()
+                                            }
                                             
                                             if viewModel.bio.isEmpty {
                                                 HStack {
@@ -356,6 +374,7 @@ struct TalentEditProfile: View {
                         })
                         
                         Button(action: {
+                            UIApplication.shared.endEditing()
                             viewModel.onUpload {
                                 dismiss()
                             }
@@ -389,9 +408,10 @@ struct TalentEditProfile: View {
 
 				ZStack(alignment: .bottom) {
 					Color.black.opacity(viewModel.showDropDown ? 0.35 : 0)
+                        .isHidden(!viewModel.showDropDown, remove: !viewModel.showDropDown)
 						.onTapGesture {
 							withAnimation(.spring()) {
-								viewModel.showDropDown.toggle()
+								viewModel.showDropDown = false
 							}
 						}
 

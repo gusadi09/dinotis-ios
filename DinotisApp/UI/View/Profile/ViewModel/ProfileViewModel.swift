@@ -18,6 +18,7 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 	private let getUserUseCase: GetUserUseCase
     private let deleteUserUseCase: DeleteAccountUseCase
 	private let coinVerificationUseCase: CoinVerificationUseCase
+    private let sendVerifUseCase: SendVerifRequestUseCase
 
 	var backToHome: () -> Void
 
@@ -29,6 +30,7 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 	private var stateObservable = StateObservable.shared
 
 	@Published var route: HomeRouting?
+    @Published var verifRoute: HomeRouting?
 	@Published var data: UserResponse?
 
 	@Published var isLoading: Bool = false
@@ -89,12 +91,14 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 		backToHome: @escaping (() -> Void),
 		getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
 		deleteUserUseCase: DeleteAccountUseCase = DeleteAccountDefaultUseCase(),
-		coinVerificationUseCase: CoinVerificationUseCase = CoinVerificationDefaultUseCase()
+		coinVerificationUseCase: CoinVerificationUseCase = CoinVerificationDefaultUseCase(),
+        sendVerifUseCase: SendVerifRequestUseCase = SendVerifRequestDefaultUseCase()
 	) {
 		self.backToHome = backToHome
 		self.getUserUseCase = getUserUseCase
 		self.deleteUserUseCase = deleteUserUseCase
 		self.coinVerificationUseCase = coinVerificationUseCase
+        self.sendVerifUseCase = sendVerifUseCase
 	}
 
 	func toggleDeleteModal() {
@@ -239,6 +243,31 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
             handleDefaultError(error: failure)
         }
 	}
+    
+    func sendVerif() async {
+        DispatchQueue.main.async { [weak self] in
+            self?.isLoadingVerified = true
+        }
+        
+        let result = await sendVerifUseCase.execute(with: attachedLinks.compactMap({
+            $0.link
+        }))
+        
+        switch result {
+        case .success(_):
+            DispatchQueue.main.async { [weak self] in
+                self?.isLoadingVerified = false
+                
+                self?.verifRoute = .waitingVerif
+            }
+        case .failure(let failure):
+            DispatchQueue.main.async { [weak self] in
+                self?.isLoadingVerified = false
+                self?.showDinotisVerifiedSheet = false
+            }
+            handleDefaultError(error: failure)
+        }
+    }
 
 	func deleteAccount() async {
 		onStartedFetch()
@@ -458,7 +487,7 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 	}
     
     func routeToCreatorRoom() {
-        let viewModel = CreatorRoomViewModel(profesionSelect: self.userProfession(), backToHome: { self.route = nil })
+        let viewModel = CreatorRoomViewModel(profilePercentage: (data?.profilePercentage).orZero(), profesionSelect: self.userProfession(), backToHome: { self.route = nil })
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .creatorRoom(viewModel: viewModel)
@@ -482,7 +511,7 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 	}
     
     func routeToAvailability() {
-        let viewModel = CreatorAvailabilityViewModel(backToHome: { self.route = nil })
+        let viewModel = CreatorAvailabilityViewModel(profilePercentage: (data?.profilePercentage).orZero(), backToHome: { self.route = nil })
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .creatorAvailability(viewModel: viewModel)

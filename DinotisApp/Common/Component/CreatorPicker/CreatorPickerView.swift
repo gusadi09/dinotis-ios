@@ -182,7 +182,10 @@ struct CreatorPickerView: View {
                                                 meetingCount: nil,
                                                 followerCount: nil,
                                                 rating: nil, 
-                                                userAvailability: nil
+                                                userAvailability: nil,
+                                                profilePercentage: nil,
+                                                verificationStatus: nil,
+                                                isCreator: nil
                                             ),
                                             approvedAt: nil,
                                             declinedAt: nil, bookingCount: 0
@@ -267,7 +270,10 @@ struct CreatorPickerView: View {
                                                 meetingCount: nil,
                                                 followerCount: nil,
                                                 rating: nil,
-                                                userAvailability: nil
+                                                userAvailability: nil,
+                                                profilePercentage: nil,
+                                                verificationStatus: nil,
+                                                isCreator: nil
                                             ),
                                             approvedAt: nil,
                                             declinedAt: nil, bookingCount: 0

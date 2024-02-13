@@ -120,37 +120,44 @@ struct TalentHomeView: View {
                         VStack {
                             VStack(spacing: 0) {
                                 HStack {
-                                    Button {
-                                        homeVM.switchAcount()
-                                    } label: {
-                                        HStack(spacing: 8) {
-                                            Text(LocalizableText.creatorTitle)
-                                                .font(.robotoBold(size: 14))
-                                                .foregroundColor(.white)
-                                            
-                                            HStack(spacing: 4) {
-                                                Image(systemName: "chevron.left")
-                                                    .resizable()
-                                                    .scaledToFit()
+                                    if state.isShowGateway {
+                                        Button {
+                                            homeVM.switchAcount()
+                                        } label: {
+                                            HStack(spacing: 8) {
+                                                Text(LocalizableText.creatorTitle)
+                                                    .font(.robotoBold(size: 14))
+                                                    .foregroundColor(.white)
                                                 
-                                                Image(systemName: "chevron.right")
-                                                    .resizable()
-                                                    .scaledToFit()
+                                                HStack(spacing: 4) {
+                                                    Image(systemName: "chevron.left")
+                                                        .resizable()
+                                                        .scaledToFit()
+                                                    
+                                                    Image(systemName: "chevron.right")
+                                                        .resizable()
+                                                        .scaledToFit()
+                                                }
+                                                .foregroundColor(.DinotisDefault.primary)
+                                                .padding(6)
+                                                .frame(width: 29, height: 29)
+                                                .background(
+                                                    Circle()
+                                                        .fill(Color.white)
+                                                )
                                             }
-                                            .foregroundColor(.DinotisDefault.primary)
                                             .padding(6)
-                                            .frame(width: 29, height: 29)
+                                            .padding(.leading, 6)
                                             .background(
-                                                Circle()
-                                                    .fill(Color.white)
+                                                Capsule()
+                                                    .fill(Color.DinotisDefault.primary)
                                             )
                                         }
-                                        .padding(6)
-                                        .padding(.leading, 6)
-                                        .background(
-                                            Capsule()
-                                                .fill(Color.DinotisDefault.primary)
-                                        )
+                                    } else {
+                                        Image.logoWithText
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(height: 35)
                                     }
                                     
                                     NavigationLink(
@@ -780,9 +787,6 @@ struct TalentHomeView: View {
                     homeVM.offsetY = homeVM.sheetHeight
                 }
             }
-            .fullScreenCover(isPresented: $homeVM.isSwitchingAccount, content: {
-                SwitchAccountAnimation(toCreator: false)
-            })
         }
     }
 }

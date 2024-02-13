@@ -17,6 +17,7 @@ public enum UsersTargetType {
 	case updateImage(EditUserPhotoRequest)
 	case deleteUser
     case creatorAvailability(CreatorAvailabilityRequest)
+    case sendVerifRequest([String])
 }
 
 extension UsersTargetType: DinotisTargetType, AccessTokenAuthorizable {
@@ -38,6 +39,8 @@ extension UsersTargetType: DinotisTargetType, AccessTokenAuthorizable {
 			return .bearer
         case .creatorAvailability(_):
             return .bearer
+        case .sendVerifRequest(_):
+            return .bearer
         }
 	}
 	
@@ -58,6 +61,8 @@ extension UsersTargetType: DinotisTargetType, AccessTokenAuthorizable {
 		case .deleteUser:
 			return URLEncoding.default
         case .creatorAvailability(_):
+            return JSONEncoding.default
+        case .sendVerifRequest(_):
             return JSONEncoding.default
         }
 	}
@@ -84,6 +89,10 @@ extension UsersTargetType: DinotisTargetType, AccessTokenAuthorizable {
 			return [:]
         case .creatorAvailability(let req):
             return req.toJSON()
+        case .sendVerifRequest(let links):
+            return [
+                "links": links
+            ]
         }
 	}
 	
@@ -105,6 +114,8 @@ extension UsersTargetType: DinotisTargetType, AccessTokenAuthorizable {
 			return "/users/me"
         case .creatorAvailability(_):
             return "/users/availability"
+        case .sendVerifRequest(_):
+            return "/users/request-verified"
         }
 	}
 	
@@ -125,6 +136,8 @@ extension UsersTargetType: DinotisTargetType, AccessTokenAuthorizable {
 		case .deleteUser:
 			return .delete
         case .creatorAvailability(_):
+            return .post
+        case .sendVerifRequest(_):
             return .post
         }
 	}

@@ -17,4 +17,5 @@ public protocol UsersRepository {
 	func provideUpdateImage(with photo: EditUserPhotoRequest) async throws -> SuccessResponse
 	func provideDeleteUserAccount() async throws -> SuccessResponse
     func provideCreatorAvailability(body: CreatorAvailabilityRequest) async throws -> SuccessResponse
+    func provideSendVerifRequest(links: [String]) async throws -> VerificationReqResponse
 }
