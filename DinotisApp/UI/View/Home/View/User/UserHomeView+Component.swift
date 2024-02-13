@@ -160,43 +160,51 @@ extension UserHomeView {
 	struct HeaderView: View {
 
 		@EnvironmentObject var homeVM: UserHomeViewModel
+        @ObservedObject var stateObservable = StateObservable.shared
         @Namespace var namespace
 
 		var body: some View {
 			VStack(spacing: 0) {
 
                 HStack(spacing: 5) {
-                    Button {
-                        homeVM.switchAcount()
-                    } label: {
-                        HStack(spacing: 8) {
-                            HStack(spacing: 4) {
-                                Image(systemName: "chevron.left")
-                                    .resizable()
-                                    .scaledToFit()
+                    if stateObservable.isShowGateway {
+                        Button {
+                            homeVM.switchAcount()
+                        } label: {
+                            HStack(spacing: 8) {
+                                HStack(spacing: 4) {
+                                    Image(systemName: "chevron.left")
+                                        .resizable()
+                                        .scaledToFit()
+                                    
+                                    Image(systemName: "chevron.right")
+                                        .resizable()
+                                        .scaledToFit()
+                                }
+                                .foregroundColor(.white)
+                                .padding(6)
+                                .frame(width: 29, height: 29)
+                                .background(
+                                    Circle()
+                                        .fill(Color.DinotisDefault.primary)
+                                )
                                 
-                                Image(systemName: "chevron.right")
-                                    .resizable()
-                                    .scaledToFit()
+                                Text(LocalizableText.personalLabel)
+                                    .font(.robotoBold(size: 14))
+                                    .foregroundColor(.DinotisDefault.primary)
                             }
-                            .foregroundColor(.white)
                             .padding(6)
-                            .frame(width: 29, height: 29)
+                            .padding(.trailing, 6)
                             .background(
-                                Circle()
-                                    .fill(Color.DinotisDefault.primary)
+                                Capsule()
+                                    .fill(Color.DinotisDefault.lightPrimary)
                             )
-                            
-                            Text(LocalizableText.personalLabel)
-                                .font(.robotoBold(size: 14))
-                                .foregroundColor(.DinotisDefault.primary)
                         }
-                        .padding(6)
-                        .padding(.trailing, 6)
-                        .background(
-                            Capsule()
-                                .fill(Color.DinotisDefault.lightPrimary)
-                        )
+                    } else {
+                        Image.logoWithText
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 35)
                     }
 
 					Spacer()

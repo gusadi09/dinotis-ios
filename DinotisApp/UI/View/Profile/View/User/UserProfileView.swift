@@ -275,6 +275,7 @@ struct UserProfileView: View {
                                     .frame(height: 12)
                                     .foregroundColor(.black)
                             }
+                            .contentShape(Rectangle())
                         })
                         .clipShape(Rectangle())
                         

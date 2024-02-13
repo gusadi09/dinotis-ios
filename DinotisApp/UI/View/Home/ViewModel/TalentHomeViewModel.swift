@@ -269,25 +269,13 @@ final class TalentHomeViewModel: ObservableObject {
     }
     
     func switchAcount() {
-        let viewModel = TabViewContainerViewModel(
-            isFromUserType: true,
-            userHomeVM: UserHomeViewModel(),
-            profileVM: ProfileViewModel(backToHome: {}),
-            searchVM: SearchTalentViewModel(backToHome: {}),
-            scheduleVM: ScheduleListViewModel(backToHome: {}, currentUserId: user.id)
-        )
         
         DispatchQueue.main.async { [weak self] in
             self?.isSwitchingAccount = true
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             self?.stateObservable.userType = 3
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now()+0.1) { [weak self] in
-            self?.primaryRoute = .tabContainer(viewModel: viewModel)
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now()+3) { [weak self] in
-            self?.isSwitchingAccount = false
         }
     }
     

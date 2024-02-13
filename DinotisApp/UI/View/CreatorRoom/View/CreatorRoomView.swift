@@ -68,7 +68,7 @@ struct CreatorRoomView: View {
                         .labelsHidden()
                         .tint(Color.DinotisDefault.green)
                         .onChange(of: viewModel.isCreatorModeActive) { newValue in
-                            viewModel.isShowCompleteProfileSheet = newValue == true ? newValue : viewModel.isShowCompleteProfileSheet
+                            viewModel.onChanged(newValue)
                         }
                 }
                 .padding(16)
@@ -95,6 +95,9 @@ struct CreatorRoomView: View {
                 CompleteProfileSheet()
             }
         })
+        .onAppear {
+            viewModel.onAppeared()
+        }
     }
 }
 
@@ -139,7 +142,7 @@ fileprivate struct Preview: View {
     
     var body: some View {
         CreatorRoomView()
-            .environmentObject(CreatorRoomViewModel(profesionSelect: [], backToHome: {}))
+            .environmentObject(CreatorRoomViewModel(profilePercentage: 80.0, profesionSelect: [], backToHome: {}))
     }
 }
 

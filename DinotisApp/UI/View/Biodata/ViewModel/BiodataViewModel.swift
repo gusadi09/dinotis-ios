@@ -376,25 +376,21 @@ final class BiodataViewModel: ObservableObject {
 	}
 
 	func routingToHome() {
-		DispatchQueue.main.async { [weak self] in
-
-			if self?.stateObservable.userType == 2 {
-                let viewModel = TalentHomeViewModel(isFromUserType: true)
-				self?.route = .homeTalent(viewModel: viewModel)
-			} else {
-				let vm = TabViewContainerViewModel(
-                    isFromUserType: true,
-                    userHomeVM: UserHomeViewModel(),
-                    profileVM: ProfileViewModel(backToHome: {}),
-					searchVM: SearchTalentViewModel(backToHome: {}),
-                    scheduleVM: ScheduleListViewModel(backToHome: {}, currentUserId: (self?.userData?.id).orEmpty())
-				)
-
-				DispatchQueue.main.async { [weak self] in
-					self?.route = .tabContainer(viewModel: vm)
-				}
-			}
-		}
+        DispatchQueue.main.async { [weak self] in
+            
+            let vm = TabViewContainerViewModel(
+                isFromUserType: true, 
+                talentHomeVM: TalentHomeViewModel(isFromUserType: true),
+                userHomeVM: UserHomeViewModel(),
+                profileVM: ProfileViewModel(backToHome: {}),
+                searchVM: SearchTalentViewModel(backToHome: {}),
+                scheduleVM: ScheduleListViewModel(backToHome: {}, currentUserId: (self?.userData?.id).orEmpty())
+            )
+            
+            DispatchQueue.main.async { [weak self] in
+                self?.route = .tabContainer(viewModel: vm)
+            }
+        }
 
 	}
 

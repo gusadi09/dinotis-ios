@@ -501,19 +501,13 @@ final class UserHomeViewModel: NSObject, ObservableObject {
     }
     
     func switchAcount() {
-        let viewModel = TalentHomeViewModel(isFromUserType: true)
         
         DispatchQueue.main.async { [weak self] in
             self?.isSwitchingAccount = true
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             self?.stateObservable.userType = 2
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now()+0.1) { [weak self] in
-            self?.primaryRoute = .homeTalent(viewModel: viewModel)
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now()+3) { [weak self] in
-            self?.isSwitchingAccount = false
         }
     }
     
@@ -1441,7 +1435,7 @@ final class UserHomeViewModel: NSObject, ObservableObject {
                 self?.productSelected = nil
             case .extraFee:
                 self?.isLoadingExtraFee = false
-            case .followingSession(let isLoadMore):
+            case .followingSession(_):
                 self?.isLoadMoreFollowingSession = false
                 self?.isLoadingFollowingSession = false
             }

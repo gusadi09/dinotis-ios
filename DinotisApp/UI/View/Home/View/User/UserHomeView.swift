@@ -102,9 +102,7 @@ struct UserHomeView: View {
             .navigationBarTitle(Text(""))
             .navigationBarHidden(true)
             .onAppear {
-                if homeVM.sessionContent.isEmpty {
-                    homeVM.onScreenAppear(geo: geo)
-                }
+                homeVM.onScreenAppear(geo: geo)
                 
                 AppDelegate.orientationLock = .portrait
                 
@@ -205,9 +203,6 @@ struct UserHomeView: View {
                 }
                 .dynamicTypeSize(.large)
             }
-        })
-        .fullScreenCover(isPresented: $homeVM.isSwitchingAccount, content: {
-            SwitchAccountAnimation(toCreator: true)
         })
     }
 }

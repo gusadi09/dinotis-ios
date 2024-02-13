@@ -10,19 +10,24 @@ import Foundation
 
 final class CreatorRoomViewModel: ObservableObject {
     
+    private let state = StateObservable.shared
+    
     @Published var route: HomeRouting?
     
     @Published var profesionSelect: [ProfessionData]
     
     @Published var isCreatorModeActive = false
     @Published var isShowCompleteProfileSheet = false
+    @Published var profilePercentage: Double
     
     var backToHome: () -> Void
     
     init(
+        profilePercentage: Double,
         profesionSelect: [ProfessionData],
         backToHome: @escaping () -> Void
     ) {
+        self.profilePercentage = profilePercentage
         self.profesionSelect = profesionSelect
         self.backToHome = backToHome
     }
@@ -39,5 +44,17 @@ final class CreatorRoomViewModel: ObservableObject {
         }
     }
     
+    func onAppeared() {
+        isCreatorModeActive = state.isShowGateway
+    }
     
+    func onChanged(_ isShow: Bool) {
+        guard profilePercentage >= 100.0 else {
+            isShowCompleteProfileSheet = true
+            isCreatorModeActive = false
+            return
+        }
+        
+        state.isShowGateway = isShow
+    }
 }

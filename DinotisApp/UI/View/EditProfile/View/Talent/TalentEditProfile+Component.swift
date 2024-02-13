@@ -48,7 +48,7 @@ extension TalentEditProfile {
                             }
                     }
                     
-                    if viewModel.userHighlightImageCount < 6 {
+                    if viewModel.userHighlightImageCount < 3 {
                         AddPhotoButton()
                     }
                 }

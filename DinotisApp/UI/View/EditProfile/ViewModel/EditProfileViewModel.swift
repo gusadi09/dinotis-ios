@@ -257,6 +257,18 @@ final class EditProfileViewModel: ObservableObject {
         }
     }
     
+    func limitUsernameText(_ upper: Int = 32) {
+        if username.count > upper {
+            username = String(username.prefix(upper))
+        }
+    }
+    
+    func limitBioText(_ upper: Int = 256) {
+        if bio.count > upper {
+            bio = String(bio.prefix(upper))
+        }
+    }
+    
     func onStartRefresh() {
         DispatchQueue.main.async { [weak self] in
             self?.isRefreshFailed = false
@@ -291,6 +303,14 @@ final class EditProfileViewModel: ObservableObject {
         }
     }
     
+    func routeToPreviewProfile() {
+        let viewModel = PreviewTalentViewModel()
+
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .previewTalent(viewModel: viewModel)
+        }
+    }
+    
     func uploadSingleImage(dismiss: @escaping () -> Void) async {
         onStartFetch()
         
@@ -300,7 +320,6 @@ final class EditProfileViewModel: ObservableObject {
             
             switch result {
             case .success(let success):
-                if self.stateObservable.userType == 2 {
                     let multipleHighlight = self.userHighlightsImage.compactMap { item in
                         if item != UIImage() {
                             return item
@@ -355,16 +374,16 @@ final class EditProfileViewModel: ObservableObject {
                             }
                         }
                     }
-                } else {
-                    DispatchQueue.main.async {[weak self] in
-                        self?.isLoading = false
-                        self?.success = true
-                    }
-                    
-                    Task {
-                        await self.updateUser(imageUrl: success, userHighlight: [], dismiss: dismiss)
-                    }
-                }
+//                } else {
+//                    DispatchQueue.main.async {[weak self] in
+//                        self?.isLoading = false
+//                        self?.success = true
+//                    }
+//                    
+//                    Task {
+//                        await self.updateUser(imageUrl: success, userHighlight: [], dismiss: dismiss)
+//                    }
+//                }
             case .failure(let failure):
                 withAnimation {
                     DispatchQueue.main.async {[weak self] in
@@ -385,7 +404,6 @@ final class EditProfileViewModel: ObservableObject {
                 }
             }
         } else {
-            if self.stateObservable.userType == 2 {
                 let multipleHighlight = self.userHighlightsImage.compactMap { item in
                     if item != UIImage() {
                         return item
@@ -439,16 +457,6 @@ final class EditProfileViewModel: ObservableObject {
                         }
                     }
                 }
-            } else {
-                DispatchQueue.main.async {[weak self] in
-                    self?.isLoading = false
-                    self?.success = true
-                }
-                
-                Task {
-                    await self.updateUser(imageUrl: "", userHighlight: [], dismiss: dismiss)
-                }
-            }
         }
     }
     

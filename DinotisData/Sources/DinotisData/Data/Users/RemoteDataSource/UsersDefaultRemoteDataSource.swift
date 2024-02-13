@@ -48,4 +48,8 @@ public final class UsersDefaultRemoteDataSource: UsersRemoteDataSource {
     public func creatorAvailability(body: CreatorAvailabilityRequest) async throws -> SuccessResponse {
         try await self.provider.request(.creatorAvailability(body), model: SuccessResponse.self)
     }
+    
+    public func sendVerifRequest(links: [String]) async throws -> VerificationReqResponse {
+        try await self.provider.request(.sendVerifRequest(links), model: VerificationReqResponse.self)
+    }
 }

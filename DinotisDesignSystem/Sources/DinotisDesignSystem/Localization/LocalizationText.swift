@@ -3711,6 +3711,16 @@ public enum LocalizableText {
         bundle: .module,
         comment: "add photo label"
     )
+    public static let authNewRegisterTitle = NSLocalizedString(
+        "authentication_new_register_title",
+        bundle: .module,
+        comment: "register"
+    )
+    public static let authNewLoginTitle = NSLocalizedString(
+        "authentication_new_login_title",
+        bundle: .module,
+        comment: "login"
+    )
     public static let justJoinedLabel = NSLocalizedString(
         "just_joined_label",
         bundle: .module,
@@ -3731,5 +3741,4 @@ public enum LocalizableText {
         bundle: .module,
         comment: "find creators label"
     )
-    
 }

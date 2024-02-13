@@ -121,13 +121,9 @@ final class LoginViewModel: ObservableObject {
         }
     }
 	
-	func loginButtonText() -> String {
-        if stateObservable.userType == 2 {
-            return isRegister ? LocalizableText.labelJoinNow : LocalizableText.loginLabel
-        } else {
-            return isRegister ? LocalizableText.labelSendOTP : LocalizableText.loginLabel
-        }
-	}
+    func loginButtonText() -> String {
+        return isRegister ? LocalizableText.labelSendOTP : LocalizableText.loginLabel
+    }
 	
 	func firstBottomLineText() -> String {
 		isRegister ? LocalizableText.linkLoginHere : LocalizableText.linkRegisterHere
@@ -338,28 +334,23 @@ final class LoginViewModel: ObservableObject {
 	}
 	
 	func routeToHome() {
-		DispatchQueue.main.async { [weak self] in
-			
-			if self?.stateObservable.userType == 3 {
-				let vm = TabViewContainerViewModel(
-                    isFromUserType: true,
-                    userHomeVM: UserHomeViewModel(),
-					profileVM: ProfileViewModel(backToHome: {}),
-					searchVM: SearchTalentViewModel(backToHome: {}),
-                    scheduleVM: ScheduleListViewModel(backToHome: {}, currentUserId: "")
-				)
-
-				DispatchQueue.main.async { [weak self] in
-					self?.route = .tabContainer(viewModel: vm)
-				}
-			} else if self?.stateObservable.userType == 2 {
-                let viewModel = TalentHomeViewModel(isFromUserType: true)
-				
-				self?.route = .homeTalent(viewModel: viewModel)
-			}
-		}
-	}
-	
+        DispatchQueue.main.async { [weak self] in
+            
+            let vm = TabViewContainerViewModel(
+                isFromUserType: true,
+                talentHomeVM: TalentHomeViewModel(isFromUserType: true),
+                userHomeVM: UserHomeViewModel(),
+                profileVM: ProfileViewModel(backToHome: {}),
+                searchVM: SearchTalentViewModel(backToHome: {}),
+                scheduleVM: ScheduleListViewModel(backToHome: {}, currentUserId: "")
+            )
+            
+            DispatchQueue.main.async { [weak self] in
+                self?.route = .tabContainer(viewModel: vm)
+            }
+        }
+    }
+    
 	func loginErrorTextForTalent() -> String {
 		statusCode == 401 ? LocaleText.talentNotRegisterError : error.orEmpty()
 	}

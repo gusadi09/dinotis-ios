@@ -11,6 +11,8 @@ public struct SwitchAccountAnimation: View {
     
     private let toCreator: Bool
     
+    @Binding var switcher: Bool
+    
     private var title: String {
         toCreator ? LocalizableText.welcomeToCreatorModeTitle : LocalizableText.welcomeToPersonalModeTitle
     }
@@ -23,7 +25,8 @@ public struct SwitchAccountAnimation: View {
         toCreator ? LottieAssetName.personalToCreator : LottieAssetName.creatorToPersonal
     }
     
-    public init(toCreator: Bool = false) {
+    public init(switcher: Binding<Bool>, toCreator: Bool = false) {
+        self._switcher = switcher
         self.toCreator = toCreator
     }
     
@@ -54,6 +57,11 @@ public struct SwitchAccountAnimation: View {
                 .offset(y: 32)
         }
         .ignoresSafeArea(edges: .bottom)
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now()+3) {
+                self.switcher = false
+            }
+        }
     }
 }
 
@@ -79,7 +87,7 @@ fileprivate struct Preview: View {
             }
         }
         .fullScreenCover(isPresented: $show, content: {
-            SwitchAccountAnimation(toCreator: toCreator)
+            SwitchAccountAnimation(switcher: .constant(false), toCreator: toCreator)
                 .onAppear {
                     DispatchQueue.main.asyncAfter(deadline: .now()+3) {
                         self.show = false

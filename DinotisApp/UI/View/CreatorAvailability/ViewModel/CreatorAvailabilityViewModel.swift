@@ -31,6 +31,8 @@ final class CreatorAvailabilityViewModel: ObservableObject {
     @Published var error = ""
     @Published var isSuccess = false
     
+    @Published var profilePercentage: Double
+    
     var backToHome: () -> Void
     
     var subscriptionTypeText: String {
@@ -45,10 +47,12 @@ final class CreatorAvailabilityViewModel: ObservableObject {
     }
     
     init(
+        profilePercentage: Double,
         creatorAvailabilityUseCase: SetCreatorAvailabilityUseCase = SetCreatorAvailabilityDefaultUseCase(),
         getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
         backToHome: @escaping () -> Void
     ) {
+        self.profilePercentage = profilePercentage
         self.backToHome = backToHome
         self.creatorAvailabilityUseCase = creatorAvailabilityUseCase
         self.getUserUseCase = getUserUseCase
@@ -105,6 +109,25 @@ final class CreatorAvailabilityViewModel: ObservableObject {
         Task {
             await getUser()
         }
+    }
+    
+    func onAppeared() {
+        isCreatorModeActive = stateObservable.isShowGateway
+    }
+    
+    func onChanged(_ isShow: Bool) {
+        print("PROFFF ", profilePercentage)
+        guard profilePercentage >= 100.0 else {
+            isShowCompleteProfileSheet = true
+            isCreatorModeActive = true
+            return
+        }
+        
+        if !isShow {
+            stateObservable.userType = 3
+        }
+        
+        stateObservable.isShowGateway = isShow
     }
     
     func setAvailability() async {
