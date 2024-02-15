@@ -6,10 +6,12 @@
   
 */
 
-"title_boarding_first" = "Chat with Awesome Creators!";
-"description_boarding_first" = "Meet with great creators from various profession? only here is the place";
-"title_boarding_second" = "Anytime and anywhere";
-"description_boarding_second" = "Are you satisfied just hearing the sound? \nIf you chat here, you can see each other!";
+"title_boarding_first" = "Meet inspiring Creators";
+"description_boarding_first" = "A place for you to get inspired by Creators from any fields";
+"title_boarding_second" = "Video Call anytime, anywhere";
+"description_boarding_second" = "Interact with your favorite Creators real time!";
+"title_boarding_third" = "You can be a Creator, too!";
+"description_boarding_third" = "Share your ideas and stories, manage everything independently!";
 "title_role_type" = "Various interesting sessions for you";
 "description_role_type" = "Please choose the type of account that suits for you!";
 "general_success" = "Success";

@@ -15,6 +15,7 @@ public extension Image {
     
     static let onboardingSlide1Image = Image("img-slide1-onboarding", bundle: Bundle.module)
     static let onboardingSlide2Image = Image("img-slide2-onboarding", bundle: Bundle.module)
+    static let onboardingSlide3Image = Image("img-slide3-onboarding", bundle: Bundle.module)
     
     static let loginAudienceImage = Image("img-audience-login", bundle: Bundle.module)
     static let loginCreatorImage = Image("img-creator-login", bundle: Bundle.module)

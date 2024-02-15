@@ -49,6 +49,17 @@ final class OtpVerificationViewModel: ObservableObject {
     
     @Published var phoneNumber: String
     
+    var headerTitle: String {
+        switch otpType {
+        case .register:
+            LocalizableText.titleRegisterAudience
+        case .forgetPassword:
+            LocalizableText.titleForgotPassword
+        case .login:
+            LocalizableText.loginTitle
+        }
+    }
+    
     var onBackToRoot: () -> Void
     var backToLogin: () -> Void
     var backToPhoneSet: () -> Void
@@ -93,6 +104,7 @@ final class OtpVerificationViewModel: ObservableObject {
         }
     }
     
+    @MainActor
     func onReceiveTimer() {
         if self.timeRemaining > 0 {
             self.timeRemaining -= 1

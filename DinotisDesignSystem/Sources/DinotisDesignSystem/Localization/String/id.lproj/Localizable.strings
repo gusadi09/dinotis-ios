@@ -6,10 +6,12 @@
   
 */
 
-"title_boarding_first" = "Ngobrol bareng Kreator Hebat!";
-"description_boarding_first" = "Ketemuan dengan kreator hebat dari berbagai bidang? hanya disini tempatnya";
-"title_boarding_second" = "Kapan saja dan di mana saja";
-"description_boarding_second" = "Denger suara doang emang puas? \nKalau ngobrol di sini bisa sambil tatap-tatapan!";
+"title_boarding_first" = "Ngobrol bareng Kreator inspiratif";
+"description_boarding_first" = "Ketemu Kreator berbagai bidang buat dapat inspirasi, ya cuma di sini!";
+"title_boarding_second" = "Video Call kapan saja, di mana saja";
+"description_boarding_second" = "Enggak cuma dengar suara, kamu bisa lihat langsung sang idola!";
+"title_boarding_third" = "Kamu juga bisa jadi Kreator";
+"description_boarding_third" = "Berbagi ide & cerita, semua bisa kamu lakukan sendiri!";
 "title_role_type" = "Berbagai sesi menarik untukmu";
 "description_role_type" = "Silahkan pilih tipe akun yang sesuai untukmu!";
 "general_success" = "Berhasil";

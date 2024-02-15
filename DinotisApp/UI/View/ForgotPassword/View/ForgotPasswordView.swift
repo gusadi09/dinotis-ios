@@ -34,41 +34,38 @@ struct ForgotPasswordView: View {
                 ZStack(alignment: .topLeading) {
 					Color.DinotisDefault.baseBackground
 						.edgesIgnoringSafeArea(.all)
+                    
+                    Image.backgroundAuthenticationImage
+                        .resizable()
+                        .ignoresSafeArea()
 
 					VStack(spacing: 0) {
-						HeaderView(
-							type: .imageHeader(.generalDinotisImage, 25),
-							title: "",
-							leadingButton: {
-								DinotisElipsisButton(
-									icon: .generalBackIcon,
-									iconColor: .DinotisDefault.black1,
-									bgColor: .DinotisDefault.white,
-									strokeColor: nil,
-									iconSize: 12,
-									type: .primary, {
-										dismiss()
-									}
-								)
-							},
-							trailingButton: {
-								Button {
-									viewModel.openWhatsApp()
-								} label: {
-									Image.generalQuestionIcon
-										.resizable()
-										.scaledToFit()
-										.frame(height: 25)
-								}
-							}
-						)
+                        HeaderView(
+                            type: .textHeader,
+                            title: LocalizableText.titleForgotPassword,
+                            headerColor: .clear,
+                            textColor: .white,
+                            leadingButton: {
+                                DinotisElipsisButton(
+                                    icon: .generalBackIcon,
+                                    iconColor: .DinotisDefault.black1,
+                                    bgColor: .DinotisDefault.white,
+                                    strokeColor: nil,
+                                    iconSize: 12,
+                                    type: .primary, {
+                                        dismiss()
+                                    }
+                                )
+                            })
 
 						ScrollView(.vertical, showsIndicators: false) {
 							VStack(spacing: 20) {
 								VStack(spacing: 10) {
-									Text(LocalizableText.titleForgotPassword)
-										.font(.robotoBold(size: 28))
-										.foregroundColor(.DinotisDefault.black1)
+                                    Image.generalDinotisImage
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 50)
+                                        .padding(.vertical)
 
 									Text(LocalizableText.descriptionForgotPassword)
 										.font(.robotoRegular(size: 12))
@@ -98,20 +95,36 @@ struct ForgotPasswordView: View {
 										.foregroundColor(.DinotisDefault.black1)
 									}
 								}
+                                
+                                DinotisPrimaryButton(
+                                    text: LocalizableText.labelSendOTP,
+                                    type: .adaptiveScreen,
+                                    textColor: viewModel.isButtonDisable() ? .DinotisDefault.lightPrimaryActive : .DinotisDefault.white,
+                                    bgColor: viewModel.isButtonDisable() ? .DinotisDefault.lightPrimary : .DinotisDefault.primary
+                                ) {
+                                    viewModel.isShowSelectChannel.toggle()
+                                }
+                                .disabled(viewModel.isButtonDisable())
+                                
+                                HStack {
+                                    Button {
+                                        viewModel.openWhatsApp()
+                                    } label: {
+                                        Image.generalMessageTextIcon
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 18)
+                                        
+                                        Text(LocalizableText.needHelpQuestion)
+                                            .font(.robotoMedium(size: 12))
+                                            .fontWeight(.semibold)
+                                            .foregroundStyle(Color.DinotisDefault.primary)
+                                    }
+
+                                }
 							}
 							.padding()
 						}
-
-						DinotisPrimaryButton(
-							text: LocalizableText.labelSendOTP,
-							type: .adaptiveScreen,
-							textColor: viewModel.isButtonDisable() ? .DinotisDefault.lightPrimaryActive : .DinotisDefault.white,
-							bgColor: viewModel.isButtonDisable() ? .DinotisDefault.lightPrimary : .DinotisDefault.primary
-						) {
-							viewModel.isShowSelectChannel.toggle()
-						}
-						.disabled(viewModel.isButtonDisable())
-						.padding()
 					}
                 }
                 
@@ -172,8 +185,19 @@ struct ForgotPasswordView: View {
 	}
 }
 
+fileprivate struct Preview: View {
+    
+    init() {
+        FontInjector.registerFonts()
+    }
+    
+    var body: some View {
+        ForgotPasswordView(viewModel: ForgotPasswordViewModel(backToRoot: {}, backToLogin: {}))
+    }
+}
+
 struct ForgotPasswordView_Previews: PreviewProvider {
 	static var previews: some View {
-		ForgotPasswordView(viewModel: ForgotPasswordViewModel(backToRoot: {}, backToLogin: {}))
+		Preview()
 	}
 }

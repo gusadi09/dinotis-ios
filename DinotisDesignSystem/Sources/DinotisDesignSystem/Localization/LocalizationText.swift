@@ -19,14 +19,24 @@ public enum LocalizableText {
 		comment: "This string usage for first boarding content desription"
 	)
 	public static let secondOnboardingTitle = NSLocalizedString(
-		"title_boarding_second",
+        "title_boarding_second",
+        bundle: .module,
+        comment: "This string usage for second content boarding title"
+    )
+    public static let descriptionSecondOnboardingContent = NSLocalizedString(
+        "description_boarding_second",
+        bundle: .module,
+        comment: "This string usage for second boarding content desription"
+    )
+    public static let thirdOnboardingTitle = NSLocalizedString(
+		"title_boarding_third",
 		bundle: .module,
-		comment: "This string usage for second content boarding title"
+		comment: "This string usage for third content boarding title"
 	)
-	public static let descriptionSecondOnboardingContent = NSLocalizedString(
-		"description_boarding_second",
+	public static let descriptionThirdOnboardingContent = NSLocalizedString(
+		"description_boarding_third",
 		bundle: .module,
-		comment: "This string usage for second boarding content desription"
+		comment: "This string usage for third boarding content desription"
 	)
 	public static let titleRoleType = NSLocalizedString(
 		"title_role_type",
