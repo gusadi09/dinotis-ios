@@ -108,7 +108,8 @@ struct UserProfileView: View {
                             profilePhoto: $viewModel.userPhotos,
                             name: $viewModel.names,
                             width: 80,
-                            height: 80
+                            height: 80,
+                            shape: RoundedRectangle(cornerRadius: 12)
                         )
                         
                         VStack(alignment: .leading, spacing: 10) {

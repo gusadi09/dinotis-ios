@@ -546,6 +546,7 @@
 
 "edit_profile_name_empty_error" = "Mohon isi nama kamu, kolom ini tidak boleh kosong";
 "edit_profile_username_empty_error" = "Mohon isi username kamu, kolom ini tidak boleh kosong";
+"edit_profile_username_less_than_error" = "Username harus lebih dari 6 karakter";
 "edit_profile_bio_empty_error" = "Mohon isi bio kamu, kolom ini tidak boleh kosong";
 "edit_profile_profession_empty_error" = "Mohon isi profesi kamu, kolom ini tidak boleh kosong";
 
@@ -804,3 +805,33 @@
 "nearest_session_label" = "Sesi terdekat";
 "all_session_label" = "Semua Sesi";
 "find_creators_label" = "Temukan Kreator";
+
+"dinotis_verified_title" = "Dinotis Verified";
+"verified_landing_title" = "Bangun kepercayaan dengan Dinotis Verified";
+"verified_landing_point1_title" = "Verification Badge";
+"verified_landing_point1_subtitle" = "Jadi lebih otentik dan kredibel di mata Audiens.";
+"verified_landing_point2_title" = "Buat sesi tidak terbatas";
+"verified_landing_point2_subtitle" = "Buat sesi group/private video call tak terbatas.";
+"verified_landing_point3_title" = "Keuntungan pengaturan lebih banyak";
+"verified_landing_point3_subtitle" = "Atur jumlah audiens hingga tak terbatas, atur biaya manajemen, hingga melampirkan file untuk mendukung sesi-mu.";
+
+"verified_waiting_success_title" = "Pengajuan verifikasi berhasil terkirim";
+"verified_waiting_success_subtitle" = "Dinotis akan meninjau akun kamu dalam 2x24 jam. Jika memenuhi kriteria, badge verifikasi akan terpasang pada akun kamu secara otomatis. Terimakasih sudah menunggu!";
+
+"verified_success_title" = "Akun kamu telah terverifikasi";
+"verified_success_subtitle" = "Sekarang kamu bisa akses semua fitur terbaik di Dinotis. Klik di sini untuk mulai buat sesi!";
+
+"verified_failed_title" = "Pengajuan verifikasi gagal";
+"verified_failed_subtitle" = "Kamu dapat mengajukan verifikasi kembali.";
+"verified_failed_reverify" = "Verifikasi Kembali";
+
+"verified_form_title" = "Minta Verifikasi";
+"verified_form_completed_subtitle" = "Pastikan informasi kamu sudah lengkap";
+"verified_form_attach_links_title" = "Sisipkan Link Lainnya";
+"verified_form_link_subtitle" = "Tambahkan sosial media kamu seperti instagram, twitter dan sejenisnya ataupun artikel yang memastikan kredibilitas kamu.";
+"verified_form_link_placeholder" = "Masukkan link tambahan kamu disini...";
+"verified_form_add_more" = "+ Tambah Lainnya";
+"verified_form_invalid_url" = "Format link kamu tidak sesuai, mohon cek kembali.";
+"verified_form_agreement_first" = "Pastikan anda telah menyetujui ";
+"verified_form_agreement_mid" = "Persyaratan Layanan";
+"verified_form_agreement_last" = " Dinotis & mengakui bahwa Pemberitahuan Privasi kami berlaku.";

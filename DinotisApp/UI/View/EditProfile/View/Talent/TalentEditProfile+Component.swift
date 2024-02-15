@@ -30,9 +30,16 @@ extension TalentEditProfile {
 
         var body: some View {
             VStack(alignment: .leading, spacing: 8) {
-                Text(LocalizableText.galleryWithCounter(with: viewModel.userHighlightImageCount))
-                    .font(.robotoMedium(size: 12))
-                    .foregroundColor(.DinotisDefault.black1)
+                (
+                    Text(LocalizableText.galleryWithCounter(with: viewModel.userHighlightImageCount))
+                        .font(.robotoMedium(size: 12))
+                        .foregroundColor(.DinotisDefault.black1)
+                    +
+                    Text("*")
+                        .font(.robotoMedium(size: 12))
+                        .foregroundColor(.DinotisDefault.red)
+                )
+                .multilineTextAlignment(.leading)
                 
                 LazyVGrid(columns: grid, spacing: 8) {
                     ForEach(viewModel.userHighlightsImage.indices, id: \.self) { index in

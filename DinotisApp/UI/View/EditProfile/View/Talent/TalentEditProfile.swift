@@ -95,9 +95,16 @@ struct TalentEditProfile: View {
                                             .foregroundColor(.DinotisDefault.black1)
                                         
                                         VStack(alignment: .leading, spacing: 8) {
-                                            Text(LocaleText.nameText)
-                                                .font(.robotoMedium(size: 12))
-                                                .foregroundColor(.DinotisDefault.black1)
+                                            (
+                                                Text(LocaleText.nameText)
+                                                    .font(.robotoMedium(size: 12))
+                                                    .foregroundColor(.DinotisDefault.black1)
+                                                +
+                                                Text("*")
+                                                    .font(.robotoMedium(size: 12))
+                                                    .foregroundColor(.DinotisDefault.red)
+                                            )
+                                            .multilineTextAlignment(.leading)
                                             
                                             DinotisTextField(
                                                 LocaleText.nameHint,
@@ -126,10 +133,17 @@ struct TalentEditProfile: View {
                                         }
                                         
                                         VStack(alignment: .leading, spacing: 8) {
-                                            Text(LocalizableText.labelFormProfession)
-                                                .font(.robotoMedium(size: 12))
-                                                .foregroundColor(.DinotisDefault.black1)
-                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                            (
+                                                Text(LocalizableText.labelFormProfession)
+                                                    .font(.robotoMedium(size: 12))
+                                                    .foregroundColor(.DinotisDefault.black1)
+                                                +
+                                                Text("*")
+                                                    .font(.robotoMedium(size: 12))
+                                                    .foregroundColor(.DinotisDefault.red)
+                                            )
+                                            .multilineTextAlignment(.leading)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
                                             
                                             HStack {
                                                 HStack {
@@ -189,9 +203,16 @@ struct TalentEditProfile: View {
                                         }
                                         
                                         VStack(alignment: .leading, spacing: 8) {
-                                            Text(LocalizableText.profileDinotisLinkWithCounter(with: viewModel.username.count))
-                                                .font(.robotoMedium(size: 12))
-                                                .foregroundColor(.DinotisDefault.black1)
+                                            (
+                                                Text(LocalizableText.profileDinotisLinkWithCounter(with: viewModel.username.count))
+                                                    .font(.robotoMedium(size: 12))
+                                                    .foregroundColor(.DinotisDefault.black1)
+                                                +
+                                                Text("*")
+                                                    .font(.robotoMedium(size: 12))
+                                                    .foregroundColor(.DinotisDefault.red)
+                                            )
+                                            .multilineTextAlignment(.leading)
                                             
                                             HStack(spacing: 8) {
                                                 Image.profileLinkIcon
@@ -209,10 +230,22 @@ struct TalentEditProfile: View {
                                                     text: $viewModel.username,
                                                     errorText: .constant(nil), trailingButton:  {
                                                         if viewModel.isUsernameAvail && !viewModel.isLoadingUserName {
-                                                            Image.Dinotis.verifiedCorrectIcon
-                                                                .resizable()
-                                                                .scaledToFit()
-                                                                .frame(height: 18)
+                                                            if viewModel.username.count < 6 {
+                                                                Image(systemName: "xmark")
+                                                                    .resizable()
+                                                                    .font(Font.system(size: 8, weight: .semibold))
+                                                                    .scaledToFit()
+                                                                    .frame(height: 8)
+                                                                    .padding(3)
+                                                                    .foregroundColor(Color.white)
+                                                                    .background(Color.red)
+                                                                    .clipShape(Circle())
+                                                            } else {
+                                                                Image.Dinotis.verifiedCorrectIcon
+                                                                    .resizable()
+                                                                    .scaledToFit()
+                                                                    .frame(height: 18)
+                                                            }
                                                         } else if !viewModel.isUsernameAvail && !viewModel.username.isEmpty && !viewModel.isLoadingUserName {
                                                             if viewModel.username == viewModel.userData?.username {
                                                                 EmptyView()
@@ -265,6 +298,22 @@ struct TalentEditProfile: View {
                                                     Spacer()
                                                 }
                                             }
+                                            
+                                            if viewModel.username.count < 6 {
+                                                HStack {
+                                                    Image.Dinotis.exclamationCircleIcon
+                                                        .resizable()
+                                                        .scaledToFit()
+                                                        .frame(height: 10)
+                                                        .foregroundColor(.red)
+                                                    Text(LocalizableText.editProfileUsernameLessError)
+                                                        .font(.robotoRegular(size: 10))
+                                                        .foregroundColor(.red)
+                                                        .multilineTextAlignment(.leading)
+                                                    
+                                                    Spacer()
+                                                }
+                                            }
                                         }
                                     }
                                     
@@ -274,9 +323,16 @@ struct TalentEditProfile: View {
                                             .foregroundColor(.DinotisDefault.black1)
                                         
                                         VStack(alignment: .leading, spacing: 8) {
-                                            Text(LocalizableText.phoneNumberLabel)
-                                                .font(.robotoMedium(size: 12))
-                                                .foregroundColor(.DinotisDefault.black1)
+                                            (
+                                                Text(LocalizableText.phoneNumberLabel)
+                                                    .font(.robotoMedium(size: 12))
+                                                    .foregroundColor(.DinotisDefault.black1)
+                                                +
+                                                Text("*")
+                                                    .font(.robotoMedium(size: 12))
+                                                    .foregroundColor(.DinotisDefault.red)
+                                            )
+                                            .multilineTextAlignment(.leading)
                                             
                                             DinotisTextField(
                                                 viewModel.phone,
@@ -328,9 +384,16 @@ struct TalentEditProfile: View {
                                         }
                                         
                                         VStack(alignment: .leading, spacing: 8) {
-                                            Text(LocalizableText.aboutMeWithCounter(with: viewModel.bio.count))
-                                                .font(.robotoMedium(size: 12))
-                                                .foregroundColor(.DinotisDefault.black1)
+                                            (
+                                                Text(LocalizableText.aboutMeWithCounter(with: viewModel.bio.count))
+                                                    .font(.robotoMedium(size: 12))
+                                                    .foregroundColor(.DinotisDefault.black1)
+                                                +
+                                                Text("*")
+                                                    .font(.robotoMedium(size: 12))
+                                                    .foregroundColor(.DinotisDefault.red)
+                                            )
+                                            .multilineTextAlignment(.leading)
                                             
                                             DinotisTextEditor(
                                                 LocalizableText.hintFormBio,
@@ -373,29 +436,28 @@ struct TalentEditProfile: View {
                             }
                         })
                         
-                        Button(action: {
+                        DinotisPrimaryButton(
+                            text: LocaleText.saveText,
+                            type: .adaptiveScreen,
+                            height: 45,
+                            textColor: .white,
+                            bgColor: .DinotisDefault.primary,
+                            isLoading: $viewModel.isLoading
+                        ) {
                             UIApplication.shared.endEditing()
                             viewModel.onUpload {
                                 dismiss()
                             }
-                        }, label: {
-                            HStack {
-                                Spacer()
-                                Text(LocaleText.saveText)
-                                    .font(.robotoMedium(size: 12))
-                                    .foregroundColor(viewModel.isAvailableToSaveUser() && !profesionSelect.isEmpty ? .white : .black.opacity(0.6))
-                                    .padding(10)
-                                    .padding(.horizontal, 5)
-                                    .padding(.vertical, 5)
-                                
-                                Spacer()
-                            }
-                            .background(viewModel.isAvailableToSaveUser() && !profesionSelect.isEmpty ? Color.DinotisDefault.primary : Color(.systemGray5))
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                        })
+                        }
                         .padding()
                         .background(Color.white.edgesIgnoringSafeArea(.all))
-                        .disabled(!viewModel.isAvailableToSaveUser() || profesionSelect.isEmpty)
+                        .disabled(
+                            !viewModel.isAvailableToSaveUser(false) &&
+                            viewModel.username.count < 6 &&
+                            !profesionSelect.isEmpty ||
+                            viewModel.userHighlightImageCount <= 0 ||
+                            viewModel.isLoadingUserName
+                        )
                         
                     }
 					.onAppear {

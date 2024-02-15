@@ -170,7 +170,7 @@ final class LoginViewModel: ObservableObject {
     
     func isButtonDisable() -> Bool {
 		if stateObservable.userType == 2 {
-			return (isRegister ? (phone.phone.isEmpty || invitationCode.isEmpty) : (phone.password.isEmpty || phone.phone.isEmpty))
+			return (isRegister ? (phone.phone.isEmpty) : (phone.password.isEmpty || phone.phone.isEmpty))
 		} else {
 			return (isRegister ? phone.phone.isEmpty : (phone.password.isEmpty || phone.phone.isEmpty))
 		}

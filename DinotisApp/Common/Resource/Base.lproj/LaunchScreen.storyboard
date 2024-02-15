@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
-    <device id="retina4_7" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+    <device id="retina4_0" orientation="portrait" appearance="light"/>
     <accessibilityOverrides dynamicTypePreference="2"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -15,21 +15,19 @@
             <objects>
                 <viewController id="01J-lp-oVM" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splashscreen-bg-img" translatesAutoresizingMaskIntoConstraints="NO" id="NUd-27-Kl0">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash-bg" translatesAutoresizingMaskIntoConstraints="NO" id="NUd-27-Kl0">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="img-splashscreen-v3" translatesAutoresizingMaskIntoConstraints="NO" id="XhS-GT-KKa">
-                                <rect key="frame" x="15" y="200" width="345" height="267"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash-content-img" translatesAutoresizingMaskIntoConstraints="NO" id="XhS-GT-KKa">
+                                <rect key="frame" x="15" y="189.5" width="290" height="189"/>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="XhS-GT-KKa" secondAttribute="bottom" constant="200" id="AN2-g1-KCT"/>
-                            <constraint firstItem="XhS-GT-KKa" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="200" id="CLi-EA-mDV"/>
                             <constraint firstItem="XhS-GT-KKa" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="H3z-hc-5t7"/>
                             <constraint firstItem="NUd-27-Kl0" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="Hs1-8d-ULs"/>
                             <constraint firstItem="NUd-27-Kl0" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="I9y-fC-F8p"/>
@@ -47,8 +45,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="img-splashscreen-v3" width="372" height="405"/>
-        <image name="splashscreen-bg-img" width="390" height="844"/>
+        <image name="splash-bg" width="390" height="844"/>
+        <image name="splash-content-img" width="272" height="189"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

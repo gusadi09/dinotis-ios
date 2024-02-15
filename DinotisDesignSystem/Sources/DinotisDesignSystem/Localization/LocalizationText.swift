@@ -2463,6 +2463,11 @@ public enum LocalizableText {
         bundle: .module,
         comment: "error empty for username field"
     )
+    public static let editProfileUsernameLessError = NSLocalizedString(
+        "edit_profile_username_less_than_error",
+        bundle: .module,
+        comment: "error less than 6 for username field"
+    )
     public static let editProfileBioEmptyError = NSLocalizedString(
         "edit_profile_bio_empty_error",
         bundle: .module,
@@ -3750,5 +3755,136 @@ public enum LocalizableText {
         "find_creators_label",
         bundle: .module,
         comment: "find creators label"
+    )
+    
+    public static let dinotisVerifiedTitle = NSLocalizedString(
+        "dinotis_verified_title",
+        bundle: .module,
+        comment: "dinotis verified"
+    )
+    public static let verifiedLandingTitle = NSLocalizedString(
+        "verified_landing_title",
+        bundle: .module,
+        comment: "landing verified title"
+    )
+    
+    public static let verifiedLandingPoint1Title = NSLocalizedString(
+        "verified_landing_point1_title",
+        bundle: .module,
+        comment: "point 1 title"
+    )
+    public static let verifiedLandingPoint1Subtitle = NSLocalizedString(
+        "verified_landing_point1_subtitle",
+        bundle: .module,
+        comment: "point 1 subtitle"
+    )
+    public static let verifiedLandingPoint2Title = NSLocalizedString(
+        "verified_landing_point2_title",
+        bundle: .module,
+        comment: "point 1 title"
+    )
+    public static let verifiedLandingPoint2Subtitle = NSLocalizedString(
+        "verified_landing_point2_subtitle",
+        bundle: .module,
+        comment: "point 1 subtitle"
+    )
+    public static let verifiedLandingPoint3Title = NSLocalizedString(
+        "verified_landing_point3_title",
+        bundle: .module,
+        comment: "point 1 title"
+    )
+    public static let verifiedLandingPoint3Subtitle = NSLocalizedString(
+        "verified_landing_point3_subtitle",
+        bundle: .module,
+        comment: "point 1 subtitle"
+    )
+    
+    public static let verifiedWaitingSuccessTitle = NSLocalizedString(
+        "verified_waiting_success_title",
+        bundle: .module,
+        comment: "waiting title"
+    )
+    public static let verifiedWaitingSuccessSubtitle = NSLocalizedString(
+        "verified_waiting_success_subtitle",
+        bundle: .module,
+        comment: "waiting subtitle"
+    )
+    
+    public static let verifiedSuccessTitle = NSLocalizedString(
+        "verified_success_title",
+        bundle: .module,
+        comment: "success title"
+    )
+    public static let verifiedSuccessSubtitle = NSLocalizedString(
+        "verified_success_subtitle",
+        bundle: .module,
+        comment: "success subtitle"
+    )
+    
+    public static let verifiedFailedTitle = NSLocalizedString(
+        "verified_failed_title",
+        bundle: .module,
+        comment: "failed title"
+    )
+    public static let verifiedFailedSubtitle = NSLocalizedString(
+        "verified_failed_subtitle",
+        bundle: .module,
+        comment: "failed subtitle"
+    )
+    public static let verifiedFailedVerifyAgain = NSLocalizedString(
+        "verified_failed_reverify",
+        bundle: .module,
+        comment: "reverify"
+    )
+    
+    public static let verifiedFormTitle = NSLocalizedString(
+        "verified_form_title",
+        bundle: .module,
+        comment: "request verified"
+    )
+    public static let verifiedFormCompletedSubtitle = NSLocalizedString(
+        "verified_form_completed_subtitle",
+        bundle: .module,
+        comment: "completed profile subtitle"
+    )
+    public static let verifiedFormAttachLinks = NSLocalizedString(
+        "verified_form_attach_links_title",
+        bundle: .module,
+        comment: "attach other links"
+    )
+    public static let verifiedFormLinkSubtitle = NSLocalizedString(
+        "verified_form_link_subtitle",
+        bundle: .module,
+        comment: "link subtitle"
+    )
+    public static let verifiedFormLinkPlaceholder = NSLocalizedString(
+        "verified_form_link_placeholder",
+        bundle: .module,
+        comment: "link placeholder"
+    )
+    public static let verifiedFormAddMore = NSLocalizedString(
+        "verified_form_add_more",
+        bundle: .module,
+        comment: "add more"
+    )
+    public static let verifiedFormInvalidLink = NSLocalizedString(
+        "verified_form_invalid_url",
+        bundle: .module,
+        comment: "error invalid url"
+    )
+    public static let verifiedFormAgreementFirst = NSLocalizedString(
+        "verified_form_agreement_first",
+        bundle: .module,
+        comment: "first"
+    )
+    public static let verifiedFormAgreementMid = NSLocalizedString(
+        "verified_form_agreement_mid",
+        bundle: .module,
+        comment: "first"
+    )
+    public static let verifiedFormAgreementLast = NSLocalizedString(
+        "verified_form_agreement_last",
+        bundle: .module,
+        comment: "first"
     )
 }
