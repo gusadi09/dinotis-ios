@@ -240,7 +240,7 @@ struct LoginViewUser: View {
                         }
 
                     }
-                    .padding([.top, .horizontal])
+                    .padding()
 				}
                 
                 DinotisLoadingView(.fullscreen, hide: !loginVM.isLoading)

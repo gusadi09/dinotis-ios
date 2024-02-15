@@ -20,11 +20,18 @@ struct OtpVerificationView: View {
 			ZStack {
                 Color.DinotisDefault.baseBackground
 					.edgesIgnoringSafeArea(.all)
+                
+                Image.backgroundAuthenticationImage
+                    .resizable()
+                    .ignoresSafeArea()
                     
                 VStack {
                     HeaderView(
-                        type: .imageHeader(Image.generalDinotisImage, 25),
-                        title: "") {
+                        type: .textHeader,
+                        title: viewModel.headerTitle,
+                        headerColor: .clear,
+                        textColor: .white,
+                        leadingButton: {
                             DinotisElipsisButton(
                                 icon: .generalBackIcon,
                                 iconColor: .DinotisDefault.black1,
@@ -35,25 +42,17 @@ struct OtpVerificationView: View {
                                     dismiss()
                                 }
                             )
-                        } trailingButton: {
-                            Button {
-                                viewModel.openWhatsApp()
-                            } label: {
-                                Image.generalQuestionIcon
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: 25)
-                            }
-                        }
+                        })
                     
                     VStack {
                         
                         ScrollView(.vertical, showsIndicators: false) {
                             VStack(alignment: .center) {
-                                Text(viewModel.registerTitleText())
-                                    .font(.robotoBold(size: 28))
-                                    .foregroundColor(.DinotisDefault.black1)
-                                    .padding(.vertical, 24)
+                                Image.generalDinotisImage
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 50)
+                                    .padding(.vertical)
                                 
                                 VStack(alignment: .center, spacing: 6) {
                                     Text(LocalizableText.hintSendOTP)
@@ -190,8 +189,19 @@ struct OtpVerificationView: View {
 	}
 }
 
+fileprivate struct Preview: View {
+    
+    init() {
+        FontInjector.registerFonts()
+    }
+    
+    var body: some View {
+        OtpVerificationView(viewModel: OtpVerificationViewModel(phoneNumber: "", otpType: .register, onBackToRoot: {}, backToLogin: {}, backToPhoneSet: {}))
+    }
+}
+
 struct EmailVerificationView_Previews: PreviewProvider {
 	static var previews: some View {
-		OtpVerificationView(viewModel: OtpVerificationViewModel(phoneNumber: "", otpType: .login, onBackToRoot: {}, backToLogin: {}, backToPhoneSet: {}))
+		Preview()
 	}
 }

@@ -15,6 +15,8 @@ public struct PasswordTextField<Content: View>: View {
 	private let placeholder: String
 	let trailingContent: Content
 	let onSubmit: () -> Void
+    
+    @FocusState private var focused: Bool
 
 	public init(
 		_ placeholder: String,
@@ -42,6 +44,7 @@ public struct PasswordTextField<Content: View>: View {
                         .font(.robotoRegular(size: 12))
 						.foregroundColor(.black)
 						.disableAutocorrection(true)
+                        .focused($focused)
 					#else
 					SecureField(placeholder, text: $password, onCommit: onSubmit)
 						.textFieldStyle(.plain)
@@ -49,6 +52,7 @@ public struct PasswordTextField<Content: View>: View {
 						.foregroundColor(.black)
 						.disableAutocorrection(true)
 						.autocapitalization(.none)
+                        .focused($focused)
 					#endif
 				} else {
 					#if os(macOS)
@@ -57,6 +61,7 @@ public struct PasswordTextField<Content: View>: View {
 						.textFieldStyle(.plain)
 						.foregroundColor(.black)
 						.disableAutocorrection(true)
+                        .focused($focused)
 					#else
 					TextField(placeholder, text: $password, onCommit: onSubmit)
 						.font(.robotoRegular(size: 12))
@@ -64,12 +69,14 @@ public struct PasswordTextField<Content: View>: View {
 						.foregroundColor(.black)
 						.disableAutocorrection(true)
 						.autocapitalization(.none)
+                        .focused($focused)
 					#endif
 				}
 
 				trailingContent
 					.buttonStyle(.plain)
 			}
+            .tint(.DinotisDefault.primary)
 			.padding()
 			.background(
 				RoundedRectangle(cornerRadius: 8)
@@ -77,7 +84,7 @@ public struct PasswordTextField<Content: View>: View {
 			)
 			.overlay(
 				RoundedRectangle(cornerRadius: 8)
-					.stroke(Color(red: 0.792, green: 0.8, blue: 0.812), lineWidth: 1)
+                    .stroke(focused ? Color.DinotisDefault.primary : Color(red: 0.792, green: 0.8, blue: 0.812), lineWidth: 1)
 			)
 
 			if let error = errorText {

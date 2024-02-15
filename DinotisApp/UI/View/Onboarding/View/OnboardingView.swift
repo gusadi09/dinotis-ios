@@ -68,26 +68,28 @@ struct OnboardingView: View {
 					}
 				}
 				.padding()
+                
+                Spacer()
 
 				TabView(selection: $viewModel.selectedContent) {
 					VStack(spacing: 15) {
 						Image.onboardingSlide1Image
 							.resizable()
 							.scaledToFit()
-							.frame(height: 321)
 
 						VStack(spacing: 10) {
 							Text(LocalizableText.firstOnboardingTitle)
-								.font(.robotoBold(size: 20))
+								.font(.robotoBold(size: 24))
 								.foregroundColor(.DinotisDefault.black1)
 								.multilineTextAlignment(.center)
 
 							Text(LocalizableText.descriptionFirstOnboardingContent)
 								.font(.robotoRegular(size: 14))
-								.foregroundColor(.DinotisDefault.black2)
+								.foregroundColor(.DinotisDefault.black3)
 								.multilineTextAlignment(.center)
 						}
 					}
+                    .frame(maxWidth: 321)
 					.padding()
 					.background(
 						Color.DinotisDefault.baseBackground
@@ -98,17 +100,16 @@ struct OnboardingView: View {
 						Image.onboardingSlide2Image
 							.resizable()
 							.scaledToFit()
-							.frame(height: 297)
 
 						VStack(spacing: 10) {
 							Text(LocalizableText.secondOnboardingTitle)
-								.font(.robotoBold(size: 20))
+								.font(.robotoBold(size: 24))
 								.foregroundColor(.DinotisDefault.black1)
 								.multilineTextAlignment(.center)
 
 							Text(LocalizableText.descriptionSecondOnboardingContent)
 								.font(.robotoRegular(size: 14))
-								.foregroundColor(.DinotisDefault.black2)
+								.foregroundColor(.DinotisDefault.black3)
 								.multilineTextAlignment(.center)
 						}
 					}
@@ -116,15 +117,55 @@ struct OnboardingView: View {
 					.background(
 						Color.DinotisDefault.baseBackground
 					)
+                    .frame(maxWidth: 321)
 					.tag(1)
+                    
+                    VStack(spacing: 15) {
+                        Image.onboardingSlide3Image
+                            .resizable()
+                            .scaledToFit()
+
+                        VStack(spacing: 10) {
+                            Text(LocalizableText.thirdOnboardingTitle)
+                                .font(.robotoBold(size: 24))
+                                .foregroundColor(.DinotisDefault.black1)
+                                .multilineTextAlignment(.center)
+
+                            Text(LocalizableText.descriptionThirdOnboardingContent)
+                                .font(.robotoRegular(size: 14))
+                                .foregroundColor(.DinotisDefault.black3)
+                                .multilineTextAlignment(.center)
+                        }
+                    }
+                    .frame(maxWidth: 321)
+                    .padding()
+                    .background(
+                        Color.DinotisDefault.baseBackground
+                    )
+                    .tag(2)
 				}
-				.tabViewStyle(.page(indexDisplayMode: .always))
+				.tabViewStyle(.page(indexDisplayMode: .never))
+                .frame(maxHeight: 415)
+                
+                HStack(spacing: 8) {
+                    ForEach(0...2, id:\.self) { index in
+                        Capsule()
+                            .fill(viewModel.selectedContent == index ? Color.DinotisDefault.primary : Color.DinotisDefault.grayDinotis)
+                            .frame(width: viewModel.selectedContent == index ? 32 : 8, height: 8)
+                            .animation(.easeInOut, value: viewModel.selectedContent)
+                    }
+                }
+                .padding()
+                
+                Spacer()
 
 				HStack {
 					if viewModel.selectedContent > 0 {
 						DinotisNudeButton(text: LocalizableText.previousLabel, textColor: .DinotisDefault.black3, fontSize: 14) {
 							withAnimation(.spring()) {
-								viewModel.selectedContent = 0
+                                if viewModel.selectedContent > 0 {
+                                    viewModel.selectedContent -= 1
+                                }
 							}
 
 						}
@@ -135,10 +176,10 @@ struct OnboardingView: View {
 
 					DinotisNudeButton(text: LocalizableText.continueLabel, textColor: .DinotisDefault.primary, fontSize: 14) {
 						withAnimation(.spring()) {
-							if viewModel.selectedContent == 1 {
+							if viewModel.selectedContent == 2 {
 								viewModel.routeToUserType()
 							} else {
-								viewModel.selectedContent = 1
+								viewModel.selectedContent += 1
 							}
 						}
 
@@ -148,18 +189,12 @@ struct OnboardingView: View {
 			}
 		}
 		.onAppear {
-			UIPageControl.appearance().currentPageIndicatorTintColor = UIColor(.DinotisDefault.primary)
-			UIPageControl.appearance().pageIndicatorTintColor = UIColor(.DinotisDefault.lightPrimaryActive)
-//
-//			let configuration = UIImage.SymbolConfiguration(pointSize: 25, weight: .black)
-//			UIPageControl.appearance().preferredIndicatorImage = UIImage(systemName: "minus", withConfiguration: configuration)
 			AppDelegate.orientationLock = .portrait
 			viewModel.checkingSession()
 		}
 		.navigationBarTitle(Text(""))
 		.navigationBarHidden(true)
 		.onDisappear {
-			UIPageControl.appearance().preferredIndicatorImage = nil
             viewModel.selectedContent = 0
 		}
 	}
