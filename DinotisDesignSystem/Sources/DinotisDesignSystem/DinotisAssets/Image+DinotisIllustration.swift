@@ -54,6 +54,7 @@ public extension Image {
     
     static let profileWaitingVerificationImage = Image("waiting-verification", bundle: .module)
     static let profileSuccessVerifiedImage = Image("success-verified", bundle: .module)
+    static let profileFailedVerifiedImage = Image("failed-verified", bundle: .module)
     
     static let backgroundAuthenticationImage = Image("bg-auth", bundle: .module)
 }

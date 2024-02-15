@@ -56,7 +56,7 @@ final class EditProfileViewModel: ObservableObject {
     @Published var phone = ""
     
     @Published var draggedImage: UIImage?
-    @Published var userHighlightsImage: [UIImage] = Array(repeating: UIImage(), count: 6)
+    @Published var userHighlightsImage: [UIImage] = Array(repeating: UIImage(), count: 3)
     var userHighlightImageCount: Int {
         userHighlightsImage.filter({ $0 != UIImage() }).count
     }
@@ -134,7 +134,7 @@ final class EditProfileViewModel: ObservableObject {
     }
     
     func startCheckAvail() {
-        if username.isValidUsername() {
+        if username.isValidUsername() && username.count >= 6 {
             if let availTimer = availTimer {
                 availTimer.invalidate()
             }
@@ -147,6 +147,8 @@ final class EditProfileViewModel: ObservableObject {
                 availTimer.invalidate()
             }
             
+            self.isLoadingUserName = false
+            self.isUsernameAvail = false
             self.usernameInvalid = true
         }
         
@@ -248,8 +250,8 @@ final class EditProfileViewModel: ObservableObject {
         
     }
     
-    func isAvailableToSaveUser() -> Bool {
-        if stateObservable.userType == 2 {
+    func isAvailableToSaveUser(_ isAudience: Bool = true) -> Bool {
+        if !isAudience {
             return !names.isEmpty && !bio.isEmpty && (!username.isEmpty && (!usernameInvalid && isUsernameAvail))
             
         } else {

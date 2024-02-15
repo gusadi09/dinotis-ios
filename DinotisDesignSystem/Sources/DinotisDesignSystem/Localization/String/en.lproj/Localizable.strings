@@ -545,6 +545,7 @@
 
 "edit_profile_name_empty_error" = "Please fill your name, this field can't be empty";
 "edit_profile_username_empty_error" = "Please fill your username, this field can't be empty";
+"edit_profile_username_less_than_error" = "Username should be more than 6 character";
 "edit_profile_bio_empty_error" = "Please fill your bio, this field can't be empty";
 "edit_profile_profession_empty_error" = "Please select your profession, this field can't be empty";
 
@@ -803,3 +804,33 @@
 "nearest_session_label" = "Nearest sessions";
 "all_session_label" = "All Sessions";
 "find_creators_label" = "Find Creators";
+
+"dinotis_verified_title" = "Dinotis Verified";
+"verified_landing_title" = "Engage trust with Dinotis Verified";
+"verified_landing_point1_title" = "A verified badge";
+"verified_landing_point1_subtitle" = "Get recognized as an authentic individual with the power to make a meaningful impact.";
+"verified_landing_point2_title" = "Create unlimited sessions";
+"verified_landing_point2_subtitle" = "Create group/private video calls as much as you like";
+"verified_landing_point3_title" = "More enhanced settings";
+"verified_landing_point3_subtitle" = "Set an unlimited number of audiences for your sessions, configure your management fee, and even attach files to enhance your session.";
+
+"verified_waiting_success_title" = "Your verification submitted";
+"verified_waiting_success_subtitle" = "We'll review your account within 2x24 hours.  If your account aligns with our requirements, you'll get the badge right away. Thanks for your patience!";
+
+"verified_success_title" = "Your account has been verified";
+"verified_success_subtitle" = "Now you can access all the best features in Dinotis.";
+
+"verified_failed_title" = "Your verification is failed";
+"verified_failed_subtitle" = "You can apply your verification request again next time";
+"verified_failed_reverify" = "Verify Again";
+
+"verified_form_title" = "Request Verified";
+"verified_form_completed_subtitle" = "Make sure your information has completed";
+"verified_form_attach_links_title" = "Attach other links";
+"verified_form_link_subtitle" = "Add your social media such as instagram, twitter, etc or articles that ensure your credibility";
+"verified_form_link_placeholder" = "Input your additional link here...";
+"verified_form_add_more" = "+ Add More";
+"verified_form_invalid_url" = "Your link is invalid format, please check again.";
+"verified_form_agreement_first" = "Make sure you have agreed to ";
+"verified_form_agreement_mid" = "Dinotis Terms of Service";
+"verified_form_agreement_last" = " & acknowledge that our Privacy Notice applies.";

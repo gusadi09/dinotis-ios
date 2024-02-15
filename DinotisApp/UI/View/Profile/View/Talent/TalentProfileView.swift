@@ -156,7 +156,7 @@ struct TalentProfileView: View {
                 .padding(.bottom, 6)
                 .background(Color.clear)
                 
-                ScrollView(.vertical, showsIndicators: false) {
+                List {
                     VStack {
                         VStack(alignment: .center, spacing: 10) {
                             VStack(alignment: .center, spacing:  8) {
@@ -259,6 +259,7 @@ struct TalentProfileView: View {
                                                 .scaledToFit()
                                                 .frame(height: 24)
                                         })
+                                        .buttonStyle(.plain)
                                     }
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 12)
@@ -316,8 +317,10 @@ struct TalentProfileView: View {
                                             .frame(height: 12)
                                             .foregroundColor(.black)
                                     }
+                                    .contentShape(Rectangle())
                                 })
                                 .clipShape(Rectangle())
+                                .buttonStyle(.plain)
                                 
                                 Capsule()
                                     .frame(height: 1)
@@ -347,8 +350,10 @@ struct TalentProfileView: View {
                                             .frame(height: 12)
                                             .foregroundColor(.black)
                                     }
+                                    .contentShape(Rectangle())
                                 })
                                 .clipShape(Rectangle())
+                                .buttonStyle(.plain)
                                 
                                 Capsule()
                                     .frame(height: 1)
@@ -389,15 +394,16 @@ struct TalentProfileView: View {
                                             .frame(height: 12)
                                             .foregroundColor(.black)
                                     }
+                                    .contentShape(Rectangle())
                                 })
                                 .clipShape(Rectangle())
+                                .buttonStyle(.plain)
                                 
                                 Capsule()
                                     .frame(height: 1)
                                     .foregroundColor(Color(.systemGray5))
                                     .padding(.vertical, 10)
                                 
-                                // MARK: - Need Action
                                 Button(action: {
                                     self.viewModel.showDinotisVerifiedSheet.toggle()
                                 }, label: {
@@ -432,8 +438,10 @@ struct TalentProfileView: View {
                                             .frame(height: 12)
                                             .foregroundColor(.black)
                                     }
+                                    .contentShape(Rectangle())
                                 })
                                 .clipShape(Rectangle())
+                                .buttonStyle(.plain)
                                 
                                 Capsule()
                                     .frame(height: 1)
@@ -463,8 +471,10 @@ struct TalentProfileView: View {
                                             .frame(height: 12)
                                             .foregroundColor(.black)
                                     }
+                                    .contentShape(Rectangle())
                                 })
                                 .clipShape(Rectangle())
+                                .buttonStyle(.plain)
                                 
                                 Capsule()
                                     .frame(height: 1)
@@ -494,8 +504,10 @@ struct TalentProfileView: View {
                                             .frame(height: 12)
                                             .foregroundColor(.black)
                                     }
+                                    .contentShape(Rectangle())
                                 })
                                 .clipShape(Rectangle())
+                                .buttonStyle(.plain)
                                 
                                 Capsule()
                                     .frame(height: 1)
@@ -525,8 +537,10 @@ struct TalentProfileView: View {
                                             .frame(height: 12)
                                             .foregroundColor(.black)
                                     }
+                                    .contentShape(Rectangle())
                                 })
                                 .clipShape(Rectangle())
+                                .buttonStyle(.plain)
                                 
                                 Capsule()
                                     .frame(height: 1)
@@ -556,8 +570,10 @@ struct TalentProfileView: View {
                                             .frame(height: 12)
                                             .foregroundColor(.black)
                                     }
+                                    .contentShape(Rectangle())
                                 })
                                 .clipShape(Rectangle())
+                                .buttonStyle(.plain)
                                 
                                 Capsule()
                                     .frame(height: 1)
@@ -587,8 +603,10 @@ struct TalentProfileView: View {
                                             .frame(height: 12)
                                             .foregroundColor(.black)
                                     }
+                                    .contentShape(Rectangle())
                                 })
                                 .clipShape(Rectangle())
+                                .buttonStyle(.plain)
                             }
                             .padding(16)
                             .background(
@@ -598,11 +616,17 @@ struct TalentProfileView: View {
                             
                         }
                         .cornerRadius(12)
-                        .padding()
+                        .padding(.vertical)
                         .padding(.bottom)
                         .padding(.top, 3)
                         
                     }
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                }
+                .listStyle(.plain)
+                .refreshable {
+                    await viewModel.getUsers()
                 }
             }
             
@@ -964,7 +988,7 @@ extension TalentProfileView {
             VStack {
                 ScrollView {
                     VStack {
-                        Text("Engage trust with Dinotis Verified")
+                        Text(LocalizableText.verifiedLandingTitle)
                             .font(.robotoBold(size: 18))
                             .foregroundStyle(Color.DinotisDefault.black1)
                             .multilineTextAlignment(.center)
@@ -1060,7 +1084,7 @@ extension TalentProfileView {
                 }
                 
                 NavigationLink {
-                    switch viewModel.data?.verificationStatus {
+                    switch viewModel.verifiedStatus {
                     case .notVerified:
                         RequestVerifiedForm()
                             .environmentObject(viewModel)
@@ -1070,6 +1094,7 @@ extension TalentProfileView {
                         VerifiedView()
                     case .failed:
                         FailedView()
+                            .environmentObject(viewModel)
                     case nil:
                         RequestVerifiedForm()
                             .environmentObject(viewModel)
@@ -1098,7 +1123,7 @@ extension TalentProfileView {
     struct WaitingView: View {
         var body: some View {
             VStack {
-                Text("Pengajuan verifikasi berhasil terkirim")
+                Text(LocalizableText.verifiedWaitingSuccessTitle)
                     .font(.robotoBold(size: 18))
                     .foregroundStyle(Color.DinotisDefault.black1)
                     .multilineTextAlignment(.center)
@@ -1112,7 +1137,7 @@ extension TalentProfileView {
                 
                 Spacer()
                 
-                Text("We'll review into your account within 2 days.  If your account aligns with our requirements, you'll get the badge right away. Thanks for your patience!")
+                Text(LocalizableText.verifiedWaitingSuccessSubtitle)
                     .font(.robotoRegular(size: 12))
                     .foregroundStyle(Color.DinotisDefault.black3)
                     .multilineTextAlignment(.center)
@@ -1128,7 +1153,7 @@ extension TalentProfileView {
     struct VerifiedView: View {
         var body: some View {
             VStack(alignment: .center) {
-                Text("Akun kamu telah terverifikasi")
+                Text(LocalizableText.verifiedSuccessTitle)
                     .font(.robotoBold(size: 18))
                     .foregroundStyle(Color.DinotisDefault.black1)
                     .multilineTextAlignment(.center)
@@ -1142,7 +1167,7 @@ extension TalentProfileView {
                 
                 Spacer()
                 
-                Text("Sekarang kamu bisa akses semua fitur terbaik di Dinotis. Klik di sini untuk mulai buat sesi!")
+                Text(LocalizableText.verifiedSuccessSubtitle)
                     .font(.robotoRegular(size: 12))
                     .foregroundStyle(Color.DinotisDefault.black3)
                     .multilineTextAlignment(.center)
@@ -1157,18 +1182,19 @@ extension TalentProfileView {
     
     struct FailedView: View {
         
+        @EnvironmentObject var viewModel: ProfileViewModel
         @Environment(\.dismiss) var dismiss
         
         var body: some View {
             VStack(alignment: .center) {
-                Text("Pengajuan verifikasi gagal")
+                Text(LocalizableText.verifiedFailedTitle)
                     .font(.robotoBold(size: 18))
                     .foregroundStyle(Color.DinotisDefault.black1)
                     .multilineTextAlignment(.center)
                 
                 Spacer()
                 
-                Image.profileSuccessVerifiedImage
+                Image.profileFailedVerifiedImage
                     .resizable()
                     .scaledToFit()
                     .frame(width: 290)
@@ -1176,17 +1202,18 @@ extension TalentProfileView {
                 Spacer()
                 
                 DinotisPrimaryButton(
-                    text: "Verify again",
+                    text: LocalizableText.verifiedFailedVerifyAgain,
                     type: .adaptiveScreen,
                     height: 45,
                     textColor: .white,
                     bgColor: .DinotisDefault.primary,
                     isLoading: .constant(false)
                 ) {
+                    viewModel.verifiedStatus = .notVerified
                     dismiss()
                 }
                 
-                Text("Kamu dapat mengajukan verifikasi kembali pada (\(Date().toStringFormat(with: .slashddMMyyyy)).")
+                Text(LocalizableText.verifiedFailedSubtitle)
                     .font(.robotoRegular(size: 12))
                     .foregroundStyle(Color.DinotisDefault.black3)
                     .multilineTextAlignment(.center)
@@ -1206,7 +1233,7 @@ extension TalentProfileView {
         var body: some View {
             VStack {
                 HStack {
-                    Text("DINOTIS VERIFIED")
+                    Text(LocalizableText.dinotisVerifiedTitle.uppercased())
                         .font(.robotoBold(size: 14))
                         .foregroundStyle(Color.DinotisDefault.black2)
                     
@@ -1250,7 +1277,7 @@ extension TalentProfileView {
             VStack(spacing: 0) {
                 HeaderView(
                     type: .textHeader,
-                    title: "Request Verified",
+                    title: LocalizableText.verifiedFormTitle,
                     headerColor: .clear,
                     textColor: .DinotisDefault.black1
                 ) {
@@ -1364,7 +1391,7 @@ extension TalentProfileView {
                                             .multilineTextAlignment(.leading)
                                     }
                                     
-                                    Text("Make sure your information has compeled")
+                                    Text(LocalizableText.verifiedFormCompletedSubtitle)
                                         .font(.robotoRegular(size: 12))
                                         .foregroundStyle(Color.DinotisDefault.black3)
                                         .multilineTextAlignment(.leading)
@@ -1394,7 +1421,7 @@ extension TalentProfileView {
                         
                         HStack {
                             (
-                                Text("Attach other links")
+                                Text(LocalizableText.verifiedFormAttachLinks)
                                     .font(.robotoMedium(size: 14))
                                     .fontWeight(.semibold)
                                     .foregroundColor(.DinotisDefault.black1)
@@ -1409,25 +1436,45 @@ extension TalentProfileView {
                             Spacer()
                         }
                         
-                        Text("Add your social media such as instagram, twitter, etc or articles that ensure your credibility")
+                        Text(LocalizableText.verifiedFormLinkSubtitle)
                             .font(.robotoRegular(size: 12))
                             .foregroundStyle(Color.DinotisDefault.black3)
                             .multilineTextAlignment(.leading)
                         
-                        ForEach($viewModel.attachedLinks, id: \.id) { $item in
-                            DinotisTextField(
-                                "Input your additional link here...",
-                                label: nil,
-                                text: $item.link,
-                                errorText: .constant(nil)
-                            )
-                            .disabled(
-                                viewModel.isLoadingVerified
-                            )
+                        ForEach(viewModel.attachedLinks.indices, id: \.self) { idx in
+                            VStack {
+                                DinotisTextField(
+                                    LocalizableText.verifiedFormLinkPlaceholder,
+                                    label: nil,
+                                    text: $viewModel.attachedLinks[idx].link,
+                                    errorText: .constant(nil)
+                                )
+                                .keyboardType(.URL)
+                                .textInputAutocapitalization(.never)
+                                .disabled(
+                                    viewModel.isLoadingVerified
+                                )
+                                
+                                if !viewModel.attachedLinks[idx].link.verifyUrl() {
+                                    HStack {
+                                        Image.Dinotis.exclamationCircleIcon
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(height: 10)
+                                            .foregroundColor(.red)
+                                        Text(LocalizableText.verifiedFormInvalidLink)
+                                            .font(.robotoRegular(size: 10))
+                                            .foregroundColor(.red)
+                                            .multilineTextAlignment(.leading)
+                                        
+                                        Spacer()
+                                    }
+                                }
+                            }
                         }
                         
                         DinotisPrimaryButton(
-                            text: "+ Add More",
+                            text: LocalizableText.verifiedFormAddMore,
                             type: .adaptiveScreen,
                             height: 30,
                             textColor: (viewModel.attachedLinks.last?.link.isEmpty ?? true) ? .DinotisDefault.black3 : .white,
@@ -1456,15 +1503,15 @@ extension TalentProfileView {
                     )
 
                     (
-                        Text("Pastikan anda telah menyetujui ")
+                        Text(LocalizableText.verifiedFormAgreementFirst)
                             .font(.robotoRegular(size: 12))
                             .foregroundColor(.DinotisDefault.black3)
                         +
-                        Text("Persyaratan Layanan")
+                        Text(LocalizableText.verifiedFormAgreementMid)
                             .font(.robotoBold(size: 12))
                             .foregroundColor(.DinotisDefault.darkPrimary)
                         +
-                        Text(" Dinotis & mengakui bahwa Pemberitahuan Privasi kami berlaku.")
+                        Text(LocalizableText.verifiedFormAgreementLast)
                             .font(.robotoRegular(size: 12))
                             .foregroundColor(.DinotisDefault.black3)
                     )
@@ -1491,6 +1538,7 @@ extension TalentProfileView {
                 .disabled(
                     !viewModel.isAgreed ||
                     (viewModel.attachedLinks.first?.link.isEmpty ?? true) ||
+                    !(viewModel.attachedLinks.first?.link.verifyUrl() ?? false) ||
                     ((viewModel.data?.profilePercentage).orZero() < 100) ||
                     viewModel.isLoadingVerified
                 )

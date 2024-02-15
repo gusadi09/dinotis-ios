@@ -75,11 +75,12 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 	@Published var statusCode = 0
     
     @Published var showDinotisVerifiedSheet = false
+    @Published var verifiedStatus: UserVerificationStatus?
     
     @Published var pointerItems = [
-        PointerModel(title: "A verified badge", definition: "Get recognized as an authentic individual with the power to make a meaningful impact."),
-        PointerModel(title: "Create unlimited sessions", definition: "Create group/private video calls as much as you like"),
-        PointerModel(title: "More enhanced settings", definition: "Set an unlimited number of audiences for your sessions, configure your management fee, and even attach files to enhance your session.")
+        PointerModel(title: LocalizableText.verifiedLandingPoint1Title, definition: LocalizableText.verifiedLandingPoint1Subtitle),
+        PointerModel(title: LocalizableText.verifiedLandingPoint2Title, definition: LocalizableText.verifiedLandingPoint2Subtitle),
+        PointerModel(title: LocalizableText.verifiedLandingPoint3Title, definition: LocalizableText.verifiedLandingPoint3Subtitle)
     ]
     
     @Published var isLoadingVerified = false
@@ -238,6 +239,8 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
                 self?.userPhotos = success.profilePhoto
                 self?.names = success.name
                 self?.userCoin = (success.coinBalance?.current).orEmpty().toPriceFormat()
+                self?.verifiedStatus = success.verificationStatus
+                self?.profesionSelect = self?.userProfession() ?? []
             }
         case .failure(let failure):
             handleDefaultError(error: failure)
@@ -258,8 +261,11 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
             DispatchQueue.main.async { [weak self] in
                 self?.isLoadingVerified = false
                 
-                self?.verifRoute = .waitingVerif
+//                self?.verifRoute = .waitingVerif
             }
+            
+            await getUsers()
+            
         case .failure(let failure):
             DispatchQueue.main.async { [weak self] in
                 self?.isLoadingVerified = false
