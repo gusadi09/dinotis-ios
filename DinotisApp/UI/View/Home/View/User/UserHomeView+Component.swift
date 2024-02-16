@@ -135,17 +135,6 @@ extension UserHomeView {
                 }
             
             NavigationLink(
-                unwrapping: $homeVM.primaryRoute,
-                case: /PrimaryRouting.homeTalent) { viewModel in
-                    TalentHomeView()
-                        .environmentObject(viewModel.wrappedValue)
-                } onNavigate: { _ in
-
-                } label: {
-                    EmptyView()
-                }
-            
-            NavigationLink(
                 unwrapping: $homeVM.route,
                 case: /HomeRouting.homeList) { viewModel in
                     HomeListView(viewModel: viewModel.wrappedValue, tabValue: $tabValue)

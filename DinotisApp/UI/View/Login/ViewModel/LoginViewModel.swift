@@ -15,11 +15,9 @@ import DinotisData
 
 final class LoginViewModel: ObservableObject {
 	
-	private let repository: AuthenticationRepository
-	private let userRepository: UsersRepository
-	
 	private var cancellables = Set<AnyCancellable>()
 
+    private let getUserUseCase: GetUserUseCase
 	private let loginUseCase: LoginUseCase
 	private let registerUseCase: RegisterUseCase
 	
@@ -64,18 +62,15 @@ final class LoginViewModel: ObservableObject {
 	var backToRoot: (() -> Void)
 	
 	init(
+        getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
 		loginUseCase: LoginUseCase = LoginDefaultUseCase(),
 		registerUseCsae: RegisterUseCase = RegisterDefaultUseCase(),
-		repository: AuthenticationRepository = AuthenticationDefaultRepository(),
-		userRepository: UsersRepository = UsersDefaultRepository(),
 		backToRoot: @escaping (() -> Void)
 	) {
+        self.getUserUseCase = getUserUseCase
 		self.loginUseCase = loginUseCase
 		self.registerUseCase = registerUseCsae
-		self.repository = repository
-		self.userRepository = userRepository
 		self.backToRoot = backToRoot
-		
 	}
 
 	func resetAllError() {
@@ -184,6 +179,8 @@ final class LoginViewModel: ObservableObject {
 
 		switch result {
 		case .success:
+            await getUsers()
+            
 			DispatchQueue.main.async { [weak self] in
 				self?.isLoading = false
 				self?.success = true
@@ -199,6 +196,19 @@ final class LoginViewModel: ObservableObject {
 
 		}
 	}
+    
+    @MainActor
+    func getUsers() async {
+        
+        let result = await getUserUseCase.execute()
+        
+        switch result {
+        case .success(let success):
+            stateObservable.userType = success.isCreator ?? false ? 2 : 3
+        case .failure(let failure):
+            handleDefaultError(error: failure)
+        }
+    }
 
 	func register() async {
 		onStartRequest()

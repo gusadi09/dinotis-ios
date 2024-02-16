@@ -15,7 +15,7 @@ import SwiftUITrackableScrollView
 
 struct TalentHomeView: View {
     
-    @EnvironmentObject var homeVM: TalentHomeViewModel
+    @StateObject var homeVM: TalentHomeViewModel
     @ObservedObject var state = StateObservable.shared
     
     var body: some View {
@@ -1559,7 +1559,7 @@ extension TalentHomeView {
 
 struct TalentHomeView_Previews: PreviewProvider {
     static var previews: some View {
-        TalentHomeView()
+        TalentHomeView(homeVM: TalentHomeViewModel(isFromUserType: true))
             .environmentObject(TalentHomeViewModel(isFromUserType: false))
     }
 }

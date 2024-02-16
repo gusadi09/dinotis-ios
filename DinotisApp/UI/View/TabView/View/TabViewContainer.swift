@@ -92,8 +92,7 @@ struct TabViewContainer: View {
                 }
                 
                 if state.userType == 2 {
-                    TalentHomeView()
-                        .environmentObject(viewModel.talentHomeVM)
+                    TalentHomeView(homeVM: viewModel.talentHomeVM)
                 } else {
                     TabView(selection: $viewModel.tab) {
                         if viewModel.state.userType == 3 {

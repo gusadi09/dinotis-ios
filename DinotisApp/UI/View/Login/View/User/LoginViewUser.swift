@@ -173,16 +173,6 @@ struct LoginViewUser: View {
 
 							NavigationLink(
 								unwrapping: $loginVM.route,
-								case: /PrimaryRouting.homeTalent
-							) { viewModel in
-								TalentHomeView()
-                                    .environmentObject(viewModel.wrappedValue)
-							} onNavigate: { _ in } label: {
-								EmptyView()
-							}
-
-							NavigationLink(
-								unwrapping: $loginVM.route,
 								case: /PrimaryRouting.verificationOtp
 							) { viewModel in
 								OtpVerificationView(viewModel: viewModel.wrappedValue)

@@ -48,16 +48,6 @@ struct OnboardingView: View {
                 EmptyView()
             }
 
-            NavigationLink(
-                unwrapping: $viewModel.route,
-                case: /PrimaryRouting.homeTalent
-            ) { viewModel in
-                TalentHomeView()
-                    .environmentObject(viewModel.wrappedValue)
-            } onNavigate: { _ in } label: {
-                EmptyView()
-            }
-
 			Color.DinotisDefault.baseBackground
 				.edgesIgnoringSafeArea(.all)
 

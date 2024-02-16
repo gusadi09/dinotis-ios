@@ -26,19 +26,6 @@ struct UserBiodataView: View {
     
     var body: some View {
         ZStack {
-
-			NavigationLink(
-				unwrapping: $viewModel.route,
-				case: /PrimaryRouting.homeTalent,
-				destination: { viewModel in
-					TalentHomeView()
-                        .environmentObject(viewModel.wrappedValue)
-				},
-				onNavigate: {_ in },
-				label: {
-					EmptyView()
-				}
-			)
             
             NavigationLink(
                 unwrapping: $viewModel.route,
