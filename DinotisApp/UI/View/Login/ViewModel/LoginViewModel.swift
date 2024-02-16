@@ -205,6 +205,7 @@ final class LoginViewModel: ObservableObject {
         switch result {
         case .success(let success):
             stateObservable.userType = success.isCreator ?? false ? 2 : 3
+            stateObservable.isShowGateway = success.isCreator ?? false
         case .failure(let failure):
             handleDefaultError(error: failure)
         }
