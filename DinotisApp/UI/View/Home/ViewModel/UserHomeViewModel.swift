@@ -504,9 +504,6 @@ final class UserHomeViewModel: NSObject, ObservableObject {
         
         DispatchQueue.main.async { [weak self] in
             self?.isSwitchingAccount = true
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             self?.stateObservable.userType = 2
         }
     }

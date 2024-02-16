@@ -23,9 +23,11 @@ final class OnboardingViewModel: ObservableObject {
         self.repository = repository
     }
     
-    func routeToUserType() {
+    func routeToLogin() {
+        let vm = LoginViewModel(backToRoot: { self.route = nil })
+        
         DispatchQueue.main.async { [weak self] in
-            self?.route = .userType
+            self?.route = .userLogin(viewModel: vm)
         }
     }
     

@@ -7,11 +7,13 @@
 
 import SwiftUI
 import DinotisDesignSystem
+import DinotisData
 import SwiftUINavigation
 
 struct OnboardingView: View {
 
 	@ObservedObject var viewModel = OnboardingViewModel()
+    @ObservedObject var state = StateObservable.shared
     
     @AppStorage("isShowTooltip") var isShowTooltip = false
 
@@ -20,9 +22,9 @@ struct OnboardingView: View {
 
 			NavigationLink(
 				unwrapping: $viewModel.route,
-				case: /PrimaryRouting.userType
-			) { _ in
-				UserTypeView()
+				case: /PrimaryRouting.userLogin
+			) { vm in
+                LoginViewUser(loginVM: vm.wrappedValue)
 			} onNavigate: { _ in } label: {
 				EmptyView()
 			}
@@ -64,7 +66,8 @@ struct OnboardingView: View {
 					Spacer()
 
 					DinotisNudeButton(text: LocalizableText.skipLabel, textColor: .DinotisDefault.black3, fontSize: 14) {
-						viewModel.routeToUserType()
+                        state.userType = 3
+						viewModel.routeToLogin()
 					}
 				}
 				.padding()
@@ -177,7 +180,8 @@ struct OnboardingView: View {
 					DinotisNudeButton(text: LocalizableText.continueLabel, textColor: .DinotisDefault.primary, fontSize: 14) {
 						withAnimation(.spring()) {
 							if viewModel.selectedContent == 2 {
-								viewModel.routeToUserType()
+                                state.userType = 3
+								viewModel.routeToLogin()
 							} else {
 								viewModel.selectedContent += 1
 							}
