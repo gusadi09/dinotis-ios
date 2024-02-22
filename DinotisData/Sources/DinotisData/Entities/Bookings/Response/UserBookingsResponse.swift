@@ -121,7 +121,7 @@ public extension UserBookingsResponse {
 	}
 }
 
-public struct UserBookingData: Codable {
+public struct UserBookingData: Codable, Identifiable {
 	public let id: String?
 	public let bookedAt: Date?
 	public let invoiceId: String?
@@ -143,20 +143,20 @@ public struct UserBookingData: Codable {
 	}
 
 	public init(
-		id: String?,
-		bookedAt: Date?,
-		invoiceId: String?,
-		canceledAt: Date?,
-		doneAt: Date?,
-		isFailed: Bool?,
-		meetingID: String?,
-		userID: String?,
-		createdAt: Date?,
-		updatedAt: Date?,
-		bookingPayment: BookingPaymentData?,
-		meeting: UserMeetingData?,
-		meetingBundle: BundlingData?,
-		status: String?
+		id: String? = nil,
+		bookedAt: Date? = nil,
+		invoiceId: String? = nil,
+		canceledAt: Date? = nil,
+		doneAt: Date? = nil,
+		isFailed: Bool? = nil,
+		meetingID: String? = nil,
+		userID: String? = nil,
+		createdAt: Date? = nil,
+		updatedAt: Date? = nil,
+		bookingPayment: BookingPaymentData? = nil,
+		meeting: UserMeetingData? = nil,
+		meetingBundle: BundlingData? = nil,
+		status: String? = nil
 	) {
 		self.id = id
 		self.bookedAt = bookedAt

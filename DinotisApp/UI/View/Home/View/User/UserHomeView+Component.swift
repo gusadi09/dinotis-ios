@@ -110,45 +110,91 @@ extension UserHomeView {
                     EmptyView()
                 }
             )
+            
+            NavigationLink(
+                unwrapping: $homeVM.route,
+                case: /HomeRouting.inbox,
+                destination: { viewModel in
+                    InboxView()
+                        .environmentObject(viewModel.wrappedValue)
+                },
+                onNavigate: { _ in },
+                label: {
+                    EmptyView()
+                }
+            )
+
+            NavigationLink(
+                unwrapping: $homeVM.route,
+                case: /HomeRouting.notification) { viewModel in
+                    NotificationView(viewModel: viewModel.wrappedValue)
+                } onNavigate: { _ in
+
+                } label: {
+                    EmptyView()
+                }
+            
+            NavigationLink(
+                unwrapping: $homeVM.route,
+                case: /HomeRouting.homeList) { viewModel in
+                    HomeListView(viewModel: viewModel.wrappedValue, tabValue: $tabValue)
+                } onNavigate: { _ in
+
+                } label: {
+                    EmptyView()
+                }
 		}
 	}
 
 	struct HeaderView: View {
 
 		@EnvironmentObject var homeVM: UserHomeViewModel
+        @ObservedObject var stateObservable = StateObservable.shared
         @Namespace var namespace
 
 		var body: some View {
 			VStack(spacing: 0) {
 
                 HStack(spacing: 5) {
-                    Image.logoWithText
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 35)
-                    
-                    NavigationLink(
-                        unwrapping: $homeVM.route,
-                        case: /HomeRouting.inbox,
-                        destination: { viewModel in
-                            InboxView()
-                                .environmentObject(viewModel.wrappedValue)
-                        },
-                        onNavigate: { _ in },
-                        label: {
-                            EmptyView()
+                    if stateObservable.isShowGateway {
+                        Button {
+                            homeVM.switchAcount()
+                        } label: {
+                            HStack(spacing: 8) {
+                                HStack(spacing: 4) {
+                                    Image(systemName: "chevron.left")
+                                        .resizable()
+                                        .scaledToFit()
+                                    
+                                    Image(systemName: "chevron.right")
+                                        .resizable()
+                                        .scaledToFit()
+                                }
+                                .foregroundColor(.white)
+                                .padding(6)
+                                .frame(width: 29, height: 29)
+                                .background(
+                                    Circle()
+                                        .fill(Color.DinotisDefault.primary)
+                                )
+                                
+                                Text(LocalizableText.personalLabel)
+                                    .font(.robotoBold(size: 14))
+                                    .foregroundColor(.DinotisDefault.primary)
+                            }
+                            .padding(6)
+                            .padding(.trailing, 6)
+                            .background(
+                                Capsule()
+                                    .fill(Color.DinotisDefault.lightPrimary)
+                            )
                         }
-                    )
-
-					NavigationLink(
-						unwrapping: $homeVM.route,
-						case: /HomeRouting.notification) { viewModel in
-							NotificationView(viewModel: viewModel.wrappedValue)
-						} onNavigate: { _ in
-
-						} label: {
-							EmptyView()
-						}
+                    } else {
+                        Image.logoWithText
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 35)
+                    }
 
 					Spacer()
 
@@ -548,21 +594,24 @@ extension UserHomeView {
                         }
                     } header: {
                         VStack(alignment: .leading, spacing: 16) {
-                            HStack {
-                                Text(LocalizableText.detailVideoUpcomingSessionDesc)
-                                    .font(.robotoBold(size: 16))
-                                    .foregroundColor(.DinotisDefault.black2)
-                                
-                                Spacer()
-                                
-                                Button {
-                                    tabValue = .search
-                                } label: {
-                                    Text(LocalizableText.searchSeeAllLabel)
-                                        .font(.robotoBold(size: 12))
-                                        .foregroundColor(.DinotisDefault.primary)
+                            if !homeVM.sessionContent.isEmpty {
+                                HStack {
+                                    Text(LocalizableText.detailVideoUpcomingSessionDesc)
+                                        .font(.robotoBold(size: 16))
+                                        .foregroundColor(.DinotisDefault.black2)
+                                    
+                                    Spacer()
+                                    
+                                    Button {
+                                        homeVM.routeToHomeList(.session, tab: homeVM.sessionTab == .groupSession ? .groupCall : .privateCall)
+                                    } label: {
+                                        Text(LocalizableText.searchSeeAllLabel)
+                                            .font(.robotoBold(size: 12))
+                                            .foregroundColor(.DinotisDefault.primary)
+                                    }
+                                    .buttonStyle(.plain)
                                 }
-                                .buttonStyle(.plain)
+                                .padding(.horizontal)
                             }
                             .padding(.horizontal)
                             
@@ -623,6 +672,7 @@ extension UserHomeView {
                     .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.clear)
+                    .isHidden(!homeVM.isLoadingGroupFeature && !homeVM.isLoadingPrivateFeature && homeVM.groupScheduleContent.isEmpty && homeVM.privateScheduleContent.isEmpty, remove: true)
                     
                     Group {
                         if homeVM.isLoadingRateCard {
@@ -726,7 +776,7 @@ extension UserHomeView {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 
                             Button {
-                                tabValue = .search
+                                homeVM.routeToHomeList(.session, tab: .nearest)
                             } label: {
                                 Text(LocalizableText.searchSeeAllLabel)
                                     .font(.robotoBold(size: 12))
@@ -882,7 +932,7 @@ extension UserHomeView {
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                 
                                 Button {
-                                    tabValue = .search
+                                    homeVM.routeToHomeList(.creator, tab: .popular)
                                 } label: {
                                     Text(LocalizableText.searchSeeAllLabel)
                                         .font(.robotoBold(size: 12))
@@ -2129,6 +2179,14 @@ extension UserHomeView {
             }
             .padding()
             .padding(.vertical)
+            .onDisappear {
+                viewModel.myProducts = []
+            }
         }
     }
 }
+
+#Preview(body: {
+    UserHomeView(tabValue: .constant(TabRoute.explore))
+        .environmentObject(UserHomeViewModel())
+})

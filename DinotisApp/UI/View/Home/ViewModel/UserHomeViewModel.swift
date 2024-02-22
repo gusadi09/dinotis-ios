@@ -94,6 +94,7 @@ final class UserHomeViewModel: NSObject, ObservableObject {
 	@Published var statusCode = 0
     
     @Published var route: HomeRouting?
+    @Published var primaryRoute: PrimaryRouting?
     
     @Published var username: String?
     @Published var showingPasswordAlert = false
@@ -117,6 +118,8 @@ final class UserHomeViewModel: NSObject, ObservableObject {
     @Published var isLoadingExtraFee = false
     @Published var isLoadingFollowingSession = false
     @Published var isLoadMoreFollowingSession = false
+    
+    @Published var isSwitchingAccount = false
     
     @Published var userData: UserResponse?
     
@@ -497,6 +500,14 @@ final class UserHomeViewModel: NSObject, ObservableObject {
         }
     }
     
+    func switchAcount() {
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.isSwitchingAccount = true
+            self?.stateObservable.userType = 2
+        }
+    }
+    
     func routeBack() {
         if statusCode == 401 {
             NavigationUtil.popToRootView()
@@ -518,6 +529,14 @@ final class UserHomeViewModel: NSObject, ObservableObject {
             } else {
                 self?.route = .userProfile(viewModel: viewModel)
             }
+        }
+    }
+    
+    func routeToHomeList(_ type: HomeListType, tab: HomeListViewModel.TabFilter) {
+        let viewModel = HomeListViewModel(type: type, tab: tab, backToHome: { self.route = nil })
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .homeList(viewModel: viewModel)
         }
     }
     
@@ -1413,7 +1432,7 @@ final class UserHomeViewModel: NSObject, ObservableObject {
                 self?.productSelected = nil
             case .extraFee:
                 self?.isLoadingExtraFee = false
-            case .followingSession(let isLoadMore):
+            case .followingSession(_):
                 self?.isLoadMoreFollowingSession = false
                 self?.isLoadingFollowingSession = false
             }

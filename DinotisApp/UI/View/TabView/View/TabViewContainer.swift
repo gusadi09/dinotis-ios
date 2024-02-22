@@ -91,46 +91,50 @@ struct TabViewContainer: View {
                     EmptyView()
                 }
                 
-                TabView(selection: $viewModel.tab) {
-                    if viewModel.state.userType == 3 {
-                        UserHomeView(tabValue: $viewModel.tab)
-                            .environmentObject(viewModel.userHomeVM)
-                            .tag(TabRoute.explore)
-                    } else {
-                        UserHomeView(tabValue: $viewModel.tab)
-                            .environmentObject(viewModel.userHomeVM)
-                            .tag(TabRoute.explore)
-                    }
-                    
-                    SearchTalentView(tabValue: $viewModel.tab)
-                        .environmentObject(viewModel.searchVM)
-                        .tag(TabRoute.search)
-                    
-                    ScheduleListView(mainTabSelection: $viewModel.tab)
-                        .onAppear {
-                            self.isShowTooltip = false
+                if state.userType == 2 {
+                    TalentHomeView(homeVM: viewModel.talentHomeVM)
+                } else {
+                    TabView(selection: $viewModel.tab) {
+                        if viewModel.state.userType == 3 {
+                            UserHomeView(tabValue: $viewModel.tab)
+                                .environmentObject(viewModel.userHomeVM)
+                                .tag(TabRoute.explore)
+                        } else {
+                            UserHomeView(tabValue: $viewModel.tab)
+                                .environmentObject(viewModel.userHomeVM)
+                                .tag(TabRoute.explore)
                         }
-                        .environmentObject(viewModel.scheduleVM)
-                        .tag(TabRoute.agenda)
-                    
-                    if viewModel.state.userType == 2 {
-                        TalentProfileView()
-                            .environmentObject(viewModel.profileVM)
-                            .tag(TabRoute.profile)
-                    } else if viewModel.state.userType == 3 {
-                        UserProfileView(tabValue: $viewModel.tab)
-                            .environmentObject(viewModel.profileVM)
-                            .tag(TabRoute.profile)
-                    } else {
-                        UserProfileView(tabValue: $viewModel.tab)
-                            .environmentObject(viewModel.profileVM)
-                            .tag(TabRoute.profile)
+                        
+                        SearchTalentView(tabValue: $viewModel.tab)
+                            .environmentObject(viewModel.searchVM)
+                            .tag(TabRoute.search)
+                        
+                        ScheduleListView(mainTabSelection: $viewModel.tab)
+                            .onAppear {
+                                self.isShowTooltip = false
+                            }
+                            .environmentObject(viewModel.scheduleVM)
+                            .tag(TabRoute.agenda)
+                        
+                        if viewModel.state.userType == 2 {
+                            TalentProfileView()
+                                .environmentObject(viewModel.profileVM)
+                                .tag(TabRoute.profile)
+                        } else if viewModel.state.userType == 3 {
+                            UserProfileView(tabValue: $viewModel.tab)
+                                .environmentObject(viewModel.profileVM)
+                                .tag(TabRoute.profile)
+                        } else {
+                            UserProfileView(tabValue: $viewModel.tab)
+                                .environmentObject(viewModel.profileVM)
+                                .tag(TabRoute.profile)
+                        }
+                        
                     }
-                    
-                }
-                .dinotisTabStyle($viewModel.tab, isNewAgenda: $viewModel.hasNewAgenda, isShowTooltip: $isShowTooltip)
-                .onChange(of: isShowTooltip) { newValue in
-                    state.isShowTooltip = newValue
+                    .dinotisTabStyle($viewModel.tab, isNewAgenda: $viewModel.hasNewAgenda, isShowTooltip: $isShowTooltip)
+                    .onChange(of: isShowTooltip) { newValue in
+                        state.isShowTooltip = newValue
+                    }
                 }
             }
             .navigationBarTitle(Text(""))
@@ -165,6 +169,12 @@ struct TabViewContainer: View {
                     viewModel.tab = .profile
                 }
             }
+            .fullScreenCover(isPresented: $viewModel.userHomeVM.isSwitchingAccount, content: {
+                SwitchAccountAnimation(switcher: $viewModel.userHomeVM.isSwitchingAccount, toCreator: true)
+            })
+            .fullScreenCover(isPresented: $viewModel.talentHomeVM.isSwitchingAccount, content: {
+                SwitchAccountAnimation(switcher: $viewModel.talentHomeVM.isSwitchingAccount, toCreator: false)
+            })
         }
     }
 }
@@ -172,6 +182,15 @@ struct TabViewContainer: View {
 struct TabViewContainer_Previews: PreviewProvider {
 	static var previews: some View {
 		TabViewContainer()
-            .environmentObject(TabViewContainerViewModel(isFromUserType: false, userHomeVM: UserHomeViewModel(), profileVM: ProfileViewModel(backToHome: {}), searchVM: SearchTalentViewModel(backToHome: {}), scheduleVM: ScheduleListViewModel(backToHome: {}, currentUserId: "")))
+            .environmentObject(
+                TabViewContainerViewModel(
+                    isFromUserType: false,
+                    talentHomeVM: TalentHomeViewModel(isFromUserType: true),
+                    userHomeVM: UserHomeViewModel(),
+                    profileVM: ProfileViewModel(backToHome: {}),
+                    searchVM: SearchTalentViewModel(backToHome: {}),
+                    scheduleVM: ScheduleListViewModel(backToHome: {}, currentUserId: "")
+                )
+            )
 	}
 }

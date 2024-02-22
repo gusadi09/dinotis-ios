@@ -19,4 +19,5 @@ public enum KeychainKey {
 	public static let twilioRole = "twilio.role"
 	public static let twilioUserIdentity = "twilio.userIdentity"
 	public static let twilioRemoveUserState = "twilio.removeUserState"
+    public static let gatewayActive = "home.gatewayActive"
 }

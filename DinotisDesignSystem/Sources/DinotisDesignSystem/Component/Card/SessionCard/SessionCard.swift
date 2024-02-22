@@ -90,15 +90,18 @@ public struct SessionCard: View {
     private let data: SessionCardModel
     private let action: () -> Void
     private let visitProfile: () -> Void
+    private let seeCollaboration: (() -> Void)?
     
     public init(
         with data: SessionCardModel,
         _ action: @escaping () -> Void,
-        visitProfile: @escaping () -> Void
+        visitProfile: @escaping () -> Void,
+        seeCollaboration: (() -> Void)? = nil
     ) {
         self.data = data
         self.action = action
         self.visitProfile = visitProfile
+        self.seeCollaboration = seeCollaboration
     }
     
     public var body: some View {
@@ -135,6 +138,8 @@ public struct SessionCard: View {
 					.lineLimit(2)
 					.foregroundColor(data.color == nil ? .DinotisDefault.black1 : .white)
 					.padding(.bottom, data.type == .session ? 0 : 15)
+                
+                Spacer()
 
 				if data.type == .session {
                     HStack(spacing: 0) {
@@ -204,11 +209,13 @@ public struct SessionCard: View {
                             .padding(.horizontal, data.participantsImgUrl.isEmpty ? 0 : 6)
                     }
 				}
-
+                
 				HStack(spacing: 5) {
 					Button {
                         if data.collaborationCount <= 0 {
                             visitProfile()
+                        } else {
+                            seeCollaboration?()
                         }
 					} label: {
                         HStack(spacing: data.collaborationCount > 0 ? 12 : 8) {

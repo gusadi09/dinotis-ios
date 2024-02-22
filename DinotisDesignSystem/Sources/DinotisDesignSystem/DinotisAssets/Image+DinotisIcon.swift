@@ -12,6 +12,7 @@ public extension Image {
     static let generalQuestionIcon = Image("ic-question-general", bundle: Bundle.module)
     static let generalChevronDown = Image("ic-chevron-down", bundle: .module)
     static let generalChevronRight = Image("ic-chevron-right", bundle: .module)
+    static let generalDinotisCircularIcon = Image("ic-dinotis-circular", bundle: .module)
     static let logoWithText = Image("logo-with-text", bundle: Bundle.module)
     static let logoWhiteText = Image("logo-white-text", bundle: .module)
     static let logoFullWhite = Image("logo-full-white", bundle: .module)
@@ -58,6 +59,8 @@ public extension Image {
     static let profileLogoutIcon = Image("ic-logout-profile", bundle: Bundle.module)
     static let profileGreenPreferencesIcon = Image("ic-green-preferences-profile", bundle: Bundle.module)
     static let profileCreatorAnalyticsIcon = Image("creator-analytics-menu", bundle: Bundle.module)
+    static let profileLinkIcon = Image("ic-link-profile", bundle: Bundle.module)
+    static let profileAddPhotoIcon = Image("ic-add-photo-profile", bundle: Bundle.module)
     
     static let paymentBCAIcon = Image("ic-bca-payment", bundle: Bundle.module)
     static let paymentBNIIcon = Image("ic-bni-payment", bundle: Bundle.module)
@@ -191,4 +194,11 @@ public extension Image {
     static let studioPencilIcon = Image("ic-pencil-black", bundle: .module)
     static let studioTrashIcon = Image("ic-trash-black", bundle: .module)
     static let chevronUp = Image("ic-chevron-up", bundle: .module)
+    static let copylinkIcon = Image("ic-copylink", bundle: .module)
+    static let dinotisVerifiedBtnIcon = Image("ic-dinotis-verified-btn", bundle: .module)
+    static let newUserVerifiedIcon = Image("ic-new-user-verified", bundle: .module)
+    static let profileVerifiedPointerIcon = Image("ic-pointer", bundle: .module)
+    static let profileChecmarkFalseIcon = Image("ic-checkbox-false", bundle: .module)
+    static let profileChecmarkTrueIcon = Image("ic-checkbox-true", bundle: .module)
+    static let generalMessageTextIcon = Image("ic-message-bubble", bundle: .module)
 }

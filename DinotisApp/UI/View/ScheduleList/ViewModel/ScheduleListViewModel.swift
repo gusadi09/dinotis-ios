@@ -79,6 +79,8 @@ final class ScheduleListViewModel: ObservableObject {
   @Published var isShowAlert = false
   @Published var alert = AlertAttribute()
     
+    @Published var currentIndex = 0
+    
     @Published var showReviewSheet = false
 
 	@Published var bookingData = [UserBookingData]()

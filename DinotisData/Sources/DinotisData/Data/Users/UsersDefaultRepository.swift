@@ -47,4 +47,8 @@ public final class UsersDefaultRepository: UsersRepository {
     public func provideCreatorAvailability(body: CreatorAvailabilityRequest) async throws -> SuccessResponse {
         try await self.remoteDataSource.creatorAvailability(body: body)
     }
+    
+    public func provideSendVerifRequest(links: [String]) async throws -> VerificationReqResponse {
+        try await self.remoteDataSource.sendVerifRequest(links: links)
+    }
 }

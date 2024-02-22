@@ -15,6 +15,8 @@ final class CreatorAvailabilityViewModel: ObservableObject {
     private let getUserUseCase: GetUserUseCase
     private var stateObservable = StateObservable.shared
     
+    @Published var isCreatorModeActive = false
+    @Published var isShowCompleteProfileSheet = false
     @Published var route: HomeRouting?
     
     @Published var isShowSubscriptionSheet = false
@@ -28,6 +30,8 @@ final class CreatorAvailabilityViewModel: ObservableObject {
     @Published var isError = false
     @Published var error = ""
     @Published var isSuccess = false
+    
+    @Published var profilePercentage: Double
     
     var backToHome: () -> Void
     
@@ -43,10 +47,12 @@ final class CreatorAvailabilityViewModel: ObservableObject {
     }
     
     init(
+        profilePercentage: Double,
         creatorAvailabilityUseCase: SetCreatorAvailabilityUseCase = SetCreatorAvailabilityDefaultUseCase(),
         getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
         backToHome: @escaping () -> Void
     ) {
+        self.profilePercentage = profilePercentage
         self.backToHome = backToHome
         self.creatorAvailabilityUseCase = creatorAvailabilityUseCase
         self.getUserUseCase = getUserUseCase
@@ -103,6 +109,25 @@ final class CreatorAvailabilityViewModel: ObservableObject {
         Task {
             await getUser()
         }
+    }
+    
+    func onAppeared() {
+        isCreatorModeActive = stateObservable.isShowGateway
+    }
+    
+    func onChanged(_ isShow: Bool) {
+        print("PROFFF ", profilePercentage)
+        guard profilePercentage >= 100.0 else {
+            isShowCompleteProfileSheet = true
+            isCreatorModeActive = true
+            return
+        }
+        
+        if !isShow {
+            stateObservable.userType = 3
+        }
+        
+        stateObservable.isShowGateway = isShow
     }
     
     func setAvailability() async {

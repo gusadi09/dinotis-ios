@@ -38,6 +38,19 @@ struct UserProfileView: View {
 			VStack(spacing: 0) {
 				HeaderView(title: "", headerColor: .DinotisDefault.baseBackground, textColor: .DinotisDefault.baseBackground)
 					.frame(height: 15)
+                
+                NavigationLink(
+                    unwrapping: $viewModel.route,
+                    case: /HomeRouting.creatorRoom,
+                    destination: { viewModel in
+                        CreatorRoomView()
+                            .environmentObject(viewModel.wrappedValue)
+                    },
+                    onNavigate: {_ in },
+                    label: {
+                        EmptyView()
+                    }
+                )
 
 				NavigationLink(
 					unwrapping: $viewModel.route,
@@ -95,7 +108,8 @@ struct UserProfileView: View {
                             profilePhoto: $viewModel.userPhotos,
                             name: $viewModel.names,
                             width: 80,
-                            height: 80
+                            height: 80,
+                            shape: RoundedRectangle(cornerRadius: 12)
                         )
                         
                         VStack(alignment: .leading, spacing: 10) {
@@ -183,7 +197,7 @@ struct UserProfileView: View {
                     
                     HStack {
                         Text(LocaleText.accountSettingText)
-                            .font(.robotoBold(size: 14))
+                            .font(.robotoBold(size: 18))
                             .foregroundColor(.black)
                         
                         Spacer()
@@ -207,7 +221,7 @@ struct UserProfileView: View {
                                         .padding(.trailing, 5)
                                     
                                     Text(LocaleText.editProfileText)
-                                        .font(.robotoRegular(size: 14))
+                                        .font(.robotoMedium(size: 12))
                                         .foregroundColor(.black)
                                     
                                     Spacer()
@@ -221,10 +235,55 @@ struct UserProfileView: View {
                                 }
                                 .contentShape(Rectangle())
                             })
-                            .padding(.vertical, 10)
                             
-                            Divider()
+                            Capsule()
+                                .frame(height: 1)
+                                .foregroundColor(Color(.systemGray5))
+                                .padding(.vertical, 10)
                         }
+                        
+                        Button(action: {
+                            viewModel.routeToCreatorRoom()
+                        }, label: {
+                            HStack {
+                                Image.profileGreenPreferencesIcon
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 34)
+                                    .padding(.trailing, 5)
+                                
+                                Text(LocalizableText.settingCreatorSpace)
+                                    .font(.robotoMedium(size: 12))
+                                    .foregroundColor(.black)
+                                
+                                Spacer()
+                                
+                                Text(LocalizableText.settingNewLabel)
+                                    .font(.robotoMedium(size: 12))
+                                    .fontWeight(.semibold)
+                                    .foregroundStyle(Color.DinotisDefault.primary)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 2)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 3)
+                                            .foregroundStyle(Color.DinotisDefault.lightPrimary)
+                                    )
+                                
+                                Image(systemName: "chevron.right")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .frame(height: 12)
+                                    .foregroundColor(.black)
+                            }
+                            .contentShape(Rectangle())
+                        })
+                        .clipShape(Rectangle())
+                        
+                        Capsule()
+                            .frame(height: 1)
+                            .foregroundColor(Color(.systemGray5))
+                            .padding(.vertical, 10)
                         
                         Button(action: {
                             viewModel.routeToCreatorChoose()
@@ -237,7 +296,7 @@ struct UserProfileView: View {
                                     .padding(.trailing, 5)
                                 
                                 Text(LocalizableText.profileChoosenCreator)
-                                    .font(.robotoRegular(size: 14))
+                                    .font(.robotoMedium(size: 12))
                                     .foregroundColor(.black)
                                 
                                 Spacer()
@@ -251,9 +310,11 @@ struct UserProfileView: View {
                             }
                             .contentShape(Rectangle())
                         })
-                        .padding(.vertical, 10)
                         
-                        Divider()
+                        Capsule()
+                            .frame(height: 1)
+                            .foregroundColor(Color(.systemGray5))
+                            .padding(.vertical, 10)
                         
                         Button(action: {
                             viewModel.routeToChangePass()
@@ -266,7 +327,7 @@ struct UserProfileView: View {
                                     .padding(.trailing, 5)
                                 
                                 Text(LocaleText.changePasswordTitle)
-                                    .font(.robotoRegular(size: 14))
+                                    .font(.robotoMedium(size: 12))
                                     .foregroundColor(.black)
                                 
                                 Spacer()
@@ -280,9 +341,11 @@ struct UserProfileView: View {
                             }
                             .contentShape(Rectangle())
                         })
-                        .padding(.vertical, 10)
                         
-                        Divider()
+                        Capsule()
+                            .frame(height: 1)
+                            .foregroundColor(Color(.systemGray5))
+                            .padding(.vertical, 10)
                         
                         Button(action: {
                             viewModel.openWhatsApp()
@@ -295,7 +358,7 @@ struct UserProfileView: View {
                                     .padding(.trailing, 5)
                                 
                                 Text(LocaleText.helpText)
-                                    .font(.robotoRegular(size: 14))
+                                    .font(.robotoMedium(size: 12))
                                     .foregroundColor(.black)
                                 
                                 Spacer()
@@ -309,10 +372,11 @@ struct UserProfileView: View {
                             }
                             .contentShape(Rectangle())
                         })
-                        .padding(.vertical, 10)
                         
-                        
-                        Divider()
+                        Capsule()
+                            .frame(height: 1)
+                            .foregroundColor(Color(.systemGray5))
+                            .padding(.vertical, 10)
                         
                         Button(action: {
                             viewModel.toggleDeleteModal()
@@ -325,7 +389,7 @@ struct UserProfileView: View {
                                     .padding(.trailing, 5)
                                 
                                 Text(LocaleText.deleteAccountText)
-                                    .font(.robotoRegular(size: 14))
+                                    .font(.robotoMedium(size: 12))
                                     .foregroundColor(.primaryRed)
                                 
                                 Spacer()
@@ -339,10 +403,11 @@ struct UserProfileView: View {
                             }
                             .contentShape(Rectangle())
                         })
-                        .padding(.vertical, 10)
                         
-                        
-                        Divider()
+                        Capsule()
+                            .frame(height: 1)
+                            .foregroundColor(Color(.systemGray5))
+                            .padding(.vertical, 10)
                         
                         Button(action: {
                             viewModel.presentLogout()
@@ -355,7 +420,7 @@ struct UserProfileView: View {
                                     .padding(.trailing, 5)
                                 
                                 Text(LocaleText.exitText)
-                                    .font(.robotoRegular(size: 14))
+                                    .font(.robotoMedium(size: 12))
                                     .foregroundColor(.black)
                                 
                                 Spacer()
@@ -369,14 +434,18 @@ struct UserProfileView: View {
                             }
                             .contentShape(Rectangle())
                         })
-                        .padding(.vertical, 10)
-                        .padding(.bottom, 45)
                         
                     }
                     .buttonStyle(.plain)
+                    .padding(16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 14)
+                            .foregroundStyle(Color.white)
+                    )
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets(top: 5, leading: 20, bottom: 15, trailing: 20))
+                    .padding(.bottom, 45)
                 }
                 .listStyle(.plain)
                 .refreshable {

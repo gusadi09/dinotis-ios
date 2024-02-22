@@ -19,29 +19,38 @@ struct ResetPasswordView: View {
 			ZStack(alignment: .topLeading) {
 				Color.DinotisDefault.baseBackground
 					.edgesIgnoringSafeArea(.all)
+                
+                Image.backgroundAuthenticationImage
+                    .resizable()
+                    .ignoresSafeArea()
 
 				VStack(spacing: 0) {
-					HeaderView(
-						type: .imageHeader(.generalDinotisImage, 25),
-						title: "",
-						trailingButton: {
-							Button {
-								viewModel.openWhatsApp()
-							} label: {
-								Image.generalQuestionIcon
-									.resizable()
-									.scaledToFit()
-									.frame(height: 25)
-							}
-						}
-					)
+                    HeaderView(
+                        type: .textHeader,
+                        title: LocalizableText.titleChangePassword,
+                        headerColor: .clear,
+                        textColor: .white,
+                        leadingButton: {
+                            DinotisElipsisButton(
+                                icon: .generalBackIcon,
+                                iconColor: .DinotisDefault.black1,
+                                bgColor: .DinotisDefault.white,
+                                strokeColor: nil,
+                                iconSize: 12,
+                                type: .primary, {
+                                    dismiss()
+                                }
+                            )
+                        })
 
 					ScrollView(.vertical, showsIndicators: false) {
 						VStack(spacing: 20) {
 							VStack(spacing: 10) {
-								Text(LocalizableText.titleChangePassword)
-									.font(.robotoBold(size: 28))
-									.foregroundColor(.DinotisDefault.black1)
+                                Image.generalDinotisImage
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 50)
+                                    .padding(.vertical)
 
 								Text(LocalizableText.descriptionChangePassword)
 									.font(.robotoRegular(size: 12))
@@ -84,22 +93,22 @@ struct ResetPasswordView: View {
 									})
 								}
 							}
+                            
+                            DinotisPrimaryButton(
+                                text: LocalizableText.changeNowLabel,
+                                type: .adaptiveScreen,
+                                textColor: viewModel.isButtonDisable() ? .DinotisDefault.lightPrimaryActive : .DinotisDefault.white,
+                                bgColor: viewModel.isButtonDisable() ? .DinotisDefault.lightPrimary : .DinotisDefault.primary
+                            ) {
+                                Task {
+                                    await viewModel.resetPassword()
+                                }
+                            }
+                            .disabled(viewModel.isButtonDisable())
+                            .padding(.vertical)
 						}
 						.padding()
 					}
-
-					DinotisPrimaryButton(
-						text: LocalizableText.changeNowLabel,
-						type: .adaptiveScreen,
-						textColor: viewModel.isButtonDisable() ? .DinotisDefault.lightPrimaryActive : .DinotisDefault.white,
-						bgColor: viewModel.isButtonDisable() ? .DinotisDefault.lightPrimary : .DinotisDefault.primary
-					) {
-                        Task {
-                            await viewModel.resetPassword()
-                        }
-					}
-					.disabled(viewModel.isButtonDisable())
-					.padding()
 				}
 
 			}
@@ -119,8 +128,19 @@ struct ResetPasswordView: View {
 	}
 }
 
+fileprivate struct Preview: View {
+    
+    init() {
+        FontInjector.registerFonts()
+    }
+    
+    var body: some View {
+        ResetPasswordView(viewModel: ResetPasswordViewModel(phone: "", token: "", backToRoot: {}, backToLogin: {}, backToPhoneSet: {}))
+    }
+}
+
 struct ResetPasswordView_Previews: PreviewProvider {
 	static var previews: some View {
-		ResetPasswordView(viewModel: ResetPasswordViewModel(phone: "", token: "", backToRoot: {}, backToLogin: {}, backToPhoneSet: {}))
+		Preview()
 	}
 }

@@ -387,7 +387,7 @@ extension CreatorProfileDetailView {
                     .foregroundColor(.DinotisDefault.black3)
                 
                 if let data = viewModel.talentData?.userHighlights {
-                    let width = geometry.size.width / 3
+                    let width = geometry.size.width / 3 - 16
                     LazyVGrid(columns: [
                         GridItem(.adaptive(minimum: width)),
                         GridItem(.adaptive(minimum: width)),

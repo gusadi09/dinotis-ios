@@ -6,10 +6,12 @@
   
 */
 
-"title_boarding_first" = "Chat with Awesome Creators!";
-"description_boarding_first" = "Meet with great creators from various profession? only here is the place";
-"title_boarding_second" = "Anytime and anywhere";
-"description_boarding_second" = "Are you satisfied just hearing the sound? \nIf you chat here, you can see each other!";
+"title_boarding_first" = "Meet inspiring Creators";
+"description_boarding_first" = "A place for you to get inspired by Creators from any fields";
+"title_boarding_second" = "Video Call anytime, anywhere";
+"description_boarding_second" = "Interact with your favorite Creators real time!";
+"title_boarding_third" = "You can be a Creator, too!";
+"description_boarding_third" = "Share your ideas and stories, manage everything independently!";
 "title_role_type" = "Various interesting sessions for you";
 "description_role_type" = "Please choose the type of account that suits for you!";
 "general_success" = "Success";
@@ -543,6 +545,7 @@
 
 "edit_profile_name_empty_error" = "Please fill your name, this field can't be empty";
 "edit_profile_username_empty_error" = "Please fill your username, this field can't be empty";
+"edit_profile_username_less_than_error" = "Username should be more than 6 character";
 "edit_profile_bio_empty_error" = "Please fill your bio, this field can't be empty";
 "edit_profile_profession_empty_error" = "Please select your profession, this field can't be empty";
 
@@ -770,3 +773,64 @@
 "home_empty_private_session_desc" = "No private video call sessions yet";
 "home_empty_group_session_desc" = "No group video call sessions yet";
 "home_empty_uploaded_video_desc" = "No uploaded videos yet";
+
+"setting_creator_space" = "Creator Space";
+"setting_new_label" = "New";
+"setting_dinotis_verified" = "Dinotis Verified";
+"personal_label" = "Personal";
+"creator_room_label" = "Creator Room";
+"activate_creator_mode_title" = "Activate Creator Mode";
+"activate_creator_mode_desc" = "Create and organize your own session as a Creator";
+"complete_profile_title" = "Your profile is incomplete 🙁";
+"complete_profile_desc" = "Complete your profile to make it more credible";
+"complete_now_label" = "Complete Now";
+"main_profile_label" = "Main Profile";
+"profile_dinotis_link_with_counter" = "Dinotis Link / Username (%lld/32)";
+"contact_information_label" = "Contact Information";
+"no_handphone_label" = "Phone Number";
+"preview_profile_label" = "Preview Profile";
+"about_me_with_counter" = "About Me (%lld/256)";
+"gallery_with_counter" = "Gallery (%lld/3)";
+"profile_image_limitation_desc" = "*Format jpg/png, max 1MB/image";
+"welcome_to_creator_mode_title" = "Welcome to Creator Mode";
+"welcome_to_personal_mode_title" = "Welcome to Personal Mode";
+"new_label" = "New";
+"profession_with_counter" = "Profession (%lld/2)";
+"add_photo_label" = "Add Photo";
+"authentication_new_register_title" = "Register Account";
+"authentication_new_login_title" = "Login Account";
+
+"just_joined_label" = "Just joined";
+"nearest_session_label" = "Nearest sessions";
+"all_session_label" = "All Sessions";
+"find_creators_label" = "Find Creators";
+
+"dinotis_verified_title" = "Dinotis Verified";
+"verified_landing_title" = "Engage trust with Dinotis Verified";
+"verified_landing_point1_title" = "A verified badge";
+"verified_landing_point1_subtitle" = "Get recognized as an authentic individual with the power to make a meaningful impact.";
+"verified_landing_point2_title" = "Create unlimited sessions";
+"verified_landing_point2_subtitle" = "Create group/private video calls as much as you like";
+"verified_landing_point3_title" = "More enhanced settings";
+"verified_landing_point3_subtitle" = "Set an unlimited number of audiences for your sessions, configure your management fee, and even attach files to enhance your session.";
+
+"verified_waiting_success_title" = "Your verification submitted";
+"verified_waiting_success_subtitle" = "We'll review your account within 2x24 hours.  If your account aligns with our requirements, you'll get the badge right away. Thanks for your patience!";
+
+"verified_success_title" = "Your account has been verified";
+"verified_success_subtitle" = "Now you can access all the best features in Dinotis.";
+
+"verified_failed_title" = "Your verification is failed";
+"verified_failed_subtitle" = "You can apply your verification request again next time";
+"verified_failed_reverify" = "Verify Again";
+
+"verified_form_title" = "Request Verified";
+"verified_form_completed_subtitle" = "Make sure your information has completed";
+"verified_form_attach_links_title" = "Attach other links";
+"verified_form_link_subtitle" = "Add your social media such as instagram, twitter, etc or articles that ensure your credibility";
+"verified_form_link_placeholder" = "Input your additional link here...";
+"verified_form_add_more" = "+ Add More";
+"verified_form_invalid_url" = "Your link is invalid format, please check again.";
+"verified_form_agreement_first" = "Make sure you have agreed to ";
+"verified_form_agreement_mid" = "Dinotis Terms of Service";
+"verified_form_agreement_last" = " & acknowledge that our Privacy Notice applies.";

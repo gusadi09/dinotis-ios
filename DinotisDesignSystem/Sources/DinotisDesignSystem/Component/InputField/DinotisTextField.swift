@@ -17,6 +17,8 @@ public struct DinotisTextField<Content: View>: View {
 	let onSubmit: () -> Void
 	let trailingButton: Content
 	let tfDisabled: Bool
+    
+    @FocusState var focused: Bool
 
 	public init(
 		_ placeholder: String,
@@ -62,6 +64,7 @@ public struct DinotisTextField<Content: View>: View {
 						.font(.robotoRegular(size: 12))
 						.foregroundColor(.black)
 						.textFieldStyle(.plain)
+                        .focused($focused)
 						.padding()
 					#else
 					TextField(placeholder, text: $text, onCommit: onSubmit)
@@ -71,6 +74,7 @@ public struct DinotisTextField<Content: View>: View {
 						.padding()
 					#endif
 				}
+                .focused($focused)
 				.disabled(tfDisabled)
 
 				trailingButton
@@ -84,7 +88,7 @@ public struct DinotisTextField<Content: View>: View {
 			)
 			.overlay(
 				RoundedRectangle(cornerRadius: 8)
-					.stroke(Color(red: 0.792, green: 0.8, blue: 0.812), lineWidth: 1)
+                    .stroke(focused ? Color.DinotisDefault.primary : Color(red: 0.792, green: 0.8, blue: 0.812), lineWidth: 1)
 			)
 
 			if let error = errorText {
@@ -96,7 +100,7 @@ public struct DinotisTextField<Content: View>: View {
 				}
 			}
 		}
-
+        .tint(Color.DinotisDefault.primary)
 	}
 }
 

@@ -20,7 +20,12 @@ public final class StateObservable: ObservableObject {
 		}
 	}
     
-    @Published public var isShowTooltip = UserDefaults().bool(forKey: "isShowTooltip")
+    @Published public var isShowTooltip = UserDefaults.standard.bool(forKey: "isShowTooltip")
+    @Published public var isShowGateway: Bool {
+        didSet {
+            keychain.set(isShowGateway, forKey: KeychainKey.gatewayActive)
+        }
+    }
     
     @Published public var userId: String {
         didSet {
@@ -100,6 +105,7 @@ public final class StateObservable: ObservableObject {
 		self.twilioRole = self.keychain.string(forKey: KeychainKey.twilioRole).orEmpty()
 		self.twilioUserIdentity = self.keychain.string(forKey: KeychainKey.twilioUserIdentity).orEmpty()
 		self.isRemoveUser = self.keychain.bool(forKey: KeychainKey.twilioRemoveUserState) ?? false
+        self.isShowGateway = self.keychain.bool(forKey: KeychainKey.gatewayActive) ?? false
 	}
     
     @MainActor

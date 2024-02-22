@@ -7,11 +7,13 @@
 
 import SwiftUI
 import DinotisDesignSystem
+import DinotisData
 import AlertToast
 
 struct CreatorAvailabilityView: View {
     
     @ObservedObject var viewModel: CreatorAvailabilityViewModel
+    @ObservedObject var state = StateObservable.shared
     @Environment(\.dismiss) var dismiss
     
     init(viewModel: CreatorAvailabilityViewModel) {
@@ -45,36 +47,66 @@ struct CreatorAvailabilityView: View {
                 
                 ScrollView {
                     VStack {
-                        Button {
-                            viewModel.isShowSubscriptionSheet = true
-                        } label: {
-                            HStack {
-                                VStack(alignment: .leading, spacing: 6, content: {
-                                    Text(LocalizableText.profileSetSubscriptionTitle)
-                                        .font(.robotoBold(size: 16))
-                                        .foregroundColor(.DinotisDefault.black1)
-                                    
-                                    Text(LocalizableText.profileSetSubscriptionDesc)
-                                        .font(.robotoRegular(size: 12))
-                                        .foregroundColor(.DinotisDefault.black3)
-                                })
-                                .multilineTextAlignment(.leading)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                
-                                Image(systemName: "chevron.right")
-                                    .font(.system(size: 20, weight: .heavy))
+                        HStack(spacing: 24) {
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text(LocalizableText.activateCreatorModeTitle)
+                                    .font(.robotoBold(size: 16))
                                     .foregroundColor(.DinotisDefault.black1)
-                            }
-                            .padding(.vertical, 24)
-                            .padding(.horizontal, 18)
-                            .background(.white)
-                            .cornerRadius(12)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .inset(by: 0.5)
-                                    .stroke(Color(red: 0.91, green: 0.91, blue: 0.91), lineWidth: 1)
                                 
-                            )
+                                Text(LocalizableText.activateCreatorModeDesc)
+                                    .font(.robotoRegular(size: 12))
+                                    .foregroundColor(.DinotisDefault.black3)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            Toggle("", isOn: $viewModel.isCreatorModeActive)
+                                .labelsHidden()
+                                .tint(Color.DinotisDefault.green)
+                                .onChange(of: viewModel.isCreatorModeActive) { newValue in
+                                    viewModel.onChanged(newValue)
+                                }
+                        }
+                        .padding(16)
+                        .background(.white)
+                        .cornerRadius(12)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .inset(by: 0.5)
+                                .stroke(Color.DinotisDefault.grayDinotis, lineWidth: 1)
+                        )
+                        
+                        if state.userType == 2 {
+                            Button {
+                                viewModel.isShowSubscriptionSheet = true
+                            } label: {
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 6, content: {
+                                        Text(LocalizableText.profileSetSubscriptionTitle)
+                                            .font(.robotoBold(size: 16))
+                                            .foregroundColor(.DinotisDefault.black1)
+                                        
+                                        Text(LocalizableText.profileSetSubscriptionDesc)
+                                            .font(.robotoRegular(size: 12))
+                                            .foregroundColor(.DinotisDefault.black3)
+                                    })
+                                    .multilineTextAlignment(.leading)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    
+                                    Image(systemName: "chevron.right")
+                                        .font(.system(size: 20, weight: .heavy))
+                                        .foregroundColor(.DinotisDefault.black1)
+                                }
+                                .padding(.vertical, 24)
+                                .padding(.horizontal, 18)
+                                .background(.white)
+                                .cornerRadius(12)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .inset(by: 0.5)
+                                        .stroke(Color(red: 0.91, green: 0.91, blue: 0.91), lineWidth: 1)
+                                    
+                                )
+                            }
                         }
                     }
                     .padding()
@@ -112,6 +144,7 @@ struct CreatorAvailabilityView: View {
             })
         )
         .onAppear {
+            viewModel.onAppeared()
             viewModel.onGetUser()
         }
     }
@@ -284,5 +317,5 @@ extension CreatorAvailabilityView {
 }
 
 #Preview {
-    CreatorAvailabilityView(viewModel: .init(backToHome: {}))
+    CreatorAvailabilityView(viewModel: .init(profilePercentage: 100.0, backToHome: {}))
 }

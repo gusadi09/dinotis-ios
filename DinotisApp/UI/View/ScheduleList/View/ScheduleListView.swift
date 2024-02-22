@@ -147,7 +147,7 @@ struct ScheduleListView: View {
                             }
                         }
                     }
-                    .listRowInsets(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 18))
+                    .listRowInsets(EdgeInsets(top: 0, leading: 18, bottom: -10, trailing: 18))
                     .listRowSeparator(.hidden)
                     .listSectionSeparator(.hidden)
                     .listRowBackground(Color.clear)
@@ -224,48 +224,47 @@ private extension ScheduleListView {
                 
                 if !viewModel.todaysAgenda.isEmpty {
                     Section {
-                            TabView {
-                                ForEach(viewModel.todaysAgenda, id: \.id) { item in
-                                    SessionCard(
-                                        with: SessionCardModel(
-                                            title: (item.meeting?.title).orEmpty(),
-                                            date: DateUtils.dateFormatter((item.meeting?.startAt).orCurrentDate(), forFormat: .EEEEddMMMMyyyy),
-                                            startAt: DateUtils.dateFormatter((item.meeting?.startAt).orCurrentDate(), forFormat: .HHmm),
-                                            endAt: DateUtils.dateFormatter((item.meeting?.endAt).orCurrentDate(), forFormat: .HHmm),
-                                            isPrivate: (item.meeting?.isPrivate) ?? false,
-                                            isVerified: (item.meeting?.user?.isVerified) ?? false,
-                                            photo: (item.meeting?.user?.profilePhoto).orEmpty(),
-                                            name: (item.meeting?.user?.name).orEmpty(),
-                                            color: item.meeting?.background,
-                                            participantsImgUrl: item.meeting?.participantDetails?.compactMap({
-                                                $0.profilePhoto.orEmpty()
-                                            }) ?? [],
-                                            isActive: item.meeting?.endAt.orCurrentDate() ?? Date() > Date(),
-                                            collaborationCount: (item.meeting?.meetingCollaborations ?? []).count,
-                                            collaborationName: (item.meeting?.meetingCollaborations ?? []).compactMap({
-                                                (
-                                                    $0.user?.name
-                                                ).orEmpty()
-                                            }).joined(separator: ", "),
-                                            isAlreadyBooked: false
-                                        )
-                                    ) {
-                                        viewModel.routeToUsertDetailSchedule(
-											bookingId: item.id.orEmpty(),
-                                            talentName: (item.meeting?.user?.name).orEmpty(),
-                                            talentPhoto: (item.meeting?.user?.profilePhoto).orEmpty()
-                                        )
-                                    } visitProfile: {
-                                        viewModel.routeToTalentProfile(username: (item.meeting?.user?.username).orEmpty())
-                                    }
-                                    .frame(maxWidth: abs(.infinity))
-                                    .padding()
-                                    .background(Color.clear)
+                        TabView {
+                            ForEach(viewModel.todaysAgenda, id: \.id) { item in
+                                SessionCard(
+                                    with: SessionCardModel(
+                                        title: (item.meeting?.title).orEmpty(),
+                                        date: DateUtils.dateFormatter((item.meeting?.startAt).orCurrentDate(), forFormat: .EEEEddMMMMyyyy),
+                                        startAt: DateUtils.dateFormatter((item.meeting?.startAt).orCurrentDate(), forFormat: .HHmm),
+                                        endAt: DateUtils.dateFormatter((item.meeting?.endAt).orCurrentDate(), forFormat: .HHmm),
+                                        isPrivate: (item.meeting?.isPrivate) ?? false,
+                                        isVerified: (item.meeting?.user?.isVerified) ?? false,
+                                        photo: (item.meeting?.user?.profilePhoto).orEmpty(),
+                                        name: (item.meeting?.user?.name).orEmpty(),
+                                        color: item.meeting?.background,
+                                        participantsImgUrl: item.meeting?.participantDetails?.compactMap({
+                                            $0.profilePhoto.orEmpty()
+                                        }) ?? [],
+                                        isActive: item.meeting?.endAt.orCurrentDate() ?? Date() > Date(),
+                                        collaborationCount: (item.meeting?.meetingCollaborations ?? []).count,
+                                        collaborationName: (item.meeting?.meetingCollaborations ?? []).compactMap({
+                                            (
+                                                $0.user?.name
+                                            ).orEmpty()
+                                        }).joined(separator: ", "),
+                                        isAlreadyBooked: false
+                                    )
+                                ) {
+                                    viewModel.routeToUsertDetailSchedule(
+                                        bookingId: item.id.orEmpty(),
+                                        talentName: (item.meeting?.user?.name).orEmpty(),
+                                        talentPhoto: (item.meeting?.user?.profilePhoto).orEmpty()
+                                    )
+                                } visitProfile: {
+                                    viewModel.routeToTalentProfile(username: (item.meeting?.user?.username).orEmpty())
                                 }
+                                .frame(maxWidth: abs(.infinity))
+                                .padding()
+                                .background(Color.clear)
                             }
-                            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-                            .frame(height: UIScreen.main.bounds.width/2)
-                            
+                        }
+                        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                        .frame(height: UIScreen.main.bounds.width/1.8)
                     }
                 } else {
                     VStack {

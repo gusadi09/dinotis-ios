@@ -49,6 +49,17 @@ final class OtpVerificationViewModel: ObservableObject {
     
     @Published var phoneNumber: String
     
+    var headerTitle: String {
+        switch otpType {
+        case .register:
+            LocalizableText.titleRegisterAudience
+        case .forgetPassword:
+            LocalizableText.titleForgotPassword
+        case .login:
+            LocalizableText.loginTitle
+        }
+    }
+    
     var onBackToRoot: () -> Void
     var backToLogin: () -> Void
     var backToPhoneSet: () -> Void
@@ -93,6 +104,7 @@ final class OtpVerificationViewModel: ObservableObject {
         }
     }
     
+    @MainActor
     func onReceiveTimer() {
         if self.timeRemaining > 0 {
             self.timeRemaining -= 1
@@ -229,10 +241,10 @@ final class OtpVerificationViewModel: ObservableObject {
                 if (data?.isPasswordFilled ?? false) || (!(data?.isPasswordFilled ?? false) && (data?.name).orEmpty().isEmpty) {
                     if !(data?.name).orEmpty().isEmpty {
                         
-                        if self?.stateObservable.userType == 3 {
                             self?.stateObservable.isVerified = "Verified"
 							let vm = TabViewContainerViewModel(
-                                isFromUserType: true,
+                                isFromUserType: true, 
+                                talentHomeVM: TalentHomeViewModel(isFromUserType: true),
                                 userHomeVM: UserHomeViewModel(),
 								profileVM: ProfileViewModel(backToHome: {}),
 								searchVM: SearchTalentViewModel(backToHome: {}),
@@ -242,22 +254,6 @@ final class OtpVerificationViewModel: ObservableObject {
 							DispatchQueue.main.async { [weak self] in
 								self?.route = .tabContainer(viewModel: vm)
 							}
-                            
-                        } else if self?.stateObservable.userType == 2 {
-                            
-                            if data?.username != nil {
-                                self?.stateObservable.isVerified = "Verified"
-                                let viewModel = TalentHomeViewModel(isFromUserType: true)
-                                self?.route = .homeTalent(viewModel: viewModel)
-                                
-                            } else {
-                                self?.stateObservable.isVerified = VerifiedCondition.verifiedNoName
-                                let viewModel = BiodataViewModel()
-                                self?.route = .biodataTalent(viewModel: viewModel)
-                                
-                            }
-                            
-                        }
                         
                     } else {
                         self?.stateObservable.isVerified = VerifiedCondition.verifiedNoName
