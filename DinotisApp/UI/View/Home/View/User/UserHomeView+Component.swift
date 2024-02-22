@@ -613,7 +613,6 @@ extension UserHomeView {
                                 }
                                 .padding(.horizontal)
                             }
-                            .padding(.horizontal)
                             
                             HStack(spacing: 8) {
                                 Button {
