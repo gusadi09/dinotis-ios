@@ -23,9 +23,11 @@ final class OnboardingViewModel: ObservableObject {
         self.repository = repository
     }
     
-    func routeToUserType() {
+    func routeToLogin() {
+        let vm = LoginViewModel(backToRoot: { self.route = nil })
+        
         DispatchQueue.main.async { [weak self] in
-            self?.route = .userType
+            self?.route = .userLogin(viewModel: vm)
         }
     }
     
@@ -43,16 +45,9 @@ final class OnboardingViewModel: ObservableObject {
         if !isTokenEmpty &&
                 ((stateObservable.isVerified == "Verified") &&
                  stateObservable.userType != 0) {
-            if stateObservable.userType == 2 {
-                let homeViewModel = TalentHomeViewModel(isFromUserType: true)
-                
-                DispatchQueue.main.async { [weak self] in
-                    self?.route = .homeTalent(viewModel: homeViewModel)
-                }
-                
-            } else if stateObservable.userType == 3 {
                 let vm = TabViewContainerViewModel(
-                    isFromUserType: true,
+                    isFromUserType: true, 
+                    talentHomeVM: TalentHomeViewModel(isFromUserType: true),
                     userHomeVM: UserHomeViewModel(),
                     profileVM: ProfileViewModel(backToHome: {}),
                     searchVM: SearchTalentViewModel(backToHome: {}),
@@ -62,8 +57,6 @@ final class OnboardingViewModel: ObservableObject {
                 DispatchQueue.main.async { [weak self] in
                     self?.route = .tabContainer(viewModel: vm)
                 }
-                
-            }
             
         } else if !isTokenEmpty &&
                     ((stateObservable.isVerified == "VerifiedNoName") &&

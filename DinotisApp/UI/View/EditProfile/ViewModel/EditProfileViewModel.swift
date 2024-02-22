@@ -55,7 +55,11 @@ final class EditProfileViewModel: ObservableObject {
     @Published var userPhoto: String?
     @Published var phone = ""
     
-    @Published var userHighlightsImage =  [UIImage(), UIImage(), UIImage()]
+    @Published var draggedImage: UIImage?
+    @Published var userHighlightsImage: [UIImage] = Array(repeating: UIImage(), count: 3)
+    var userHighlightImageCount: Int {
+        userHighlightsImage.filter({ $0 != UIImage() }).count
+    }
     
     @Published var userHighlights : [String]?
     @Published var userHighlight : String?
@@ -67,7 +71,7 @@ final class EditProfileViewModel: ObservableObject {
     @Published var bio = ""
     
     @Published var isShowPhotoLibrary = false
-    @Published var isShowPhotoLibraryHG = [false, false, false]
+    @Published var isShowPhotoLibraryHG: [Bool] = Array(repeating: false, count: 6)
     @Published var image = UIImage()
     
     @Published var isSuccessUpdate = false
@@ -130,7 +134,7 @@ final class EditProfileViewModel: ObservableObject {
     }
     
     func startCheckAvail() {
-        if username.isValidUsername() {
+        if username.isValidUsername() && username.count >= 6 {
             if let availTimer = availTimer {
                 availTimer.invalidate()
             }
@@ -143,6 +147,8 @@ final class EditProfileViewModel: ObservableObject {
                 availTimer.invalidate()
             }
             
+            self.isLoadingUserName = false
+            self.isUsernameAvail = false
             self.usernameInvalid = true
         }
         
@@ -244,12 +250,24 @@ final class EditProfileViewModel: ObservableObject {
         
     }
     
-    func isAvailableToSaveUser() -> Bool {
-        if stateObservable.userType == 2 {
+    func isAvailableToSaveUser(_ isAudience: Bool = true) -> Bool {
+        if !isAudience {
             return !names.isEmpty && !bio.isEmpty && (!username.isEmpty && (!usernameInvalid && isUsernameAvail))
             
         } else {
             return !names.isEmpty
+        }
+    }
+    
+    func limitUsernameText(_ upper: Int = 32) {
+        if username.count > upper {
+            username = String(username.prefix(upper))
+        }
+    }
+    
+    func limitBioText(_ upper: Int = 256) {
+        if bio.count > upper {
+            bio = String(bio.prefix(upper))
         }
     }
     
@@ -273,9 +291,25 @@ final class EditProfileViewModel: ObservableObject {
         }
     }
     
+    @MainActor
+    func deleteHighlightImage(at index: Int) {
+        withAnimation {
+            userHighlightsImage.remove(at: index)
+            userHighlightsImage.append(UIImage())
+        }
+    }
+    
     func onUpload(dismiss: @escaping () -> Void) {
         Task {
             await uploadSingleImage(dismiss: dismiss)
+        }
+    }
+    
+    func routeToPreviewProfile() {
+        let viewModel = PreviewTalentViewModel()
+
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .previewTalent(viewModel: viewModel)
         }
     }
     
@@ -288,7 +322,6 @@ final class EditProfileViewModel: ObservableObject {
             
             switch result {
             case .success(let success):
-                if self.stateObservable.userType == 2 {
                     let multipleHighlight = self.userHighlightsImage.compactMap { item in
                         if item != UIImage() {
                             return item
@@ -343,16 +376,16 @@ final class EditProfileViewModel: ObservableObject {
                             }
                         }
                     }
-                } else {
-                    DispatchQueue.main.async {[weak self] in
-                        self?.isLoading = false
-                        self?.success = true
-                    }
-                    
-                    Task {
-                        await self.updateUser(imageUrl: success, userHighlight: [], dismiss: dismiss)
-                    }
-                }
+//                } else {
+//                    DispatchQueue.main.async {[weak self] in
+//                        self?.isLoading = false
+//                        self?.success = true
+//                    }
+//                    
+//                    Task {
+//                        await self.updateUser(imageUrl: success, userHighlight: [], dismiss: dismiss)
+//                    }
+//                }
             case .failure(let failure):
                 withAnimation {
                     DispatchQueue.main.async {[weak self] in
@@ -373,7 +406,6 @@ final class EditProfileViewModel: ObservableObject {
                 }
             }
         } else {
-            if self.stateObservable.userType == 2 {
                 let multipleHighlight = self.userHighlightsImage.compactMap { item in
                     if item != UIImage() {
                         return item
@@ -427,16 +459,6 @@ final class EditProfileViewModel: ObservableObject {
                         }
                     }
                 }
-            } else {
-                DispatchQueue.main.async {[weak self] in
-                    self?.isLoading = false
-                    self?.success = true
-                }
-                
-                Task {
-                    await self.updateUser(imageUrl: "", userHighlight: [], dismiss: dismiss)
-                }
-            }
         }
     }
     
@@ -568,17 +590,9 @@ final class EditProfileViewModel: ObservableObject {
                         }
                     }
                     
-                    if tempHG.count < 3 {
-                        if tempHG.count == 1 {
-                            tempHG.append(UIImage())
-                            tempHG.append(UIImage())
-                        } else if tempHG.count == 2 {
-                            tempHG.append(UIImage())
-                        }
-                        
-                        self.userHighlightsImage = tempHG
-                    } else {
-                        self.userHighlightsImage = tempHG
+                    self.userHighlightsImage = tempHG
+                    for _ in 1...6-userHighlightsImage.count {
+                        self.userHighlightsImage.append(UIImage())
                     }
                 }
         case .failure(let failure):

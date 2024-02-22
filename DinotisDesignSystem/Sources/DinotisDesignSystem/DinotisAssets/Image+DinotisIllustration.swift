@@ -10,9 +10,12 @@ import SwiftUI
 public extension Image {
     static let generalDinotisImage = Image("img-dinotis-general", bundle: Bundle.module)
     static let generalEmptyImage = Image("img-empty-general", bundle: Bundle.module)
+    static let generalPersonalImage = Image("img-personal", bundle: Bundle.module)
+    static let generalCreatorImage = Image("img-creator", bundle: Bundle.module)
     
     static let onboardingSlide1Image = Image("img-slide1-onboarding", bundle: Bundle.module)
     static let onboardingSlide2Image = Image("img-slide2-onboarding", bundle: Bundle.module)
+    static let onboardingSlide3Image = Image("img-slide3-onboarding", bundle: Bundle.module)
     
     static let loginAudienceImage = Image("img-audience-login", bundle: Bundle.module)
     static let loginCreatorImage = Image("img-creator-login", bundle: Bundle.module)
@@ -48,4 +51,10 @@ public extension Image {
     static let homeLineGradientOrangeImage = Image("img-home-line-gradient-orange", bundle: .module)
     static let homeEyes3dImage = Image("img-home-eyes-3d", bundle: .module)
     static let homeBasketball3dImage = Image("img-home-basketball-3d", bundle: .module)
+    
+    static let profileWaitingVerificationImage = Image("waiting-verification", bundle: .module)
+    static let profileSuccessVerifiedImage = Image("success-verified", bundle: .module)
+    static let profileFailedVerifiedImage = Image("failed-verified", bundle: .module)
+    
+    static let backgroundAuthenticationImage = Image("bg-auth", bundle: .module)
 }

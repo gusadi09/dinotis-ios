@@ -26,19 +26,6 @@ struct UserBiodataView: View {
     
     var body: some View {
         ZStack {
-
-			NavigationLink(
-				unwrapping: $viewModel.route,
-				case: /PrimaryRouting.homeTalent,
-				destination: { viewModel in
-					TalentHomeView()
-                        .environmentObject(viewModel.wrappedValue)
-				},
-				onNavigate: {_ in },
-				label: {
-					EmptyView()
-				}
-			)
             
             NavigationLink(
                 unwrapping: $viewModel.route,
@@ -57,27 +44,24 @@ struct UserBiodataView: View {
                 Color.DinotisDefault.baseBackground
                     .edgesIgnoringSafeArea(.all)
                 
+                Image.backgroundAuthenticationImage
+                    .resizable()
+                    .ignoresSafeArea()
+                
                 VStack {
-                    HeaderView(
-                        type: .imageHeader(Image.generalDinotisImage, 25),
-                        title: "") {
-                            EmptyView()
-                        } trailingButton: {
-                            Button {
-                                viewModel.openWhatsApp()
-                            } label: {
-                                Image.generalQuestionIcon
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: 25)
-                            }
-                        }
+                    Image.generalDinotisImage
+                        .renderingMode(.template)
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(.white)
+                        .frame(height: 35)
+                        .padding(.vertical)
                     
                     VStack {
                         ScrollView(.vertical, showsIndicators: false, content: {
                             VStack {
                                 Text(LocalizableText.titleFormRegister)
-                                    .font(.robotoBold(size: 28))
+                                    .font(.robotoBold(size: 20))
                                     .foregroundColor(.DinotisDefault.black1)
                                     .padding(.bottom, 24)
                                 
@@ -265,21 +249,48 @@ struct UserBiodataView: View {
                                     }
                                 }
                                 
+                                DinotisPrimaryButton(
+                                    text: LocalizableText.saveLabel,
+                                    type: .adaptiveScreen,
+                                    textColor: viewModel.isAvailableToSaveUser() ? .DinotisDefault.white : .DinotisDefault.lightPrimaryActive,
+                                    bgColor: viewModel.isAvailableToSaveUser() ? .DinotisDefault.primary : .DinotisDefault.lightPrimary) {
+                                        Task {
+                                            await viewModel.updateUsers()
+                                        }
+                                    }
+                                    .disabled(!viewModel.isAvailableToSaveUser())
+                                    .padding(.top, 24)
+                                
                             }
 							.padding()
+                            .padding(.vertical)
+                            .background(
+                                RoundedRectangle(cornerRadius: 26)
+                                    .fill(Color.white)
+                                    .shadow(color: Color(red: 0.22, green: 0.29, blue: 0.41).opacity(0.11), radius: 10)
+                            )
+                            .padding(.horizontal)
                         })
                         
-                        DinotisPrimaryButton(
-                            text: LocalizableText.saveLabel,
-                            type: .adaptiveScreen,
-                            textColor: viewModel.isAvailableToSaveUser() ? .DinotisDefault.white : .DinotisDefault.lightPrimaryActive,
-                            bgColor: viewModel.isAvailableToSaveUser() ? .DinotisDefault.primary : .DinotisDefault.lightPrimary) {
-                                Task {
-                                    await viewModel.updateUsers()
-                                }
+                        Divider()
+                        
+                        HStack {
+                            Button {
+                                viewModel.openWhatsApp()
+                            } label: {
+                                Image.generalMessageTextIcon
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 18)
+                                
+                                Text(LocalizableText.needHelpQuestion)
+                                    .font(.robotoMedium(size: 12))
+                                    .fontWeight(.semibold)
+                                    .foregroundStyle(Color.DinotisDefault.primary)
                             }
-                            .disabled(!viewModel.isAvailableToSaveUser())
-							.padding([.horizontal, .bottom])
+
+                        }
+                        .padding()
                     }
 					.onAppear {
                         Task {
@@ -434,8 +445,19 @@ struct UserBiodataView: View {
     }
 }
 
+fileprivate struct Preview: View {
+    
+    init() {
+        FontInjector.registerFonts()
+    }
+    
+    var body: some View {
+        UserBiodataView(viewModel: BiodataViewModel())
+    }
+}
+
 struct UserBiodataView_Previews: PreviewProvider {
     static var previews: some View {
-        UserBiodataView(viewModel: BiodataViewModel())
+        Preview()
     }
 }

@@ -11,6 +11,7 @@ public struct SearchQueryParam: Codable {
     public var query: String
     public var skip: Int
     public var take: Int
+    public var sort: GeneralSorting?
     public var profession: Int?
     public var professionCategory: Int?
     
@@ -18,13 +19,15 @@ public struct SearchQueryParam: Codable {
         query: String,
         skip: Int,
         take: Int,
-        profession: Int?,
-        professionCategory: Int?
+        sort: GeneralSorting? = nil,
+        profession: Int? = nil,
+        professionCategory: Int? = nil
     ) {
         self.query = query
         self.skip = skip
         self.take = take
         self.profession = profession
         self.professionCategory = professionCategory
+        self.sort = sort
     }
 }

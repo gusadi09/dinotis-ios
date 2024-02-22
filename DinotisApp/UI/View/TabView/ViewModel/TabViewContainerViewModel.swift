@@ -14,6 +14,7 @@ final class TabViewContainerViewModel: ObservableObject {
     private let counterUseCase: GetCounterUseCase
 
     @Published var isFromUserType: Bool
+    @Published var talentHomeVM: TalentHomeViewModel
 	@Published var userHomeVM: UserHomeViewModel
 	@Published var profileVM: ProfileViewModel
 	@Published var searchVM: SearchTalentViewModel
@@ -27,6 +28,7 @@ final class TabViewContainerViewModel: ObservableObject {
 
 	init(
         isFromUserType: Bool,
+        talentHomeVM: TalentHomeViewModel,
         userHomeVM: UserHomeViewModel,
         profileVM: ProfileViewModel,
         searchVM: SearchTalentViewModel,
@@ -34,6 +36,7 @@ final class TabViewContainerViewModel: ObservableObject {
         counterUseCase: GetCounterUseCase = GetCounterDefaultUseCase()
     ) {
         self.isFromUserType = isFromUserType
+        self.talentHomeVM = talentHomeVM
 		self.userHomeVM = userHomeVM
 		self.profileVM = profileVM
 		self.searchVM = searchVM

@@ -41,29 +41,11 @@ extension SearchTargetType: DinotisTargetType, AccessTokenAuthorizable {
     var parameters: [String : Any] {
         switch self {
         case .getRecommendation(let query):
-            return [
-                "query": query.query,
-                "skip": query.skip == 0 ? "" : query.skip,
-                "take": query.take == 0 ? "" : query.take,
-                "profession": query.profession == 0 || query.profession == nil ? "" : query.profession.orZero(),
-                "profession_category": query.professionCategory == 0 || query.professionCategory == nil ? "" : query.professionCategory.orZero()
-            ]
+            return query.toJSON()
         case .getSearchedData(let query):
-            return [
-                "query": query.query,
-                "skip": query.skip == 0 ? "" : query.skip,
-                "take": query.take == 0 ? "" : query.take,
-                "profession": query.profession == 0 || query.profession == nil ? "" : query.profession.orZero(),
-                "profession_category": query.professionCategory == 0 || query.professionCategory == nil ? "" : query.professionCategory.orZero()
-            ]
+            return query.toJSON()
         case .getSearchedCreator(let query):
-            return [
-                "query": query.query,
-                "skip": query.skip == 0 ? "" : query.skip,
-                "take": query.take == 0 ? "" : query.take,
-                "profession": query.profession == 0 || query.profession == nil ? "" : query.profession.orZero(),
-                "profession_category": query.professionCategory == 0 || query.professionCategory == nil ? "" : query.professionCategory.orZero()
-            ]
+            return query.toJSON()
         }
     }
 

@@ -15,11 +15,9 @@ import DinotisData
 
 final class LoginViewModel: ObservableObject {
 	
-	private let repository: AuthenticationRepository
-	private let userRepository: UsersRepository
-	
 	private var cancellables = Set<AnyCancellable>()
 
+    private let getUserUseCase: GetUserUseCase
 	private let loginUseCase: LoginUseCase
 	private let registerUseCase: RegisterUseCase
 	
@@ -64,18 +62,15 @@ final class LoginViewModel: ObservableObject {
 	var backToRoot: (() -> Void)
 	
 	init(
+        getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
 		loginUseCase: LoginUseCase = LoginDefaultUseCase(),
 		registerUseCsae: RegisterUseCase = RegisterDefaultUseCase(),
-		repository: AuthenticationRepository = AuthenticationDefaultRepository(),
-		userRepository: UsersRepository = UsersDefaultRepository(),
 		backToRoot: @escaping (() -> Void)
 	) {
+        self.getUserUseCase = getUserUseCase
 		self.loginUseCase = loginUseCase
 		self.registerUseCase = registerUseCsae
-		self.repository = repository
-		self.userRepository = userRepository
 		self.backToRoot = backToRoot
-		
 	}
 
 	func resetAllError() {
@@ -121,13 +116,9 @@ final class LoginViewModel: ObservableObject {
         }
     }
 	
-	func loginButtonText() -> String {
-        if stateObservable.userType == 2 {
-            return isRegister ? LocalizableText.labelJoinNow : LocalizableText.loginLabel
-        } else {
-            return isRegister ? LocalizableText.labelSendOTP : LocalizableText.loginLabel
-        }
-	}
+    func loginButtonText() -> String {
+        return isRegister ? LocalizableText.labelSendOTP : LocalizableText.loginLabel
+    }
 	
 	func firstBottomLineText() -> String {
 		isRegister ? LocalizableText.linkLoginHere : LocalizableText.linkRegisterHere
@@ -174,7 +165,7 @@ final class LoginViewModel: ObservableObject {
     
     func isButtonDisable() -> Bool {
 		if stateObservable.userType == 2 {
-			return (isRegister ? (phone.phone.isEmpty || invitationCode.isEmpty) : (phone.password.isEmpty || phone.phone.isEmpty))
+			return (isRegister ? (phone.phone.isEmpty) : (phone.password.isEmpty || phone.phone.isEmpty))
 		} else {
 			return (isRegister ? phone.phone.isEmpty : (phone.password.isEmpty || phone.phone.isEmpty))
 		}
@@ -188,6 +179,8 @@ final class LoginViewModel: ObservableObject {
 
 		switch result {
 		case .success:
+            await getUsers()
+            
 			DispatchQueue.main.async { [weak self] in
 				self?.isLoading = false
 				self?.success = true
@@ -203,6 +196,20 @@ final class LoginViewModel: ObservableObject {
 
 		}
 	}
+    
+    @MainActor
+    func getUsers() async {
+        
+        let result = await getUserUseCase.execute()
+        
+        switch result {
+        case .success(let success):
+            stateObservable.userType = success.isCreator ?? false ? 2 : 3
+            stateObservable.isShowGateway = success.isCreator ?? false
+        case .failure(let failure):
+            handleDefaultError(error: failure)
+        }
+    }
 
 	func register() async {
 		onStartRequest()
@@ -338,28 +345,23 @@ final class LoginViewModel: ObservableObject {
 	}
 	
 	func routeToHome() {
-		DispatchQueue.main.async { [weak self] in
-			
-			if self?.stateObservable.userType == 3 {
-				let vm = TabViewContainerViewModel(
-                    isFromUserType: true,
-                    userHomeVM: UserHomeViewModel(),
-					profileVM: ProfileViewModel(backToHome: {}),
-					searchVM: SearchTalentViewModel(backToHome: {}),
-                    scheduleVM: ScheduleListViewModel(backToHome: {}, currentUserId: "")
-				)
-
-				DispatchQueue.main.async { [weak self] in
-					self?.route = .tabContainer(viewModel: vm)
-				}
-			} else if self?.stateObservable.userType == 2 {
-                let viewModel = TalentHomeViewModel(isFromUserType: true)
-				
-				self?.route = .homeTalent(viewModel: viewModel)
-			}
-		}
-	}
-	
+        DispatchQueue.main.async { [weak self] in
+            
+            let vm = TabViewContainerViewModel(
+                isFromUserType: true,
+                talentHomeVM: TalentHomeViewModel(isFromUserType: true),
+                userHomeVM: UserHomeViewModel(),
+                profileVM: ProfileViewModel(backToHome: {}),
+                searchVM: SearchTalentViewModel(backToHome: {}),
+                scheduleVM: ScheduleListViewModel(backToHome: {}, currentUserId: "")
+            )
+            
+            DispatchQueue.main.async { [weak self] in
+                self?.route = .tabContainer(viewModel: vm)
+            }
+        }
+    }
+    
 	func loginErrorTextForTalent() -> String {
 		statusCode == 401 ? LocaleText.talentNotRegisterError : error.orEmpty()
 	}

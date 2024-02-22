@@ -10,6 +10,7 @@ import Combine
 import SwiftUI
 import OneSignal
 import DinotisData
+import DinotisDesignSystem
 import StoreKit
 
 final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDelegate, SKPaymentTransactionObserver {
@@ -17,6 +18,7 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 	private let getUserUseCase: GetUserUseCase
     private let deleteUserUseCase: DeleteAccountUseCase
 	private let coinVerificationUseCase: CoinVerificationUseCase
+    private let sendVerifUseCase: SendVerifRequestUseCase
 
 	var backToHome: () -> Void
 
@@ -28,6 +30,7 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 	private var stateObservable = StateObservable.shared
 
 	@Published var route: HomeRouting?
+    @Published var verifRoute: HomeRouting?
 	@Published var data: UserResponse?
 
 	@Published var isLoading: Bool = false
@@ -70,17 +73,33 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 	@Published var isLoadingTrx = false
 
 	@Published var statusCode = 0
+    
+    @Published var showDinotisVerifiedSheet = false
+    @Published var verifiedStatus: UserVerificationStatus?
+    
+    @Published var pointerItems = [
+        PointerModel(title: LocalizableText.verifiedLandingPoint1Title, definition: LocalizableText.verifiedLandingPoint1Subtitle),
+        PointerModel(title: LocalizableText.verifiedLandingPoint2Title, definition: LocalizableText.verifiedLandingPoint2Subtitle),
+        PointerModel(title: LocalizableText.verifiedLandingPoint3Title, definition: LocalizableText.verifiedLandingPoint3Subtitle)
+    ]
+    
+    @Published var isLoadingVerified = false
+    
+    @Published var attachedLinks = [LinkModel(link: "")]
+    @Published var isAgreed = false
 
 	init(
 		backToHome: @escaping (() -> Void),
 		getUserUseCase: GetUserUseCase = GetUserDefaultUseCase(),
 		deleteUserUseCase: DeleteAccountUseCase = DeleteAccountDefaultUseCase(),
-		coinVerificationUseCase: CoinVerificationUseCase = CoinVerificationDefaultUseCase()
+		coinVerificationUseCase: CoinVerificationUseCase = CoinVerificationDefaultUseCase(),
+        sendVerifUseCase: SendVerifRequestUseCase = SendVerifRequestDefaultUseCase()
 	) {
 		self.backToHome = backToHome
 		self.getUserUseCase = getUserUseCase
 		self.deleteUserUseCase = deleteUserUseCase
 		self.coinVerificationUseCase = coinVerificationUseCase
+        self.sendVerifUseCase = sendVerifUseCase
 	}
 
 	func toggleDeleteModal() {
@@ -137,9 +156,7 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 	}
     
     func managementsString() -> String {
-        ((self.data?.managements) ?? []).compactMap {
-            $0.management?.user?.name
-        }.joined(separator: ", ")
+        "\((self.data?.managements?.first?.management?.user?.name).orEmpty())"
     }
     
     func managements() -> [String] {
@@ -222,11 +239,41 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
                 self?.userPhotos = success.profilePhoto
                 self?.names = success.name
                 self?.userCoin = (success.coinBalance?.current).orEmpty().toPriceFormat()
+                self?.verifiedStatus = success.verificationStatus
+                self?.profesionSelect = self?.userProfession() ?? []
             }
         case .failure(let failure):
             handleDefaultError(error: failure)
         }
 	}
+    
+    func sendVerif() async {
+        DispatchQueue.main.async { [weak self] in
+            self?.isLoadingVerified = true
+        }
+        
+        let result = await sendVerifUseCase.execute(with: attachedLinks.compactMap({
+            $0.link
+        }))
+        
+        switch result {
+        case .success(_):
+            DispatchQueue.main.async { [weak self] in
+                self?.isLoadingVerified = false
+                
+//                self?.verifRoute = .waitingVerif
+            }
+            
+            await getUsers()
+            
+        case .failure(let failure):
+            DispatchQueue.main.async { [weak self] in
+                self?.isLoadingVerified = false
+                self?.showDinotisVerifiedSheet = false
+            }
+            handleDefaultError(error: failure)
+        }
+    }
 
 	func deleteAccount() async {
 		onStartedFetch()
@@ -444,6 +491,14 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 	func onDisappear() {
 		SKPaymentQueue.default().remove(self)
 	}
+    
+    func routeToCreatorRoom() {
+        let viewModel = CreatorRoomViewModel(profilePercentage: (data?.profilePercentage).orZero(), profesionSelect: self.userProfession(), backToHome: { self.route = nil })
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.route = .creatorRoom(viewModel: viewModel)
+        }
+    }
 
 	func routeToCoinHistory() {
 		let viewModel = CoinHistoryViewModel(backToHome: { self.route = nil })
@@ -462,7 +517,7 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 	}
     
     func routeToAvailability() {
-        let viewModel = CreatorAvailabilityViewModel(backToHome: { self.route = nil })
+        let viewModel = CreatorAvailabilityViewModel(profilePercentage: (data?.profilePercentage).orZero(), backToHome: { self.route = nil })
         
         DispatchQueue.main.async { [weak self] in
             self?.route = .creatorAvailability(viewModel: viewModel)
@@ -472,4 +527,16 @@ final class ProfileViewModel: NSObject, ObservableObject, SKProductsRequestDeleg
 
 extension SKProduct: Identifiable {
 
+}
+
+extension ProfileViewModel {
+    struct PointerModel {
+        let title: String
+        let definition: String
+    }
+    
+    struct LinkModel {
+        let id = UUID()
+        var link: String
+    }
 }

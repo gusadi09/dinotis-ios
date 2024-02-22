@@ -47,6 +47,9 @@ public struct UserResponse: Codable, Hashable {
     public let followerCount: Int?
     public let rating: String?
     public let userAvailability: UserAvailabilityData?
+    public let profilePercentage: Double?
+    public let verificationStatus: UserVerificationStatus?
+    public let isCreator: Bool?
 
 	public init(
 		coinBalance: CoinBalanceData?,
@@ -79,7 +82,10 @@ public struct UserResponse: Codable, Hashable {
         meetingCount: Int?,
         followerCount: Int?,
         rating: String?,
-        userAvailability: UserAvailabilityData?
+        userAvailability: UserAvailabilityData?,
+        profilePercentage: Double?,
+        verificationStatus: UserVerificationStatus?,
+        isCreator: Bool?
 	) {
 		self.coinBalance = coinBalance
 		self.createdAt = createdAt
@@ -112,7 +118,22 @@ public struct UserResponse: Codable, Hashable {
         self.followerCount =  followerCount
         self.rating = rating
         self.userAvailability = userAvailability
+        self.profilePercentage = profilePercentage
+        self.verificationStatus = verificationStatus
+        self.isCreator = isCreator
 	}
+}
+
+public enum UserVerificationStatus: String, Codable {
+    case notVerified = "NOT_VERIFIED"
+    case waiting = "WAITING"
+    case verified = "VERIFIED"
+    case failed = "FAILED"
+    
+    public init(from decoder: Decoder) throws {
+        let label = try decoder.singleValueContainer().decode(String.self)
+        self = UserVerificationStatus(rawValue: label) ?? .notVerified
+      }
 }
 
 public struct UsernameAvailabilityResponse: Codable {
@@ -191,7 +212,10 @@ public extension UserResponse {
             meetingCount: 1,
             followerCount: 1,
             rating: "5",
-            userAvailability: UserAvailabilityData(id: 1, availability: true, type: .FREE, price: "0")
+            userAvailability: UserAvailabilityData(id: 1, availability: true, type: .FREE, price: "0"),
+            profilePercentage: 80.0,
+            verificationStatus: .notVerified,
+            isCreator: false
 		)
 	}
 
@@ -262,7 +286,10 @@ public extension UserResponse {
             meetingCount: 1,
             followerCount: 1,
             rating: "5",
-            userAvailability: UserAvailabilityData(id: 1, availability: true, type: .FREE, price: "0")
+            userAvailability: UserAvailabilityData(id: 1, availability: true, type: .FREE, price: "0"),
+            profilePercentage: 80.0,
+            verificationStatus: .notVerified,
+            isCreator: false
 		).toJSONData()
 	}
 }
@@ -474,27 +501,14 @@ public struct UserAvailabilityData: Codable {
     }
 }
 
-//{
-//	"id": 1,
-//	"userManagementId": 2,
-//	"userId": "c6127652d2e84b1198b3a8c035814267",
-//	"createdAt": "2022-12-15T17:24:17.267Z",
-//	"updatedAt": "2022-12-15T17:24:17.267Z",
-//	"userManagement": {
-//		"id": 2,
-//		"code": "MCDE",
-//		"userId": "657514285c0e817fcfde43b30e811f2d",
-//		"createdAt": "2022-12-15T17:23:51.019Z",
-//		"updatedAt": "2022-12-15T17:23:51.019Z",
-//		"user": {
-//			"id": "657514285c0e817fcfde43b30e811f2d",
-//			"name": "Rumah Kita Sendiri",
-//			"username": "buonobane",
-//			"profilePhoto": "https://dinotis-public.s3.ap-southeast-1.amazonaws.com/5dd73b87b18644c5bec381be9c97fd78.png",
-//			"profileDescription": "Abrakadabra",
-//			"isVerified": false,
-//			"isVisible": true,
-//			"isActive": true
-//		}
-//	}
-//}
+public struct VerificationReqResponse: Codable {
+    public let id: Int?
+    public let userId: String?
+    public let links: [String]?
+    
+    public init(id: Int? = 0, userId: String = "UnitTest", links: [String]? = ["@test"]) {
+        self.id = id
+        self.userId = userId
+        self.links = links
+    }
+}
